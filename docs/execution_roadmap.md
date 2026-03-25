@@ -153,12 +153,12 @@
 
 - reviewer 双审与仲裁已完成：`medium_006` 可收，`celery_hard_013 / 017` 需修后再收
 - 正式评测集迁移 draft 已产出：`data/eval_cases_migrated_draft.json`（28 条）
-- few-shot 文档已回填：`B02 / B03 / B04 / C02 / C03 / E02 / E04`
-- 仍待继续处理：few-shot `E03`，以及 Type A / Type D 的后续补齐
+- few-shot 文档已回填：`B02 / B03 / B04 / C02 / C03 / E02 / E03 / E04`
+- 正式升格审核结论：当前 28 条 draft 暂不替换正式 `data/eval_cases.json`
+- 仍待继续处理：Type A / Type D 的后续补齐，以及剩余 few-shot 空位
 
 ### 下一步顺序
 
-1. 复审 round 2 修订稿，确认 `easy_005/006/008`、`hard_013/015/017/018/020`、few-shot round 2 是否真正过线。
-2. 决定是否将 28 条迁移 draft 替换为正式 `data/eval_cases.json`。
-3. 单独修完 few-shot `E03`。
-4. 继续补齐 few-shot 的 Type A / D 与剩余空位。
+1. 继续补 eval 的 Type A / Type D / hard 配额，不急着升格正式集。
+2. 继续补齐 few-shot 的 Type A / Type D 与剩余空位，先把 few-shot 推到 20 条。
+3. 等评测集与 few-shot 两边都更完整后，再重新申请正式升格。

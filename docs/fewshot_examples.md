@@ -310,7 +310,40 @@
 }
 ```
 
-### Few-shot E03: （重写中，暂不入正式池）
+### Few-shot E03: by_url + override_backends 的 tuple 语义
+
+**问题**: 在提供 `loader.override_backends = {'kv': 'celery.backends.redis:RedisBackend'}` 的前提下，`by_url('kv+redis://localhost/0', loader=loader)` 会把 backend 部分最终解析成哪个类，以及这个过程中 URL payload 如何被保留下来？
+
+**环境前置条件**:
+1. `loader.override_backends = {'kv': 'celery.backends.redis:RedisBackend'}`。
+2. 调用入口为：`celery.app.backends.by_url('kv+redis://localhost/0', loader=loader)`。
+
+**推理过程**:
+1. `by_url` 先检测输入含 `://`，取出 scheme `kv+redis`。
+2. `by_url` 再按 `+` 拆分 scheme，得到 `backend='kv'` 与 `url='redis://localhost/0'`。
+3. 随后 `by_url` 调用 `by_name('kv', loader)` 去解析 backend 类。
+4. `by_name` 会合并 `dict(BACKEND_ALIASES, **loader.override_backends)`，因此 `kv` 命中运行时覆盖映射。
+5. `symbol_by_name` 最终把该字符串解析为 `celery.backends.redis.RedisBackend`。
+6. `by_url` 的运行时返回不是实例化对象，而是二元组 `(resolved_backend_cls, rewritten_url)`，即 `(celery.backends.redis.RedisBackend, 'redis://localhost/0')`。
+
+**答案**:
+```json
+{
+  "ground_truth": {
+    "direct_deps": [
+      "celery.backends.redis.RedisBackend"
+    ],
+    "indirect_deps": [
+      "celery.app.backends.by_url",
+      "celery.app.backends.by_name",
+      "celery.utils.imports.symbol_by_name"
+    ],
+    "implicit_deps": [
+      "celery.app.backends.BACKEND_ALIASES"
+    ]
+  }
+}
+```
 
 ### Few-shot E04: 导入时注入 alias 的时序依赖
 

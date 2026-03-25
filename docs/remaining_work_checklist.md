@@ -23,10 +23,19 @@
   - `docs/drafts/review_round5_round2.md`
 - 尾项复审已完成：
   - `docs/drafts/review_round6_tail.md`
+- E03 spot review 已完成：
+  - `docs/drafts/review_round8_e03.md`
 - 新 schema 迁移 draft 已产出：
   - `data/eval_cases_migrated_draft.json`（28 条：旧 12 条迁移 + 当前批次已稳定的 eval 条目）
 - 正式 few-shot 文档已开始回填：
-  - 已并入 `B02`、`B03`、`B04`、`C02`、`C03`、`E02`、`E04`
+  - 已并入 `B02`、`B03`、`B04`、`C02`、`C03`、`E02`、`E03`、`E04`
+- 正式升格审核已完成：
+  - `docs/drafts/review_round7_eval_dataset.md`
+  - 结论：`do_not_promote_yet`
+- few-shot 扩展批次已启动：
+  - `docs/drafts/fewshot_gap_plan_round1.md`
+  - `docs/drafts/fewshot_type_a_round1.md` 已产出
+  - Type D 两组草稿并行进行中
 - 当前最高优先级不是继续堆样本，而是先把 review 和 schema migration 做实，避免把新旧口径混进正式数据。
 
 ## 审稿结论摘要
@@ -70,8 +79,6 @@
   - 与 eval 主链重复过高
   - Type A / Type D 完全缺失
   - Proxy / 环境前置 / direct-indirect-implicit 拆分不稳
-- 仍需继续修订的 round 2 条目：
-  - `E03`
 - 当前 few-shot 正式文档中已稳定的新增条目：
   - `B02`
   - `B03`
@@ -79,6 +86,7 @@
   - `C02`
   - `C03`
   - `E02`
+  - `E03`
   - `E04`
 
 ## 阶段状态总览
@@ -171,6 +179,7 @@
   - round 2 二次复审新增可保留：`easy_005`、`easy_006`、`easy_008`、`medium_007`、`celery_hard_013`、`celery_hard_015`、`celery_hard_018`
   - 尾项复审新增可保留：`celery_medium_017`、`celery_medium_020`
   - 当前迁移 draft 已达 28 条，超过“24 条可复核版本”里程碑，但尚未替换正式 `data/eval_cases.json`
+  - `review_round7_eval_dataset.md` 的正式结论是：先不升级正式集
 
 ### P0-05：把通过审核的 few-shot 回填到正式文档
 
@@ -187,7 +196,19 @@
   - 保留未过审项的待办说明
 - 当前阻塞原因：
   - Type A / Type D 仍为空
-  - `E03` 仍需继续修订
+  - 总量仍未到 20 条，Type B / C / E 也还没补满配比
+
+### P0-05b：为什么正式评测集暂不升级
+
+- 状态：`done`
+- 依据：
+  - `docs/drafts/review_round7_eval_dataset.md`
+- 当前结论：
+  - 先不把 `data/eval_cases_migrated_draft.json` 覆盖成正式 `data/eval_cases.json`
+- 主要原因：
+  - 旧 12 条迁移字段仍需补强复核
+  - Type A 缺失、Type D 偏少
+  - 总量仍只有 28 条，离 50 条目标有明显差距
 
 ### P0-06：更新进度文档并推送
 
