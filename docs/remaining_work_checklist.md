@@ -34,6 +34,15 @@
   - `docs/drafts/review_round11_type_a_round2.md`
 - 新 schema 迁移 draft 已产出：
   - `data/eval_cases_migrated_draft.json`（28 条：旧 12 条迁移 + 当前批次已稳定的 eval 条目）
+- round 4 高价值 eval 双轮严格审稿已完成：
+  - `docs/drafts/review_round16_eval_round4_gate.md`
+  - `docs/drafts/review_round17_eval_round4_findings.md`
+  - `docs/drafts/review_round18_eval_round4_r2.md`
+- round 4 已形成新的待集成 draft：
+  - `data/eval_cases_migrated_draft_round4.json`（32 条：原 28 条 + `celery_hard_121 / 122 / 024 / 025`）
+- round 4 当前已明确 `park` 的题材：
+  - former Candidate 01（`worker_acks_late_failure_branch`）
+  - Candidate 04（`beat_reserve_before_send`）
 - 正式 few-shot 文档已继续回填：
   - 已并入 `A01`、`B02`、`B03`、`B04`、`C02`、`C03`、`D01`、`D02`、`D03`、`D04`、`E02`、`E03`、`E04`
 - 正式升格审核已完成：
@@ -49,6 +58,12 @@
 - 正式 few-shot 文档现已稳定 20 条：`A01 / A02 / B01-B05 / C01-C05 / D01-D04 / E01-E04`
 - `pe/prompt_templates_v2.py` 与 `data/fewshot_examples_20.json` 已落地。
 - round 15 strict challenge 后，`B01 / D04 / E03` 已完成收紧修复，见 `docs/drafts/review_round15_formal_pool_safety.md`。
+- 微调线的脚手架阻塞已收口：
+  - `finetune/data_guard.py` 已对齐微调 schema
+  - `finetune/data_guard.py` 已加入 dataset-level gate（默认 `min_records=500`、`min_hard_ratio=0.3`），但仍未做到语义级 anti-hallucination 校验
+  - `finetune/train_qlora.py` 已支持 `--config`，但当前仍是 scaffold-only，尚未接入真实 trainer backend
+  - `configs/qlora_7b.toml` 已新增
+  - `data/finetune_dataset_500.jsonl` 已补占位，但当前仍为 0 条有效记录
 - 当前最高优先级已切到高价值 eval 继续扩充：
   - 基于 `docs/drafts/eval_high_value_candidates_round4.md` 起草下一批 Type A / Type D / hard
   - 使用 round 15 gate 拦住双问题、值语义题、schema 不可表达题
@@ -111,11 +126,11 @@
 | :--- | :--- | :--- | :--- |
 | 阶段 0 | 文档与口径冻结 | 已完成 | 持续修正文档漂移 |
 | 阶段 1 | 仓库快照与版本绑定 | 已完成 | 任何源码更新后回写快照文档 |
-| 阶段 2 | 评测集设计与人工标注 | 进行中 | 完成 review + 迁移 draft + 24 条里程碑 |
+| 阶段 2 | 评测集设计与人工标注 | 进行中（32 条 draft 已到位） | `32 -> 50`，并维持 formal hold |
 | 阶段 3 | Baseline 与瓶颈诊断 | 未开始 | 评测集新 schema 稳定后启动 |
 | 阶段 4 | Prompt Engineering | 进行中（20 条 few-shot 正式池已补齐） | 将正式池写入 prompt template / JSON 工件 |
-| 阶段 5 | RAG | 未开始 | 等阶段 2/4 稳定后进入设计 |
-| 阶段 6 | 微调 | 未开始 | 等 bad case 与 schema 冻结 |
+| 阶段 5 | RAG | 原型已落地，独立评测未开始 | 产出 Recall@5 / MRR |
+| 阶段 6 | 微调 | 准备中（schema / guard / train scaffold 已对齐） | 生成第一批高质量 500 条候选 |
 | 阶段 7 | 消融与答辩材料 | 未开始 | 等实验结果产出后收口 |
 
 ## 当前 P0 清单（必须先做完）
@@ -194,7 +209,8 @@
   - 仲裁后新增可保留：`medium_006`
   - round 2 二次复审新增可保留：`easy_005`、`easy_006`、`easy_008`、`medium_007`、`celery_hard_013`、`celery_hard_015`、`celery_hard_018`
   - 尾项复审新增可保留：`celery_medium_017`、`celery_medium_020`
-  - 当前迁移 draft 已达 28 条，超过“24 条可复核版本”里程碑，但尚未替换正式 `data/eval_cases.json`
+  - round 4 r2 + strict review 新增可推进：`celery_hard_121`、`celery_hard_122`、`celery_hard_024`、`celery_hard_025`
+  - 当前迁移 draft 已达 32 条，超过“24 条可复核版本”里程碑，但尚未替换正式 `data/eval_cases.json`
   - `review_round7_eval_dataset.md` 的正式结论是：先不升级正式集
 
 ### P0-05：把通过审核的 few-shot 回填到正式文档
@@ -223,8 +239,8 @@
   - 先不把 `data/eval_cases_migrated_draft.json` 覆盖成正式 `data/eval_cases.json`
 - 主要原因：
   - 旧 12 条迁移字段仍需补强复核
-  - Type A 缺失、Type D 偏少
-  - 总量仍只有 28 条，离 50 条目标有明显差距
+  - Type D 仍偏少，round 4 仅先补进 4 条高价值 hard
+  - 总量当前提升到 32 条，但离 50 条目标仍有明显差距
 
 ### P0-05c：把 20 条正式 few-shot 固化为可消费工件
 

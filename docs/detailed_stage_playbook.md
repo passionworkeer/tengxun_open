@@ -420,7 +420,7 @@
 
 ### 本阶段产出
 
-- `data/finetune_dataset.jsonl`
+- `data/finetune_dataset_500.jsonl`
 - 微调实验日志
 - 训练曲线和关键超参记录
 

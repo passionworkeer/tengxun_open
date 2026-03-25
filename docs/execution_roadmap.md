@@ -137,8 +137,9 @@
 
 - ✅ 阶段 0：文档定稿（已完成）
 - ✅ 阶段 1：目标仓库准备（已完成，commit: b8f85213）
-- ⏳ 阶段 2：评测集构建（28 条迁移 draft 已产出，但正式 `data/eval_cases.json` 仍保持 hold）
+- ⏳ 阶段 2：评测集构建（32 条新 schema draft 已产出，但正式 `data/eval_cases.json` 仍保持 hold）
 - ⏳ 阶段 4：few-shot 正式池已补齐 20 条，`prompt_templates_v2.py` 与 `fewshot_examples_20.json` 已落地；下一步转向高价值 eval 起草
+- ⏳ 阶段 6：微调线已完成 schema / guard / train scaffold 对齐，但正式数据仍为 0 条
 
 ## 当前并行批次（2026-03-25）
 
@@ -152,7 +153,7 @@
 ### 正在进行
 
 - reviewer 双审与仲裁已完成：`medium_006` 可收，`celery_hard_013 / 017` 需修后再收
-- 正式评测集迁移 draft 已产出：`data/eval_cases_migrated_draft.json`（28 条）
+- 正式评测集迁移 draft 已扩到：`data/eval_cases_migrated_draft_round4.json`（32 条）
 - few-shot 扩展审稿链已补齐：`docs/drafts/fewshot_type_a_round3.md` + `docs/drafts/review_round13_type_a_round3.md` + `docs/drafts/review_round12_bc_tail.md` + `docs/drafts/review_round13_bc_arbitration.md` + `docs/drafts/review_round14_strict_challenge.md`
 - few-shot 文档已补齐 20 条正式条目：`A01 / A02 / B01-B05 / C01-C05 / D01-D04 / E01-E04`
 - A02 已以收紧版回填：默认 app 解析与 `Celery.tasks -> finalize(auto=True)` 已明确拆开
@@ -160,10 +161,23 @@
 - 正式升格审核结论：当前 28 条 draft 暂不替换正式 `data/eval_cases.json`
 - 严格 reviewer 新增安全提醒：`B01 / D04 / E03` 已完成收紧修复，并形成 `docs/drafts/review_round15_formal_pool_safety.md`
 - 高价值下一批 eval 候选已整理：`docs/drafts/eval_high_value_candidates_round4.md`
-- 仍待继续处理：按 round 4 候选起草新一批 Type A / Type D / hard eval，并继续保持正式 `data/eval_cases.json` 的 hold
+- round 4 双轮严格审稿已完成：
+  - `docs/drafts/review_round16_eval_round4_gate.md`
+  - `docs/drafts/review_round17_eval_round4_findings.md`
+  - `docs/drafts/review_round18_eval_round4_r2.md`
+- round 4 目前有 4 条可继续推进的高价值 eval：
+  - `celery_hard_121`
+  - `celery_hard_122`
+  - `celery_hard_024`
+  - `celery_hard_025`
+- 微调线阻塞已显式暴露并收口：
+  - `finetune/data_guard.py` 已对齐 `instruction / input / output / difficulty / verified`，并默认卡 `min_records=500` 与 `min_hard_ratio=0.3`
+  - `finetune/train_qlora.py` 已支持 `--config`，但当前仍是 scaffold-only，未接入真实 trainer backend
+  - `configs/qlora_7b.toml` 与 `data/finetune_dataset_500.jsonl` 占位已落地
+- 仍待继续处理：把 round 4 通过项并入正式待集成队列，并继续保持正式 `data/eval_cases.json` 的 hold
 
 ### 下一步顺序
 
-1. 按 `docs/drafts/eval_high_value_candidates_round4.md` 起草下一批 Type A / Type D / hard eval。
-2. 使用 `review_round15_formal_pool_safety.md` 中的门禁收紧新题，避免再混入双问题和 schema 不可表达项。
-3. 继续补 eval 的 Type A / Type D / hard 配额，但在更强复核前不升级正式 `data/eval_cases.json`。
+1. 把 `celery_hard_121 / 122 / 024 / 025` 并入正式待集成队列，并保持 formal hold 不变。
+2. 继续补下一批 Type A / Type D / hard eval，优先填 `32 -> 50` 的缺口。
+3. 启动 500 条微调数据的候选生成，但只在 `data_guard.py` 口径下沉淀干净记录。

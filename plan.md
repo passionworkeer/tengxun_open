@@ -413,13 +413,14 @@ celery-dep-analysis/
 ├── Dockerfile
 │
 ├── data/
-│   ├── eval_cases_celery.json         # ✅ 50 条人工标注评测集（含 FQN + 失效类型标签）
+│   ├── eval_cases.json                # 当前正式评测集（12 条旧 schema）
+│   ├── eval_cases_migrated_draft_round4.json # 当前新 schema draft（32 条）
 │   ├── fewshot_examples_20.json       # ✅ 20 条 few-shot 示例库
-│   └── finetune_dataset_500.jsonl     # ✅ 500 条经 jedi+ast 验证的微调数据集
+│   └── finetune_dataset_500.jsonl     # 当前微调数据占位文件（仍待扩到 500 条）
 │
 ├── evaluation/
-│   ├── baseline_eval.py               # 多模型并行基线评测
-│   └── metrics_fqn.py                 # F1 / Recall@K / MRR / 幻觉率计算
+│   ├── baseline.py                    # 数据集概览 / prompt 预览 / RAG 检索评测
+│   └── metrics.py                     # Recall@K / MRR / 幻觉率计算
 │
 ├── pe/
 │   ├── prompt_templates_v2.py         # ✅ System Prompt + CoT + Few-shot 库
@@ -427,19 +428,11 @@ celery-dep-analysis/
 │
 ├── rag/
 │   ├── ast_chunker.py                 # tree-sitter AST 代码级分块
-│   ├── indexer_three_way.py           # 三路索引构建（向量 + BM25 + 图）
-│   ├── retriever_rrf.py               # RRF(k=60) 融合检索
-│   └── context_manager.py            # 上下文分层压缩 + Token 计数
+│   └── rrf_retriever.py               # BM25 / semantic / graph + RRF 融合检索
 │
 ├── finetune/
-│   ├── data_guard.py                  # ✅ jedi+ast 防幻觉验证流水线
-│   └── train_qlora.py                 # QLoRA 训练 + Early Stopping
-│
-├── experiments/
-│   └── ablation_full_matrix.ipynb     # ✅ 完整消融实验（含雷达图/柱状图/热力图）
-│
-├── results/
-│   └── *.json                         # 所有实验原始结果（可追溯）
+│   ├── data_guard.py                  # schema + dataset-level gate（语义校验仍待补）
+│   └── train_qlora.py                 # QLoRA 训练脚手架（trainer backend 待接入）
 │
 └── reports/
     ├── bottleneck_diagnosis.md        # ✅ 瓶颈诊断 + 热力图 + Bad Case 证据链
@@ -451,22 +444,22 @@ celery-dep-analysis/
 
 ```makefile
 eval-baseline:
-    python evaluation/baseline_eval.py --models gpt-4o glm-5 qwen2.5-coder-7b
+    uv run python -m evaluation.baseline --mode baseline --eval-cases data/eval_cases.json
 
 eval-pe:
-    python evaluation/baseline_eval.py --model gpt-4o --pe-ablation
+    uv run python -m evaluation.baseline --mode pe --prompt-version v2 --eval-cases data/eval_cases.json
 
 eval-rag:
-    python evaluation/baseline_eval.py --model gpt-4o --rag --rag-ablation
+    uv run python -m evaluation.baseline --mode rag --eval-cases data/eval_cases.json
 
 eval-ft:
-    python evaluation/baseline_eval.py --model qwen2.5-coder-7b-ft
+    @echo "eval-ft placeholder"
 
 eval-all:
-    python experiments/ablation_full_matrix.py --all
+    uv run python -m evaluation.baseline --mode all --prompt-version v2 --eval-cases data/eval_cases.json
 
 train:
-    python finetune/train_qlora.py --config configs/qlora_7b.yaml
+    uv run python finetune/train_qlora.py --config configs/qlora_7b.toml
 
 report:
     jupyter nbconvert --execute experiments/ablation_full_matrix.ipynb

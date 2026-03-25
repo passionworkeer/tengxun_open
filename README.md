@@ -59,16 +59,16 @@
 # 1. 安装依赖
 pip install -r requirements.txt
 
-# 2. 查看评测集状态
-python -m evaluation.baseline --eval-cases data/eval_cases_celery.json
+# 2. 查看当前评测集摘要
+python -m evaluation.baseline --eval-cases data/eval_cases.json
 
 # 3. 校验微调数据
 python -m finetune.data_guard data/finetune_dataset_500.jsonl
 
-# 4. 运行基线评测
+# 4. 运行当前 baseline 摘要命令
 make eval-baseline
 
-# 5. 运行全部实验
+# 5. 运行当前 summary + RAG + PE 预览组合命令
 make eval-all
 ```
 
@@ -82,13 +82,14 @@ celery-dep-analysis/
 ├── Makefile                           # make eval-baseline / make eval-all / make train
 │
 ├── data/
-│   ├── eval_cases_celery.json         # 50 条人工标注评测集
+│   ├── eval_cases.json                # 当前正式评测集（12 条旧 schema）
+│   ├── eval_cases_migrated_draft_round4.json # 新 schema 迁移+round4 draft（32 条）
 │   ├── fewshot_examples_20.json       # 20 条 few-shot 示例库
 │   └── finetune_dataset_500.jsonl     # 500 条经验证的微调数据集
 │
 ├── evaluation/
-│   ├── baseline_eval.py               # 多模型并行基线评测
-│   └── metrics_fqn.py                 # F1 / Recall@K / MRR / 幻觉率计算
+│   ├── baseline.py                    # 数据集概览 / prompt 预览 / RAG 检索评测
+│   └── metrics.py                     # Recall@K / MRR 等指标计算
 │
 ├── pe/
 │   ├── prompt_templates_v2.py         # System Prompt + CoT + Few-shot 库
@@ -96,19 +97,11 @@ celery-dep-analysis/
 │
 ├── rag/
 │   ├── ast_chunker.py                 # tree-sitter AST 代码级分块
-│   ├── indexer_three_way.py           # 三路索引构建
-│   ├── retriever_rrf.py               # RRF(k=60) 融合检索
-│   └── context_manager.py             # 上下文分层压缩 + Token 计数
+│   └── rrf_retriever.py               # BM25 / semantic / graph + RRF 融合检索
 │
 ├── finetune/
 │   ├── data_guard.py                  # jedi+ast 防幻觉验证流水线
 │   └── train_qlora.py                 # QLoRA 训练 + Early Stopping
-│
-├── experiments/
-│   └── ablation_full_matrix.ipynb     # 完整消融实验（含雷达图/柱状图/热力图）
-│
-├── results/
-│   └── *.json                         # 所有实验原始结果
 │
 ├── reports/
 │   ├── bottleneck_diagnosis.md        # 瓶颈诊断 + 热力图 + Bad Case 证据链

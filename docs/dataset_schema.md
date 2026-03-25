@@ -69,7 +69,12 @@
 | `category` | string | 否 | 装饰器、再导出、动态导入等 |
 | `repo_path` | string | 否 | 来源文件路径 |
 | `verified` | boolean | 是 | 是否通过 `data_guard.py` 校验 |
-| `verify_method` | string | 否 | `jedi+ast` / `manual` |
+| `verify_method` | string | 视情况 | `jedi+ast` / `manual` |
+
+补充约束：
+
+- `output` 末尾必须包含一个可解析的 JSON 答案块，至少能还原 `direct_deps / indirect_deps / implicit_deps` 三个列表；也可以额外冗余一个独立 `ground_truth` 字段，方便 `data_guard.py` 校验。
+- 当 `verified=true` 时，`verify_method` 视为条件必填，不能留空。
 
 ### 数据来源配比
 

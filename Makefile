@@ -1,5 +1,5 @@
-PYTHON ?= python
-EVAL_CASES ?= data/eval_cases_celery.json
+PYTHON ?= uv run python
+EVAL_CASES ?= data/eval_cases.json
 FINETUNE_DATA ?= data/finetune_dataset_500.jsonl
 FEWSHOT_DATA ?= data/fewshot_examples_20.json
 CONFIG_DIR ?= configs
@@ -8,32 +8,32 @@ CONFIG_DIR ?= configs
 
 help:
 	@echo "Available targets:"
-	@echo "  make eval-baseline  - run baseline evaluation (GPT-4o / GLM-5 / Qwen2.5-Coder-7B)"
-	@echo "  make eval-pe        - run PE ablation (System → CoT → Few-shot → Post-processing)"
-	@echo "  make eval-rag       - run RAG ablation (Vector → BM25 → Graph → RRF)"
-	@echo "  make eval-ft        - run fine-tuned model evaluation"
-	@echo "  make eval-all       - run full ablation matrix (10 experiments)"
-	@echo "  make train          - train Qwen2.5-Coder-7B with QLoRA"
+	@echo "  make eval-baseline  - summarize the current eval dataset"
+	@echo "  make eval-pe        - preview PE prompt metadata with v2 few-shot assets"
+	@echo "  make eval-rag       - run retrieval metrics on the current eval dataset"
+	@echo "  make eval-ft        - placeholder for checkpoint evaluation wiring"
+	@echo "  make eval-all       - run summary + retrieval + prompt preview metadata"
+	@echo "  make train          - validate the QLoRA scaffold config, then fail until trainer wiring exists"
 	@echo "  make report         - generate ablation report with charts"
 	@echo "  make lint-data      - validate finetune dataset with data_guard.py"
 
 eval-baseline:
-	$(PYTHON) evaluation/baseline_eval.py --models gpt-4o glm-5 qwen2.5-coder-7b --eval-cases $(EVAL_CASES)
+	$(PYTHON) -m evaluation.baseline --mode baseline --eval-cases $(EVAL_CASES)
 
 eval-pe:
-	$(PYTHON) evaluation/baseline_eval.py --model gpt-4o --pe-ablation --eval-cases $(EVAL_CASES)
+	$(PYTHON) -m evaluation.baseline --mode pe --prompt-version v2 --eval-cases $(EVAL_CASES)
 
 eval-rag:
-	$(PYTHON) evaluation/baseline_eval.py --model gpt-4o --rag --rag-ablation --eval-cases $(EVAL_CASES)
+	$(PYTHON) -m evaluation.baseline --mode rag --eval-cases $(EVAL_CASES)
 
 eval-ft:
-	$(PYTHON) evaluation/baseline_eval.py --model qwen2.5-coder-7b-ft --eval-cases $(EVAL_CASES)
+	@echo "eval-ft is not wired yet; produce a checkpoint first and add a dedicated evaluation entrypoint."
 
 eval-all:
-	$(PYTHON) experiments/ablation_full_matrix.py --all --eval-cases $(EVAL_CASES)
+	$(PYTHON) -m evaluation.baseline --mode all --prompt-version v2 --eval-cases $(EVAL_CASES)
 
 train:
-	$(PYTHON) finetune/train_qlora.py --config $(CONFIG_DIR)/qlora_7b.yaml
+	$(PYTHON) finetune/train_qlora.py --config $(CONFIG_DIR)/qlora_7b.toml
 
 report:
 	jupyter nbconvert --execute experiments/ablation_full_matrix.ipynb
