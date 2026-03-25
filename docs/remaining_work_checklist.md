@@ -31,6 +31,7 @@
   - `docs/drafts/type_d_review_notes.md`
   - `docs/drafts/type_ad_challenge_notes.md`
   - `docs/drafts/review_round10_type_ad_arbitration.md`
+  - `docs/drafts/review_round11_type_a_round2.md`
 - 新 schema 迁移 draft 已产出：
   - `data/eval_cases_migrated_draft.json`（28 条：旧 12 条迁移 + 当前批次已稳定的 eval 条目）
 - 正式 few-shot 文档已继续回填：
@@ -40,7 +41,7 @@
   - 结论：`do_not_promote_yet`
 - few-shot 扩展批次已启动：
   - `docs/drafts/fewshot_gap_plan_round1.md`
-  - `docs/drafts/fewshot_type_a_round1.md` 已修到 `A01` 可回填
+  - `docs/drafts/fewshot_type_a_round1.md` 已完成历史修订，`A01` 已正式回填
   - `docs/drafts/fewshot_type_a_round2.md` 已产出，`A02` 当前在 `docs/drafts/review_round11_type_a_round2.md` 中为 `needs_more_fix`
   - `docs/drafts/fewshot_type_d_round1.md`、`docs/drafts/fewshot_type_d_round2.md` 已修订并完成仲裁
   - `docs/drafts/fewshot_bc_tail_round1.md` 已产出，待审 `B05 / C04 / C05`
