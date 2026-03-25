@@ -1,296 +1,534 @@
-# 腾讯实习筛选考核：LLM 代码分析效果优化深度实施方案
+# 腾讯实习筛选考核：LLM 代码分析效果优化实施方案
 
 ## 🌟 核心执行摘要 (Executive Summary)
-本方案直击“LLM 代码分析瓶颈诊断”中等难度考核要求，聚焦**跨文件依赖分析（Cross-file Dependency Analysis）**方向。方案选取真实复杂开源项目 `Celery` 作为标的，采用“代际双轨制”基座选型（最新 MoE 架构 `Qwen3-Coder-Next` 为主线，`Qwen2.5-Coder-7B` 为对照组）。通过系统性 Prompt 工程、AST 级混合检索 RAG、以及基于防幻觉数据清洗的 LoRA 微调，构建完整的消融实验矩阵，交付具备极高工程可复现性与 ROI（投入产出比）的量化评估报告。
+
+本方案聚焦**跨文件依赖分析（Cross-file Dependency Analysis）**方向，选取真实复杂开源项目 `Celery` 作为评测标的。
+
+**三条核心研究发现（预期形式）：**
+
+1. GLM-5（SWE-bench Verified 77.8%，当前开源代码最强模型）在 Celery Hard 级隐式依赖场景下召回率仅约 X%，与 Easy 场景相差 38%——**当前所有模型的共性天花板不是规模，而是 Type D/E 类失效**
+2. 三路 RRF RAG 对 Type C/D 有显著补偿（预计 +23% F1），但对 Type E（动态加载/字符串映射）无效，说明检索覆盖的是静态结构，动态语义仍需微调解决
+3. 工程落地建议：**仅对 `implicit_level ≥ 3` 的模块启用完整 RAG+FT 策略**，约占文件总量 35%，可节省约 65% Token 消耗，F1 损失 < 3%
+
+**模型配置：**
+
+| 角色 | 模型 | 用途 |
+|------|------|------|
+| 评测基线 A | `GLM-5`（API） | 开源代码最强模型，作为上界参照 |
+| 评测基线 B | `GPT-4o`（API） | 所有人熟悉的锚点，便于结论校准 |
+| 评测基线 C | `Qwen2.5-Coder-7B`（未微调） | 微调前的对照基座 |
+| 微调目标 | `Qwen2.5-Coder-7B`（QLoRA） | 领域适配，单张 A100 可跑 |
+
+> 核心叙事：**"经过领域微调的 7B 模型，在窄域任务上能否逼近甚至超越 70B+ 通用大模型"** ——这是工业界真正关心的 ROI 问题。
 
 ---
 
-## 模块一：【LLM 代码分析瓶颈诊断】与基准构建
-**（严密对齐验收指标：评测用例质量、瓶颈识别准确性、数据支撑）**
+## 模块一：瓶颈诊断与评测基准构建
 
-### 1.1 评测基准构建 (Dataset Definition)
-* **评测项目**：`Celery` (选用原因：包含大量高难度隐式依赖、装饰器包装和动态 import，工业代表性极强)。
-* **用例规模与质量**：纯人工从真实源码与 Issue 中提炼 **$\ge$ 50 条**跨文件依赖调用链路，拒绝 AI 瞎编。
-* **难度分层与 Ground Truth**：
-    * **Easy (15条)**：显式直接跨文件 import。
-    * **Medium (20条)**：跨多层 `__init__.py` 的再导出链与浅层类继承。
-    * **Hard (15条)**：`@app.task` 装饰器隐式挂载、`importlib` 动态加载。
-    * **正确答案标准**：采用 FQN（Fully Qualified Name，完全限定名）精确匹配。
+### 1.1 评测基准设计
 
-### 1.2 共性瓶颈诊断框架 (Bottleneck Diagnosis)
-不泛泛而谈“上下文不足”，而是基于基线测试的 Bad Case 归纳出 5 类具体失效特征：
-1.  **Type A（长上下文截断丢失）**：超出窗口导致基础模块、上游定义或中间跳转节点被遗漏。
-2.  **Type B（隐式依赖断裂）**：遇到装饰器、注册器或动态注入时，LLM 编造不存在的内部调用（幻觉）。
-3.  **Type C（再导出链断裂）**：跨多层 `__init__.py` 再导出、别名转发或浅层继承时，链路在中间节点中断。
-4.  **Type D（跨文件命名空间混淆）**：同名函数、同名类或局部覆盖导致 LLM 张冠李戴。
-5.  **Type E（动态加载与字符串引用失配）**：`importlib`、配置字符串、延迟导入或自动发现机制触发时，LLM 无法把字符串入口映射回真实符号。
-* **数据支撑**：通过绘制这 5 类失效特征在 Easy/Medium/Hard 上的分布热力图，精准定位下一步优化的发力点。
+- **评测项目**：`Celery`（含大量装饰器包装、动态 import 和跨层 `__init__` 再导出，工业代表性极强）
+- **规模**：纯人工从真实源码标注 **≥ 50 条**，拒绝 AI 生成
+- **版本锁定**：绑定具体 commit hash，保证评测集与源码版本一一对应
 
-### 1.3 执行拆解（对应 AI Task）
-1.  **冻结版本与样本口径**：先锁定 `external/celery/` 对应提交号，再冻结 `eval_cases.json` 字段定义。
-    * 对应任务：`REPO-002`、`DOC-003`
-2.  **建立候选样本池**：优先从 `celery/__init__.py`、`celery/app/__init__.py`、`celery/app/base.py`、`celery/app/builtins.py`、`celery/loaders/*`、`celery/concurrency/__init__.py` 中抽取首批候选。
-    * 对应任务：`REPO-003`、`REPO-004`、`EVAL-001`
-3.  **完成首批 12 条样本**：先各做 4 条 Easy / 4 条 Medium / 4 条 Hard，用于跑通完整标注流程。
-    * 对应任务：`EVAL-002`、`EVAL-003`、`EVAL-004`、`EVAL-005`
-4.  **扩展到正式 50 条评测集**：按 15 / 20 / 15 的目标比例继续扩展，并做抽检与去歧义。
-    * 对应任务：`EVAL-006`、`EVAL-007`、`EVAL-008`、`EVAL-009`、`EVAL-010`
-5.  **运行 Baseline 并做瓶颈归因**：形成 bad case 清单，把错误样本映射到 Type A-E。
-    * 对应任务：`BASE-001` 至 `BASE-007`
+**难度分层：**
 
-### 1.4 阶段产物与验收
-* **必须产物**
-    * `data/eval_cases.json`
-    * `reports/bottleneck_diagnosis.md`
-    * 首批样本草稿与抽检记录
-* **验收标准**
-    * 样本总数不少于 50 条，且每条都能回溯到真实源码路径
-    * Easy / Medium / Hard 分布满足 15 / 20 / 15
-    * 每条样本只解决一个清晰问题，答案使用 FQN 精确标注
-    * bad case 归因必须有样本证据，不能只写抽象结论
-* **前置依赖**
-    * 已完成仓库快照绑定
-    * 已冻结样本 schema
-* **常见失败方式**
-    * 样本集中在显式 import，导致无法支撑中难度答辩
-    * Hard 样本只有结论，没有证据链
-    * `gold_fqns` 标的是中间跳板，不是最终目标
+| 难度 | 数量 | 特征描述 |
+|------|------|---------|
+| Easy | 15 条 | 显式直接跨文件 import |
+| Medium | 20 条 | 跨多层 `__init__.py` 再导出链、浅层类继承 |
+| Hard | 15 条 | `@app.task` 装饰器隐式挂载、`importlib` 动态加载 |
 
----
+**Ground Truth 标准**：FQN（Fully Qualified Name）精确匹配，例如 `celery.app.trace.build_tracer`
 
-## 模块二：【Prompt Engineering 系统优化】
-**（严密对齐验收指标：PE 优化系统性、效果量化、方案可复现性）**
+**每条用例数据结构：**
 
-将对 PE 的四个维度进行严格分离与逐层叠加优化，量化每一步的增益：
-
-### 2.1 四维度系统优化策略
-1.  **System Prompt 角色定义与格式约束**：定义为“资深 Python 静态分析专家”，强制要求输出为标准 JSON 列表（仅包含 FQN 路径），杜绝废话。
-2.  **Few-shot 示例库构建 ($\ge$ 20条)**：基于前面提炼的 5 类失效类型，人工编写 20+ 条高质量示例（覆盖再导出链、装饰器、动态加载和字符串映射的推演过程），构建动态 Few-shot 样本池。
-3.  **Chain-of-Thought (CoT) 推理引导**：设计分步推理模板：`1. 识别入口点 -> 2. 分析当前文件显式 import -> 3. 追踪装饰器/基类内部调用 -> 4. 组装完整路径`。
-4.  **输出后处理规则 (Post-processing)**：
-    * **过滤与去重**：编写 Python 脚本清洗 LLM 输出，去除重复项。
-    * **有效性兜底**：利用 AST 检查输出的路径格式是否合法。
-
-### 2.2 PE 独立效果量化 (PE Ablation)
-*实验设计：在基线模型上依次叠加上述四步，得出独立的 F1 提升数据。*
-* Baseline $\rightarrow$ + System Prompt (+X%) $\rightarrow$ + CoT (+Y%) $\rightarrow$ + Few-shot (+Z%) $\rightarrow$ + 后处理 (最终 PE 独立得分)。
-
-### 2.3 执行拆解（对应 AI Task）
-1.  **固定 System Prompt v1**：先收敛角色、任务边界和输出格式，只允许输出 JSON FQN 列表。
-    * 对应任务：`PE-001`
-2.  **固定 CoT 模板 v1**：把“入口识别 -> 显式 import -> 隐式依赖 -> 最终路径组装”写成统一模板。
-    * 对应任务：`PE-002`
-3.  **从 bad case 反推 few-shot 配比**：按照 Type A-E 和 Easy / Medium / Hard 的失败分布决定 few-shot 结构，不允许凭感觉拼样本。
-    * 对应任务：`PE-003`
-4.  **分层编写 few-shot 示例**：分别补齐 Easy / Medium / Hard 的 few-shot 库，Hard 重点覆盖 `shared_task`、`connect_on_app_finalize`、`symbol_by_name`、动态加载。
-    * 对应任务：`PE-004`、`PE-005`、`PE-006`
-5.  **制定后处理规则**：仅做 JSON 解析、FQN 去重、非法路径过滤，不做事实层面的修正。
-    * 对应任务：`PE-007`
-6.  **做逐步叠加实验**：必须按 Baseline -> +System -> +CoT -> +Few-shot -> +Post-processing 的顺序单变量推进。
-    * 对应任务：`PE-008`、`PE-009`
-
-### 2.4 阶段产物与验收
-* **必须产物**
-    * `pe/prompt_templates.py`
-    * `pe/post_processor.py`
-    * `reports/pe_optimization.md`
-    * Prompt 版本记录与 few-shot 样本池
-* **验收标准**
-    * 四个 PE 组件都有独立量化结果
-    * 能明确回答哪一步对 Hard 样本提升最大
-    * few-shot 至少 20 条，且覆盖主要 bad case 类型
-    * 后处理规则不会“改答案”，只做格式净化
-* **前置依赖**
-    * 已有 baseline 结果和 Type A-E bad case 分类
-* **常见失败方式**
-    * 把所有 PE 手段一次性叠上，无法做消融
-    * few-shot 偏向 Easy 样本，无法解决隐式依赖类错误
-    * 后处理偷偷修事实，导致结果不可解释
-
----
-
-## 模块三：【RAG 增强管线构建】
-**（严密对齐验收指标：Pipeline 完整度、检索精度 Recall@K/MRR、端到端效果）**
-
-### 3.1 跨文件 RAG Pipeline 设计
-1.  **代码片段分块 (Chunking)**：放弃暴力的文本切分，采用 `tree-sitter` 实现 **AST 代码级分块**，按函数/类/全局作用域精确切割。
-2.  **多路混合检索 (Hybrid Search)**：
-    * **向量检索**：对比 `CodeBERT` 与 `text-embedding-3-small`，选定 Embedding 模型。
-    * **关键词检索**：BM25（对变量名、类名精确匹配）。
-    * **图结构召回**：基于 `NetworkX` 解析静态 import 关系与继承树。
-3.  **融合策略 (Fusion)**：采用 **RRF (Reciprocal Rank Fusion)** 算法，对三路召回结果重排序 (k=60)。
-4.  **上下文窗口管理**：
-    * 针对 Top-1 直接依赖：塞入全量 AST 代码片段。
-    * 针对 Top-2~5 间接依赖：仅提取“函数签名 + Docstring”进行压缩，严格控制 Token 消耗。
-
-### 3.2 检索评测指标
-* 针对 RAG 模块自身，独立测算 **Recall@5** 和 **MRR (Mean Reciprocal Rank)**。
-
-### 3.3 执行拆解（对应 AI Task）
-1.  **定义 AST 分块规范**：明确 chunk 的边界、元数据、符号命名方式和行号范围。
-    * 对应任务：`RAG-001`
-2.  **分别设计三路召回**：向量检索、BM25、图结构召回分别设计，禁止把所有能力都堆到一个检索器上。
-    * 对应任务：`RAG-002`、`RAG-003`、`RAG-004`
-3.  **设计融合与窗口管理**：定义 RRF 参数、Top-K 逻辑、上下文压缩规则和 token 预算。
-    * 对应任务：`RAG-005`
-4.  **制定检索评测口径**：先独立定义 Recall@5 和 MRR，再做端到端实验。
-    * 对应任务：`RAG-006`、`RAG-007`
-5.  **做端到端 RAG 实验**：在 PE 稳定版本上叠加 RAG，比较单路与融合检索的增益。
-    * 对应任务：`RAG-008`、`RAG-009`
-
-### 3.4 阶段产物与验收
-* **必须产物**
-    * `rag/ast_chunker.py`
-    * `rag/rrf_retriever.py`
-    * 检索实验日志
-    * `reports/ablation_study.md` 中的 RAG 指标部分
-* **验收标准**
-    * Recall@5、MRR 都可独立汇报
-    * 能解释三路召回各自覆盖了什么问题
-    * token 成本被显式记录，而不是只看效果
-* **前置依赖**
-    * 已有正式评测集
-    * PE 有稳定可对比版本
-* **常见失败方式**
-    * 只做向量检索，导致 alias / 字符串映射场景覆盖不足
-    * 不单测检索质量，导致端到端结果无法解释
-
----
-
-## 模块四：【模型微调实验】
-**（严密对齐验收指标：微调数据集质量 $\ge$ 500条、防止过拟合监控、效果评估）**
-
-### 4.1 数据集构建与防幻觉清洗（核心壁垒）
-1.  **自动化提取与清洗**：利用 LLM 辅助生成 600+ 条依赖分析 QA 数据，**引入 `jedi` / `ast` 自动验证管线**。脚本将验证 LLM 生成的依赖路径在物理文件中是否真实连通，直接剔除断链的脏数据，最终沉淀 **$\ge$ 500 条**高保真微调集。
-2.  **数据配比**：70% 通用跨文件推演 + 30% 针对装饰器/动态依赖的专项“Hard 样本”。
-
-### 4.2 LoRA 微调配置与训练监控
-* **基座选型**：`Qwen3-Coder-Next` (主) / `Qwen2.5-Coder-7B` (辅)。
-* **参数设置**：`r=16, lora_alpha=32`，覆盖 Q, K, V, O 投影层。
-* **过拟合监控**：划分 10% 验证集，在训练脚本中记录 `train_loss` 与 `val_loss` 曲线，设置 Early Stopping（早停策略）防止模型死记硬背 Celery 的特定代码。
-
-### 4.3 执行拆解（对应 AI Task）
-1.  **定义候选数据生成策略**：先规定来源范围、题型结构和难度配比，再生成候选数据。
-    * 对应任务：`FT-001`
-2.  **分批生成候选微调数据**：先出一批样本做清洗验证，再决定是否扩量，避免一次性生成大量脏数据。
-    * 对应任务：`FT-002`
-3.  **设计自动校验规则**：至少覆盖字段完整性、FQN 格式、路径可连通性、Hard 样本比例。
-    * 对应任务：`FT-003`
-4.  **清洗并扩展到 500+**：先清洗首批，再扩展到正式规模，保留 Hard 样本占比。
-    * 对应任务：`FT-004`、`FT-005`、`FT-006`
-5.  **制定微调配置并运行实验**：明确基座、LoRA 参数、验证集划分和早停策略。
-    * 对应任务：`FT-007`、`FT-008`、`FT-009`
-
-### 4.4 阶段产物与验收
-* **必须产物**
-    * `data/finetune_dataset.jsonl`
-    * `finetune/data_guard.py`
-    * `finetune/train_qlora.py`
-    * 训练与验证日志
-* **验收标准**
-    * 数据量不少于 500 条，并通过自动校验
-    * Hard 样本占比不少于 30%
-    * 有 `train_loss` / `val_loss` 曲线和 Early Stopping 记录
-    * Fine-tune only 能进入消融矩阵比较
-* **前置依赖**
-    * 已有稳定评测集与 bad case 分类
-* **常见失败方式**
-    * 只满足数量，不满足质量
-    * 训练集过度偏向简单样本
-    * 训练记录不完整，无法判断是否过拟合
-
----
-
-## 模块五：【完整消融实验与策略选择】
-**（严密对齐验收指标：消融矩阵严谨性、最优策略及边界条件识别）**
-
-### 5.1 全景消融实验矩阵
-所有实验将产出统一的指标：`Easy F1` | `Medium F1` | `Hard F1` | `Avg F1` | `单次 Token 消耗 (ROI)`。
-
-| 实验组别 | 核心验证目的 |
-| :--- | :--- |
-| **1. Baseline** | 评估原生模型零样本的跨文件理解上限。 |
-| **2. PE only** | 验证纯粹的提示词工程在代码图谱推演中的极限。 |
-| **3. RAG only** | 验证外部知识注入的增益（含三路 RRF 的独立增益）。 |
-| **4. Fine-tune only** | 验证将领域知识固化至权重的效果及格式遵循能力。 |
-| **5. PE + RAG** | 工业界最常用的免训练轻量级组合。 |
-| **6. PE + Fine-tune** | 验证在无外部检索下，通过微调解锁内化知识。 |
-| **7. All (最优解)** | PE + RAG + FT，测试攻克 Type B/C/E 这类隐式失效的最终天花板。 |
-
-### 5.2 策略边界与落地结论 (最优策略识别)
-在报告末尾，将基于数据产出明确的工程落地指导（示例结论）：
-* **低深度关联 (深度 $\le$ 2)**：推荐仅使用 **PE + RAG**，投入产出比最高，F1 可达 85% 以上。
-* **高隐式关联 (深度 $\ge$ 3，动态注入 / 字符串入口 / 自动发现)**：仅靠 RAG 容易召回失败，**必须叠加 Fine-tune** 才能让模型具备动态链路推演能力，此时 PE+RAG+FT 是唯一解。
-
-### 5.3 执行拆解（对应 AI Task）
-1.  **冻结实验矩阵和指标口径**：先固定七组实验和统计字段，不允许边跑边改口径。
-    * 对应任务：`ABL-001`
-2.  **完成单项实验**：Baseline / PE only / RAG only / Fine-tune only 先跑完。
-    * 对应任务：`ABL-002`
-3.  **完成组合实验**：PE + RAG、PE + Fine-tune、All 三组实验独立跑。
-    * 对应任务：`ABL-003`、`ABL-004`、`ABL-005`
-4.  **统一汇总与图表生成**：把所有指标收敛到同一张总表和图表数据中。
-    * 对应任务：`ABL-006`
-5.  **写结论并提炼边界条件**：区分“分数最高”“ROI 最优”“高隐式依赖场景唯一解”三种不同维度。
-    * 对应任务：`ABL-007`、`ABL-008`、`ABL-009`
-
-### 5.4 阶段产物与验收
-* **必须产物**
-    * `reports/ablation_study.md`
-    * 七组实验结果总表
-    * 图表素材与答辩提纲
-* **验收标准**
-    * 七组实验结果齐备且口径一致
-    * 能明确回答最优策略、适用边界和 ROI
-    * 最终结论能区分低深度关联和高隐式关联场景
-* **前置依赖**
-    * PE、RAG、Fine-tune 都已有可复用独立结果
-* **常见失败方式**
-    * 变量不干净，导致消融结论不可信
-    * 只报总分最高项，不谈成本和边界
-
----
-
-## 模块六：交付物清单与仓库结构 (Deliverables)
-保证所有实验成果对阅卷人绝对透明、100% 可复现。
-
-### 6.1 GitHub / GitLab 仓库结构
-```text
-celery-dep-analysis/
-├── README.md                    # 项目复现指南、实验结论与最优策略边界说明
-├── data/
-│   ├── eval_cases.json          # 验收项：50条人工构建的带标注评测集
-│   └── finetune_dataset.jsonl   # 验收项：500条经 jedi 验证的微调数据集
-├── evaluation/
-│   ├── baseline.py              # 基础评测脚本
-│   └── metrics.py               # 包含 F1, Recall@K, MRR 的计算逻辑
-├── pe/
-│   ├── prompt_templates.py      # 验收项：系统Prompt, CoT与20+ Few-shot库
-│   └── post_processor.py        # 结果过滤与后处理规则
-├── rag/
-│   ├── ast_chunker.py           # 替换传统文本切割的 AST 分块模块
-│   └── rrf_retriever.py         # 向量+BM25+AST混合检索与窗口管理
-├── finetune/
-│   ├── data_guard.py            # 核心亮点：基于AST的脏数据阻断脚本
-│   └── train_qlora.py           # 带有 early_stopping 的训练脚本
-└── reports/
-    ├── bottleneck_diagnosis.md  # 验收项：瓶颈诊断与 Bad Case 分析报告
-    ├── pe_optimization.md       # 验收项：PE 各项增益独立量化报告
-    └── ablation_study.md        # 验收项：完整消融实验矩阵与雷达图/柱状图
+```json
+{
+  "id": "celery_hard_021",
+  "question": "分析 celery.app.task.Task.__call__ 的完整依赖链",
+  "source_file": "celery/app/task.py",
+  "source_commit": "a1b2c3d",
+  "ground_truth": {
+    "direct_deps": ["celery.app.trace.build_tracer"],
+    "indirect_deps": ["celery.utils.functional.maybe_list"],
+    "implicit_deps": ["celery.app.builtins.add_backend_cleanup_task"]
+  },
+  "difficulty": "hard",
+  "failure_type": "Type B",
+  "implicit_level": 4
+}
 ```
 
-### 6.2 最终答辩执行建议
-1.  **一键验证基建**：提供 `Makefile` 支持一键执行 `make eval-baseline` 和 `make eval-all`。
-2.  **可视化展现**：报告中穿插 `matplotlib` 生成的热力图（展示瓶颈）和对比雷达图（展示消融结果），用数据说话，完美契合腾讯考核要求。
+### 1.2 共性瓶颈诊断框架（5 类失效）
 
-### 6.3 文档化补充要求
-1.  **Repo 来源记录**：明确记录外部分析对象仓库地址、克隆时间、分支或提交号，保证评测集与源码版本绑定。
-2.  **数据定义文档**：单独维护评测集字段定义、微调集字段定义、命名规范与抽样原则，避免后期多人协作时口径漂移。
-3.  **实验日志模板**：每次实验记录模型版本、Prompt 版本、检索配置、样本范围、指标结果与异常样本，确保报告可追溯。
+基于基线测试的 Bad Case 归纳，**不写"上下文不足"这类废话**，精确到代码模式：
 
-### 6.4 AI 协作执行入口
-1.  **先看阶段手册**：使用 `docs/detailed_stage_playbook.md` 确认当前处于哪个阶段。
-2.  **再看任务拆解**：使用 `docs/ai_task_breakdown.md` 选择当前要执行的 Task ID。
-3.  **按任务卡派发**：使用 `docs/ai_task_cards.md` 约束 AI 的输入、输出和验收标准。
-4.  **按批次发任务**：使用 `docs/ai_work_batches.md` 决定哪些任务可以并行，哪些必须人工拍板。
-5.  **直接用 Prompt 模板**：使用 `docs/ai_prompt_templates.md` 把单个任务发给 AI，降低提示词组织成本。
+| 类型 | 失效特征 | Celery 典型案例 |
+|------|---------|----------------|
+| **Type A** | 长上下文截断丢失 | 超出窗口导致上游定义节点被遗漏 |
+| **Type B** | 隐式依赖断裂（幻觉） | `@app.task` 装饰器注册时 LLM 编造不存在的内部调用 |
+| **Type C** | 再导出链断裂 | 跨多层 `__init__.py` 别名转发，链路在中间节点中断 |
+| **Type D** | 跨文件命名空间混淆 | 同名函数/类导致 LLM 张冠李戴 |
+| **Type E** | 动态加载与字符串引用失配 | `importlib`/配置字符串，LLM 无法把字符串入口映射回真实符号 |
+
+**诊断产物**：绘制 5 类失效在 Easy/Medium/Hard 上的**分布热力图**，所有结论必须有具体 Bad Case 样本佐证。
+
+### 1.3 重点标注文件
+
+优先从以下文件抽取候选样本：
+- `celery/__init__.py`
+- `celery/app/__init__.py` / `celery/app/base.py` / `celery/app/builtins.py`
+- `celery/loaders/*`
+- `celery/concurrency/__init__.py`
+
+### 1.4 阶段产物与验收
+
+**产物：**
+- `data/eval_cases.json`
+- `reports/bottleneck_diagnosis.md`（含热力图 + Bad Case 证据链）
+
+**验收标准：**
+- ≥ 50 条，每条可回溯到真实源码路径
+- 难度分布 15 / 20 / 15
+- Bad Case 归因必须有样本证据，不能只写抽象结论
+- Hard 样本有完整推理证据链，不只有结论
+
+---
+
+## 模块二：Prompt Engineering 系统优化
+
+### 2.1 四维度优化策略
+
+**① System Prompt**
+
+```
+角色：资深 Python 静态分析专家，专注跨文件依赖图分析
+任务约束：
+  1. 严格区分直接依赖 / 间接依赖 / 隐式依赖三级
+  2. 必须追踪 __init__.py 的完整再导出链
+  3. 对装饰器函数，必须递归分析装饰器本身的依赖
+  4. 搜索 importlib / __import__ 等动态加载模式
+  5. 输出格式：严格 JSON，含 direct_deps / indirect_deps / implicit_deps 三字段
+  6. 禁止输出任何解释性文字，只输出 JSON
+```
+
+**② CoT 推理引导模板**
+
+```
+Step 1: 定位入口函数，识别其所在文件
+Step 2: 枚举当前文件所有显式 import 语句
+Step 3: 检查函数上的装饰器，递归分析装饰器依赖（Type B 专项）
+Step 4: 搜索 __init__.py 再导出链，追踪别名（Type C 专项）
+Step 5: 搜索 importlib / symbol_by_name 等动态加载（Type E 专项）
+Step 6: 检查同名函数/类的命名空间，避免混淆（Type D 专项）
+Step 7: 按 direct / indirect / implicit 分类汇总输出
+```
+
+**③ Few-shot 示例库（≥ 20 条）**
+
+按失效类型配比，不允许偏向 Easy：
+
+| 覆盖类型 | 数量 | 重点内容 |
+|---------|------|---------|
+| Type B 装饰器 | 5 条 | `@app.task`、`@shared_task`、`connect_on_app_finalize` |
+| Type C 再导出 | 5 条 | `__init__.py` 多层转发、别名 |
+| Type D 命名空间 | 4 条 | 同名函数、局部覆盖 |
+| Type E 动态加载 | 4 条 | `symbol_by_name`、`importlib.import_module`、配置字符串 |
+| Type A 长上下文 | 2 条 | 超长链路的截断补偿策略 |
+
+**④ 输出后处理规则**
+
+- JSON 解析 + FQN 格式校验（正则：`^[a-zA-Z_][a-zA-Z0-9_.]*$`）
+- 去重（同一 FQN 多次出现）
+- 非法路径过滤（`jedi` 验证路径在源码中可连通）
+- **严禁修改事实内容，只做格式净化**
+
+### 2.2 PE 独立效果量化
+
+**实验顺序（严格单变量）：**
+
+```
+Baseline → +System Prompt → +CoT → +Few-shot → +后处理
+```
+
+每步独立记录 Easy / Medium / Hard / Avg F1，不允许跳步或合并。
+
+### 2.3 阶段产物与验收
+
+**产物：**
+- `pe/prompt_templates.py`（含 System Prompt、CoT 模板、20+ few-shot 库）
+- `pe/post_processor.py`
+- `reports/pe_optimization.md`（含四维度独立增益表）
+
+**验收标准：**
+- 四个 PE 组件均有独立量化数据
+- 能明确回答哪一步对 Hard 样本提升最大
+- 后处理不修改事实，有规则说明文档
+
+---
+
+## 模块三：RAG 增强管线构建
+
+### 3.1 Pipeline 架构
+
+```
+代码解析层
+    └── tree-sitter AST 分块
+        按函数 / 类 / 全局作用域精确切割（非暴力 512 字符硬切）
+        每个 chunk 保留：函数签名 + import 上下文 + 行号元数据
+
+索引层（三路并行）
+    ├── 向量索引：对比 CodeBERT vs text-embedding-3-small（Recall@5 / MRR 量化）
+    ├── BM25 索引：函数名 + 类名 + 模块名关键词精确匹配
+    └── 轻量级图索引：tree-sitter 解析显式 import + 类继承树
+                      NetworkX 构图 → BFS 遍历 Top-K=10
+                      ⚠️ 仅覆盖静态引用，动态依赖由 BM25 兜底
+                      （受 Python 动态特性限制，在报告中诚实说明）
+
+融合层
+    └── RRF(k=60) 三路合并
+        参数消融：k = 30 / 60 / 120 对比
+
+上下文管理层
+    ├── Top-1 直接依赖：全量代码片段
+    ├── Top-2~5 间接依赖：函数签名 + Docstring（压缩）
+    └── Token 超限时：摘要压缩，记录每次调用 token 消耗
+```
+
+### 3.2 RAG 内部消融实验
+
+| 检索策略 | Recall@5 | MRR | 备注 |
+|---------|---------|-----|------|
+| 向量检索 only | - | - | 基准 |
+| BM25 only | - | - | 函数名精确匹配场景 |
+| 图索引 only | - | - | 静态依赖覆盖范围 |
+| 向量 + BM25 RRF | - | - | 双路融合 |
+| **三路 RRF（本方案）** | - | - | 预期最优 |
+| Text Chunking vs AST Chunking | - | - | 分块策略对比 |
+
+### 3.3 检索-生成解耦分析（原创框架）
+
+统计四象限分布，重点分析 Case B：
+
+```
+检索✓ + 生成✓ → Case A：理想状态
+检索✓ + 生成✗ → Case B：融合策略瓶颈 ← 重点深挖
+检索✗ + 生成✓ → Case C：模型参数补偿（RAG 是否必要？）
+检索✗ + 生成✗ → Case D：双重失效，分析根因
+```
+
+Case B 的发现直接指导上下文融合策略优化，Case C 给出 RAG 的适用边界。
+
+### 3.4 阶段产物与验收
+
+**产物：**
+- `rag/ast_chunker.py`
+- `rag/rrf_retriever.py`（含三路索引 + RRF 融合 + 上下文管理）
+- 检索实验日志（Recall@5 / MRR 独立可汇报）
+
+**验收标准：**
+- 三路召回各自能解释覆盖了什么失效类型
+- Token 消耗被显式记录，体现 ROI 意识
+- 能独立汇报检索质量，不只看端到端分数
+
+---
+
+## 模块四：模型微调实验
+
+### 4.1 模型选型说明
+
+**微调目标：`Qwen2.5-Coder-7B-Instruct`**
+
+选择理由：
+- 代码专项预训练，代码分析任务比同尺寸通用模型高约 12%
+- Instruct 变体，微调起点已对齐指令格式
+- QLoRA 4-bit + gradient checkpointing，单张 A100 24GB 可跑
+- Fallback：若显存不足，降级到 `Qwen2.5-Coder-3B`，在报告中写明"3B 微调后 F1=X，与 7B 基线差距仅 Y%，单位显存收益更高"——本身是有价值的发现
+
+**与 GLM-5 的对比叙事：**
+> "经过领域微调的 Qwen2.5-Coder-7B，在跨文件依赖分析任务上 F1 达到 X，与 GLM-5（未微调）的 Y 相比，差距从基线的 Z% 收窄到 W%，而推理成本降低 90%"
+
+### 4.2 微调数据集构建（防幻觉管线）
+
+**构建策略（500 条目标）：**
+
+| 来源 | 数量 | 方式 |
+|------|------|------|
+| Celery 源码自动提取 | 200 条 | AST 解析 + 脚本生成候选 QA |
+| 基线模型错误案例纠正 | 150 条 | 直接从 Day 2 Bad Case 转化 |
+| 5 类失效类型专项 | 100 条 | 针对 Type B/C/D/E 人工构造 |
+| 跨项目泛化样本 | 50 条 | 防止过拟合到 Celery 特定代码 |
+
+**防幻觉验证流水线（核心壁垒）：**
+
+```python
+# data_guard.py 核心逻辑
+def validate_sample(sample, repo_path):
+    """
+    验证 LLM 生成的依赖路径在物理文件中真实可连通
+    """
+    for fqn in sample["gold_fqns"]:
+        # 1. FQN 格式校验
+        if not is_valid_fqn(fqn):
+            return False, "invalid_fqn_format"
+        # 2. jedi 静态解析验证路径存在
+        if not jedi_verify(fqn, repo_path):
+            return False, "path_not_connectable"
+        # 3. AST 交叉验证
+        if not ast_cross_verify(fqn, repo_path):
+            return False, "ast_mismatch"
+    return True, "ok"
+
+# 预计剔除 15-20% 脏数据，在报告中写明清洗规则
+```
+
+**数据格式：**
+
+```json
+{
+  "instruction": "分析以下 Python 函数的完整跨文件依赖链，区分直接/间接/隐式依赖",
+  "input": "# celery/app/task.py\ndef __call__(self, *args, **kwargs):\n    ...",
+  "output": "推理过程：\nStep 1: 发现装饰器模式 @app.task...\nStep 3: 追踪装饰器依赖...\n最终依赖：\n{\"direct_deps\": [...], \"implicit_deps\": [...]}",
+  "failure_type": "Type B",
+  "difficulty": "hard",
+  "verified": true,
+  "verify_method": "jedi+ast"
+}
+```
+
+### 4.3 训练配置
+
+```python
+# train_qlora.py
+lora_config = LoraConfig(
+    r=16,
+    lora_alpha=32,
+    target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
+    lora_dropout=0.05,
+    task_type="CAUSAL_LM"
+)
+
+training_args = TrainingArguments(
+    max_seq_length=2048,          # 控制显存
+    per_device_train_batch_size=2,
+    gradient_accumulation_steps=8,
+    gradient_checkpointing=True,   # 防 OOM
+    load_in_4bit=True,             # QLoRA
+    evaluation_strategy="steps",
+    eval_steps=50,
+    save_strategy="best",          # Early Stopping
+    metric_for_best_model="eval_f1"
+)
+```
+
+**过拟合监控：**
+- 划分 10% 验证集（held-out，不参与训练）
+- 记录 `train_loss` / `val_loss` 曲线，每 50 步评测一次
+- Early Stopping patience=3，防止死记硬背 Celery 特定代码
+
+### 4.4 阶段产物与验收
+
+**产物：**
+- `data/finetune_dataset_500.jsonl`
+- `finetune/data_guard.py`（验证流水线）
+- `finetune/train_qlora.py`（含 Early Stopping）
+- 训练日志（loss 曲线截图）
+
+**验收标准：**
+- ≥ 500 条，全部通过 `data_guard.py` 校验
+- Hard 样本占比 ≥ 30%
+- 有完整 train/val loss 曲线，可判断是否过拟合
+- Fine-tune only 结果可进入消融矩阵
+
+---
+
+## 模块五：完整消融实验与策略选择
+
+### 5.1 消融实验矩阵
+
+统一指标：`Easy F1` | `Medium F1` | `Hard F1` | `Avg F1` | `单次 Token 消耗`
+
+| 实验组 | Easy F1 | Medium F1 | Hard F1 | Avg F1 | Token 消耗 | 核心验证目的 |
+|--------|---------|-----------|---------|--------|-----------|------------|
+| Baseline (GPT-4o) | - | - | - | - | 基准 | 商业模型零样本上限 |
+| Baseline (GLM-5) | - | - | - | - | 基准 | 开源最强模型零样本上限 |
+| Baseline (Qwen2.5-Coder-7B) | - | - | - | - | 基准 | 微调基座未优化水平 |
+| PE only | - | - | - | - | +40% | 纯提示词工程极限 |
+| RAG only（向量） | - | - | - | - | +120% | 单路检索基准 |
+| RAG only（三路 RRF） | - | - | - | - | +140% | 混合检索增益 |
+| FT only | - | - | - | - | 0 | 领域知识固化效果 |
+| PE + RAG | - | - | - | - | +150% | 免训练轻量级最优组合 |
+| PE + FT | - | - | - | - | +40% | 无检索的内化知识组合 |
+| **PE + RAG + FT** | - | - | - | - | +150% | 三者协同增益验证 |
+
+> 表中数字为基于魔搭项目经验的预估，最终以实验结果为准。
+
+### 5.2 策略边界与落地结论
+
+基于实验数据产出工程落地指导（以下为预期结论形式，以实际数据为准）：
+
+**依赖深度 ≤ 2（Easy/Medium 场景）：**
+- 推荐 **PE + RAG**，F1 可达较高水平，Token 增量可控
+- FT 额外增益 < 2%，训练成本投入产出比低，不推荐
+
+**依赖深度 ≥ 3（Hard 场景，动态注入/字符串映射）：**
+- RAG 的图索引在 Type E 场景召回失败，单独 RAG 不足
+- **必须叠加 FT** 才能让模型具备动态链路推演能力
+- PE + RAG + FT 是 Type E 场景唯一有效策略
+
+**最终工程建议：**
+> 仅对 `implicit_level ≥ 3` 的模块（约占 35%）启用完整 RAG+FT 策略，其余模块 PE+RAG 即可，节省约 65% 整体 Token 消耗，F1 损失 < 3%
+
+### 5.3 Bad Case 专栏（报告必须包含）
+
+挑选 2~3 个最典型的错误案例，格式为：
+1. **原始问题**：具体的依赖分析题目
+2. **Baseline 错误答案**：模型给出了什么（含幻觉内容）
+3. **失效归因**：属于 Type A-E 中的哪一类，为什么会失败
+4. **优化后答案**：RAG / FT 如何纠正
+5. **纠正机理**：为什么这个优化手段对这类失效有效
+
+### 5.4 阶段产物与验收
+
+**产物：**
+- `reports/ablation_study.md`（含完整矩阵 + 雷达图 + 柱状图 + Bad Case 专栏）
+- `experiments/ablation_full_matrix.ipynb`（可复现的图表生成代码）
+
+**验收标准：**
+- 10 组实验结果齐备且口径一致（含三个 Baseline）
+- 能明确区分"分数最高""ROI 最优""高隐式依赖唯一解"三个维度
+- Bad Case 专栏有具体样本，不只是抽象描述
+
+---
+
+## 模块六：工程化交付
+
+### 6.1 仓库结构
+
+```
+celery-dep-analysis/
+├── README.md                          # Quick Start + 核心结论 + 复现步骤
+├── Makefile                           # make eval-baseline / make eval-all / make train
+├── Dockerfile
+│
+├── data/
+│   ├── eval_cases_celery.json         # ✅ 50 条人工标注评测集（含 FQN + 失效类型标签）
+│   ├── fewshot_examples_20.json       # ✅ 20 条 few-shot 示例库
+│   └── finetune_dataset_500.jsonl     # ✅ 500 条经 jedi+ast 验证的微调数据集
+│
+├── evaluation/
+│   ├── baseline_eval.py               # 多模型并行基线评测
+│   └── metrics_fqn.py                 # F1 / Recall@K / MRR / 幻觉率计算
+│
+├── pe/
+│   ├── prompt_templates_v2.py         # ✅ System Prompt + CoT + Few-shot 库
+│   └── post_processor.py              # FQN 格式校验 + 去重 + 过滤
+│
+├── rag/
+│   ├── ast_chunker.py                 # tree-sitter AST 代码级分块
+│   ├── indexer_three_way.py           # 三路索引构建（向量 + BM25 + 图）
+│   ├── retriever_rrf.py               # RRF(k=60) 融合检索
+│   └── context_manager.py            # 上下文分层压缩 + Token 计数
+│
+├── finetune/
+│   ├── data_guard.py                  # ✅ jedi+ast 防幻觉验证流水线
+│   └── train_qlora.py                 # QLoRA 训练 + Early Stopping
+│
+├── experiments/
+│   └── ablation_full_matrix.ipynb     # ✅ 完整消融实验（含雷达图/柱状图/热力图）
+│
+├── results/
+│   └── *.json                         # 所有实验原始结果（可追溯）
+│
+└── reports/
+    ├── bottleneck_diagnosis.md        # ✅ 瓶颈诊断 + 热力图 + Bad Case 证据链
+    ├── pe_optimization.md             # ✅ PE 四维度独立增益报告
+    └── ablation_study.md              # ✅ 消融矩阵 + 策略边界 + 工程建议
+```
+
+### 6.2 Makefile
+
+```makefile
+eval-baseline:
+    python evaluation/baseline_eval.py --models gpt-4o glm-5 qwen2.5-coder-7b
+
+eval-pe:
+    python evaluation/baseline_eval.py --model gpt-4o --pe-ablation
+
+eval-rag:
+    python evaluation/baseline_eval.py --model gpt-4o --rag --rag-ablation
+
+eval-ft:
+    python evaluation/baseline_eval.py --model qwen2.5-coder-7b-ft
+
+eval-all:
+    python experiments/ablation_full_matrix.py --all
+
+train:
+    python finetune/train_qlora.py --config configs/qlora_7b.yaml
+
+report:
+    jupyter nbconvert --execute experiments/ablation_full_matrix.ipynb
+```
+
+### 6.3 README 结构
+
+```markdown
+# Celery Cross-file Dependency Analysis
+
+## 📊 Core Findings（三条带数字的核心结论，放最显眼位置）
+...
+
+## 🏗️ Architecture
+（RAG Pipeline 架构图）
+
+## 📈 Results
+（消融矩阵总表）
+
+## ⚡ Quick Start
+git clone ...
+pip install -r requirements.txt
+make eval-all
+
+## 📁 Data
+...
+
+## 🔬 Reproduce
+（每个实验的复现命令，10 分钟内可验证）
+```
+
+### 6.4 实验日志规范
+
+每次实验记录：
+
+```json
+{
+  "exp_id": "RAG-003",
+  "timestamp": "2025-xx-xx",
+  "model": "gpt-4o",
+  "prompt_version": "v2.1",
+  "rag_config": {"chunker": "ast", "retriever": "rrf_k60"},
+  "eval_scope": "all_50_cases",
+  "results": {"easy_f1": 0.79, "medium_f1": 0.71, "hard_f1": 0.52, "avg_f1": 0.67},
+  "token_cost": {"avg_input": 3240, "avg_output": 180},
+  "anomalies": ["case_id_031 检索结果为空，降级到 BM25 兜底"]
+}
+```
+
+---
+
+## 七天执行计划
+
+| 天 | 核心任务 | 不可压缩的事 | 产物 |
+|----|---------|------------|------|
+| **Day 1** ★ | 人工标注 50 条评测集 | 读 Celery 源码，自己设计陷阱用例 | `eval_cases_celery.json` |
+| **Day 2** | 三模型基线评测 + 瓶颈归因 | 手动分析 Bad Case，映射到 Type A-E | 失效热力图 + bad case 清单 |
+| **Day 3** | PE 四维度逐步优化 | 严格单变量，每步独立记录 | `prompt_templates_v2.py` + 增益表 |
+| **Day 4** ‖ | 500 条数据集构建 + 启动训练 | `data_guard.py` 验证后再批量生成 | `finetune_dataset_500.jsonl` |
+| **Day 5** ‖ | RAG Pipeline 构建 | GPU 跑训练，并行写 RAG | `ast_chunker.py` + `rrf_retriever.py` |
+| **Day 6** | 完整消融矩阵 + 可视化 | 10 组实验口径统一，画雷达图 | `ablation_full_matrix.ipynb` |
+| **Day 7** | 工程化收尾 + 报告润色 | README Executive Summary 放最前面 | 全部产物打包 |
+
+> ★ Day 1 是最关键的一天，护城河在这里。‖ Day 4 启动训练后 GPU 并行运行，不浪费等待时间。
+> **风险 Fallback**：若 7B OOM → 降级 3B；若训练超时 → LoRA rank 从 16 降到 8。
