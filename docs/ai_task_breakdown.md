@@ -206,7 +206,7 @@
 | PE-020 | 补齐 B / C 尾项 few-shot | done | `docs/fewshot_examples.md`、`docs/drafts/fewshot_gap_plan_round1.md`、bad case 清单 | `docs/drafts/fewshot_bc_tail_round1.md`、`docs/drafts/review_round12_bc_tail.md`、`docs/drafts/bc_tail_review_notes.md`、`docs/drafts/review_round13_bc_arbitration.md`、`docs/drafts/review_round14_strict_challenge.md` | `B05 / C04 / C05` 完成仲裁并已回填正式文档 |
 | PE-021 | 将 20 条正式 few-shot 写入 prompt 模板 | ready | `docs/fewshot_examples.md` | `pe/prompt_templates_v2.py` | 20 条样本在模板中可直接消费，且不混入 draft-only 条目 |
 | PE-022 | 导出正式 few-shot JSON 工件 | ready | `docs/fewshot_examples.md` | `data/fewshot_examples_20.json` | 20 条顺序、字段、ground truth 结构与正式文档完全一致 |
-| PM-001 | 更新阶段进度并推送远端 | doing | 当前进展与审稿结论 | 进度文档 + git push | 文档状态与仓库实际一致；待统一 commit / push |
+| PM-001 | 更新阶段进度并推送远端 | done | 当前进展与审稿结论 | 进度文档 + git push | 文档状态与仓库实际一致；本地与远端已对齐 |
 
 ## 当前批次的质量门禁
 
