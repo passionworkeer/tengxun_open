@@ -1,2 +1,158 @@
-[]
-
+[
+  {
+    "id": "easy_001",
+    "difficulty": "easy",
+    "category": "re_export",
+    "question": "Which real class does `celery.Celery` resolve to in the top-level lazy API?",
+    "entry_file": "celery/__init__.py",
+    "entry_symbol": "celery.Celery",
+    "gold_fqns": [
+      "celery.app.base.Celery"
+    ],
+    "reasoning_hint": "`celery.__init__` re-exports `Celery` from `celery.app`, and `celery.app` imports it from `.base`.",
+    "source_note": "Bound to `external/celery/celery/__init__.py` and `external/celery/celery/app/__init__.py`."
+  },
+  {
+    "id": "easy_002",
+    "difficulty": "easy",
+    "category": "re_export",
+    "question": "Which real function does the top-level `celery.shared_task` symbol resolve to?",
+    "entry_file": "celery/__init__.py",
+    "entry_symbol": "celery.shared_task",
+    "gold_fqns": [
+      "celery.app.shared_task"
+    ],
+    "reasoning_hint": "`celery.__init__` forwards `shared_task` to the `celery.app` module where it is defined directly.",
+    "source_note": "Bound to `external/celery/celery/__init__.py` and `external/celery/celery/app/__init__.py`."
+  },
+  {
+    "id": "easy_003",
+    "difficulty": "easy",
+    "category": "loader_alias",
+    "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('default')` resolve to?",
+    "entry_file": "celery/loaders/__init__.py",
+    "entry_symbol": "celery.loaders.get_loader_cls",
+    "gold_fqns": [
+      "celery.loaders.default.Loader"
+    ],
+    "reasoning_hint": "`LOADER_ALIASES['default']` points to `celery.loaders.default:Loader`.",
+    "source_note": "Bound to `external/celery/celery/loaders/__init__.py` and `external/celery/celery/loaders/default.py`."
+  },
+  {
+    "id": "easy_004",
+    "difficulty": "easy",
+    "category": "alias_resolution",
+    "question": "What pool implementation does `celery.concurrency.get_implementation('processes')` resolve to?",
+    "entry_file": "celery/concurrency/__init__.py",
+    "entry_symbol": "celery.concurrency.get_implementation",
+    "gold_fqns": [
+      "celery.concurrency.prefork.TaskPool"
+    ],
+    "reasoning_hint": "`ALIASES['processes']` is a compatibility alias for `celery.concurrency.prefork:TaskPool`.",
+    "source_note": "Bound to `external/celery/celery/concurrency/__init__.py` and `external/celery/celery/concurrency/prefork.py`."
+  },
+  {
+    "id": "medium_001",
+    "difficulty": "medium",
+    "category": "backend_alias",
+    "question": "Which backend class does `celery.app.backends.by_name('redis')` resolve to?",
+    "entry_file": "celery/app/backends.py",
+    "entry_symbol": "celery.app.backends.by_name",
+    "gold_fqns": [
+      "celery.backends.redis.RedisBackend"
+    ],
+    "reasoning_hint": "`BACKEND_ALIASES['redis']` maps to `celery.backends.redis:RedisBackend` before `symbol_by_name` resolves it.",
+    "source_note": "Bound to `external/celery/celery/app/backends.py` and `external/celery/celery/backends/redis.py`."
+  },
+  {
+    "id": "medium_002",
+    "difficulty": "medium",
+    "category": "loader_alias",
+    "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('app')` resolve to?",
+    "entry_file": "celery/loaders/__init__.py",
+    "entry_symbol": "celery.loaders.get_loader_cls",
+    "gold_fqns": [
+      "celery.loaders.app.AppLoader"
+    ],
+    "reasoning_hint": "`LOADER_ALIASES['app']` points to `celery.loaders.app:AppLoader`.",
+    "source_note": "Bound to `external/celery/celery/loaders/__init__.py` and `external/celery/celery/loaders/app.py`."
+  },
+  {
+    "id": "medium_003",
+    "difficulty": "medium",
+    "category": "alias_resolution",
+    "question": "What pool implementation does `celery.concurrency.get_implementation('threads')` resolve to?",
+    "entry_file": "celery/concurrency/__init__.py",
+    "entry_symbol": "celery.concurrency.get_implementation",
+    "gold_fqns": [
+      "celery.concurrency.thread.TaskPool"
+    ],
+    "reasoning_hint": "When `concurrent.futures` imports successfully, `ALIASES['threads']` is set to `celery.concurrency.thread:TaskPool`.",
+    "source_note": "Bound to `external/celery/celery/concurrency/__init__.py` and `external/celery/celery/concurrency/thread.py`."
+  },
+  {
+    "id": "medium_004",
+    "difficulty": "medium",
+    "category": "name_generation",
+    "question": "Which helper function does `Celery.gen_task_name` delegate to?",
+    "entry_file": "celery/app/base.py",
+    "entry_symbol": "celery.app.base.Celery.gen_task_name",
+    "gold_fqns": [
+      "celery.utils.imports.gen_task_name"
+    ],
+    "reasoning_hint": "`Celery.gen_task_name` is a thin wrapper that returns the imported `gen_task_name(self, name, module)` helper.",
+    "source_note": "Bound to `external/celery/celery/app/base.py` and `external/celery/celery/utils/imports.py`."
+  },
+  {
+    "id": "hard_001",
+    "difficulty": "hard",
+    "category": "shared_task_registration",
+    "question": "When `@shared_task` decorates a function, which real app method ultimately creates the task instance?",
+    "entry_file": "celery/app/__init__.py",
+    "entry_symbol": "celery.app.shared_task",
+    "gold_fqns": [
+      "celery.app.base.Celery._task_from_fun"
+    ],
+    "reasoning_hint": "Both the finalize callback and the already-finalized app branch call `app._task_from_fun(fun, **options)`.",
+    "source_note": "Bound to `external/celery/celery/app/__init__.py` and `external/celery/celery/app/base.py`."
+  },
+  {
+    "id": "hard_002",
+    "difficulty": "hard",
+    "category": "app_task_registration",
+    "question": "Inside the `@app.task` decorator flow, which real method ultimately constructs and registers the task?",
+    "entry_file": "celery/app/base.py",
+    "entry_symbol": "celery.app.base.Celery.task",
+    "gold_fqns": [
+      "celery.app.base.Celery._task_from_fun"
+    ],
+    "reasoning_hint": "The decorator implementation routes both the shared branch and the immediate branch to `_task_from_fun`.",
+    "source_note": "Bound to `external/celery/celery/app/base.py`."
+  },
+  {
+    "id": "hard_003",
+    "difficulty": "hard",
+    "category": "finalize_callback",
+    "question": "Which function is responsible for firing all shared-task and built-in finalize callbacks?",
+    "entry_file": "celery/_state.py",
+    "entry_symbol": "celery._state.connect_on_app_finalize",
+    "gold_fqns": [
+      "celery._state._announce_app_finalized"
+    ],
+    "reasoning_hint": "`connect_on_app_finalize` only stores callbacks; `Celery.finalize` later calls `_announce_app_finalized(self)` to execute them.",
+    "source_note": "Bound to `external/celery/celery/_state.py` and `external/celery/celery/app/base.py`."
+  },
+  {
+    "id": "hard_004",
+    "difficulty": "hard",
+    "category": "symbol_by_name_resolution",
+    "question": "In `celery.worker.strategy.default`, what real class does `task.Request` resolve to?",
+    "entry_file": "celery/worker/strategy.py",
+    "entry_symbol": "celery.worker.strategy.default",
+    "gold_fqns": [
+      "celery.worker.request.Request"
+    ],
+    "reasoning_hint": "`default` calls `symbol_by_name(task.Request)`, while `Task.Request` stores the string `celery.worker.request:Request`.",
+    "source_note": "Bound to `external/celery/celery/worker/strategy.py`, `external/celery/celery/app/task.py`, and `external/celery/celery/worker/request.py`."
+  }
+]

@@ -1,8 +1,16 @@
 from __future__ import annotations
 
-from collections import defaultdict
+import math
+import re
+from collections import Counter, defaultdict, deque
 from dataclasses import dataclass
-from typing import Iterable
+from pathlib import Path
+from typing import Iterable, Sequence
+
+from .ast_chunker import CodeChunk, chunk_repository, module_name_from_path, normalize_symbol_target
+
+
+_TOKEN_PATTERN = re.compile(r"[A-Za-z_][A-Za-z0-9_]+")
 
 
 @dataclass(frozen=True)
@@ -10,6 +18,27 @@ class RankedResult:
     item_id: str
     score: float
     source: str
+
+
+@dataclass(frozen=True)
+class RetrievalHit:
+    chunk_id: str
+    symbol: str
+    repo_path: str
+    kind: str
+    score: float
+    source: tuple[str, ...]
+    start_line: int
+    end_line: int
+    snippet: str
+
+
+@dataclass(frozen=True)
+class RetrievalTrace:
+    bm25: tuple[str, ...]
+    semantic: tuple[str, ...]
+    graph: tuple[str, ...]
+    fused: tuple[RetrievalHit, ...]
 
 
 def rrf_fuse(rankings: dict[str, Iterable[str]], k: int = 60) -> list[RankedResult]:
@@ -31,3 +60,455 @@ def rrf_fuse(rankings: dict[str, Iterable[str]], k: int = 60) -> list[RankedResu
         for item_id, score in ranked
     ]
 
+
+class HybridRetriever:
+    def __init__(self, chunks: Sequence[CodeChunk]) -> None:
+        self.chunks = list(chunks)
+        self.chunk_by_id = {chunk.chunk_id: chunk for chunk in self.chunks}
+        _GLOBAL_CHUNK_REGISTRY.clear()
+        _GLOBAL_CHUNK_REGISTRY.update(self.chunk_by_id)
+        self.symbol_to_ids: dict[str, list[str]] = defaultdict(list)
+        self.module_to_ids: dict[str, list[str]] = defaultdict(list)
+        self.basename_to_ids: dict[str, list[str]] = defaultdict(list)
+        self.parent_to_ids: dict[str, list[str]] = defaultdict(list)
+        self.chunk_tokens: dict[str, list[str]] = {}
+        self._graph: dict[str, set[str]] = defaultdict(set)
+
+        for chunk in self.chunks:
+            self.symbol_to_ids[chunk.symbol].append(chunk.chunk_id)
+            self.module_to_ids[chunk.module].append(chunk.chunk_id)
+            if chunk.symbol:
+                self.basename_to_ids[chunk.symbol.rsplit(".", 1)[-1]].append(chunk.chunk_id)
+            if chunk.parent_symbol:
+                self.parent_to_ids[chunk.parent_symbol].append(chunk.chunk_id)
+            token_text = " ".join(
+                [
+                    chunk.symbol,
+                    chunk.signature,
+                    chunk.content,
+                    " ".join(chunk.imports),
+                    " ".join(chunk.string_targets),
+                    " ".join(chunk.references),
+                ]
+            )
+            self.chunk_tokens[chunk.chunk_id] = _tokenize(token_text)
+
+        self._bm25 = _BM25Index(self.chunk_tokens)
+        self._semantic = _TfIdfIndex(self.chunk_tokens)
+        self._build_graph()
+
+    @classmethod
+    def from_repo(cls, repo_root: Path | str) -> "HybridRetriever":
+        return cls(chunk_repository(Path(repo_root)))
+
+    def retrieve(
+        self,
+        question: str,
+        entry_symbol: str = "",
+        entry_file: str = "",
+        top_k: int = 5,
+        per_source: int = 12,
+    ) -> list[RetrievalHit]:
+        return list(
+            self.retrieve_with_trace(
+                question=question,
+                entry_symbol=entry_symbol,
+                entry_file=entry_file,
+                top_k=top_k,
+                per_source=per_source,
+            ).fused
+        )
+
+    def retrieve_with_trace(
+        self,
+        question: str,
+        entry_symbol: str = "",
+        entry_file: str = "",
+        top_k: int = 5,
+        per_source: int = 12,
+    ) -> RetrievalTrace:
+        query_text = self._build_query_text(
+            question=question,
+            entry_symbol=entry_symbol,
+            entry_file=entry_file,
+        )
+        bm25_ranked = self._bm25.search(query_text, top_n=per_source)
+        semantic_ranked = self._semantic.search(query_text, top_n=per_source)
+        graph_ranked = self._graph_search(
+            question=question,
+            entry_symbol=entry_symbol,
+            entry_file=entry_file,
+            top_n=per_source,
+        )
+        fused = rrf_fuse(
+            {
+                "bm25": bm25_ranked,
+                "semantic": semantic_ranked,
+                "graph": graph_ranked,
+            }
+        )
+        hits: list[RetrievalHit] = []
+        for result in fused[:top_k]:
+            chunk = self.chunk_by_id[result.item_id]
+            hits.append(
+                RetrievalHit(
+                    chunk_id=chunk.chunk_id,
+                    symbol=chunk.symbol,
+                    repo_path=chunk.repo_path,
+                    kind=chunk.kind,
+                    score=result.score,
+                    source=tuple(result.source.split(",")) if result.source else (),
+                    start_line=chunk.start_line,
+                    end_line=chunk.end_line,
+                    snippet=self._render_chunk(chunk, detailed=(len(hits) == 0)),
+                )
+            )
+        return RetrievalTrace(
+            bm25=tuple(bm25_ranked),
+            semantic=tuple(semantic_ranked),
+            graph=tuple(graph_ranked),
+            fused=tuple(hits),
+        )
+
+    def build_context(
+        self,
+        question: str,
+        entry_symbol: str = "",
+        entry_file: str = "",
+        top_k: int = 5,
+        per_source: int = 12,
+    ) -> str:
+        trace = self.retrieve_with_trace(
+            question=question,
+            entry_symbol=entry_symbol,
+            entry_file=entry_file,
+            top_k=top_k,
+            per_source=per_source,
+        )
+        sections = []
+        for rank, hit in enumerate(trace.fused, start=1):
+            location = f"{hit.repo_path}:{hit.start_line}-{hit.end_line}"
+            source = ", ".join(hit.source) if hit.source else "fused"
+            sections.append(
+                f"[Retrieved {rank}] {hit.symbol} ({location}) | source={source}\n{hit.snippet}"
+            )
+        return "\n\n".join(sections)
+
+    def expand_candidate_fqns(
+        self,
+        hits: Sequence[RetrievalHit],
+        query_text: str = "",
+        entry_symbol: str = "",
+    ) -> list[str]:
+        query_tokens = set(_tokenize(query_text))
+        entry_tail = entry_symbol.rsplit(".", 1)[-1] if entry_symbol else ""
+        scored: dict[str, float] = {}
+        for index, hit in enumerate(hits, start=1):
+            chunk = self.chunk_by_id[hit.chunk_id]
+            candidates: list[tuple[str, float]] = [(chunk.symbol, 0.2)]
+            candidates.extend((target, 0.35) for target in chunk.string_targets)
+            candidates.extend(
+                (target, 0.15) for target in chunk.imports if _looks_like_fqn(target)
+            )
+            for reference in chunk.references:
+                for candidate_id in self._resolve_reference_ids(
+                    chunk, normalize_symbol_target(reference)
+                ):
+                    candidates.append((self.chunk_by_id[candidate_id].symbol, 0.25))
+            for candidate, bonus in candidates:
+                normalized = normalize_symbol_target(candidate)
+                if not _looks_like_fqn(normalized):
+                    continue
+                overlap = len(query_tokens & set(_tokenize(normalized)))
+                tail_bonus = 1.2 if entry_tail and normalized.endswith(f".{entry_tail}") else 0.0
+                score = hit.score + (1.0 / index) + bonus + overlap * 0.3 + tail_bonus
+                scored[normalized] = max(scored.get(normalized, 0.0), score)
+        return [
+            candidate
+            for candidate, _ in sorted(scored.items(), key=lambda item: item[1], reverse=True)
+        ]
+
+    def _build_graph(self) -> None:
+        for chunk in self.chunks:
+            self._graph.setdefault(chunk.chunk_id, set())
+            for sibling_id in self.module_to_ids.get(chunk.module, []):
+                if sibling_id != chunk.chunk_id:
+                    self._link(chunk.chunk_id, sibling_id)
+            self._connect_targets(chunk.chunk_id, chunk.imports)
+            self._connect_targets(chunk.chunk_id, chunk.string_targets)
+            self._connect_references(chunk)
+
+    def _connect_targets(self, source_id: str, targets: Iterable[str]) -> None:
+        for target in targets:
+            normalized = normalize_symbol_target(target)
+            for candidate_id in self._resolve_target_ids(normalized):
+                self._link(source_id, candidate_id)
+
+    def _connect_references(self, chunk: CodeChunk) -> None:
+        for reference in chunk.references:
+            normalized = normalize_symbol_target(reference)
+            for candidate_id in self._resolve_reference_ids(chunk, normalized):
+                self._link(chunk.chunk_id, candidate_id)
+
+    def _resolve_target_ids(self, target: str) -> list[str]:
+        if target in self.symbol_to_ids:
+            return list(self.symbol_to_ids[target])
+        if target in self.module_to_ids:
+            return list(self.module_to_ids[target])
+        base = target.rsplit(".", 1)[-1]
+        return list(self.basename_to_ids.get(base, []))
+
+    def _resolve_reference_ids(self, chunk: CodeChunk, reference: str) -> list[str]:
+        if reference in self.symbol_to_ids:
+            return list(self.symbol_to_ids[reference])
+        if reference in self.module_to_ids:
+            return list(self.module_to_ids[reference])
+
+        base = reference.rsplit(".", 1)[-1]
+        candidates: list[str] = []
+
+        if chunk.parent_symbol:
+            for candidate_id in self.parent_to_ids.get(chunk.parent_symbol, []):
+                candidate = self.chunk_by_id[candidate_id]
+                if candidate.symbol.endswith(f".{base}"):
+                    candidates.append(candidate_id)
+
+        module_candidate = f"{chunk.module}.{base}"
+        if module_candidate in self.symbol_to_ids:
+            candidates.extend(self.symbol_to_ids[module_candidate])
+
+        if not candidates:
+            candidates.extend(self.basename_to_ids.get(base, []))
+
+        return list(dict.fromkeys(candidates))
+
+    def _link(self, left: str, right: str) -> None:
+        if left == right:
+            return
+        self._graph[left].add(right)
+        self._graph[right].add(left)
+
+    def _build_query_text(self, question: str, entry_symbol: str, entry_file: str) -> str:
+        return " ".join(
+            part
+            for part in (question.strip(), entry_symbol.strip(), entry_file.strip())
+            if part
+        )
+
+    def _graph_search(
+        self,
+        question: str,
+        entry_symbol: str,
+        entry_file: str,
+        top_n: int,
+    ) -> list[str]:
+        seeds: set[str] = set()
+        if entry_symbol:
+            seeds.update(self._resolve_target_ids(entry_symbol))
+            seeds.update(self._resolve_target_ids(entry_symbol.rsplit(".", 1)[0]))
+        if entry_file:
+            module_from_file = _entry_file_to_module(entry_file)
+            if module_from_file:
+                seeds.update(self.module_to_ids.get(module_from_file, []))
+        for target in _extract_symbol_like_strings(question):
+            seeds.update(self._resolve_target_ids(target))
+
+        if not seeds:
+            return []
+
+        query_tokens = set(_tokenize(question))
+        queue: deque[tuple[str, int]] = deque((seed, 0) for seed in seeds)
+        distances: dict[str, int] = {seed: 0 for seed in seeds}
+
+        while queue:
+            current, distance = queue.popleft()
+            if distance >= 2:
+                continue
+            for neighbor in self._graph.get(current, ()):
+                if neighbor in distances and distances[neighbor] <= distance + 1:
+                    continue
+                distances[neighbor] = distance + 1
+                queue.append((neighbor, distance + 1))
+
+        scored: list[tuple[float, str]] = []
+        for chunk_id, distance in distances.items():
+            chunk = self.chunk_by_id[chunk_id]
+            overlap = len(query_tokens & set(self.chunk_tokens[chunk_id]))
+            score = 1.0 / (1 + distance) + overlap * 0.05 + _kind_bonus(chunk.kind)
+            scored.append((score, chunk_id))
+        scored.sort(key=lambda item: item[0], reverse=True)
+        return [chunk_id for _, chunk_id in scored[:top_n]]
+
+    def _render_chunk(self, chunk: CodeChunk, detailed: bool) -> str:
+        if detailed and chunk.kind != "module":
+            return chunk.content
+
+        lines = [chunk.signature]
+        if chunk.docstring:
+            lines.append(f'Docstring: "{chunk.docstring.splitlines()[0]}"')
+        if chunk.imports:
+            lines.append("Imports: " + ", ".join(chunk.imports[:6]))
+        if chunk.string_targets:
+            lines.append("String targets: " + ", ".join(chunk.string_targets[:6]))
+        if chunk.references:
+            lines.append("References: " + ", ".join(chunk.references[:6]))
+        return "\n".join(lines)
+
+
+class _BM25Index:
+    def __init__(self, token_map: dict[str, list[str]], k1: float = 1.5, b: float = 0.75) -> None:
+        self.k1 = k1
+        self.b = b
+        self.token_map = token_map
+        self.doc_lengths = {chunk_id: len(tokens) for chunk_id, tokens in token_map.items()}
+        self.avg_doc_length = (
+            sum(self.doc_lengths.values()) / len(self.doc_lengths) if self.doc_lengths else 0.0
+        )
+        self.term_freqs = {chunk_id: Counter(tokens) for chunk_id, tokens in token_map.items()}
+        self.doc_freqs: Counter[str] = Counter()
+        for tokens in token_map.values():
+            self.doc_freqs.update(set(tokens))
+        self.num_docs = len(token_map)
+
+    def search(self, query: str, top_n: int) -> list[str]:
+        query_tokens = _tokenize(query)
+        if not query_tokens:
+            return []
+        scores: list[tuple[float, str]] = []
+        for chunk_id, frequencies in self.term_freqs.items():
+            doc_length = self.doc_lengths[chunk_id]
+            score = 0.0
+            for token in query_tokens:
+                tf = frequencies.get(token, 0)
+                if tf == 0:
+                    continue
+                doc_freq = self.doc_freqs.get(token, 0)
+                idf = math.log(1 + (self.num_docs - doc_freq + 0.5) / (doc_freq + 0.5))
+                denominator = tf + self.k1 * (
+                    1 - self.b + self.b * doc_length / (self.avg_doc_length or 1.0)
+                )
+                score += idf * (tf * (self.k1 + 1)) / denominator
+            if score:
+                chunk = self._safe_chunk(chunk_id)
+                score += _kind_bonus(chunk.kind)
+                scores.append((score, chunk_id))
+        scores.sort(key=lambda item: item[0], reverse=True)
+        return [chunk_id for _, chunk_id in scores[:top_n]]
+
+    def _safe_chunk(self, chunk_id: str) -> CodeChunk:
+        return _GLOBAL_CHUNK_REGISTRY[chunk_id]
+
+
+class _TfIdfIndex:
+    def __init__(self, token_map: dict[str, list[str]]) -> None:
+        self.token_map = token_map
+        self.doc_freqs: Counter[str] = Counter()
+        for tokens in token_map.values():
+            self.doc_freqs.update(set(tokens))
+        self.num_docs = len(token_map)
+        self.doc_vectors = {
+            chunk_id: self._build_weighted_vector(tokens)
+            for chunk_id, tokens in token_map.items()
+        }
+
+    def search(self, query: str, top_n: int) -> list[str]:
+        query_tokens = _tokenize(query)
+        if not query_tokens:
+            return []
+        query_vector = self._build_weighted_vector(query_tokens)
+        if not query_vector:
+            return []
+
+        scores: list[tuple[float, str]] = []
+        for chunk_id, doc_vector in self.doc_vectors.items():
+            score = _cosine_similarity(query_vector, doc_vector)
+            if score <= 0:
+                continue
+            chunk = _GLOBAL_CHUNK_REGISTRY[chunk_id]
+            score += _kind_bonus(chunk.kind)
+            scores.append((score, chunk_id))
+        scores.sort(key=lambda item: item[0], reverse=True)
+        return [chunk_id for _, chunk_id in scores[:top_n]]
+
+    def _build_weighted_vector(self, tokens: Sequence[str]) -> dict[str, float]:
+        term_freq = Counter(tokens)
+        vector: dict[str, float] = {}
+        for token, count in term_freq.items():
+            doc_freq = self.doc_freqs.get(token, 0)
+            idf = math.log((self.num_docs + 1) / (doc_freq + 1)) + 1.0
+            vector[token] = count * idf
+        return vector
+
+
+def _kind_bonus(kind: str) -> float:
+    if kind == "method":
+        return 0.18
+    if kind in {"function", "async_function"}:
+        return 0.12
+    if kind == "class":
+        return 0.08
+    return 0.0
+
+
+def _tokenize(text: str) -> list[str]:
+    normalized = (
+        text.replace(":", ".")
+        .replace("/", ".")
+        .replace("`", " ")
+        .replace("-", " ")
+    )
+    tokens: list[str] = []
+    for raw_token in _TOKEN_PATTERN.findall(normalized):
+        lower = raw_token.lower()
+        tokens.append(lower)
+        split_token = re.sub(r"(?<!^)(?=[A-Z])", " ", raw_token).lower()
+        tokens.extend(piece for piece in split_token.split() if piece)
+    return tokens
+
+
+def _cosine_similarity(left: dict[str, float], right: dict[str, float]) -> float:
+    shared = set(left) & set(right)
+    numerator = sum(left[token] * right[token] for token in shared)
+    if numerator == 0.0:
+        return 0.0
+    left_norm = math.sqrt(sum(value * value for value in left.values()))
+    right_norm = math.sqrt(sum(value * value for value in right.values()))
+    if left_norm == 0.0 or right_norm == 0.0:
+        return 0.0
+    return numerator / (left_norm * right_norm)
+
+
+def _extract_symbol_like_strings(text: str) -> list[str]:
+    matches = re.findall(r"(?:[A-Za-z_][A-Za-z0-9_]*)(?:[.:][A-Za-z_][A-Za-z0-9_]*)+", text)
+    return [normalize_symbol_target(match) for match in matches]
+
+
+def _looks_like_fqn(value: str) -> bool:
+    if "." not in value:
+        return False
+    for part in value.split("."):
+        if not part:
+            return False
+        if not (part[0].isalpha() or part[0] == "_"):
+            return False
+    return True
+
+
+_GLOBAL_CHUNK_REGISTRY: dict[str, CodeChunk] = {}
+
+
+def _entry_file_to_module(entry_file: str) -> str:
+    path = Path(entry_file)
+    parts = list(path.parts)
+    if not parts:
+        return ""
+    stem = Path(parts[-1]).stem
+    if stem == "__init__":
+        parts = parts[:-1]
+    else:
+        parts[-1] = stem
+    return ".".join(part for part in parts if part)
+
+
+def build_retriever(repo_root: Path | str) -> HybridRetriever:
+    return HybridRetriever.from_repo(repo_root)
