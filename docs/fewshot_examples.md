@@ -42,17 +42,20 @@
 
 **推理过程**:
 1. Step 1: 定位 `shared_task` 在 `celery/app/__init__.py`
-2. Step 2: 发现 `shared_task` 返回一个 `_create_shared_task` 调用
-3. Step 3: 追踪 `_create_shared_task`，它使用 `connect_on_app_finalize` 延迟注册
-4. Step 4: 在 app finalized 时，调用 `Celery._task_from_fun` 完成注册
+2. Step 2: 发现 `shared_task` 内部先通过 `connect_on_app_finalize(...)` 注册 finalize 回调
+3. Step 3: 同时它会遍历 `_get_active_apps()`，让已 finalized 的 app 立刻执行同一注册动作
+4. Step 4: 两条分支最终都落到 `app._task_from_fun(fun, **options)` 完成任务注册
 
 **答案**:
 ```json
 {
   "ground_truth": {
     "direct_deps": ["celery.app.base.Celery._task_from_fun"],
-    "indirect_deps": ["celery.app.task.create_task_cls"],
-    "implicit_deps": ["celery.app.builtins.add_backend_cleanup_task"]
+    "indirect_deps": [
+      "celery._state.connect_on_app_finalize",
+      "celery._state._get_active_apps"
+    ],
+    "implicit_deps": ["celery.app.shared_task"]
   }
 }
 ```
@@ -440,23 +443,21 @@
 }
 ```
 
-### Few-shot D04: `dispatch_uid` 冲突下的 Signal 去重
+### Few-shot D04: `dispatch_uid` 冲突下的去重键判定
 
-**问题**: 在同一个 `Signal` 上，对同一 `sender` 重复 `connect` 两个 receiver 且使用同一个 `dispatch_uid`，并假设第一次连接的 receiver 仍然存活，最终会触发几次，按哪个 receiver 执行？
+**问题**: 在同一个 `Signal` 上，对同一 `sender` 重复 `connect` 两个 receiver 且使用同一个 `dispatch_uid` 时，哪个 helper 链路负责生成去重键并阻止第二次 receiver 被追加？
 
 **环境前置条件**:
 1. 两次 `connect` 作用于同一个 `Signal` 实例。
 2. `sender` 相同，且显式传入相同 `dispatch_uid`。
 3. 第二次 `connect` 前未执行 `disconnect`。
-4. 第一次连接的 receiver 仍存活，未被 weakref 回收。
+4. 关注的是“去重判定发生在哪个 helper 链路”，不是发送阶段的运行时触发次数。
 
 **推理过程**:
 1. `Signal.connect(...)` 最终进入 `Signal._connect_signal(...)`。
 2. `_connect_signal` 用 `_make_lookup_key(receiver, sender, dispatch_uid)` 生成去重键；当 `dispatch_uid` 存在时，key 由 `(dispatch_uid, sender_id)` 组成，不看 receiver 对象身份。
 3. `_connect_signal` 在写入前会清理 dead receivers，然后遍历 `self.receivers`；如果发现相同 key，就不会 append 新 receiver。
-4. 进入发送路径前，Signal 还会继续清理 dead weak receiver；在题设“首次 receiver 仍存活”的前提下，这个 key 仍由第一次连接留下的 receiver 占据。
-5. `Signal.send(...)` 通过 `_live_receivers(...)` 取出当前有效 receiver 并逐个执行，因此该冲突键最终只会触发第一次成功保留下来的 live receiver。
-6. 如果要换成新的 receiver，需要先 `disconnect(...)`，或等待旧 weak receiver 被清理后再重新 `connect(...)`。
+4. 因而稳定的“去重判定点”是 `_make_lookup_key` 生成键，再由 `_connect_signal` 检查并阻止追加。
 
 **答案**:
 ```json
@@ -467,11 +468,7 @@
       "celery.utils.dispatch.signal._make_lookup_key"
     ],
     "indirect_deps": [
-      "celery.utils.dispatch.signal.Signal.connect",
-      "celery.utils.dispatch.signal.Signal._clear_dead_receivers",
-      "celery.utils.dispatch.signal.Signal.send",
-      "celery.utils.dispatch.signal.Signal._live_receivers",
-      "celery.utils.dispatch.signal.Signal.disconnect"
+      "celery.utils.dispatch.signal.Signal.connect"
     ],
     "implicit_deps": [
       "celery.utils.dispatch.signal.Signal.receivers"
@@ -537,9 +534,9 @@
 }
 ```
 
-### Few-shot E03: by_url + override_backends 的 tuple 语义
+### Few-shot E03: by_url + override_backends 的 backend 解析
 
-**问题**: 在提供 `loader.override_backends = {'kv': 'celery.backends.redis:RedisBackend'}` 的前提下，`by_url('kv+redis://localhost/0', loader=loader)` 会把 backend 部分最终解析成哪个类，以及这个过程中 URL payload 如何被保留下来？
+**问题**: 在提供 `loader.override_backends = {'kv': 'celery.backends.redis:RedisBackend'}` 的前提下，`by_url('kv+redis://localhost/0', loader=loader)` 会把 backend 部分最终解析成哪个类？
 
 **环境前置条件**:
 1. `loader.override_backends = {'kv': 'celery.backends.redis:RedisBackend'}`。
@@ -551,7 +548,6 @@
 3. 随后 `by_url` 调用 `by_name('kv', loader)` 去解析 backend 类。
 4. `by_name` 会合并 `dict(BACKEND_ALIASES, **loader.override_backends)`，因此 `kv` 命中运行时覆盖映射。
 5. `symbol_by_name` 最终把该字符串解析为 `celery.backends.redis.RedisBackend`。
-6. `by_url` 的运行时返回不是实例化对象，而是二元组 `(resolved_backend_cls, rewritten_url)`，即 `(celery.backends.redis.RedisBackend, 'redis://localhost/0')`。
 
 **答案**:
 ```json
@@ -695,5 +691,5 @@
 
 - [x] 从 bad case 中补充完整的 20 条示例（当前正式文档已稳定 20 条；`A02 / B05 / C04 / C05` 已回填）
 - [x] 每条示例验证在 Celery 源码中可复现
-- [ ] 写入 `pe/prompt_templates_v2.py`
-- [ ] 创建 `data/fewshot_examples_20.json` 文件
+- [x] 写入 `pe/prompt_templates_v2.py`
+- [x] 创建 `data/fewshot_examples_20.json` 文件

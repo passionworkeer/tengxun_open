@@ -204,8 +204,11 @@
 | PE-018 | Type A / D few-shot 扩展批次 | done | `docs/drafts/fewshot_gap_plan_round1.md` | `docs/drafts/fewshot_type_a_round1.md`、`docs/drafts/fewshot_type_d_round1.md`、`docs/drafts/fewshot_type_d_round2.md`、`docs/drafts/type_ad_challenge_notes.md`、`docs/drafts/review_round9_type_ad.md`、`docs/drafts/review_round10_type_ad_arbitration.md` | Type D 已修订回填正式文档，A01 已回填，A02 得到明确 rewrite 结论 |
 | PE-019 | 补 Type A 的 A02 replacement | done | `docs/drafts/review_round10_type_ad_arbitration.md`、`external/celery/` | `docs/drafts/fewshot_type_a_round3.md`、`docs/drafts/review_round13_type_a_round3.md` | A02 收紧分层和前置条件后过审，并已回填正式文档 |
 | PE-020 | 补齐 B / C 尾项 few-shot | done | `docs/fewshot_examples.md`、`docs/drafts/fewshot_gap_plan_round1.md`、bad case 清单 | `docs/drafts/fewshot_bc_tail_round1.md`、`docs/drafts/review_round12_bc_tail.md`、`docs/drafts/bc_tail_review_notes.md`、`docs/drafts/review_round13_bc_arbitration.md`、`docs/drafts/review_round14_strict_challenge.md` | `B05 / C04 / C05` 完成仲裁并已回填正式文档 |
-| PE-021 | 将 20 条正式 few-shot 写入 prompt 模板 | ready | `docs/fewshot_examples.md` | `pe/prompt_templates_v2.py` | 20 条样本在模板中可直接消费，且不混入 draft-only 条目 |
-| PE-022 | 导出正式 few-shot JSON 工件 | ready | `docs/fewshot_examples.md` | `data/fewshot_examples_20.json` | 20 条顺序、字段、ground truth 结构与正式文档完全一致 |
+| PE-021 | 将 20 条正式 few-shot 写入 prompt 模板 | done | `docs/fewshot_examples.md` | `pe/prompt_templates_v2.py` | 20 条样本在模板中可直接消费，且不混入 draft-only 条目 |
+| PE-022 | 导出正式 few-shot JSON 工件 | done | `docs/fewshot_examples.md` | `data/fewshot_examples_20.json` | 20 条顺序、字段、ground truth 结构与正式文档完全一致 |
+| EVAL-019 | 深读源码并筛 round 4 高价值候选 | done | `external/celery/` 高价值区域 | `docs/drafts/eval_high_value_candidates_round4.md` | 至少 6 条 Type A / Type D / hard 候选，含证据链与风险 |
+| EVAL-020 | 用 strict gate 过滤新候选与 formal pool 风险 | done | 正式 few-shot 文档 + 候选题点 | `docs/drafts/review_round15_formal_pool_safety.md` | 明确 formal pool 阻塞项与下一批挖题门禁 |
+| EVAL-021 | 起草 round 4 高价值 eval 草稿 | ready | `docs/drafts/eval_high_value_candidates_round4.md`、round 15 gate | 新一批 eval draft | 先起草 Type A / Type D / hard，且不混入 schema 不可表达题 |
 | PM-001 | 更新阶段进度并推送远端 | done | 当前进展与审稿结论 | 进度文档 + git push | 文档状态与仓库实际一致；本地与远端已对齐 |
 
 ## 当前批次的质量门禁

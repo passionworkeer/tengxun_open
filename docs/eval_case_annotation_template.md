@@ -60,8 +60,11 @@
   "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
   "ground_truth": {
     "direct_deps": ["celery.app.base.Celery._task_from_fun"],
-    "indirect_deps": [],
-    "implicit_deps": ["celery.app.builtins.add_backend_cleanup_task"]
+    "indirect_deps": [
+      "celery._state.connect_on_app_finalize",
+      "celery._state._get_active_apps"
+    ],
+    "implicit_deps": ["celery.app.shared_task"]
   },
   "reasoning_hint": "shared_task 内部通过 connect_on_app_finalize 延迟注册，并在 finalized app 上调用 _task_from_fun。",
   "source_note": "来自 shared_task 装饰器注册路径"

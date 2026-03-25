@@ -1,14 +1,15 @@
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
+from types import ModuleType
 from typing import Any
 
 from evaluation.metrics import mean_reciprocal_rank, recall_at_k, reciprocal_rank
-from pe.prompt_templates import build_prompt_bundle, few_shot_gap
 from rag.rrf_retriever import HybridRetriever, build_retriever
 
 
@@ -107,7 +108,18 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Print retrieved context for the selected case.",
     )
+    parser.add_argument(
+        "--prompt-version",
+        choices=["v1", "v2"],
+        default="v1",
+        help="Prompt template version used for prompt preview metadata.",
+    )
     return parser
+
+
+def load_prompt_module(version: str) -> ModuleType:
+    module_name = "pe.prompt_templates_v2" if version == "v2" else "pe.prompt_templates"
+    return importlib.import_module(module_name)
 
 
 def select_case(cases: list[EvalCase], case_id: str) -> EvalCase | None:
@@ -180,14 +192,19 @@ def evaluate_retrieval(
     }
 
 
-def preview_prompt(case: EvalCase, retriever: HybridRetriever, top_k: int) -> str:
+def preview_prompt(
+    case: EvalCase,
+    retriever: HybridRetriever,
+    top_k: int,
+    prompt_module: ModuleType,
+) -> str:
     context = retriever.build_context(
         question=case.question,
         entry_symbol=case.entry_symbol,
         entry_file=case.entry_file,
         top_k=top_k,
     )
-    bundle = build_prompt_bundle(
+    bundle = prompt_module.build_prompt_bundle(
         question=case.question,
         context=context,
         entry_symbol=case.entry_symbol,
@@ -198,11 +215,13 @@ def preview_prompt(case: EvalCase, retriever: HybridRetriever, top_k: int) -> st
 
 def main() -> int:
     args = build_parser().parse_args()
+    prompt_module = load_prompt_module(args.prompt_version)
     cases = load_eval_cases(args.eval_cases)
     summary = summarize_cases(cases)
     summary["mode"] = args.mode
+    summary["prompt_version"] = args.prompt_version
     summary["few_shot_ready"] = {
-        "gap_to_target": few_shot_gap(),
+        "gap_to_target": prompt_module.few_shot_gap(),
         "target": 20,
     }
 
@@ -242,7 +261,14 @@ def main() -> int:
 
     if args.preview_prompt and selected is not None and retriever is not None:
         print("\n=== Prompt Preview ===")
-        print(preview_prompt(selected, retriever=retriever, top_k=args.top_k))
+        print(
+            preview_prompt(
+                selected,
+                retriever=retriever,
+                top_k=args.top_k,
+                prompt_module=prompt_module,
+            )
+        )
 
     return 0
 

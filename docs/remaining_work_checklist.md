@@ -47,9 +47,11 @@
   - `docs/drafts/fewshot_bc_tail_round1.md` + `docs/drafts/review_round12_bc_tail.md` + `docs/drafts/bc_tail_review_notes.md` + `docs/drafts/review_round13_bc_arbitration.md`：`B05 / C04 / C05` 已完成仲裁
   - `docs/drafts/review_round14_strict_challenge.md`：严格 reviewer 最终挑战纪要
 - 正式 few-shot 文档现已稳定 20 条：`A01 / A02 / B01-B05 / C01-C05 / D01-D04 / E01-E04`
-- 当前最高优先级已切到 few-shot 工件固化与 eval 继续扩充：
-  - 写入 `pe/prompt_templates_v2.py`
-  - 生成 `data/fewshot_examples_20.json`
+- `pe/prompt_templates_v2.py` 与 `data/fewshot_examples_20.json` 已落地。
+- round 15 strict challenge 后，`B01 / D04 / E03` 已完成收紧修复，见 `docs/drafts/review_round15_formal_pool_safety.md`。
+- 当前最高优先级已切到高价值 eval 继续扩充：
+  - 基于 `docs/drafts/eval_high_value_candidates_round4.md` 起草下一批 Type A / Type D / hard
+  - 使用 round 15 gate 拦住双问题、值语义题、schema 不可表达题
   - 继续扩 eval，但维持 `data/eval_cases.json` 的 hold 结论
 
 ## 审稿结论摘要
@@ -226,7 +228,7 @@
 
 ### P0-05c：把 20 条正式 few-shot 固化为可消费工件
 
-- 状态：`ready`
+- 状态：`done`
 - 输入：
   - `docs/fewshot_examples.md`
 - 输出：
@@ -236,6 +238,11 @@
   - 20 条顺序与正式文档一致
   - 输出字段与 `ground_truth.direct_deps / indirect_deps / implicit_deps` 完全兼容
   - 不再引用 rejected 或 draft-only 条目
+- 当前结果：
+  - 已完成；正式 few-shot 已写入 `pe/prompt_templates_v2.py`
+  - `data/fewshot_examples_20.json` 已从正式文档结构化生成
+  - round 15 已补做 formal pool safety 复核并修复 `B01 / D04 / E03`
+  - `evaluation/baseline.py` 已支持 `--prompt-version v2` 显式预览，不会静默替换旧版 prompt
 
 ### P0-06：更新进度文档并推送
 
@@ -260,7 +267,8 @@
 | Lane C | few-shot 正式回填 | `docs/fewshot_examples.md` | 只允许回填 round 13 / 14 审过的条目 |
 | Lane D | 旧 schema 迁移方案 | `docs/drafts/schema_migration_round2.md` | 先生成迁移 draft，不直接覆盖正式文件 |
 | Lane E | 严格审核 | `review_round2_findings.md` / `review_round3_challenge.md` | 逐条 pass / hold / reject |
-| Lane F | Type A / B / C 严格审稿与仲裁 | `review_round13_type_a_round3.md` / `review_round13_bc_arbitration.md` / `review_round14_strict_challenge.md` | 只有经 challenge 仍站得住的条目才能回填正式 few-shot |
+| Lane F | formal few-shot 安全复核 | `review_round13_type_a_round3.md` / `review_round13_bc_arbitration.md` / `review_round14_strict_challenge.md` / `review_round15_formal_pool_safety.md` | 只有经 challenge 仍站得住的条目才能进入 v2 工件 |
+| Lane G | 高价值下一批 eval 候选 | `eval_high_value_candidates_round4.md` | 只允许起草 Type A / Type D / hard，且先过 round 15 gate |
 
 ## 评测集集成门禁
 

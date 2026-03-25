@@ -138,7 +138,7 @@
 - ✅ 阶段 0：文档定稿（已完成）
 - ✅ 阶段 1：目标仓库准备（已完成，commit: b8f85213）
 - ⏳ 阶段 2：评测集构建（28 条迁移 draft 已产出，但正式 `data/eval_cases.json` 仍保持 hold）
-- ⏳ 阶段 4：few-shot 正式池已补齐 20 条（`A02 / B05 / C04 / C05` 已过审并回填，待写入 prompt / JSON 工件）
+- ⏳ 阶段 4：few-shot 正式池已补齐 20 条，`prompt_templates_v2.py` 与 `fewshot_examples_20.json` 已落地；下一步转向高价值 eval 起草
 
 ## 当前并行批次（2026-03-25）
 
@@ -158,10 +158,12 @@
 - A02 已以收紧版回填：默认 app 解析与 `Celery.tasks -> finalize(auto=True)` 已明确拆开
 - B05 已以收紧版回填：补足 execv 场景的 env import 时序前置条件，ground truth 只保留首跳入口
 - 正式升格审核结论：当前 28 条 draft 暂不替换正式 `data/eval_cases.json`
-- 仍待继续处理：把 20 条正式 few-shot 写入 `pe/prompt_templates_v2.py`，并生成 `data/fewshot_examples_20.json`
+- 严格 reviewer 新增安全提醒：`B01 / D04 / E03` 已完成收紧修复，并形成 `docs/drafts/review_round15_formal_pool_safety.md`
+- 高价值下一批 eval 候选已整理：`docs/drafts/eval_high_value_candidates_round4.md`
+- 仍待继续处理：按 round 4 候选起草新一批 Type A / Type D / hard eval，并继续保持正式 `data/eval_cases.json` 的 hold
 
 ### 下一步顺序
 
-1. 将 `docs/fewshot_examples.md` 的 20 条正式样本写入 `pe/prompt_templates_v2.py`。
-2. 生成 `data/fewshot_examples_20.json`，保证顺序与正式文档一致。
+1. 按 `docs/drafts/eval_high_value_candidates_round4.md` 起草下一批 Type A / Type D / hard eval。
+2. 使用 `review_round15_formal_pool_safety.md` 中的门禁收紧新题，避免再混入双问题和 schema 不可表达项。
 3. 继续补 eval 的 Type A / Type D / hard 配额，但在更强复核前不升级正式 `data/eval_cases.json`。
