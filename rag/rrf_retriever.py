@@ -38,6 +38,7 @@ class RetrievalTrace:
     bm25: tuple[str, ...]
     semantic: tuple[str, ...]
     graph: tuple[str, ...]
+    fused_ids: tuple[str, ...]
     fused: tuple[RetrievalHit, ...]
 
 
@@ -108,6 +109,7 @@ class HybridRetriever:
         entry_file: str = "",
         top_k: int = 5,
         per_source: int = 12,
+        query_mode: str = "question_plus_entry",
     ) -> list[RetrievalHit]:
         return list(
             self.retrieve_with_trace(
@@ -116,6 +118,7 @@ class HybridRetriever:
                 entry_file=entry_file,
                 top_k=top_k,
                 per_source=per_source,
+                query_mode=query_mode,
             ).fused
         )
 
@@ -126,11 +129,13 @@ class HybridRetriever:
         entry_file: str = "",
         top_k: int = 5,
         per_source: int = 12,
+        query_mode: str = "question_plus_entry",
     ) -> RetrievalTrace:
         query_text = self._build_query_text(
             question=question,
             entry_symbol=entry_symbol,
             entry_file=entry_file,
+            query_mode=query_mode,
         )
         bm25_ranked = self._bm25.search(query_text, top_n=per_source)
         semantic_ranked = self._semantic.search(query_text, top_n=per_source)
@@ -139,6 +144,7 @@ class HybridRetriever:
             entry_symbol=entry_symbol,
             entry_file=entry_file,
             top_n=per_source,
+            query_mode=query_mode,
         )
         fused = rrf_fuse(
             {
@@ -147,6 +153,7 @@ class HybridRetriever:
                 "graph": graph_ranked,
             }
         )
+        fused_ids = tuple(result.item_id for result in fused)
         hits: list[RetrievalHit] = []
         for result in fused[:top_k]:
             chunk = self.chunk_by_id[result.item_id]
@@ -167,6 +174,7 @@ class HybridRetriever:
             bm25=tuple(bm25_ranked),
             semantic=tuple(semantic_ranked),
             graph=tuple(graph_ranked),
+            fused_ids=fused_ids,
             fused=tuple(hits),
         )
 
@@ -177,6 +185,7 @@ class HybridRetriever:
         entry_file: str = "",
         top_k: int = 5,
         per_source: int = 12,
+        query_mode: str = "question_plus_entry",
     ) -> str:
         trace = self.retrieve_with_trace(
             question=question,
@@ -184,6 +193,7 @@ class HybridRetriever:
             entry_file=entry_file,
             top_k=top_k,
             per_source=per_source,
+            query_mode=query_mode,
         )
         sections = []
         for rank, hit in enumerate(trace.fused, start=1):
@@ -227,6 +237,56 @@ class HybridRetriever:
             candidate
             for candidate, _ in sorted(scored.items(), key=lambda item: item[1], reverse=True)
         ]
+
+    def ranked_symbols(self, chunk_ids: Sequence[str]) -> list[str]:
+        symbols: list[str] = []
+        seen: set[str] = set()
+        for chunk_id in chunk_ids:
+            chunk = self.chunk_by_id.get(chunk_id)
+            if chunk is None or not chunk.symbol or chunk.symbol in seen:
+                continue
+            seen.add(chunk.symbol)
+            symbols.append(chunk.symbol)
+        return symbols
+
+    def materialize_hits(
+        self,
+        chunk_ids: Sequence[str],
+        source: str,
+        top_k: int | None = None,
+    ) -> list[RetrievalHit]:
+        selected_ids = chunk_ids[:top_k] if top_k is not None else chunk_ids
+        hits: list[RetrievalHit] = []
+        for rank, chunk_id in enumerate(selected_ids, start=1):
+            chunk = self.chunk_by_id[chunk_id]
+            hits.append(
+                RetrievalHit(
+                    chunk_id=chunk.chunk_id,
+                    symbol=chunk.symbol,
+                    repo_path=chunk.repo_path,
+                    kind=chunk.kind,
+                    score=1.0 / rank,
+                    source=(source,),
+                    start_line=chunk.start_line,
+                    end_line=chunk.end_line,
+                    snippet=self._render_chunk(chunk, detailed=(rank == 1)),
+                )
+            )
+        return hits
+
+    def expand_candidate_fqns_from_chunk_ids(
+        self,
+        chunk_ids: Sequence[str],
+        source: str,
+        query_text: str = "",
+        entry_symbol: str = "",
+    ) -> list[str]:
+        hits = self.materialize_hits(chunk_ids=chunk_ids, source=source)
+        return self.expand_candidate_fqns(
+            hits,
+            query_text=query_text,
+            entry_symbol=entry_symbol,
+        )
 
     def _build_graph(self) -> None:
         for chunk in self.chunks:
@@ -288,7 +348,17 @@ class HybridRetriever:
         self._graph[left].add(right)
         self._graph[right].add(left)
 
-    def _build_query_text(self, question: str, entry_symbol: str, entry_file: str) -> str:
+    def _build_query_text(
+        self,
+        question: str,
+        entry_symbol: str,
+        entry_file: str,
+        query_mode: str,
+    ) -> str:
+        if query_mode == "question_only":
+            return question.strip()
+        if query_mode != "question_plus_entry":
+            raise ValueError(f"Unsupported query mode: {query_mode}")
         return " ".join(
             part
             for part in (question.strip(), entry_symbol.strip(), entry_file.strip())
@@ -301,15 +371,19 @@ class HybridRetriever:
         entry_symbol: str,
         entry_file: str,
         top_n: int,
+        query_mode: str,
     ) -> list[str]:
         seeds: set[str] = set()
-        if entry_symbol:
-            seeds.update(self._resolve_target_ids(entry_symbol))
-            seeds.update(self._resolve_target_ids(entry_symbol.rsplit(".", 1)[0]))
-        if entry_file:
-            module_from_file = _entry_file_to_module(entry_file)
-            if module_from_file:
-                seeds.update(self.module_to_ids.get(module_from_file, []))
+        if query_mode == "question_plus_entry":
+            if entry_symbol:
+                seeds.update(self._resolve_target_ids(entry_symbol))
+                seeds.update(self._resolve_target_ids(entry_symbol.rsplit(".", 1)[0]))
+            if entry_file:
+                module_from_file = _entry_file_to_module(entry_file)
+                if module_from_file:
+                    seeds.update(self.module_to_ids.get(module_from_file, []))
+        elif query_mode != "question_only":
+            raise ValueError(f"Unsupported query mode: {query_mode}")
         for target in _extract_symbol_like_strings(question):
             seeds.update(self._resolve_target_ids(target))
 
