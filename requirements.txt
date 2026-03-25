@@ -1,0 +1,12 @@
+# Core analysis
+networkx>=3.3
+jedi>=0.19.2
+rank-bm25>=0.2.2
+
+# Parsing and retrieval
+tree-sitter>=0.24.0
+tree-sitter-python>=0.23.6
+
+# Reporting
+matplotlib>=3.9.2
+

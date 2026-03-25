@@ -1,0 +1,3 @@
+[submodule "external/celery"]
+	path = external/celery
+	url = https://github.com/celery/celery.git
