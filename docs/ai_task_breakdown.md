@@ -178,6 +178,46 @@
 - FT-006
 - ABL-008
 
+---
+
+## 当前活动批次（2026-03-25）
+
+本节只记录当前这一轮真实在跑的任务，便于直接分发给 AI 或子 agent。
+
+| Task ID | 任务名 | 状态 | 输入 | 输出 | 完成条件 |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| EVAL-011 | 新增 Easy / Medium 样本草稿 Round 1 | review | `external/celery/`、`dataset_schema.md` | `docs/drafts/eval_easy_medium_round1.md` | reviewer 逐条给出 verdict |
+| EVAL-012 | 新增 Hard 样本草稿 Round 1 | review | `external/celery/`、`dataset_schema.md` | `docs/drafts/eval_hard_round1.md` | reviewer 逐条给出 verdict |
+| PE-010 | 补齐 few-shot 空位 Round 1 | review | `docs/fewshot_examples.md`、`external/celery/` | `docs/drafts/fewshot_round1.md` | reviewer 逐条给出 verdict |
+| EVAL-013 | 旧 schema -> 新 schema 迁移方案 | done | `data/eval_cases.json`、`docs/dataset_schema.md` | `docs/drafts/schema_migration_round2.md` | 映射表、风险、步骤齐备 |
+| EVAL-014 | 双 reviewer 对抗式审稿 | done | `review_round1.md` + 3 份草稿 | `review_round2_findings.md`、`review_round3_challenge.md` | 每条 item 均有 pass/hold/reject |
+| EVAL-015 | 仲裁双 reviewer 分歧项 | done | 两份 review 文件 + 原始草稿 | `docs/drafts/review_round4_arbitration.md` | 争议项有最终 keep/repair/drop |
+| EVAL-016 | 旧 12 条样本迁移为新 schema draft | done | `schema_migration_round2.md`、审稿结论 | `data/eval_cases_migrated_draft.json` | 旧 12 条全部迁移且字段齐全 |
+| EVAL-017 | 将通过审核的新样本合入正式评测集 | doing | 迁移 draft + pass 条目 | `data/eval_cases.json` | 正式集至少 24 条，新 schema 统一 |
+| PE-011 | few-shot round 2 重写 | doing | `fewshot_round1.md` + review objection | `docs/drafts/fewshot_round2.md` | 先产出不泄漏 eval 的修订版 |
+| PE-012 | round 2 修订稿二次复审 | done | `eval_easy_medium_round2.md`、`eval_hard_round2.md`、`fewshot_round2.md` | `docs/drafts/review_round5_round2.md` | 修订稿得到 accept / needs_more_fix / reject |
+| PE-013 | 将通过审核的 few-shot 回填正式文档 | doing | 二次复审结论 + `fewshot_round2.md` | `docs/fewshot_examples.md` | 正式 few-shot 文档已补齐一批空位 |
+| PE-014 | 继续修订未过审 few-shot | doing | `review_round5_round2.md` | `docs/drafts/fewshot_round3.md` | B03 / B04 / E03 过线或被替换 |
+| PE-015 | few-shot 尾项 final review | done | `eval_remaining_round3.md`、`fewshot_round3.md` | `docs/drafts/review_round6_tail.md` | 尾项得到 accept / needs_more_fix / reject |
+| PE-016 | 修复 few-shot E03 与继续补齐 Type A / D | todo | `review_round6_tail.md`、正式 few-shot 文档 | `docs/drafts/fewshot_round4.md` 或等价产物 | few-shot 结构更完整，E03 过线 |
+| PM-001 | 更新阶段进度并推送远端 | todo | 当前进展与审稿结论 | 进度文档 + git push | 本地与远端一致 |
+
+## 当前批次的质量门禁
+
+### 对 eval 草稿
+
+1. 不允许 mixed schema。
+2. 不允许用中间跳板符号充当最终 `ground_truth`。
+3. 不允许 `difficulty` 和 `implicit_level` 明显失配。
+4. 不允许与旧 12 条高重复。
+
+### 对 few-shot 草稿
+
+1. 不允许只做“问题换皮”。
+2. 不允许把 easy 题伪装成 hard 对抗样例。
+3. 不允许没有清晰 bad case 对应关系。
+4. 不允许输出结构与正式 schema 脱节。
+
 ## 任务拆分原则补充
 
 - 如果一个任务同时需要“读源码 + 造数据 + 写报告”，就拆成至少两个 task。

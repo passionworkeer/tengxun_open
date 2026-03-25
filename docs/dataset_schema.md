@@ -4,7 +4,7 @@
 
 本文件用于统一评测集与微调集的数据口径，避免后续在样本构建、标注、评测和报告阶段出现字段漂移。
 
-## 评测集 `eval_cases_celery.json`
+## 评测集 `data/eval_cases.json`
 
 ### 目标
 
@@ -49,7 +49,7 @@
 
 ---
 
-## 微调集 `finetune_dataset_500.jsonl`
+## 微调集 `data/finetune_dataset_500.jsonl`
 
 ### 目标
 
@@ -89,7 +89,7 @@
 
 ---
 
-## Few-shot 示例库 `fewshot_examples_20.json`
+## Few-shot 示例库 `data/fewshot_examples_20.json`
 
 ### 目标
 

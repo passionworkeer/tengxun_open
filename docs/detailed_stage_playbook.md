@@ -27,6 +27,19 @@
 4. 每次实验只改一个关键变量，确保消融成立。
 5. 每个阶段都要沉淀成文档，而不是只留在聊天或临时笔记里。
 
+## 当前执行状态（2026-03-25）
+
+- 阶段 0 已完成：主方案、执行路线、AI 分工文档已经落地。
+- 阶段 1 已完成：`external/celery/` 已绑定到固定提交。
+- 阶段 2 正在推进到“24 条可复核版本”里程碑：
+  - 旧版正式集仍有 12 条旧 schema 样本
+  - 新一轮 16 条 eval 草稿已经独立写入 `docs/drafts/`
+  - schema migration 方案已经独立写成草稿
+  - 严格 reviewer 正在逐条审稿
+- 阶段 4 也已提前进入 few-shot 草稿阶段，但正式 few-shot 文档尚未回填。
+
+当前真实下一步不是继续无脑造数，而是先完成 review -> migration draft -> approved integration 这条链。
+
 ---
 
 ## 阶段 0：文档与口径冻结
@@ -140,18 +153,34 @@
 每条样本都要完成以下内容：
 
 1. 明确问题定义，只问一个清晰问题。
-2. 记录入口文件和入口符号。
-3. 追踪真实依赖链，写出最终 `gold_fqns`。
-4. 用“证据链”写清楚是怎么从源码走到答案的。
-5. 给样本打难度标签和类别标签。
+2. 记录 `source_file` 和 `source_commit`，必要的入口符号信息可写入 `source_note`。
+3. 追踪真实依赖链，分别写出：
+   - `ground_truth.direct_deps`
+   - `ground_truth.indirect_deps`
+   - `ground_truth.implicit_deps`
+4. 用“证据链”写清楚是怎么从源码走到答案的，至少覆盖关键跳转。
+5. 给样本打 `difficulty`、`category`、`failure_type`、`implicit_level` 标签。
+6. 写 `reasoning_hint`，但不要把最终答案直接泄露成一句话抄写。
 
 #### 2.3 样本质检
 
 1. 每 10 条样本做一次抽检。
 2. Hard 样本必须二次复核。
 3. 有歧义的样本要么补证据，要么删掉，不允许带病入库。
+4. AI 起草内容先进入独立草稿文件，不直接改正式评测集。
+5. reviewer 必须逐条给出 `pass / hold / reject`。
+6. `hold / reject` 条目修完前，不允许合入正式集。
 
-#### 2.4 比例控制
+#### 2.4 旧 schema 迁移
+
+当前仓库已有 12 条旧 schema 样本，因此阶段 2 不只是“继续新增”，还要补做迁移：
+
+1. 先根据 `docs/dataset_schema.md` 生成迁移 draft，不直接改正式文件。
+2. 将旧字段映射到新字段结构，统一 `ground_truth` 子字段。
+3. 人工补齐 `failure_type`、`implicit_level` 以及必要的 `indirect_deps / implicit_deps`。
+4. 迁移后的旧样本也要走 reviewer 复核，不能因为“原来就在库里”就跳过。
+
+#### 2.5 比例控制
 
 - Easy：15 条
 - Medium：20 条
@@ -167,11 +196,16 @@
 
 - [docs/first_batch_candidates.md](first_batch_candidates.md)
 - `data/eval_cases.json`
+- `docs/drafts/eval_easy_medium_round1.md`
+- `docs/drafts/eval_hard_round1.md`
+- `docs/drafts/schema_migration_round2.md`
+- reviewer 审稿文档
 - 人工标注时产生的中间笔记或抽检记录
 
 ### 完成标准
 
 - 正式评测集不少于 50 条
+- 正式评测集已统一到新 schema
 - 每条样本都能回溯到真实源码
 - 难度分布达到目标比例
 - 每条样本都有可复核证据链
@@ -474,8 +508,10 @@
 
 ## 当前建议的下一步
 
-当前最该做的是阶段 2：
+当前最该做的是把阶段 2 和阶段 4 的“门禁工作”做实：
 
-- 按 [first_batch_candidates.md](first_batch_candidates.md) 先完成 12 条首批样本
-- 每条样本都按 [eval_case_annotation_template.md](eval_case_annotation_template.md) 填完整
-- 先把评测集质量做稳，再启动 baseline 评测
+1. 收到 reviewer 对 Round 1 eval / few-shot 草稿的逐条结论。
+2. 根据 `schema_migration_round2.md` 生成旧 12 条样本的新 schema draft。
+3. 只把 reviewer 通过的条目并入正式评测集，先做成 24 条稳定版本。
+4. 回填通过审核的 few-shot 到正式文档。
+5. 等评测集与 few-shot 口径都稳定后，再启动 baseline 评测。
