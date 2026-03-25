@@ -41,6 +41,7 @@
 │   ├── ai_task_cards.md
 │   ├── ai_work_batches.md
 │   ├── candidate_task_packets.md
+│   ├── candidate_dispatch_prompts.md
 │   ├── detailed_stage_playbook.md
 │   ├── eval_case_annotation_template.md
 │   ├── experiment_log_template.md
@@ -85,6 +86,7 @@
 - `ai_task_cards.md`：高频任务的标准任务卡，适合直接派发
 - `ai_work_batches.md`：任务派发顺序和并行规则，适合连续给 AI 派单
 - `candidate_task_packets.md`：首批候选样本 `C01-C12` 的逐条任务包，适合直接拆单
+- `candidate_dispatch_prompts.md`：首批候选样本 `C01-C12` 的可复制派单 prompt
 - `detailed_stage_playbook.md`：逐阶段执行手册，明确每一阶段的输入、动作、产出与验收标准
 - `eval_case_annotation_template.md`：单条评测样本的人工标注模板与填写规范
 - `experiment_log_template.md`：实验记录模板，统一记录模型、Prompt、检索与结果
@@ -159,8 +161,9 @@
 3. 阅读 [docs/detailed_stage_playbook.md](docs/detailed_stage_playbook.md)，按阶段执行，不要跳步骤。
 4. 如果要让 AI 帮忙执行，先用 [docs/ai_task_breakdown.md](docs/ai_task_breakdown.md) 选任务，再参考 [docs/ai_work_batches.md](docs/ai_work_batches.md) 决定派发顺序，并配合 [docs/ai_task_cards.md](docs/ai_task_cards.md) 和 [docs/ai_prompt_templates.md](docs/ai_prompt_templates.md) 派发。
 5. 如果要把首批样本继续拆细，就直接使用 [docs/candidate_task_packets.md](docs/candidate_task_packets.md) 逐条派发 `C01-C12`。
-6. 先过一遍 [docs/first_batch_candidates.md](docs/first_batch_candidates.md)，再结合 [docs/celery_case_mining.md](docs/celery_case_mining.md) 和 [docs/eval_case_annotation_template.md](docs/eval_case_annotation_template.md) 开始人工标注。
-7. 等评测集稳定后，再开始 PE、RAG、Fine-tune 的逐层实验。
+6. 如果想复制即发，就直接使用 [docs/candidate_dispatch_prompts.md](docs/candidate_dispatch_prompts.md)。
+7. 先过一遍 [docs/first_batch_candidates.md](docs/first_batch_candidates.md)，再结合 [docs/celery_case_mining.md](docs/celery_case_mining.md) 和 [docs/eval_case_annotation_template.md](docs/eval_case_annotation_template.md) 开始人工标注。
+8. 等评测集稳定后，再开始 PE、RAG、Fine-tune 的逐层实验。
 
 ## 快速开始
 
