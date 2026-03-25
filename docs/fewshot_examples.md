@@ -158,7 +158,38 @@
 }
 ```
 
-### Few-shot B05: （待补充）
+### Few-shot B05: `@app.task` 在 execv 场景的首跳转发
+
+**问题**：当进程处于 execv 兼容场景（`FORKED_BY_MULTIPROCESSING` 为真）且 `@app.task` 未显式关闭 lazy 时，装饰器流程会先转发到哪个入口，而不是直接走当前 app 的 `_task_from_fun`？
+
+**环境前置条件**：
+1. `FORKED_BY_MULTIPROCESSING` 对应的环境变量在导入 `celery.app.base` 之前已设置，使 `USING_EXECV` 为真。
+2. 调用 `@app.task(...)` 时 `lazy` 未显式设为 `False`（保持默认可懒注册分支）。
+3. 关注的是“首跳转发入口”，不是最终任务实例创建终点。
+
+**推理过程**：
+1. `celery.app.base` 在模块导入阶段就把 `USING_EXECV` 绑定为 `os.environ.get('FORKED_BY_MULTIPROCESSING')`。
+2. `Celery.task` 开头先判断 `if USING_EXECV and opts.get('lazy', True): ...`。
+3. 条件成立时，代码不会继续走当前 app 的 `inner_create_task_cls` 主分支。
+4. 该分支显式 `from . import shared_task`，随后 `return shared_task(*args, lazy=False, **opts)`。
+5. 因此 `@app.task` 在这个场景下的首跳入口是 `celery.app.shared_task`；后续 finalize / 注册逻辑已属于下一阶段链路。
+
+**答案**：
+```json
+{
+  "ground_truth": {
+    "direct_deps": [
+      "celery.app.shared_task"
+    ],
+    "indirect_deps": [
+      "celery.app.base.Celery.task"
+    ],
+    "implicit_deps": [
+      "celery.app.base.USING_EXECV"
+    ]
+  }
+}
+```
 
 ---
 
@@ -245,7 +276,67 @@
 }
 ```
 
-### Few-shot C04-C05: （待补充）
+### Few-shot C04: `celery.chord` 的再导出 + 兼容别名链
+
+**问题**：顶层 `celery.chord` 最终落到 `celery.canvas` 中哪个真实类定义，而不是停在兼容别名符号名上？
+
+**环境前置条件**：
+1. 使用当前 Celery 源码快照（`b8f85213f45c937670a6a6806ce55326a0eb537f`）。
+2. 按正常导入路径访问顶层 `celery.chord`。
+
+**推理过程**：
+1. `celery/__init__.py` 通过 `local.recreate_module` 把顶层 `chord` 懒导出到 `celery.canvas`。
+2. 在 `celery.canvas` 中，公开名 `chord` 不是独立定义的新类，而是兼容别名赋值：`chord = _chord`。
+3. 真正类定义位置是 `class _chord(Signature): ...`。
+4. 因此顶层 `celery.chord` 的“真实定义落点”应追到 `celery.canvas._chord`，而不仅是别名名义上的 `celery.canvas.chord`。
+5. 这类链路是“顶层再导出 + 模块内 back-compat alias”的两段式路径。
+
+**答案**：
+```json
+{
+  "ground_truth": {
+    "direct_deps": [
+      "celery.canvas._chord"
+    ],
+    "indirect_deps": [
+      "celery.canvas.chord",
+      "celery.local.recreate_module"
+    ],
+    "implicit_deps": []
+  }
+}
+```
+
+### Few-shot C05: `celery.uuid` 的跨模块再导出链
+
+**问题**：顶层 `celery.uuid` 最终解析到哪个真实函数符号（跨到 `celery.utils` 之外的提供者）？
+
+**环境前置条件**：
+1. 正常导入顶层 `celery` 包。
+2. 不对 `celery.utils` 做本地 monkey patch。
+
+**推理过程**：
+1. `celery/__init__.py` 的 `recreate_module` 将顶层 `uuid` 映射到 `celery.utils` 模块下的同名符号。
+2. `celery/utils/__init__.py` 并未在本地实现 `uuid`，而是 `from kombu.utils.uuid import uuid`。
+3. 因此 `celery.utils.uuid` 本身是一次转发引用。
+4. 顶层 `celery.uuid` 继续沿该转发链，最终真实提供者落到 `kombu.utils.uuid.uuid`。
+5. 这是“顶层懒再导出 + 子模块二次再导出（跨包）”的复合链路。
+
+**答案**：
+```json
+{
+  "ground_truth": {
+    "direct_deps": [
+      "kombu.utils.uuid.uuid"
+    ],
+    "indirect_deps": [
+      "celery.utils.uuid",
+      "celery.local.recreate_module"
+    ],
+    "implicit_deps": []
+  }
+}
+```
 
 ---
 
@@ -555,10 +646,41 @@
 }
 ```
 
-### Few-shot A02: （待替换）
+### Few-shot A02: `current_app.tasks` 首访链路（分离 default app 与 finalize）
 
-- round 1 原题已判定为 `reject`，原因是把“访问 `current_app`”误写成“触发 auto-finalize”。
-- round 2 replacement 已起草到 `docs/drafts/fewshot_type_a_round2.md`，但在 `docs/drafts/review_round11_type_a_round2.md` 中仍被判定为 `needs_more_fix`，暂不回填。
+**问题**：在未显式创建全局 app 的前提下，首次访问 `celery.current_app.tasks` 时，哪一步只负责创建/返回 default app，哪一步才会触发 `finalize`？
+
+**环境前置条件**：
+1. 进程内尚未显式执行 `Celery(..., set_as_current=True)` 或其他等价的全局 app 绑定。
+2. 使用默认 current_app 路径（未开启 `C_STRICT_APP` / `C_WARN_APP` 特殊分支）。
+3. `autofinalize=True`（默认配置）。
+
+**推理过程**：
+1. `celery.current_app` 是 `Proxy(get_current_app)`；先发生的是 Proxy 解引用，而不是任务注册表访问。
+2. 在默认分支中，`get_current_app` 绑定到 `_get_current_app`：若 `default_app is None`，会创建 fallback `Celery('default', fixups=[], set_as_current=False, loader=...)` 并 `set_default_app(...)`。
+3. 到这一步为止，只完成“创建/返回 default app”；单独访问 `celery.current_app` 本身不会触发 `finalize`。
+4. 随后访问 `.tasks` 才命中 `Celery.tasks`（cached_property），其内部显式执行 `self.finalize(auto=True)`，这是 finalize 的稳定触发点。
+5. `finalize` 内部可能涉及 `_announce_app_finalized`、`maybe_evaluate` 等子步骤，但它们受内部状态影响，不应作为本题必经主链依赖。
+
+**答案**：
+```json
+{
+  "ground_truth": {
+    "direct_deps": [
+      "celery.app.base.Celery.tasks"
+    ],
+    "indirect_deps": [
+      "celery.app.base.Celery.finalize",
+      "celery._state._get_current_app"
+    ],
+    "implicit_deps": [
+      "celery._state.current_app",
+      "celery.local.Proxy",
+      "celery._state.default_app"
+    ]
+  }
+}
+```
 
 ---
 
@@ -571,7 +693,7 @@
 
 ## 后续工作
 
-- [ ] 从 bad case 中补充完整的 20 条示例（当前正式文档已稳定 16 条；剩余 `B05 / C04 / C05 / A02`）
-- [ ] 每条示例验证在 Celery 源码中可复现
+- [x] 从 bad case 中补充完整的 20 条示例（当前正式文档已稳定 20 条；`A02 / B05 / C04 / C05` 已回填）
+- [x] 每条示例验证在 Celery 源码中可复现
 - [ ] 写入 `pe/prompt_templates_v2.py`
 - [ ] 创建 `data/fewshot_examples_20.json` 文件

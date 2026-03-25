@@ -163,12 +163,11 @@
 
 ### 适合立刻交给 AI 的
 
-- EVAL-002
-- EVAL-003
-- EVAL-004
 - EVAL-006
 - EVAL-007
 - EVAL-008
+- PE-021
+- PE-022
 
 ### 需要人工强参与的
 
@@ -193,18 +192,20 @@
 | EVAL-014 | 双 reviewer 对抗式审稿 | done | `review_round1.md` + 3 份草稿 | `review_round2_findings.md`、`review_round3_challenge.md` | 每条 item 均有 pass/hold/reject |
 | EVAL-015 | 仲裁双 reviewer 分歧项 | done | 两份 review 文件 + 原始草稿 | `docs/drafts/review_round4_arbitration.md` | 争议项有最终 keep/repair/drop |
 | EVAL-016 | 旧 12 条样本迁移为新 schema draft | done | `schema_migration_round2.md`、审稿结论 | `data/eval_cases_migrated_draft.json` | 旧 12 条全部迁移且字段齐全 |
-| EVAL-017 | 将通过审核的新样本合入正式评测集 | doing | 迁移 draft + pass 条目 | `data/eval_cases.json` | 正式集至少 24 条，新 schema 统一 |
+| EVAL-017 | 将通过审核的新样本合入正式评测集 | blocked | 迁移 draft + pass 条目 | `data/eval_cases.json` | 仅在 `review_round7_eval_dataset.md` 的 hold 被解除后推进 |
 | PE-011 | few-shot round 2 重写 | doing | `fewshot_round1.md` + review objection | `docs/drafts/fewshot_round2.md` | 先产出不泄漏 eval 的修订版 |
 | PE-012 | round 2 修订稿二次复审 | done | `eval_easy_medium_round2.md`、`eval_hard_round2.md`、`fewshot_round2.md` | `docs/drafts/review_round5_round2.md` | 修订稿得到 accept / needs_more_fix / reject |
-| PE-013 | 将通过审核的 few-shot 回填正式文档 | doing | 二次复审结论 + `fewshot_round2.md` | `docs/fewshot_examples.md` | 正式 few-shot 文档已补齐一批空位 |
+| PE-013 | 将通过审核的 few-shot 回填正式文档 | done | 二次复审结论 + 后续 round 13 / 14 审稿结果 | `docs/fewshot_examples.md` | 正式 few-shot 文档已补齐稳定 20 条 |
 | PE-014 | 继续修订未过审 few-shot | done | `review_round5_round2.md` | `docs/drafts/fewshot_round3.md` | B03 / B04 / E03 过线或被替换 |
 | PE-015 | few-shot 尾项 final review | done | `eval_remaining_round3.md`、`fewshot_round3.md` | `docs/drafts/review_round6_tail.md` | 尾项得到 accept / needs_more_fix / reject |
 | PE-016 | 修复 few-shot E03 与继续补齐 Type A / D | done | `review_round6_tail.md`、正式 few-shot 文档 | `docs/drafts/fewshot_round4.md` 或等价产物 | few-shot 结构更完整，E03 过线 |
 | EVAL-018 | 正式升格前数据集审计 | done | `data/eval_cases_migrated_draft.json` | `docs/drafts/review_round7_eval_dataset.md` | 得到 promote / hold 结论 |
 | PE-017 | E03 spot review | done | `docs/drafts/fewshot_round4.md` | `docs/drafts/review_round8_e03.md` | E03 可回填或继续修 |
 | PE-018 | Type A / D few-shot 扩展批次 | done | `docs/drafts/fewshot_gap_plan_round1.md` | `docs/drafts/fewshot_type_a_round1.md`、`docs/drafts/fewshot_type_d_round1.md`、`docs/drafts/fewshot_type_d_round2.md`、`docs/drafts/type_ad_challenge_notes.md`、`docs/drafts/review_round9_type_ad.md`、`docs/drafts/review_round10_type_ad_arbitration.md` | Type D 已修订回填正式文档，A01 已回填，A02 得到明确 rewrite 结论 |
-| PE-019 | 补 Type A 的 A02 replacement | review | `docs/drafts/review_round10_type_ad_arbitration.md`、`external/celery/` | `docs/drafts/fewshot_type_a_round2.md`、`docs/drafts/review_round11_type_a_round2.md` | A02 收紧分层和前置条件后过审，不再把 `current_app` 访问误写成 finalize 触发，且不与现有 B04 重复 |
-| PE-020 | 补齐 B / C 尾项 few-shot | review | `docs/fewshot_examples.md`、`docs/drafts/fewshot_gap_plan_round1.md`、bad case 清单 | `docs/drafts/fewshot_bc_tail_round1.md` | `B05 / C04 / C05` 经严格 reviewer 给出 accept / needs_more_fix / reject |
+| PE-019 | 补 Type A 的 A02 replacement | done | `docs/drafts/review_round10_type_ad_arbitration.md`、`external/celery/` | `docs/drafts/fewshot_type_a_round3.md`、`docs/drafts/review_round13_type_a_round3.md` | A02 收紧分层和前置条件后过审，并已回填正式文档 |
+| PE-020 | 补齐 B / C 尾项 few-shot | done | `docs/fewshot_examples.md`、`docs/drafts/fewshot_gap_plan_round1.md`、bad case 清单 | `docs/drafts/fewshot_bc_tail_round1.md`、`docs/drafts/review_round12_bc_tail.md`、`docs/drafts/bc_tail_review_notes.md`、`docs/drafts/review_round13_bc_arbitration.md`、`docs/drafts/review_round14_strict_challenge.md` | `B05 / C04 / C05` 完成仲裁并已回填正式文档 |
+| PE-021 | 将 20 条正式 few-shot 写入 prompt 模板 | ready | `docs/fewshot_examples.md` | `pe/prompt_templates_v2.py` | 20 条样本在模板中可直接消费，且不混入 draft-only 条目 |
+| PE-022 | 导出正式 few-shot JSON 工件 | ready | `docs/fewshot_examples.md` | `data/fewshot_examples_20.json` | 20 条顺序、字段、ground truth 结构与正式文档完全一致 |
 | PM-001 | 更新阶段进度并推送远端 | doing | 当前进展与审稿结论 | 进度文档 + git push | 文档状态与仓库实际一致；待统一 commit / push |
 
 ## 当前批次的质量门禁

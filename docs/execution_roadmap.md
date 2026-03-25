@@ -137,8 +137,8 @@
 
 - ✅ 阶段 0：文档定稿（已完成）
 - ✅ 阶段 1：目标仓库准备（已完成，commit: b8f85213）
-- ⏳ 阶段 2：评测集构建（旧 12 条仍待迁移到新 schema）
-- ⏳ 阶段 4：few-shot 正式回填中（Type D 已补齐，A01 已回填，A02 待 replacement）
+- ⏳ 阶段 2：评测集构建（28 条迁移 draft 已产出，但正式 `data/eval_cases.json` 仍保持 hold）
+- ⏳ 阶段 4：few-shot 正式池已补齐 20 条（`A02 / B05 / C04 / C05` 已过审并回填，待写入 prompt / JSON 工件）
 
 ## 当前并行批次（2026-03-25）
 
@@ -153,16 +153,15 @@
 
 - reviewer 双审与仲裁已完成：`medium_006` 可收，`celery_hard_013 / 017` 需修后再收
 - 正式评测集迁移 draft 已产出：`data/eval_cases_migrated_draft.json`（28 条）
-- A / D few-shot 审稿链已补齐：`docs/drafts/review_round9_type_ad.md` + `docs/drafts/review_round10_type_ad_arbitration.md`
-- Type A round 2 已产出并完成严格复审：`docs/drafts/fewshot_type_a_round2.md` + `docs/drafts/review_round11_type_a_round2.md`
-- few-shot 文档已回填：`A01 / B02 / B03 / B04 / C02 / C03 / D01 / D02 / D03 / D04 / E02 / E03 / E04`
-- A / D 仲裁结论：修订后 `A01`、`D01-D04` 可集成；`A02` round 2 replacement 已起草，但当前仍是 `needs_more_fix`
-- B / C 尾项草稿已产出：`docs/drafts/fewshot_bc_tail_round1.md`（待正式审稿）
+- few-shot 扩展审稿链已补齐：`docs/drafts/fewshot_type_a_round3.md` + `docs/drafts/review_round13_type_a_round3.md` + `docs/drafts/review_round12_bc_tail.md` + `docs/drafts/review_round13_bc_arbitration.md` + `docs/drafts/review_round14_strict_challenge.md`
+- few-shot 文档已补齐 20 条正式条目：`A01 / A02 / B01-B05 / C01-C05 / D01-D04 / E01-E04`
+- A02 已以收紧版回填：默认 app 解析与 `Celery.tasks -> finalize(auto=True)` 已明确拆开
+- B05 已以收紧版回填：补足 execv 场景的 env import 时序前置条件，ground truth 只保留首跳入口
 - 正式升格审核结论：当前 28 条 draft 暂不替换正式 `data/eval_cases.json`
-- 仍待继续处理：继续收紧 `A02` replacement，并审 `B05 / C04 / C05`
+- 仍待继续处理：把 20 条正式 few-shot 写入 `pe/prompt_templates_v2.py`，并生成 `data/fewshot_examples_20.json`
 
 ### 下一步顺序
 
-1. 先修 `docs/drafts/fewshot_type_a_round2.md` 里的 `A02`，让 replacement 过线。
-2. 再审 `docs/drafts/fewshot_bc_tail_round1.md`，决定 `B05 / C04 / C05` 哪些可直接回填。
+1. 将 `docs/fewshot_examples.md` 的 20 条正式样本写入 `pe/prompt_templates_v2.py`。
+2. 生成 `data/fewshot_examples_20.json`，保证顺序与正式文档一致。
 3. 继续补 eval 的 Type A / Type D / hard 配额，但在更强复核前不升级正式 `data/eval_cases.json`。
