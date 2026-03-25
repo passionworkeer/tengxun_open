@@ -202,8 +202,10 @@
 | PE-016 | 修复 few-shot E03 与继续补齐 Type A / D | done | `review_round6_tail.md`、正式 few-shot 文档 | `docs/drafts/fewshot_round4.md` 或等价产物 | few-shot 结构更完整，E03 过线 |
 | EVAL-018 | 正式升格前数据集审计 | done | `data/eval_cases_migrated_draft.json` | `docs/drafts/review_round7_eval_dataset.md` | 得到 promote / hold 结论 |
 | PE-017 | E03 spot review | done | `docs/drafts/fewshot_round4.md` | `docs/drafts/review_round8_e03.md` | E03 可回填或继续修 |
-| PE-018 | Type A / D few-shot 扩展批次 | doing | `docs/drafts/fewshot_gap_plan_round1.md` | 新 few-shot 草稿 | 把 few-shot 总量继续推向 20 条 |
-| PM-001 | 更新阶段进度并推送远端 | todo | 当前进展与审稿结论 | 进度文档 + git push | 本地与远端一致 |
+| PE-018 | Type A / D few-shot 扩展批次 | done | `docs/drafts/fewshot_gap_plan_round1.md` | `docs/drafts/fewshot_type_a_round1.md`、`docs/drafts/fewshot_type_d_round1.md`、`docs/drafts/fewshot_type_d_round2.md`、`docs/drafts/type_ad_challenge_notes.md`、`docs/drafts/review_round9_type_ad.md`、`docs/drafts/review_round10_type_ad_arbitration.md` | Type D 已修订回填正式文档，A01 已回填，A02 得到明确 rewrite 结论 |
+| PE-019 | 补 Type A 的 A02 replacement | review | `docs/drafts/review_round10_type_ad_arbitration.md`、`external/celery/` | `docs/drafts/fewshot_type_a_round2.md`、`docs/drafts/review_round11_type_a_round2.md` | A02 收紧分层和前置条件后过审，不再把 `current_app` 访问误写成 finalize 触发，且不与现有 B04 重复 |
+| PE-020 | 补齐 B / C 尾项 few-shot | review | `docs/fewshot_examples.md`、`docs/drafts/fewshot_gap_plan_round1.md`、bad case 清单 | `docs/drafts/fewshot_bc_tail_round1.md` | `B05 / C04 / C05` 经严格 reviewer 给出 accept / needs_more_fix / reject |
+| PM-001 | 更新阶段进度并推送远端 | doing | 当前进展与审稿结论 | 进度文档 + git push | 文档状态与仓库实际一致；待统一 commit / push |
 
 ## 当前批次的质量门禁
 

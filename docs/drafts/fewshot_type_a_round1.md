@@ -7,7 +7,7 @@
 ### Few-shot A01: CLI worker 启动长链
 
 **问题**  
-当执行 `celery -A proj worker` 时，从命令入口到 Worker 实例化的关键调用链是什么？请标出最终负责启动 worker 的可调用对象。
+当执行 `celery -A proj worker` 时，从 CLI 命令入口到 worker 真正启动的关键调用链是什么？请标出最终执行启动动作的可调用入口，以及 Worker 实例来自哪个动态绑定类。
 
 **环境前置条件**  
 - 命令行调用：`celery -A proj worker`，未自定义子命令。
@@ -15,26 +15,28 @@
 - 使用默认 `CELERY_LOADER` 与默认 worker 选项（无 `--loader` 等改写）。
 
 **推理链（示例 5 步，可压缩为 ≥4 步）**  
-1. `celery/bin/celery.py:main()` 解析 argv，将 `worker` 子命令分派给 `celery/bin/worker.py:main`.  
-2. `celery/bin/worker.py:main` 构造 `WorkerCommand(app=self.app)`，进入 `run_from_argv`。  
-3. `WorkerCommand.run_from_argv` 内部调用 `self.execute_from_commandline` → `WorkerCommand.run`。  
-4. `run` 构造 `worker = self.app.Worker(**kwargs)`（`self.app` 已在 CLI 创建），这里触发 `Celery.Worker` 缓存属性。  
-5. `Celery.Worker` 缓存属性调用 `self.subclass_with_self('celery.apps.worker:Worker')`，最终返回绑定 app 的 Worker 子类并实例化，启动 worker。
+1. `celery/bin/celery.py:main()` 启动顶层 Click 入口；`celery` group 已通过 `celery.add_command(worker)` 注册 `worker` 子命令。  
+2. 解析完 `-A proj` 后，CLI 把 app 放进 `CLIContext`，随后进入 `celery/bin/worker.py:worker(...)` 这个子命令函数。  
+3. `worker(...)` 内部执行 `worker = app.Worker(...)`，这里触发 `Celery.Worker` 缓存属性。  
+4. `Celery.Worker` 调用 `self.subclass_with_self('celery.apps.worker:Worker')`；`subclass_with_self` 再通过 `symbol_by_name` 解析真实类并生成绑定当前 app 的 Worker 子类。  
+5. 命令函数最后显式调用 `worker.start()`，真正把 worker 跑起来；因此“启动动作”和“Worker 类解析”是同一长链里的两个不同节点。
 
 **标准答案（ground_truth）**  
 ```json
 {
   "ground_truth": {
     "direct_deps": [
-      "celery.apps.worker.Worker"
+      "celery.apps.worker.Worker.start"
     ],
     "indirect_deps": [
-      "celery.bin.worker.WorkerCommand.run",
+      "celery.bin.worker.worker",
       "celery.app.base.Celery.Worker",
+      "celery.apps.worker.Worker",
       "celery.app.base.Celery.subclass_with_self"
     ],
     "implicit_deps": [
-      "celery.utils.imports.symbol_by_name"
+      "celery.utils.imports.symbol_by_name",
+      "celery.bin.celery.main"
     ]
   }
 }
@@ -46,46 +48,20 @@
 
 ---
 
-### Few-shot A02: `current_app` 首次访问的 auto-finalize 链
+### Few-shot A02: 当前版本作废，待替换
 
-**问题**  
-第一次访问 `celery.current_app` 时，Proxy 是如何把默认 app 回填并触发 auto-finalize 的？请给出完成回填与 finalize 的关键调用链。
+**状态**  
+- `reject`
 
-**环境前置条件**  
-- 尚未手动创建全局 app（未调用 `Celery()` 显式绑定）。  
-- 使用默认 loader，未设置 `CELERY_LOADER`。  
-- 无自定义 `app.autodiscover_tasks` 预先执行。
+**原因**  
+1. 原题把“首次访问 `celery.current_app`”和“触发 auto-finalize”绑定在一起，但当前源码里这不是同一条链。  
+2. 原推理链混入了不存在于 `_get_current_app()` 路径中的 `maybe_evaluate(pending)` / finalize 副作用，属于错误 few-shot。  
+3. 在替换成新题之前，不应把该条并入正式 few-shot 文档。  
 
-**推理链（示例 5 步，可压缩为 ≥4 步）**  
-1. 代码访问 `celery.current_app`，实为 `celery/_state.py` 中的 `current_app = Proxy(get_current_app)`，触发 Proxy `__call__`。  
-2. `get_current_app` 检查线程局部，若无则调用 `_get_current_app() or (set_default_app())`。  
-3. `_get_current_app` 若发现 `default_app` 为空，则创建默认 `Celery('default')`，随后 `maybe_evaluate(pending)` 将 `_pending` 里的 PromiseProxy 任务 drain。  
-4. 创建默认 app 时，`Celery.__init__` 会挂钩 `self._fixups`，并在 `finalize(auto=True)` 时触发 `connect_on_app_finalize` 登记的回调（如 shared_task pending）。  
-5. 最终 `current_app` Proxy 返回实际的 `Celery` 实例；默认 app 被写回 `_state.default_app`，后续访问走缓存，不再触发构造。
-
-**标准答案（ground_truth）**  
-```json
-{
-  "ground_truth": {
-    "direct_deps": [
-      "celery._state.get_current_app"
-    ],
-    "indirect_deps": [
-      "celery._state._get_current_app",
-      "celery.app.base.Celery.finalize",
-      "celery.local.PromiseProxy"
-    ],
-    "implicit_deps": [
-      "celery._state.set_default_app",
-      "celery._state.default_app"
-    ]
-  }
-}
-```
-
-**为何适合 few-shot（长链分段示范）**  
-- 涉及 Proxy → 线程局部 → 默认 app 构造 → finalize → pending drain，多阶段状态切换，属于典型长链上下文。  
-- 如果放入 eval 容易因默认 app / pending state 造成不可复现的歧义；few-shot 可示范“先定位 Proxy/Getter，再看默认分支，再看 finalize 副作用”这一分段检索方法。
+**后续替换方向**  
+- 方向 A：改成“`current_app` 首次访问的 fallback app 创建链”。  
+- 方向 B：改成“首次访问 `app.tasks` 或等价入口时的真实 auto-finalize 链”。  
+- 具体 replacement 需重新过审，不沿用当前版本的 `ground_truth`。
 
 ---
 

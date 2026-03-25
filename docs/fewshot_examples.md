@@ -251,7 +251,143 @@
 
 ## Type D 命名空间（4 条）
 
-### Few-shot D01-D04: （待从 bad case 中补充）
+### Few-shot D01: TaskRegistry 同名注册冲突
+
+**问题**: 在同一个 `TaskRegistry` 实例里，先后 `register` 两个 `task.name` 相同、但 `run` 实现不同的 Task，最终 `registry[name]` 指向哪一个？
+
+**环境前置条件**:
+1. 两次注册发生在同一个 `TaskRegistry` 对象上。
+2. 两个 Task 都有合法 `name`，不会触发 `InvalidTaskError`。
+3. 第二次注册确实发生，且不是并发未完成状态。
+
+**推理过程**:
+1. `TaskRegistry.register` 先校验 `task.name` 非空，否则抛 `InvalidTaskError`。
+2. 如果传入的是类，`register` 会先实例化，再继续处理。
+3. 随后它执行 `self[task.name] = task`，把任务写入注册表。
+4. `TaskRegistry` 底层是 dict 语义；相同 key 的再次赋值会覆盖旧值。
+5. 因此在“同名冲突”场景下，最终 `registry[name]` 指向后注册的 task，也就是 `last write wins`。
+
+**答案**:
+```json
+{
+  "ground_truth": {
+    "direct_deps": [
+      "celery.app.registry.TaskRegistry.register"
+    ],
+    "indirect_deps": [],
+    "implicit_deps": []
+  }
+}
+```
+
+### Few-shot D02: `@app.task` 自动命名后的同名冲突
+
+**问题**: 同一个 app 中，两个函数都用 `@app.task(lazy=False, shared=False)` 且未显式传 `name`，并且推导出的 `task.name` 相同。第二次装饰时会覆盖第一次，还是复用第一次任务对象？
+
+**环境前置条件**:
+1. 两个函数在同一个 app 下注册。
+2. 两次注册都走 `lazy=False, shared=False`，避免 pending 与 finalize callback 支路干扰，直接考察同步注册路径。
+3. 两个函数推导出的任务名相同。
+
+**推理过程**:
+1. `Celery.task` 在 `lazy=False, shared=False` 条件下，不经过 pending 队列，也不注册 `connect_on_app_finalize(cons)` 支路。
+2. 该分支直接调用 `self._task_from_fun(fun, **opts)`。
+3. `_task_from_fun` 会先确定任务名：`name = name or self.gen_task_name(fun.__name__, fun.__module__)`。
+4. `gen_task_name` 最终委托 `celery.utils.imports.gen_task_name` 生成规范任务名。
+5. `_task_from_fun` 只有在 `name not in self._tasks` 时才创建新任务；否则直接返回 `self._tasks[name]`。
+6. 因此在“同名冲突”场景下，第二次不会覆盖，而是复用第一次已经存在的任务对象，也就是这条路径上 `first wins`。
+
+**答案**:
+```json
+{
+  "ground_truth": {
+    "direct_deps": [
+      "celery.app.base.Celery._task_from_fun"
+    ],
+    "indirect_deps": [
+      "celery.app.base.Celery.gen_task_name",
+      "celery.utils.imports.gen_task_name"
+    ],
+    "implicit_deps": [
+      "celery.app.base.Celery._tasks"
+    ]
+  }
+}
+```
+
+### Few-shot D03: remote control 命令同名冲突
+
+**问题**: 当自定义 remote control 命令与已有命令同名时，以 pidbox `handlers` 分发结果为准，worker 运行时最终采用哪一个实现？
+
+**环境前置条件**:
+1. 两个命令都通过 `@control_command` 或 `@inspect_command` 注册到同一个 `Panel`。
+2. 后注册命令发生在前注册命令之后。
+3. 两者使用相同 `name`，或函数名推导得到相同 `control_name`。
+
+**推理过程**:
+1. `@control_command` / `@inspect_command` 都会转发到 `Panel.register(...)`，再进入 `Panel._register(...)`。
+2. `Panel._register` 在内部执行 `Panel.data[control_name] = fun`，把命令实现写入全局 handlers 映射。
+3. `Panel.data` 是全局 dict；相同 key 的再次赋值会覆盖旧值，所以同名冲突时“后注册覆盖先注册”。
+4. worker pidbox 初始化时把 `handlers=control.Panel.data` 传给 mailbox 节点。
+5. 因此运行时命令分发最终采用的是最后一次写入 `Panel.data[control_name]` 的实现。
+
+**答案**:
+```json
+{
+  "ground_truth": {
+    "direct_deps": [
+      "celery.worker.control.Panel._register",
+      "celery.worker.control.Panel.data"
+    ],
+    "indirect_deps": [
+      "celery.worker.control.control_command",
+      "celery.worker.control.inspect_command",
+      "celery.worker.pidbox.Pidbox.__init__"
+    ],
+    "implicit_deps": []
+  }
+}
+```
+
+### Few-shot D04: `dispatch_uid` 冲突下的 Signal 去重
+
+**问题**: 在同一个 `Signal` 上，对同一 `sender` 重复 `connect` 两个 receiver 且使用同一个 `dispatch_uid`，并假设第一次连接的 receiver 仍然存活，最终会触发几次，按哪个 receiver 执行？
+
+**环境前置条件**:
+1. 两次 `connect` 作用于同一个 `Signal` 实例。
+2. `sender` 相同，且显式传入相同 `dispatch_uid`。
+3. 第二次 `connect` 前未执行 `disconnect`。
+4. 第一次连接的 receiver 仍存活，未被 weakref 回收。
+
+**推理过程**:
+1. `Signal.connect(...)` 最终进入 `Signal._connect_signal(...)`。
+2. `_connect_signal` 用 `_make_lookup_key(receiver, sender, dispatch_uid)` 生成去重键；当 `dispatch_uid` 存在时，key 由 `(dispatch_uid, sender_id)` 组成，不看 receiver 对象身份。
+3. `_connect_signal` 在写入前会清理 dead receivers，然后遍历 `self.receivers`；如果发现相同 key，就不会 append 新 receiver。
+4. 进入发送路径前，Signal 还会继续清理 dead weak receiver；在题设“首次 receiver 仍存活”的前提下，这个 key 仍由第一次连接留下的 receiver 占据。
+5. `Signal.send(...)` 通过 `_live_receivers(...)` 取出当前有效 receiver 并逐个执行，因此该冲突键最终只会触发第一次成功保留下来的 live receiver。
+6. 如果要换成新的 receiver，需要先 `disconnect(...)`，或等待旧 weak receiver 被清理后再重新 `connect(...)`。
+
+**答案**:
+```json
+{
+  "ground_truth": {
+    "direct_deps": [
+      "celery.utils.dispatch.signal.Signal._connect_signal",
+      "celery.utils.dispatch.signal._make_lookup_key"
+    ],
+    "indirect_deps": [
+      "celery.utils.dispatch.signal.Signal.connect",
+      "celery.utils.dispatch.signal.Signal._clear_dead_receivers",
+      "celery.utils.dispatch.signal.Signal.send",
+      "celery.utils.dispatch.signal.Signal._live_receivers",
+      "celery.utils.dispatch.signal.Signal.disconnect"
+    ],
+    "implicit_deps": [
+      "celery.utils.dispatch.signal.Signal.receivers"
+    ]
+  }
+}
+```
 
 ---
 
@@ -382,7 +518,47 @@
 
 ## Type A 长上下文（2 条）
 
-### Few-shot A01-A02: （待从 bad case 中补充）
+### Few-shot A01: CLI worker 启动长链
+
+**问题**: 执行 `celery -A proj worker` 时，从 CLI 入口到真正启动 worker 的关键调用链是什么？最终负责“启动动作”的可调用对象是谁？
+
+**环境前置条件**:
+1. 使用当前 Celery Click CLI（`celery.bin.celery` + `celery.bin.worker`）流程。
+2. `-A proj` 可被 `find_app` 成功解析为 app 实例。
+3. 未对 `worker` 子命令做自定义替换。
+
+**推理过程**:
+1. CLI 入口 `celery.bin.celery.main()` 调用 Click group（`celery(...)`），并通过 `celery.add_command(worker)` 将 `worker` 子命令路由到 `celery.bin.worker.worker`。
+2. `celery.bin.worker.worker(...)` 读取 `ctx.obj.app`，构造 `worker = app.Worker(...)`。
+3. `app.Worker` 不是普通属性，而是 `Celery.Worker` cached_property；它通过 `subclass_with_self('celery.apps.worker:Worker')` 解析并生成绑定 app 的 Worker 子类。
+4. `subclass_with_self` 内部依赖 `symbol_by_name` 将字符串路径解析为真实类 `celery.apps.worker.Worker`。
+5. `celery.bin.worker.worker(...)` 随后调用 `worker.start()`；该 `start` 实现来自父类 `celery.worker.worker.WorkController.start`，这是实际执行启动流程的最终可调用对象。
+
+**答案**:
+```json
+{
+  "ground_truth": {
+    "direct_deps": [
+      "celery.worker.worker.WorkController.start"
+    ],
+    "indirect_deps": [
+      "celery.bin.celery.main",
+      "celery.bin.worker.worker",
+      "celery.app.base.Celery.Worker",
+      "celery.apps.worker.Worker",
+      "celery.app.base.Celery.subclass_with_self"
+    ],
+    "implicit_deps": [
+      "celery.utils.imports.symbol_by_name"
+    ]
+  }
+}
+```
+
+### Few-shot A02: （待替换）
+
+- round 1 原题已判定为 `reject`，原因是把“访问 `current_app`”误写成“触发 auto-finalize”。
+- round 2 replacement 已起草到 `docs/drafts/fewshot_type_a_round2.md`，但在 `docs/drafts/review_round11_type_a_round2.md` 中仍被判定为 `needs_more_fix`，暂不回填。
 
 ---
 
@@ -395,7 +571,7 @@
 
 ## 后续工作
 
-- [ ] 从 bad case 中补充完整的 20 条示例（当前已稳定回填 8 条）
+- [ ] 从 bad case 中补充完整的 20 条示例（当前正式文档已稳定 16 条；剩余 `B05 / C04 / C05 / A02`）
 - [ ] 每条示例验证在 Celery 源码中可复现
 - [ ] 写入 `pe/prompt_templates_v2.py`
 - [ ] 创建 `data/fewshot_examples_20.json` 文件

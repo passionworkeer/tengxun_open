@@ -138,7 +138,7 @@
 - ✅ 阶段 0：文档定稿（已完成）
 - ✅ 阶段 1：目标仓库准备（已完成，commit: b8f85213）
 - ⏳ 阶段 2：评测集构建（旧 12 条仍待迁移到新 schema）
-- ⏳ 阶段 4：few-shot 草稿补齐（已产出一批草稿，等待严格审核）
+- ⏳ 阶段 4：few-shot 正式回填中（Type D 已补齐，A01 已回填，A02 待 replacement）
 
 ## 当前并行批次（2026-03-25）
 
@@ -153,12 +153,16 @@
 
 - reviewer 双审与仲裁已完成：`medium_006` 可收，`celery_hard_013 / 017` 需修后再收
 - 正式评测集迁移 draft 已产出：`data/eval_cases_migrated_draft.json`（28 条）
-- few-shot 文档已回填：`B02 / B03 / B04 / C02 / C03 / E02 / E03 / E04`
+- A / D few-shot 审稿链已补齐：`docs/drafts/review_round9_type_ad.md` + `docs/drafts/review_round10_type_ad_arbitration.md`
+- Type A round 2 已产出并完成严格复审：`docs/drafts/fewshot_type_a_round2.md` + `docs/drafts/review_round11_type_a_round2.md`
+- few-shot 文档已回填：`A01 / B02 / B03 / B04 / C02 / C03 / D01 / D02 / D03 / D04 / E02 / E03 / E04`
+- A / D 仲裁结论：修订后 `A01`、`D01-D04` 可集成；`A02` round 2 replacement 已起草，但当前仍是 `needs_more_fix`
+- B / C 尾项草稿已产出：`docs/drafts/fewshot_bc_tail_round1.md`（待正式审稿）
 - 正式升格审核结论：当前 28 条 draft 暂不替换正式 `data/eval_cases.json`
-- 仍待继续处理：Type A / Type D 的后续补齐，以及剩余 few-shot 空位
+- 仍待继续处理：继续收紧 `A02` replacement，并审 `B05 / C04 / C05`
 
 ### 下一步顺序
 
-1. 继续补 eval 的 Type A / Type D / hard 配额，不急着升格正式集。
-2. 继续补齐 few-shot 的 Type A / Type D 与剩余空位，先把 few-shot 推到 20 条。
-3. 等评测集与 few-shot 两边都更完整后，再重新申请正式升格。
+1. 先修 `docs/drafts/fewshot_type_a_round2.md` 里的 `A02`，让 replacement 过线。
+2. 再审 `docs/drafts/fewshot_bc_tail_round1.md`，决定 `B05 / C04 / C05` 哪些可直接回填。
+3. 继续补 eval 的 Type A / Type D / hard 配额，但在更强复核前不升级正式 `data/eval_cases.json`。

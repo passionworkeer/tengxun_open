@@ -25,18 +25,26 @@
   - `docs/drafts/review_round6_tail.md`
 - E03 spot review 已完成：
   - `docs/drafts/review_round8_e03.md`
+- Type A / D 的严格审稿已补齐：
+  - `docs/drafts/review_round9_type_ad.md`
+  - `docs/drafts/type_a_review_notes.md`
+  - `docs/drafts/type_d_review_notes.md`
+  - `docs/drafts/type_ad_challenge_notes.md`
+  - `docs/drafts/review_round10_type_ad_arbitration.md`
 - 新 schema 迁移 draft 已产出：
   - `data/eval_cases_migrated_draft.json`（28 条：旧 12 条迁移 + 当前批次已稳定的 eval 条目）
-- 正式 few-shot 文档已开始回填：
-  - 已并入 `B02`、`B03`、`B04`、`C02`、`C03`、`E02`、`E03`、`E04`
+- 正式 few-shot 文档已继续回填：
+  - 已并入 `A01`、`B02`、`B03`、`B04`、`C02`、`C03`、`D01`、`D02`、`D03`、`D04`、`E02`、`E03`、`E04`
 - 正式升格审核已完成：
   - `docs/drafts/review_round7_eval_dataset.md`
   - 结论：`do_not_promote_yet`
 - few-shot 扩展批次已启动：
   - `docs/drafts/fewshot_gap_plan_round1.md`
-  - `docs/drafts/fewshot_type_a_round1.md` 已产出
-  - Type D 两组草稿并行进行中
-- 当前最高优先级不是继续堆样本，而是先把 review 和 schema migration 做实，避免把新旧口径混进正式数据。
+  - `docs/drafts/fewshot_type_a_round1.md` 已修到 `A01` 可回填
+  - `docs/drafts/fewshot_type_a_round2.md` 已产出，`A02` 当前在 `docs/drafts/review_round11_type_a_round2.md` 中为 `needs_more_fix`
+  - `docs/drafts/fewshot_type_d_round1.md`、`docs/drafts/fewshot_type_d_round2.md` 已修订并完成仲裁
+  - `docs/drafts/fewshot_bc_tail_round1.md` 已产出，待审 `B05 / C04 / C05`
+- 当前最高优先级不是继续堆样本，而是先把 `A02` replacement 修过审，再审 `B05 / C04 / C05`，再继续扩 eval。
 
 ## 审稿结论摘要
 
@@ -77,17 +85,31 @@
 - `fewshot_round2.md` 已有一批条目通过二次复审并回填正式文档。
 - 当前 round 1 few-shot 主要问题：
   - 与 eval 主链重复过高
-  - Type A / Type D 完全缺失
+  - Type A 的原 A02 题眼错误，不能带入正式 few-shot
   - Proxy / 环境前置 / direct-indirect-implicit 拆分不稳
 - 当前 few-shot 正式文档中已稳定的新增条目：
+  - `A01`
   - `B02`
   - `B03`
   - `B04`
   - `C02`
   - `C03`
+  - `D01`
+  - `D02`
+  - `D03`
+  - `D04`
   - `E02`
   - `E03`
   - `E04`
+- A / D 仲裁后的最终结论：
+  - `A01`：修订后已可回填正式 few-shot 文档
+  - `D01 / D02 / D03 / D04`：修订后已可回填正式 few-shot 文档
+  - `A02`：`reject`，需要改题或改入口后重写
+- Type A round 2 结论：
+  - `A01`：新版已 `accept`
+  - `A02`：replacement 已起草，但仍是 `needs_more_fix`
+- B / C 尾项状态：
+  - `fewshot_bc_tail_round1.md` 已产出，但尚未经过严格 reviewer
 
 ## 阶段状态总览
 
@@ -195,8 +217,8 @@
   - Type B / C / E 的覆盖数有记录
   - 保留未过审项的待办说明
 - 当前阻塞原因：
-  - Type A / Type D 仍为空
-  - 总量仍未到 20 条，Type B / C / E 也还没补满配比
+  - Type A 仍缺通过审稿的 `A02` replacement
+  - 总量仍未到 20 条，`B05 / C04 / C05` 已起草但还没过审
 
 ### P0-05b：为什么正式评测集暂不升级
 
@@ -212,7 +234,7 @@
 
 ### P0-06：更新进度文档并推送
 
-- 状态：`todo`
+- 状态：`doing`
 - 输出：
   - `docs/remaining_work_checklist.md`
   - `docs/execution_roadmap.md`
@@ -231,6 +253,7 @@
 | Lane C | few-shot 草稿补齐 | `docs/drafts/fewshot_round1.md` | reviewer 通过后才能回填正式文档 |
 | Lane D | 旧 schema 迁移方案 | `docs/drafts/schema_migration_round2.md` | 先生成迁移 draft，不直接覆盖正式文件 |
 | Lane E | 严格审核 | `review_round2_findings.md` / `review_round3_challenge.md` | 逐条 pass / hold / reject |
+| Lane F | Type A / D 对抗审稿与仲裁 | `review_round9_type_ad.md` / `review_round10_type_ad_arbitration.md` | 只有仲裁通过的条目才能回填正式 few-shot |
 
 ## 评测集集成门禁
 
