@@ -65,7 +65,7 @@
 
 ### 阶段 3：Baseline 与瓶颈诊断（Day 2）
 
-- 三模型（GPT-4o / GLM-5 / Qwen2.5-Coder-7B）基线评测
+- 三模型（GPT-5.4 / GLM-5 / Qwen3.5-9B）基线评测
 - 抽取 bad cases
 - 将错误映射到 Type A-E 失效类型
 - 绘制失效分布热力图
@@ -94,7 +94,7 @@
 
 - 完成 AST 分块与三路混合检索设计
 - 完成微调数据清洗（data_guard.py）
-- 跑通 QLoRA 训练
+- 跑通 LoRA 训练
 - GPU 训练与 RAG 开发并行
 
 阶段完成标志：
@@ -128,7 +128,7 @@
 | 评测口径漂移 | 各阶段结果无法横向比较 | 先冻结 schema，再开始大规模造数 |
 | 仓库版本漂移 | 数据无法复现 | 每轮实验绑定提交号 |
 | 过早实现工具 | 代码很多但结果无法验收 | 以样本和指标为主线，工具后补 |
-| 7B OOM | 训练无法进行 | 降级到 Qwen2.5-Coder-3B |
+| 7B OOM | 训练无法进行 | 降级到 Qwen3.5-3B |
 | 训练超时 | 影响进度 | LoRA rank 从 16 降到 8 |
 
 ---
@@ -172,8 +172,8 @@
   - `celery_hard_025`
 - 微调线阻塞已显式暴露并收口：
   - `finetune/data_guard.py` 已对齐 `instruction / input / output / difficulty / verified`，并默认卡 `min_records=500` 与 `min_hard_ratio=0.3`
-  - `finetune/train_qlora.py` 已支持 `--config`，但当前仍是 scaffold-only，未接入真实 trainer backend
-  - `configs/qlora_7b.toml` 与 `data/finetune_dataset_500.jsonl` 占位已落地
+  - `finetune/train_lora.py` 已支持 `--config`，但当前仍是 scaffold-only，未接入真实 trainer backend
+  - `configs/lora_9b.toml` 与 `data/finetune_dataset_500.jsonl` 占位已落地
 - 仍待继续处理：把 round 4 通过项并入正式待集成队列，并继续保持正式 `data/eval_cases.json` 的 hold
 
 ### 下一步顺序

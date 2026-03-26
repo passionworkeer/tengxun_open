@@ -1,0 +1,109 @@
+{
+  "total_samples": 500,
+  "fqn_valid_rate": 0.894,
+  "logic_valid_rate": 1.0,
+  "difficulty_valid_rate": 0.992,
+  "avg_score": 0.9768399999999997,
+  "score_distribution": {
+    "优秀(>=0.9)": 447,
+    "良好(0.8-0.9)": 52,
+    "中等(0.7-0.8)": 1,
+    "较差(<0.7)": 0
+  },
+  "top_issues": {
+    "无法提取FQN": 48,
+    "难度标注可能不准确: 标注hard, 预期easy": 3,
+    "FQN无效: celery.backend_cleanup ()": 2,
+    "FQN无效: celery.uuid (未找到符号定义)": 1,
+    "FQN无效: celery.uuid ()": 1,
+    "难度标注可能不准确: 标注easy, 预期hard": 1,
+    "FQN无效: celery.subtask (未找到符号定义)": 1,
+    "FQN无效: celery.main (未找到符号定义)": 1,
+    "FQN无效: celery.backend_cleanup (未找到符号定义)": 1,
+    "FQN无效: celery.accumulate (未找到符号定义)": 1
+  },
+  "worst_samples": [
+    {
+      "index": 361,
+      "instruction": "分析 finalizer_callbacks 类型的 hard 难度依赖链，确定直接/间接/隐式依赖",
+      "score": 0.76,
+      "issues": [
+        "FQN无效: celery.accumulate ()",
+        "FQN无效: celery.backend_cleanup ()",
+        "FQN无效: celery.chord_unlock (未找到符号定义)"
+      ]
+    },
+    {
+      "index": 32,
+      "instruction": "分析 stdlib_import 类型的 easy 难度依赖链，确定直接/间接/隐式依赖",
+      "score": 0.8,
+      "issues": [
+        "无法提取FQN"
+      ]
+    },
+    {
+      "index": 35,
+      "instruction": "分析 data_structure_choice 类型的 easy 难度依赖链，确定直接/间接/隐式",
+      "score": 0.8,
+      "issues": [
+        "无法提取FQN"
+      ]
+    },
+    {
+      "index": 36,
+      "instruction": "分析 lock_per_instance 类型的 easy 难度依赖链，确定直接/间接/隐式依赖",
+      "score": 0.8,
+      "issues": [
+        "无法提取FQN"
+      ]
+    },
+    {
+      "index": 49,
+      "instruction": "追踪 entry_points 的包发现依赖",
+      "score": 0.8,
+      "issues": [
+        "无法提取FQN"
+      ]
+    },
+    {
+      "index": 51,
+      "instruction": "分析 bootsteps 中 deque 的导入来源",
+      "score": 0.8,
+      "issues": [
+        "无法提取FQN"
+      ]
+    },
+    {
+      "index": 52,
+      "instruction": "分析 bootsteps 中 Event 的导入来源",
+      "score": 0.8,
+      "issues": [
+        "无法提取FQN"
+      ]
+    },
+    {
+      "index": 53,
+      "instruction": "分析 bootsteps 中 ignore_errors 的导入来源",
+      "score": 0.8,
+      "issues": [
+        "无法提取FQN"
+      ]
+    },
+    {
+      "index": 54,
+      "instruction": "分析 bootsteps 中 bytes_to_str 的导入来源",
+      "score": 0.8,
+      "issues": [
+        "无法提取FQN"
+      ]
+    },
+    {
+      "index": 55,
+      "instruction": "分析 bootsteps 中 DependencyGraph 的导入来源",
+      "score": 0.8,
+      "issues": [
+        "无法提取FQN"
+      ]
+    }
+  ]
+}

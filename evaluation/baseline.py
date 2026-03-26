@@ -149,6 +149,12 @@ def build_parser() -> argparse.ArgumentParser:
         default="v1",
         help="Prompt template version used for prompt preview metadata.",
     )
+    parser.add_argument(
+        "--rrf-k",
+        type=int,
+        default=60,
+        help="RRF reciprocal rank fusion k parameter (default 60).",
+    )
     return parser
 
 
@@ -174,6 +180,7 @@ def evaluate_retrieval(
     top_k: int,
     per_source: int,
     query_mode: str,
+    rrf_k: int = 60,
 ) -> dict[str, Any]:
     chunk_rankings: dict[str, list[list[str]]] = {
         source: [] for source in RETRIEVAL_SOURCES
@@ -192,6 +199,7 @@ def evaluate_retrieval(
             top_k=top_k,
             per_source=per_source,
             query_mode=query_mode,
+            rrf_k=rrf_k,
         )
         source_chunk_ids = {
             "bm25": list(trace.bm25),
@@ -260,6 +268,7 @@ def evaluate_retrieval(
         "top_k": top_k,
         "setting": {
             "query_mode": query_mode,
+            "rrf_k": rrf_k,
             "query_inputs": (
                 ["question"]
                 if query_mode == "question_only"
@@ -289,6 +298,7 @@ def preview_prompt(
     per_source: int,
     prompt_module: ModuleType,
     query_mode: str,
+    rrf_k: int = 60,
 ) -> str:
     context = retriever.build_context(
         question=case.question,
@@ -297,6 +307,7 @@ def preview_prompt(
         top_k=top_k,
         per_source=per_source,
         query_mode=query_mode,
+        rrf_k=rrf_k,
     )
     bundle = prompt_module.build_prompt_bundle(
         question=case.question,
@@ -337,6 +348,7 @@ def main() -> int:
             top_k=args.top_k,
             per_source=args.per_source,
             query_mode=args.query_mode,
+            rrf_k=args.rrf_k,
         )
 
     if args.report_path is not None:
@@ -362,6 +374,7 @@ def main() -> int:
                 top_k=args.top_k,
                 per_source=args.per_source,
                 query_mode=args.query_mode,
+                rrf_k=args.rrf_k,
             )
         )
 
@@ -375,6 +388,7 @@ def main() -> int:
                 per_source=args.per_source,
                 prompt_module=prompt_module,
                 query_mode=args.query_mode,
+                rrf_k=args.rrf_k,
             )
         )
 
@@ -455,7 +469,7 @@ def _summarize_ranked_lists(
     rr_by_difficulty: dict[str, list[float]] = defaultdict(list)
     recall_by_failure_type: dict[str, list[float]] = defaultdict(list)
     rr_by_failure_type: dict[str, list[float]] = defaultdict(list)
-    for case, ranked in zip(cases, ranked_lists, strict=True):
+    for case, ranked in zip(cases, ranked_lists):
         recall_score = recall_at_k(case.gold_fqns, ranked, top_k)
         rr_score = reciprocal_rank(case.gold_fqns, ranked)
         recall_by_difficulty[case.difficulty].append(recall_score)
@@ -466,7 +480,10 @@ def _summarize_ranked_lists(
 
     return {
         "avg_recall_at_k": round(
-            sum(recall_at_k(case.gold_fqns, ranked, top_k) for case, ranked in zip(cases, ranked_lists, strict=True))
+            sum(
+                recall_at_k(case.gold_fqns, ranked, top_k)
+                for case, ranked in zip(cases, ranked_lists)
+            )
             / len(cases),
             4,
         )

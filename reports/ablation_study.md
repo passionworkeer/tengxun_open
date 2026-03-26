@@ -6,8 +6,8 @@
 
 | 实验组 | Easy F1 | Medium F1 | Hard F1 | Avg F1 | Token 消耗 | 核心验证目的 |
 |--------|---------|-----------|---------|--------|-----------|------------|
-| Baseline (MiniMax-M2.7) | TBD | TBD | TBD | TBD | 基准 | 商业闭源模型上界 |
-| Baseline (GPT-4o) | TBD | TBD | TBD | TBD | 基准 | 业界锚点校准 |
+| Baseline (GPT-5.4) | TBD | TBD | TBD | TBD | 基准 | 国际商业模型天花板，零样本上限 |
+| Baseline (GLM-5) | TBD | TBD | TBD | TBD | 基准 | 开源最强模型零样本上限 |
 | Baseline (Qwen3.5-9B) | TBD | TBD | TBD | TBD | 基准 | 微调基座未优化水平 |
 | PE only | TBD | TBD | TBD | TBD | +40% | 纯提示词工程极限 |
 | RAG only（向量） | TBD | TBD | TBD | TBD | +120% | 单路检索基准 |

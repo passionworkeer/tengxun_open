@@ -39,7 +39,9 @@ def _extract_ground_truth(record: dict[str, Any]) -> dict[str, Any] | None:
         return None
 
     candidates: list[str] = []
-    candidates.extend(match.group(1).strip() for match in JSON_FENCE_PATTERN.finditer(output))
+    candidates.extend(
+        match.group(1).strip() for match in JSON_FENCE_PATTERN.finditer(output)
+    )
 
     stripped = output.strip()
     if stripped.startswith("{") and stripped.endswith("}"):
@@ -67,6 +69,120 @@ def _extract_ground_truth(record: dict[str, Any]) -> dict[str, Any] | None:
     return None
 
 
+def validate_fqn(fqn: str, source_dir: Path) -> tuple[bool, str]:
+    """
+    验证FQN路径是否真实存在
+
+    修复方法级FQN问题：
+    - celery.app.base.Celery.send_task 现在能正确找到 celery/app/base.py
+    - 递归尝试所有可能的模块/符号切分点
+    - 支持模块级FQN（如 celery.app.defaults -> app/defaults.py）
+    """
+    parts = fqn.split(".")
+    if len(parts) < 2:
+        return False, "FQN格式错误"
+
+    # 外部包直接放行
+    if parts[0] in ("kombu", "vine", "billiard", "pydantic", "eventlet", "gevent"):
+        return True, "外部包"
+
+    # 跳过第一个 celery 前缀（因为 source_dir 已经包含了）
+    if parts[0] == "celery":
+        parts = parts[1:]
+
+    if len(parts) < 1:
+        return False, "FQN格式错误"
+
+    # 核心修复：递归尝试所有可能的模块/符号切分点
+    # celery.app.base.Celery.send_task
+    # 可能是：
+    #   文件=celery/app/base.py, 符号=Celery（类）, 方法=send_task
+    #   文件=celery/app/base/Celery.py, 符号=send_task
+    # 从最长的模块路径开始尝试
+
+    for split_at in range(len(parts), 0, -1):
+        module_parts = parts[:split_at]
+        symbol_name = parts[split_at] if split_at < len(parts) else None
+
+        # 如果没有符号名，只检查模块文件是否存在
+        if symbol_name is None:
+            # 检查 module_parts/__init__.py
+            path = source_dir / Path(*module_parts) / "__init__.py"
+            if path.exists():
+                return True, f"模块存在: {path}"
+            # 检查 module_parts.py (单层模块)
+            if len(module_parts) == 1:
+                path2 = source_dir / f"{module_parts[0]}.py"
+                if path2.exists():
+                    return True, f"模块文件: {path2.name}"
+            continue
+
+        # 尝试 module/as/path.py
+        if len(module_parts) >= 2:
+            path1 = source_dir / Path(*module_parts[:-1]) / f"{module_parts[-1]}.py"
+        elif len(module_parts) == 1:
+            path1 = source_dir / f"{module_parts[0]}.py"
+        else:
+            continue
+
+        # 尝试 module/as/path/__init__.py
+        path2 = source_dir / Path(*module_parts) / "__init__.py"
+
+        for path in [path1, path2]:
+            if path.exists():
+                try:
+                    content = path.read_text(encoding="utf-8")
+                    patterns = [
+                        rf"class\s+{re.escape(symbol_name)}\s*[\(:]",
+                        rf"def\s+{re.escape(symbol_name)}\s*\(",
+                        rf"{re.escape(symbol_name)}\s*=",
+                        rf"from\s+\S+\s+import\s+.*\b{re.escape(symbol_name)}\b",
+                        rf"import\s+.*\b{re.escape(symbol_name)}\b",
+                    ]
+                    for pattern in patterns:
+                        if re.search(pattern, content):
+                            return True, f"在 {path.name} 中找到 {symbol_name}"
+                except Exception:
+                    pass
+
+        # 额外检查：如果 symbol_name.py 文件存在，说明这是一个模块级FQN
+        # celery.app.defaults -> app/defaults.py 是一个模块
+        if len(module_parts) >= 1:
+            module_file_path = source_dir / Path(*module_parts) / f"{symbol_name}.py"
+            if module_file_path.exists():
+                return True, f"模块文件: {module_file_path.name}"
+
+    return False, "未找到符号定义"
+
+
+def validate_fqns_in_ground_truth(
+    ground_truth: dict[str, Any], source_dir: Path | None = None
+) -> list[str]:
+    """验证ground_truth中的所有FQN"""
+    errors: list[str] = []
+
+    if source_dir is None:
+        source_dir = Path("external/celery/celery")
+
+    for key in GROUND_TRUTH_KEYS:
+        value = ground_truth.get(key)
+        if not isinstance(value, list):
+            continue
+
+        for fqn in value:
+            if not isinstance(fqn, str):
+                continue
+            if not FQN_PATTERN.fullmatch(fqn):
+                errors.append(f"invalid FQN format: {fqn}")
+                continue
+
+            valid, reason = validate_fqn(fqn, source_dir)
+            if not valid:
+                errors.append(f"FQN invalid: {fqn} ({reason})")
+
+    return errors
+
+
 def _validate_dep_lists(ground_truth: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     total_items = 0
@@ -77,7 +193,8 @@ def _validate_dep_lists(ground_truth: dict[str, Any]) -> list[str]:
             errors.append(f"{key} must be a list")
             continue
         invalid = [
-            item for item in value
+            item
+            for item in value
             if not isinstance(item, str) or not FQN_PATTERN.fullmatch(item)
         ]
         if invalid:
@@ -115,11 +232,17 @@ def validate_record(record: dict[str, Any]) -> list[str]:
         errors.append("verified must be a boolean")
 
     verify_method = record.get("verify_method")
-    if verified is True and (not isinstance(verify_method, str) or not verify_method.strip()):
+    if verified is True and (
+        not isinstance(verify_method, str) or not verify_method.strip()
+    ):
         errors.append("verify_method must be a non-empty string when verified is true")
 
     for key in ("category", "repo_path"):
-        if key in record and record[key] is not None and not isinstance(record[key], str):
+        if (
+            key in record
+            and record[key] is not None
+            and not isinstance(record[key], str)
+        ):
             errors.append(f"{key} must be a string when present")
 
     ground_truth = _extract_ground_truth(record)
@@ -147,7 +270,9 @@ def validate_jsonl(
     difficulty_counter: Counter[str] = Counter()
     hard_count = 0
 
-    for line_number, line in enumerate(path.read_text(encoding="utf-8-sig").splitlines(), start=1):
+    for line_number, line in enumerate(
+        path.read_text(encoding="utf-8-sig").splitlines(), start=1
+    ):
         if not line.strip():
             continue
 
@@ -173,9 +298,7 @@ def validate_jsonl(
     hard_ratio = round(hard_count / valid, 4) if valid else 0.0
     gate_errors: list[str] = []
     if valid < min_records:
-        gate_errors.append(
-            f"valid_records={valid} is below min_records={min_records}"
-        )
+        gate_errors.append(f"valid_records={valid} is below min_records={min_records}")
     if valid == 0:
         gate_errors.append("dataset contains no valid records")
     elif hard_ratio < min_hard_ratio:

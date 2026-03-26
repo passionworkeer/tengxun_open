@@ -10,7 +10,7 @@
 {
   "exp_id": "RAG-003",
   "timestamp": "2025-xx-xx",
-  "model": "gpt-4o",
+  "model": "gpt-5.4",
   "prompt_version": "v2.1",
   "rag_config": {
     "chunker": "ast",
@@ -56,7 +56,7 @@
 - eval dataset version:
 
 ## Model Setup
-- base model: GPT-4o / GLM-5 / Qwen2.5-Coder-7B
+- base model: GPT-5.4 / GLM-5 / Qwen3.5-9B
 - decoding params:
 - context window:
 
@@ -77,7 +77,7 @@
 ## Fine-tune Setup
 - fine-tune enabled: yes / no
 - dataset version:
-- lora / qlora config: r=16, alpha=32
+- lora config: r=16, alpha=32
 - early stopping: patience=3
 
 ## Results
@@ -120,9 +120,9 @@
 
 ## 命名建议
 
-- `baseline_gpt4o_v1`
+- `baseline_gpt54_v1`
 - `baseline_glm5_v1`
-- `baseline_qwen7b_v1`
+- `baseline_qwen35_9b_v1`
 - `pe_system_v1`
 - `pe_system_cot_v1`
 - `pe_system_cot_fewshot_v1`
@@ -130,7 +130,7 @@
 - `rag_ast_bm25_v1`
 - `rag_ast_graph_v1`
 - `rag_rrf_v1`
-- `ft_qwen25_7b_v1`
+- `ft_qwen35_9b_v1`
 - `pe_rag_v1`
 - `pe_ft_v1`
 - `all_stack_v1`

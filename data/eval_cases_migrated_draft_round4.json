@@ -752,5 +752,385 @@
     },
     "reasoning_hint": "题面已收口为运行时改写点而非 CLI 端到端链。`Tasks.start` 中先判断 `worker_disable_prefetch`，再做 Redis gate（`driver_type == 'redis'`）；仅在该分支内通过 `MethodType` 将自定义 `can_consume` 绑定到 `channel_qos`。",
     "source_note": "round 4 accepted after strict review r2; see docs/drafts/eval_round4_type_ad_set2_r2.md and review_round18_eval_round4_r2.md"
+  },
+  {
+    "id": "easy_010",
+    "difficulty": "easy",
+    "category": "re_export",
+    "failure_type": "Type C",
+    "implicit_level": 1,
+    "question": "Which real function does `celery.maybe_signature` resolve to in the canvas module?",
+    "source_file": "celery/__init__.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.maybe_signature"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`celery.__init__` lazy-exports `maybe_signature` from `celery.canvas` via `local.recreate_module`.",
+    "source_note": "Simple single-hop re-export from top-level to canvas module."
+  },
+  {
+    "id": "easy_011",
+    "difficulty": "easy",
+    "category": "re_export",
+    "failure_type": "Type C",
+    "implicit_level": 1,
+    "question": "Which real class does `celery.Signature` resolve to?",
+    "source_file": "celery/__init__.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.Signature"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`celery.__init__` maps `Signature` to `celery.canvas` module where `class Signature` is defined.",
+    "source_note": "Single-hop class re-export."
+  },
+  {
+    "id": "easy_012",
+    "difficulty": "easy",
+    "category": "alias_resolution",
+    "failure_type": "Type E",
+    "implicit_level": 1,
+    "question": "In `celery.concurrency.get_implementation`, what does `get_implementation('eventlet')` resolve to?",
+    "source_file": "celery/concurrency/__init__.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.eventlet.TaskPool"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`ALIASES['eventlet']` points to `'celery.concurrency.eventlet:TaskPool'` which is resolved by `symbol_by_name`.",
+    "source_note": "Alias resolution via symbol_by_name with ALIASES dict."
+  },
+  {
+    "id": "easy_013",
+    "difficulty": "easy",
+    "category": "alias_resolution",
+    "failure_type": "Type E",
+    "implicit_level": 1,
+    "question": "In `celery.concurrency.get_implementation`, what does `get_implementation('solo')` resolve to?",
+    "source_file": "celery/concurrency/__init__.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.solo.TaskPool"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`ALIASES['solo']` maps to `'celery.concurrency.solo:TaskPool'`.",
+    "source_note": "Simple alias resolution for solo concurrency pool."
+  },
+  {
+    "id": "easy_014",
+    "difficulty": "easy",
+    "category": "re_export",
+    "failure_type": "Type C",
+    "implicit_level": 1,
+    "question": "What does the Proxy in  wrap at the module level?",
+    "source_file": "celery/app/__init__.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state.default_app"
+      ],
+      "indirect_deps": [
+        "celery.local.Proxy"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "default_app = Proxy(lambda: _state.default_app) where _state.default_app is a global variable initialized to None. The Proxy lazily evaluates this lambda on attribute access.",
+    "source_note": "Proxy wrapping a lambda that reads a module-level global variable."
+  },
+  {
+    "id": "easy_015",
+    "difficulty": "easy",
+    "category": "re_export",
+    "failure_type": "Type C",
+    "implicit_level": 1,
+    "question": "What does `celery.app.AppPickler` resolve to in the app module?",
+    "source_file": "celery/app/__init__.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.utils.AppPickler"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`from .utils import AppPickler` in `celery/app/__init__.py` re-exports it from `celery.app.utils`.",
+    "source_note": "Simple from-import re-export within app package."
+  },
+  {
+    "id": "easy_016",
+    "difficulty": "easy",
+    "category": "re_export",
+    "failure_type": "Type C",
+    "implicit_level": 1,
+    "question": "Which function is the final implementation of `celery.utils.gen_task_name`?",
+    "source_file": "celery/utils/__init__.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`celery.utils.__init__` imports `gen_task_name` from `.imports` module.",
+    "source_note": "Intra-package re-export from utils.__init__ to utils.imports."
+  },
+  {
+    "id": "medium_011",
+    "difficulty": "medium",
+    "category": "re_export_chain",
+    "failure_type": "Type C",
+    "implicit_level": 2,
+    "question": "When `celery.utils.uuid` is called, what is the actual underlying function that generates the UUID?",
+    "source_file": "celery/utils/__init__.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "kombu.utils.uuid.uuid"
+      ],
+      "indirect_deps": [
+        "celery.utils.uuid"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`celery.utils.__init__` imports `uuid` from `kombu.utils.uuid`. This is a cross-package re-export chain: celery -> celery.utils -> kombu.utils.uuid.",
+    "source_note": "Cross-package re-export chain reaching into kombu dependency."
+  },
+  {
+    "id": "medium_012",
+    "difficulty": "medium",
+    "category": "decorator_registration",
+    "failure_type": "Type B",
+    "implicit_level": 3,
+    "question": "When `@shared_task` decorates a function, what method is ultimately called to register the task with a finalized app?",
+    "source_file": "celery/app/__init__.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [
+        "celery._state.connect_on_app_finalize",
+        "celery._state._get_active_apps"
+      ],
+      "implicit_deps": [
+        "celery.local.Proxy"
+      ]
+    },
+    "reasoning_hint": "`shared_task` inner function calls `app._task_from_fun(fun, **options)` for both finalized apps (via `_get_active_apps()` loop) and future apps (via `connect_on_app_finalize` callback).",
+    "source_note": "Multi-path registration: direct loop for finalized apps + callback for future apps."
+  },
+  {
+    "id": "medium_013",
+    "difficulty": "medium",
+    "category": "builtin_registration",
+    "failure_type": "Type B",
+    "implicit_level": 3,
+    "question": "How does the `celery.backend_cleanup` task get registered with every Celery app instance?",
+    "source_file": "celery/app/builtins.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state.connect_on_app_finalize"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.task"
+      ],
+      "implicit_deps": [
+        "celery.app.base.Celery.backend"
+      ]
+    },
+    "reasoning_hint": "`add_backend_cleanup_task` is decorated with `@connect_on_app_finalize`, so it's called when any app is finalized, creating the task via `@app.task(name='celery.backend_cleanup')`.",
+    "source_note": "Implicit registration via connect_on_app_finalize decorator + app.task decorator combo."
+  },
+  {
+    "id": "medium_014",
+    "difficulty": "medium",
+    "category": "builtin_registration",
+    "failure_type": "Type B",
+    "implicit_level": 3,
+    "question": "What function implements the `celery.accumulate` built-in task, and what dependencies does it have?",
+    "source_file": "celery/app/builtins.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state.connect_on_app_finalize"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.task"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`add_accumulate_task` is decorated with `@connect_on_app_finalize` and creates a task named 'celery.accumulate' via `@app.task(bind=True, name='celery.accumulate', shared=False, lazy=False)`.",
+    "source_note": "Built-in task registered via connect_on_app_finalize; uses kwargs.get('index') for selective return."
+  },
+  {
+    "id": "medium_015",
+    "difficulty": "medium",
+    "category": "module_alias",
+    "failure_type": "Type D",
+    "implicit_level": 2,
+    "question": "In `celery.utils`, what does `gen_unique_id` resolve to, and is it the same as `uuid`?",
+    "source_file": "celery/utils/__init__.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "kombu.utils.uuid.uuid"
+      ],
+      "indirect_deps": [
+        "celery.utils.uuid",
+        "celery.utils.gen_unique_id"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`gen_unique_id = uuid` creates an alias. Both `uuid` and `gen_unique_id` in `celery.utils` ultimately point to `kombu.utils.uuid.uuid`.",
+    "source_note": "Module-level alias assignment creating two names for the same cross-package function."
+  },
+  {
+    "id": "medium_016",
+    "difficulty": "medium",
+    "category": "dynamic_loading",
+    "failure_type": "Type E",
+    "implicit_level": 3,
+    "question": "When `Celery.__init__` sets `self.registry_cls = symbol_by_name(self.registry_cls)`, what class does `registry_cls` default to?",
+    "source_file": "celery/app/base.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.registry.TaskRegistry"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "reasoning_hint": "`registry_cls = 'celery.app.registry:TaskRegistry'` (class attribute) is resolved via `symbol_by_name` in `__init__`.",
+    "source_note": "Dynamic class resolution at init time via symbol_by_name on class attribute string."
+  },
+  {
+    "id": "medium_017",
+    "difficulty": "medium",
+    "category": "namespace_confusion",
+    "failure_type": "Type D",
+    "implicit_level": 2,
+    "question": "Both `celery.app.utils` and `celery.app.__init__` export a function called `bugreport`. Are they the same function?",
+    "source_file": "celery/app/__init__.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.utils.bugreport"
+      ],
+      "indirect_deps": [
+        "celery.app.bugreport",
+        "celery._state.get_current_app"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`celery.app.__init__.bugreport` is a wrapper that calls `(app or _state.get_current_app()).bugreport()`. The `Celery.bugreport` method internally calls `celery.app.utils.bugreport(self)`. So `celery.app.bugreport` is NOT the same as `celery.app.utils.bugreport` — it's a wrapper that delegates through the app instance method.",
+    "source_note": "Same name, different implementations in two modules within the same package."
+  },
+  {
+    "id": "medium_018",
+    "difficulty": "medium",
+    "category": "re_export_chain",
+    "failure_type": "Type C",
+    "implicit_level": 2,
+    "question": "What is the full dependency chain when calling `celery.app.disable_trace()`?",
+    "source_file": "celery/app/__init__.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state.disable_trace"
+      ],
+      "indirect_deps": [
+        "celery._state.app_or_default",
+        "celery._state._app_or_default"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`celery.app.__init__` imports `disable_trace` from `celery._state`. When called, it sets `app_or_default = _app_or_default`.",
+    "source_note": "Re-export + side-effect on global variable assignment."
+  },
+  {
+    "id": "medium_020",
+    "difficulty": "medium",
+    "category": "namespace_confusion",
+    "failure_type": "Type D",
+    "implicit_level": 2,
+    "question": "In the `celery` top-level module, `subtask` is exported. In `celery.canvas`, `subtask` is also defined. Are they the same object?",
+    "source_file": "celery/canvas.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.signature"
+      ],
+      "indirect_deps": [
+        "celery.canvas.subtask"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`celery.__init__` lazy-exports `subtask` from `celery.canvas`. In `celery.canvas`, `subtask = signature` is a compatibility alias. So `celery.subtask` resolves to `celery.canvas.signature` through the alias.",
+    "source_note": "Module-level alias creating a name collision between re-exported symbol and local alias."
+  },
+  {
+    "id": "hard_015",
+    "difficulty": "hard",
+    "category": "builtin_registration",
+    "failure_type": "Type B",
+    "implicit_level": 4,
+    "question": "Trace the complete dependency chain for `celery.chord_unlock` built-in task registration, including all implicit imports and the callback mechanism.",
+    "source_file": "celery/app/builtins.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state.connect_on_app_finalize"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.task",
+        "celery.backends.base._create_chord_error_with_cause",
+        "celery.canvas.maybe_signature",
+        "celery.result.allow_join_result",
+        "celery.result.result_from_tuple"
+      ],
+      "implicit_deps": [
+        "celery.app.base.Celery.backend"
+      ]
+    },
+    "reasoning_hint": "`add_unlock_chord_task` is `@connect_on_app_finalize` decorated. Inside, it imports `_create_chord_error_with_cause`, `maybe_signature`, `allow_join_result`, `result_from_tuple`. The task itself uses `app.AsyncResult`, `app.GroupResult`, and `app.backend.chord_error_from_stack`.",
+    "source_note": "Complex built-in task with deep cross-module imports inside the task function body."
+  },
+  {
+    "id": "medium_021",
+    "difficulty": "medium",
+    "category": "dynamic_loading",
+    "failure_type": "Type E",
+    "implicit_level": 3,
+    "question": "When Celery app is initialized, how does it resolve the fixup classes from the builtin_fixups set?",
+    "source_file": "celery/app/base.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [
+        "celery.fixups.django.fixup"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "In Celery.__init__, self._fixups = [symbol_by_name(fixup)(self) for fixup in self.fixups] where self.fixups = set(self.builtin_fixups). BUILTIN_FIXUPS contains the string celery.fixups.django:fixup which is resolved dynamically.",
+    "source_note": "Dynamic class instantiation from string configuration via symbol_by_name in a list comprehension."
   }
 ]

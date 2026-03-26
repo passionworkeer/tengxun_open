@@ -1,6 +1,6 @@
-model_name = "Qwen2.5-Coder-7B"
+model_name = "Qwen3.5-9B"
 dataset_path = "data/finetune_dataset_500.jsonl"
-output_dir = "artifacts/qlora/qwen2.5-coder-7b"
+output_dir = "artifacts/lora/qwen3.5-9b"
 learning_rate = 0.0002
 batch_size = 2
 num_epochs = 3

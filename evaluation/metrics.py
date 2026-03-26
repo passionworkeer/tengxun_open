@@ -29,7 +29,9 @@ def compute_set_metrics(
     return ClassificationMetrics(precision=precision, recall=recall, f1=f1)
 
 
-def recall_at_k(gold_items: Iterable[str], ranked_items: Sequence[str], k: int) -> float:
+def recall_at_k(
+    gold_items: Iterable[str], ranked_items: Sequence[str], k: int
+) -> float:
     gold = {item for item in gold_items if item}
     if not gold or k <= 0:
         return 0.0
@@ -58,7 +60,6 @@ def mean_reciprocal_rank(
 
     total = sum(
         reciprocal_rank(gold_items=gold, ranked_items=ranked)
-        for gold, ranked in zip(gold_sets, ranked_lists, strict=True)
+        for gold, ranked in zip(gold_sets, ranked_lists)
     )
     return _safe_divide(total, len(gold_sets))
-

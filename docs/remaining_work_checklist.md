@@ -61,8 +61,8 @@
 - 微调线的脚手架阻塞已收口：
   - `finetune/data_guard.py` 已对齐微调 schema
   - `finetune/data_guard.py` 已加入 dataset-level gate（默认 `min_records=500`、`min_hard_ratio=0.3`），但仍未做到语义级 anti-hallucination 校验
-  - `finetune/train_qlora.py` 已支持 `--config`，但当前仍是 scaffold-only，尚未接入真实 trainer backend
-  - `configs/qlora_7b.toml` 已新增
+  - `finetune/train_lora.py` 已支持 `--config`，但当前仍是 scaffold-only，尚未接入真实 trainer backend
+  - `configs/lora_9b.toml` 已新增
   - `data/finetune_dataset_500.jsonl` 已补占位，但当前仍为 0 条有效记录
 - RAG 独立评测链已往前推进一格：
   - `evaluation/baseline.py` 现已兼容 `legacy_v1 + schema_v2` 双 schema，避免 round4 draft 静默退化成全 0

@@ -10,9 +10,9 @@ from typing import Any
 
 @dataclass(frozen=True)
 class TrainingConfig:
-    model_name: str = "Qwen2.5-Coder-7B"
+    model_name: str = "Qwen3.5-9B"
     dataset_path: str = "data/finetune_dataset_500.jsonl"
-    output_dir: str = "artifacts/qlora/qwen2.5-coder-7b"
+    output_dir: str = "artifacts/lora/qwen3.5-9b"
     learning_rate: float = 2e-4
     batch_size: int = 2
     num_epochs: int = 3
@@ -34,7 +34,7 @@ CONFIG_FIELD_NAMES = {field.name for field in fields(TrainingConfig)}
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="QLoRA training scaffold.")
+    parser = argparse.ArgumentParser(description="LoRA training scaffold.")
     parser.add_argument("--config", type=Path, help="Optional TOML config file.")
     parser.add_argument("--model-name")
     parser.add_argument("--dataset-path")
@@ -68,7 +68,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--load-in-4bit",
         dest="load_in_4bit",
         action="store_true",
-        help="Enable 4-bit loading for QLoRA.",
+        help="Enable 4-bit loading for LoRA.",
     )
     parser.add_argument(
         "--no-load-in-4bit",
@@ -109,7 +109,9 @@ def build_config(args: argparse.Namespace) -> TrainingConfig:
         "lora_r": args.lora_r,
         "lora_alpha": args.lora_alpha,
         "lora_dropout": args.lora_dropout,
-        "target_modules": tuple(args.target_modules) if args.target_modules is not None else None,
+        "target_modules": tuple(args.target_modules)
+        if args.target_modules is not None
+        else None,
         "validation_split": args.validation_split,
         "early_stopping_patience": args.early_stopping_patience,
         "max_seq_length": args.max_seq_length,
@@ -138,7 +140,10 @@ def main() -> int:
     dataset_path = Path(config.dataset_path)
     if not dataset_path.exists():
         raise FileNotFoundError(f"Dataset not found: {dataset_path}")
-    if not any(line.strip() for line in dataset_path.read_text(encoding="utf-8-sig").splitlines()):
+    if not any(
+        line.strip()
+        for line in dataset_path.read_text(encoding="utf-8-sig").splitlines()
+    ):
         raise ValueError(
             f"Dataset is empty: {dataset_path}. Generate validated records before starting training."
         )

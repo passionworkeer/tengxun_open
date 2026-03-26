@@ -10,9 +10,9 @@
 
 | 角色 | 模型 | 用途 |
 |------|------|------|
-| 评测基线 A | `GLM-5`（API） | 开源代码最强模型，作为上界参照 |
-| 评测基线 B | `GPT-4o`（API） | 所有人熟悉的锚点，便于结论校准 |
-| 评测基线 C | `Qwen2.5-Coder-7B`（未微调） | 微调前的对照基座 |
+| 评测基线 A | `GPT-5.4`（API） | 国际顶尖商业模型，作为上界参照 |
+| 评测基线 B | `GLM-5`（API） | 开源代码最强模型，国产自研 |
+| 评测基线 C | `Qwen3.5-9B`（未微调） | 微调前的对照基座 |
 
 ## 待补数据
 
@@ -25,9 +25,9 @@
 
 | Model | Easy F1 | Medium F1 | Hard F1 | Avg F1 | Notes |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| GPT-4o | TBD | TBD | TBD | TBD | |
+| GPT-5.4 | TBD | TBD | TBD | TBD | |
 | GLM-5 | TBD | TBD | TBD | TBD | |
-| Qwen2.5-Coder-7B | TBD | TBD | TBD | TBD | |
+| Qwen3.5-9B | TBD | TBD | TBD | TBD | |
 
 ## 失效模式定义
 

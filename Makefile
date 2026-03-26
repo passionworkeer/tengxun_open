@@ -16,7 +16,7 @@ help:
 	@echo "  make eval-rag-draft - run retrieval metrics on the 32-case round4 draft and write a JSON report"
 	@echo "  make eval-ft        - placeholder for checkpoint evaluation wiring"
 	@echo "  make eval-all       - run summary + retrieval + prompt preview metadata"
-	@echo "  make train          - validate the QLoRA scaffold config, then fail until trainer wiring exists"
+	@echo "  make train          - validate the LoRA scaffold config, then fail until trainer wiring exists"
 	@echo "  make report         - generate ablation report with charts"
 	@echo "  make lint-data      - validate finetune dataset with data_guard.py"
 
@@ -39,7 +39,7 @@ eval-all:
 	$(PYTHON) -m evaluation.baseline --mode all --prompt-version v2 --eval-cases $(EVAL_CASES)
 
 train:
-	$(PYTHON) finetune/train_qlora.py --config $(CONFIG_DIR)/qlora_7b.toml
+	$(PYTHON) finetune/train_lora.py --config $(CONFIG_DIR)/lora_9b.toml
 
 report:
 	jupyter nbconvert --execute experiments/ablation_full_matrix.ipynb

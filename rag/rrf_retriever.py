@@ -7,7 +7,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Sequence
 
-from .ast_chunker import CodeChunk, chunk_repository, module_name_from_path, normalize_symbol_target
+from .ast_chunker import (
+    CodeChunk,
+    chunk_repository,
+    module_name_from_path,
+    normalize_symbol_target,
+)
 
 
 _TOKEN_PATTERN = re.compile(r"[A-Za-z_][A-Za-z0-9_]+")
@@ -73,13 +78,14 @@ class HybridRetriever:
         self.basename_to_ids: dict[str, list[str]] = defaultdict(list)
         self.parent_to_ids: dict[str, list[str]] = defaultdict(list)
         self.chunk_tokens: dict[str, list[str]] = {}
-        self._graph: dict[str, set[str]] = defaultdict(set)
 
         for chunk in self.chunks:
             self.symbol_to_ids[chunk.symbol].append(chunk.chunk_id)
             self.module_to_ids[chunk.module].append(chunk.chunk_id)
             if chunk.symbol:
-                self.basename_to_ids[chunk.symbol.rsplit(".", 1)[-1]].append(chunk.chunk_id)
+                self.basename_to_ids[chunk.symbol.rsplit(".", 1)[-1]].append(
+                    chunk.chunk_id
+                )
             if chunk.parent_symbol:
                 self.parent_to_ids[chunk.parent_symbol].append(chunk.chunk_id)
             token_text = " ".join(
@@ -95,7 +101,7 @@ class HybridRetriever:
             self.chunk_tokens[chunk.chunk_id] = _tokenize(token_text)
 
         self._bm25 = _BM25Index(self.chunk_tokens)
-        self._semantic = _TfIdfIndex(self.chunk_tokens)
+        self._semantic = _SemanticIndex(self.chunks)
         self._build_graph()
 
     @classmethod
@@ -110,6 +116,7 @@ class HybridRetriever:
         top_k: int = 5,
         per_source: int = 12,
         query_mode: str = "question_plus_entry",
+        rrf_k: int = 60,
     ) -> list[RetrievalHit]:
         return list(
             self.retrieve_with_trace(
@@ -119,6 +126,7 @@ class HybridRetriever:
                 top_k=top_k,
                 per_source=per_source,
                 query_mode=query_mode,
+                rrf_k=rrf_k,
             ).fused
         )
 
@@ -130,6 +138,7 @@ class HybridRetriever:
         top_k: int = 5,
         per_source: int = 12,
         query_mode: str = "question_plus_entry",
+        rrf_k: int = 60,
     ) -> RetrievalTrace:
         query_text = self._build_query_text(
             question=question,
@@ -151,7 +160,8 @@ class HybridRetriever:
                 "bm25": bm25_ranked,
                 "semantic": semantic_ranked,
                 "graph": graph_ranked,
-            }
+            },
+            k=rrf_k,
         )
         fused_ids = tuple(result.item_id for result in fused)
         hits: list[RetrievalHit] = []
@@ -167,7 +177,7 @@ class HybridRetriever:
                     source=tuple(result.source.split(",")) if result.source else (),
                     start_line=chunk.start_line,
                     end_line=chunk.end_line,
-                    snippet=self._render_chunk(chunk, detailed=(len(hits) == 0)),
+                    snippet=self._render_chunk(chunk, rank=len(hits) + 1),
                 )
             )
         return RetrievalTrace(
@@ -186,6 +196,7 @@ class HybridRetriever:
         top_k: int = 5,
         per_source: int = 12,
         query_mode: str = "question_plus_entry",
+        rrf_k: int = 60,
     ) -> str:
         trace = self.retrieve_with_trace(
             question=question,
@@ -194,6 +205,7 @@ class HybridRetriever:
             top_k=top_k,
             per_source=per_source,
             query_mode=query_mode,
+            rrf_k=rrf_k,
         )
         sections = []
         for rank, hit in enumerate(trace.fused, start=1):
@@ -230,12 +242,16 @@ class HybridRetriever:
                 if not _looks_like_fqn(normalized):
                     continue
                 overlap = len(query_tokens & set(_tokenize(normalized)))
-                tail_bonus = 1.2 if entry_tail and normalized.endswith(f".{entry_tail}") else 0.0
+                tail_bonus = (
+                    1.2 if entry_tail and normalized.endswith(f".{entry_tail}") else 0.0
+                )
                 score = hit.score + (1.0 / index) + bonus + overlap * 0.3 + tail_bonus
                 scored[normalized] = max(scored.get(normalized, 0.0), score)
         return [
             candidate
-            for candidate, _ in sorted(scored.items(), key=lambda item: item[1], reverse=True)
+            for candidate, _ in sorted(
+                scored.items(), key=lambda item: item[1], reverse=True
+            )
         ]
 
     def ranked_symbols(self, chunk_ids: Sequence[str]) -> list[str]:
@@ -269,7 +285,7 @@ class HybridRetriever:
                     source=(source,),
                     start_line=chunk.start_line,
                     end_line=chunk.end_line,
-                    snippet=self._render_chunk(chunk, detailed=(rank == 1)),
+                    snippet=self._render_chunk(chunk, rank=rank),
                 )
             )
         return hits
@@ -288,27 +304,46 @@ class HybridRetriever:
             entry_symbol=entry_symbol,
         )
 
+    # ── NetworkX graph ──────────────────────────────────────────────
+
     def _build_graph(self) -> None:
+        import networkx as nx
+
+        self._nx_graph = nx.Graph()
+        chunk_ids = [c.chunk_id for c in self.chunks]
+        self._nx_graph.add_nodes_from(chunk_ids)
+
         for chunk in self.chunks:
-            self._graph.setdefault(chunk.chunk_id, set())
+            # module siblings
             for sibling_id in self.module_to_ids.get(chunk.module, []):
                 if sibling_id != chunk.chunk_id:
-                    self._link(chunk.chunk_id, sibling_id)
-            self._connect_targets(chunk.chunk_id, chunk.imports)
-            self._connect_targets(chunk.chunk_id, chunk.string_targets)
+                    self._nx_graph.add_edge(chunk.chunk_id, sibling_id, rel="sibling")
+            # import targets
+            self._connect_targets(chunk.chunk_id, chunk.imports, rel="import")
+            # string targets (dynamic references like "celery.app.trace.build_tracer")
+            self._connect_targets(
+                chunk.chunk_id, chunk.string_targets, rel="string_target"
+            )
+            # code references (function calls, attribute access)
             self._connect_references(chunk)
 
-    def _connect_targets(self, source_id: str, targets: Iterable[str]) -> None:
+    def _connect_targets(
+        self, source_id: str, targets: Iterable[str], rel: str = "import"
+    ) -> None:
         for target in targets:
             normalized = normalize_symbol_target(target)
             for candidate_id in self._resolve_target_ids(normalized):
-                self._link(source_id, candidate_id)
+                if source_id != candidate_id:
+                    self._nx_graph.add_edge(source_id, candidate_id, rel=rel)
 
     def _connect_references(self, chunk: CodeChunk) -> None:
         for reference in chunk.references:
             normalized = normalize_symbol_target(reference)
             for candidate_id in self._resolve_reference_ids(chunk, normalized):
-                self._link(chunk.chunk_id, candidate_id)
+                if chunk.chunk_id != candidate_id:
+                    self._nx_graph.add_edge(
+                        chunk.chunk_id, candidate_id, rel="reference"
+                    )
 
     def _resolve_target_ids(self, target: str) -> list[str]:
         if target in self.symbol_to_ids:
@@ -342,12 +377,6 @@ class HybridRetriever:
 
         return list(dict.fromkeys(candidates))
 
-    def _link(self, left: str, right: str) -> None:
-        if left == right:
-            return
-        self._graph[left].add(right)
-        self._graph[right].add(left)
-
     def _build_query_text(
         self,
         question: str,
@@ -373,6 +402,8 @@ class HybridRetriever:
         top_n: int,
         query_mode: str,
     ) -> list[str]:
+        import networkx as nx
+
         seeds: set[str] = set()
         if query_mode == "question_plus_entry":
             if entry_symbol:
@@ -390,31 +421,61 @@ class HybridRetriever:
         if not seeds:
             return []
 
-        query_tokens = set(_tokenize(question))
-        queue: deque[tuple[str, int]] = deque((seed, 0) for seed in seeds)
-        distances: dict[str, int] = {seed: 0 for seed in seeds}
-
-        while queue:
-            current, distance = queue.popleft()
-            if distance >= 2:
+        # BFS via NetworkX, max depth 2, Top-K=10
+        visited: dict[str, int] = {}
+        for seed in seeds:
+            if seed not in self._nx_graph:
                 continue
-            for neighbor in self._graph.get(current, ()):
-                if neighbor in distances and distances[neighbor] <= distance + 1:
-                    continue
-                distances[neighbor] = distance + 1
-                queue.append((neighbor, distance + 1))
+            # ego_graph gives BFS neighborhood within radius
+            try:
+                subgraph = nx.ego_graph(self._nx_graph, seed, radius=2)
+                for node in subgraph.nodes():
+                    dist = (
+                        nx.shortest_path_length(self._nx_graph, seed, node)
+                        if node != seed
+                        else 0
+                    )
+                    if node not in visited or visited[node] > dist:
+                        visited[node] = dist
+            except nx.NodeNotFound:
+                continue
 
+        if not visited:
+            return []
+
+        query_tokens = set(_tokenize(question))
         scored: list[tuple[float, str]] = []
-        for chunk_id, distance in distances.items():
-            chunk = self.chunk_by_id[chunk_id]
-            overlap = len(query_tokens & set(self.chunk_tokens[chunk_id]))
+        for chunk_id, distance in visited.items():
+            chunk = self.chunk_by_id.get(chunk_id)
+            if chunk is None:
+                continue
+            overlap = len(query_tokens & set(self.chunk_tokens.get(chunk_id, [])))
             score = 1.0 / (1 + distance) + overlap * 0.05 + _kind_bonus(chunk.kind)
+            # edge-type bonus: direct import > reference > sibling
+            for seed in seeds:
+                if seed in self._nx_graph and chunk_id in self._nx_graph:
+                    edge_data = self._nx_graph.get_edge_data(seed, chunk_id)
+                    if edge_data:
+                        rel = edge_data.get("rel", "")
+                        if rel == "import":
+                            score += 0.3
+                        elif rel == "string_target":
+                            score += 0.25
+                        elif rel == "reference":
+                            score += 0.15
             scored.append((score, chunk_id))
         scored.sort(key=lambda item: item[0], reverse=True)
         return [chunk_id for _, chunk_id in scored[:top_n]]
 
-    def _render_chunk(self, chunk: CodeChunk, detailed: bool) -> str:
-        if detailed and chunk.kind != "module":
+    # ── Tiered context rendering ────────────────────────────────────
+
+    def _render_chunk(self, chunk: CodeChunk, rank: int) -> str:
+        """Tiered rendering per plan:
+        - Top-1: full code content
+        - Top-2~5: signature + docstring + imports (compressed)
+        - Beyond: summary only
+        """
+        if rank == 1:
             return chunk.content
 
         lines = [chunk.signature]
@@ -426,19 +487,126 @@ class HybridRetriever:
             lines.append("String targets: " + ", ".join(chunk.string_targets[:6]))
         if chunk.references:
             lines.append("References: " + ", ".join(chunk.references[:6]))
-        return "\n".join(lines)
+
+        if rank <= 5:
+            return "\n".join(lines)
+
+        # rank > 5: summary only
+        return "\n".join(lines[:2])
+
+
+# ── Semantic Index: Enhanced TF-IDF + Character N-gram ──────────────
+
+
+class _SemanticIndex:
+    """Hybrid semantic index combining:
+    1. Word-level TF-IDF on tokenized code (identifier splitting)
+    2. Character n-gram TF-IDF for partial symbol matching
+
+    Fast on CPU, effective for code-style queries.
+    """
+
+    def __init__(self, chunks: list[CodeChunk]) -> None:
+        self.chunk_ids = [c.chunk_id for c in chunks]
+
+        # ── Word-level token map ─────────────────────────────────
+        word_map: dict[str, list[str]] = {}
+        for chunk in chunks:
+            text = " ".join([chunk.symbol, chunk.signature, chunk.content])
+            word_map[chunk.chunk_id] = _tokenize(text)
+
+        self._word_index = _MiniTfidfIndex(word_map)
+
+        # ── Char n-gram map (3-5 grams) ─────────────────────────
+        char_map: dict[str, list[str]] = {}
+        for chunk in chunks:
+            text = chunk.symbol + " " + chunk.signature
+            char_map[chunk.chunk_id] = _char_ngrams(text, n_min=3, n_max=5)
+
+        self._char_index = _MiniTfidfIndex(char_map)
+
+    def search(self, query: str, top_n: int) -> list[str]:
+        if not query.strip():
+            return []
+        word_results = self._word_index.search(query, top_n=top_n)
+        char_results = self._char_index.search(query, top_n=top_n)
+
+        # Score fusion: word * 0.6 + char * 0.4
+        scores: dict[str, float] = {}
+        for rank, cid in enumerate(word_results, 1):
+            scores[cid] = scores.get(cid, 0.0) + (1.0 / rank) * 0.6
+        for rank, cid in enumerate(char_results, 1):
+            scores[cid] = scores.get(cid, 0.0) + (1.0 / rank) * 0.4
+
+        return [
+            cid
+            for cid, _ in sorted(scores.items(), key=lambda x: x[1], reverse=True)[
+                :top_n
+            ]
+        ]
+
+
+class _MiniTfidfIndex:
+    """Lightweight TF-IDF using raw term frequencies + IDF approximation."""
+
+    def __init__(self, token_map: dict[str, list[str]]) -> None:
+        self.token_map = token_map
+        self.doc_freqs: Counter[str] = Counter()
+        for tokens in token_map.values():
+            self.doc_freqs.update(set(tokens))
+        self.num_docs = len(token_map)
+
+    def search(self, query: str, top_n: int) -> list[str]:
+        q_tokens = _tokenize(query)
+        if not q_tokens:
+            return []
+        tf_freq = Counter(q_tokens)
+        scores: list[tuple[float, str]] = []
+        for cid, tokens in self.token_map.items():
+            doc_tf = Counter(tokens)
+            score = 0.0
+            for tok in q_tokens:
+                df = self.doc_freqs.get(tok, 0)
+                if df == 0:
+                    continue
+                idf = math.log((self.num_docs + 1) / (df + 1)) + 1.0
+                score += idf * doc_tf.get(tok, 0)
+            if score:
+                scores.append((score, cid))
+        scores.sort(key=lambda x: x[0], reverse=True)
+        return [cid for _, cid in scores[:top_n]]
+
+
+def _char_ngrams(text: str, n_min: int, n_max: int) -> list[str]:
+    text = text.lower()
+    result: list[str] = []
+    for n in range(n_min, n_max + 1):
+        for i in range(len(text) - n + 1):
+            result.append(text[i : i + n])
+    return result
+
+
+# ── BM25 Index ───────────────────────────────────────────────────────
 
 
 class _BM25Index:
-    def __init__(self, token_map: dict[str, list[str]], k1: float = 1.5, b: float = 0.75) -> None:
+    def __init__(
+        self, token_map: dict[str, list[str]], k1: float = 1.5, b: float = 0.75
+    ) -> None:
         self.k1 = k1
         self.b = b
         self.token_map = token_map
-        self.doc_lengths = {chunk_id: len(tokens) for chunk_id, tokens in token_map.items()}
+        self.doc_lengths = {
+            chunk_id: len(tokens) for chunk_id, tokens in token_map.items()
+        }
         self.avg_doc_length = (
-            sum(self.doc_lengths.values()) / len(self.doc_lengths) if self.doc_lengths else 0.0
+            sum(self.doc_lengths.values()) / len(self.doc_lengths)
+            if self.doc_lengths
+            else 0.0
         )
-        self.term_freqs = {chunk_id: Counter(tokens) for chunk_id, tokens in token_map.items()}
+        self.term_freqs = {
+            chunk_id: Counter(tokens) for chunk_id, tokens in token_map.items()
+        }
         self.doc_freqs: Counter[str] = Counter()
         for tokens in token_map.values():
             self.doc_freqs.update(set(tokens))
@@ -473,45 +641,7 @@ class _BM25Index:
         return _GLOBAL_CHUNK_REGISTRY[chunk_id]
 
 
-class _TfIdfIndex:
-    def __init__(self, token_map: dict[str, list[str]]) -> None:
-        self.token_map = token_map
-        self.doc_freqs: Counter[str] = Counter()
-        for tokens in token_map.values():
-            self.doc_freqs.update(set(tokens))
-        self.num_docs = len(token_map)
-        self.doc_vectors = {
-            chunk_id: self._build_weighted_vector(tokens)
-            for chunk_id, tokens in token_map.items()
-        }
-
-    def search(self, query: str, top_n: int) -> list[str]:
-        query_tokens = _tokenize(query)
-        if not query_tokens:
-            return []
-        query_vector = self._build_weighted_vector(query_tokens)
-        if not query_vector:
-            return []
-
-        scores: list[tuple[float, str]] = []
-        for chunk_id, doc_vector in self.doc_vectors.items():
-            score = _cosine_similarity(query_vector, doc_vector)
-            if score <= 0:
-                continue
-            chunk = _GLOBAL_CHUNK_REGISTRY[chunk_id]
-            score += _kind_bonus(chunk.kind)
-            scores.append((score, chunk_id))
-        scores.sort(key=lambda item: item[0], reverse=True)
-        return [chunk_id for _, chunk_id in scores[:top_n]]
-
-    def _build_weighted_vector(self, tokens: Sequence[str]) -> dict[str, float]:
-        term_freq = Counter(tokens)
-        vector: dict[str, float] = {}
-        for token, count in term_freq.items():
-            doc_freq = self.doc_freqs.get(token, 0)
-            idf = math.log((self.num_docs + 1) / (doc_freq + 1)) + 1.0
-            vector[token] = count * idf
-        return vector
+# ── Helpers ──────────────────────────────────────────────────────────
 
 
 def _kind_bonus(kind: str) -> float:
@@ -526,10 +656,7 @@ def _kind_bonus(kind: str) -> float:
 
 def _tokenize(text: str) -> list[str]:
     normalized = (
-        text.replace(":", ".")
-        .replace("/", ".")
-        .replace("`", " ")
-        .replace("-", " ")
+        text.replace(":", ".").replace("/", ".").replace("`", " ").replace("-", " ")
     )
     tokens: list[str] = []
     for raw_token in _TOKEN_PATTERN.findall(normalized):
@@ -540,20 +667,10 @@ def _tokenize(text: str) -> list[str]:
     return tokens
 
 
-def _cosine_similarity(left: dict[str, float], right: dict[str, float]) -> float:
-    shared = set(left) & set(right)
-    numerator = sum(left[token] * right[token] for token in shared)
-    if numerator == 0.0:
-        return 0.0
-    left_norm = math.sqrt(sum(value * value for value in left.values()))
-    right_norm = math.sqrt(sum(value * value for value in right.values()))
-    if left_norm == 0.0 or right_norm == 0.0:
-        return 0.0
-    return numerator / (left_norm * right_norm)
-
-
 def _extract_symbol_like_strings(text: str) -> list[str]:
-    matches = re.findall(r"(?:[A-Za-z_][A-Za-z0-9_]*)(?:[.:][A-Za-z_][A-Za-z0-9_]*)+", text)
+    matches = re.findall(
+        r"(?:[A-Za-z_][A-Za-z0-9_]*)(?:[.:][A-Za-z_][A-Za-z0-9_]*)+", text
+    )
     return [normalize_symbol_target(match) for match in matches]
 
 
