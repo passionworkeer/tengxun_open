@@ -873,5 +873,414 @@
     },
     "raw_output": null,
     "f1": 0.0
+  },
+  {
+    "case_id": "easy_016",
+    "difficulty": "easy",
+    "category": "re_export",
+    "model": "glm-5",
+    "question": "Which function is the final implementation of `celery.utils.gen_task_name`?",
+    "prediction": {
+      "direct_deps": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "raw_output": "\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\"celery.utils.imports.gen_task_name\"],\n    \"indirect_deps\": [],\n    \"implicit_deps\": []\n  }\n}\n```",
+    "f1": 1.0
+  },
+  {
+    "case_id": "medium_011",
+    "difficulty": "medium",
+    "category": "re_export_chain",
+    "model": "glm-5",
+    "question": "When `celery.utils.uuid` is called, what is the actual underlying function that generates the UUID?",
+    "prediction": {
+      "direct_deps": [],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "kombu.utils.uuid.uuid"
+      ],
+      "indirect_deps": [
+        "celery.utils.uuid"
+      ],
+      "implicit_deps": []
+    },
+    "raw_output": "\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [],\n    \"indirect_deps\": [],\n    \"implicit_deps\": []\n  }\n}\n```",
+    "f1": 0.0
+  },
+  {
+    "case_id": "medium_012",
+    "difficulty": "medium",
+    "category": "decorator_registration",
+    "model": "glm-5",
+    "question": "When `@shared_task` decorates a function, what method is ultimately called to register the task with a finalized app?",
+    "prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery.register_task"
+      ],
+      "indirect_deps": [
+        "celery.app.registry.TaskRegistry.register"
+      ],
+      "implicit_deps": [
+        "celery.app.base.Celery.finalize"
+      ]
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [
+        "celery._state.connect_on_app_finalize",
+        "celery._state._get_active_apps"
+      ],
+      "implicit_deps": [
+        "celery.local.Proxy"
+      ]
+    },
+    "raw_output": "\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery.register_task\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.registry.TaskRegistry.register\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.base.Celery.finalize\"\n    ]\n  }\n}\n```",
+    "f1": 0.0
+  },
+  {
+    "case_id": "medium_013",
+    "difficulty": "medium",
+    "category": "builtin_registration",
+    "model": "glm-5",
+    "question": "How does the `celery.backend_cleanup` task get registered with every Celery app instance?",
+    "prediction": {
+      "direct_deps": [
+        "celery.app.builtins (defines backend_cleanup using the current_app.task decorator)",
+        "celery.loaders.base (import_default_modules loads celery.builtins for each app)",
+        "celery.app.base (Celery.finalize() registers pending tasks from builtins to the app's registry)"
+      ],
+      "indirect_deps": [
+        "celery.app.task (Task base class used by the decorator)",
+        "celery.app.registry (task registry where backend_cleanup is stored)",
+        "celery.app.backend (result backend used by backend_cleanup)",
+        "celery.loaders.default (default loader implementation)",
+        "celery.utils.imports (utility functions for importing modules)",
+        "celery.signals (post-import signals)"
+      ],
+      "implicit_deps": [
+        "Python import system",
+        "celery configuration (C.* settings)",
+        "celery.utils.log (logging for tasks)",
+        "celery.exceptions (exception handling)",
+        "celery.result (backend result classes)"
+      ]
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state.connect_on_app_finalize"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.task"
+      ],
+      "implicit_deps": [
+        "celery.app.base.Celery.backend"
+      ]
+    },
+    "raw_output": "\n\n{\"ground_truth\": {\"direct_deps\": [\"celery.app.builtins (defines backend_cleanup using the current_app.task decorator)\", \"celery.loaders.base (import_default_modules loads celery.builtins for each app)\", \"celery.app.base (Celery.finalize() registers pending tasks from builtins to the app's registry)\"], \"indirect_deps\": [\"celery.app.task (Task base class used by the decorator)\", \"celery.app.registry (task registry where backend_cleanup is stored)\", \"celery.app.backend (result backend used by backend_cleanup)\", \"celery.loaders.default (default loader implementation)\", \"celery.utils.imports (utility functions for importing modules)\", \"celery.signals (post-import signals)\"], \"implicit_deps\": [\"Python import system\", \"celery configuration (C.* settings)\", \"celery.utils.log (logging for tasks)\", \"celery.exceptions (exception handling)\", \"celery.result (backend result classes)\"]}}",
+    "f1": 0.0
+  },
+  {
+    "case_id": "medium_014",
+    "difficulty": "medium",
+    "category": "builtin_registration",
+    "model": "glm-5",
+    "question": "What function implements the `celery.accumulate` built-in task, and what dependencies does it have?",
+    "prediction": {
+      "direct_deps": [
+        "celery.app.builtins.accumulate",
+        "list",
+        "celery.app.task"
+      ],
+      "indirect_deps": [
+        "celery.app.base",
+        "celery.result",
+        "celery.utils",
+        "celery.canvas",
+        "celery.exceptions"
+      ],
+      "implicit_deps": [
+        "builtins",
+        "sys"
+      ]
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state.connect_on_app_finalize"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.task"
+      ],
+      "implicit_deps": []
+    },
+    "raw_output": "\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.builtins.accumulate\",\n      \"list\",\n      \"celery.app.task\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base\",\n      \"celery.result\",\n      \"celery.utils\",\n      \"celery.canvas\",\n      \"celery.exceptions\"\n    ],\n    \"implicit_deps\": [\n      \"builtins\",\n      \"sys\"\n    ]\n  }\n}\n```",
+    "f1": 0.0
+  },
+  {
+    "case_id": "medium_015",
+    "difficulty": "medium",
+    "category": "module_alias",
+    "model": "glm-5",
+    "question": "In `celery.utils`, what does `gen_unique_id` resolve to, and is it the same as `uuid`?",
+    "prediction": {
+      "direct_deps": [
+        "celery.utils.uuid"
+      ],
+      "indirect_deps": [
+        "uuid"
+      ],
+      "implicit_deps": []
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "kombu.utils.uuid.uuid"
+      ],
+      "indirect_deps": [
+        "celery.utils.uuid",
+        "celery.utils.gen_unique_id"
+      ],
+      "implicit_deps": []
+    },
+    "raw_output": "\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.uuid\"\n    ],\n    \"indirect_deps\": [\n      \"uuid\"\n    ],\n    \"implicit_deps\": []\n  }\n}\n```",
+    "f1": 0.4
+  },
+  {
+    "case_id": "medium_016",
+    "difficulty": "medium",
+    "category": "dynamic_loading",
+    "model": "glm-5",
+    "question": "When `Celery.__init__` sets `self.registry_cls = symbol_by_name(self.registry_cls)`, what class does `registry_cls` default to?",
+    "prediction": {
+      "direct_deps": [
+        "celery.app.registry.TaskRegistry"
+      ],
+      "indirect_deps": [
+        "celery.app.registry"
+      ],
+      "implicit_deps": []
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.registry.TaskRegistry"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "raw_output": "\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.registry.TaskRegistry\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.registry\"\n    ],\n    \"implicit_deps\": []\n  }\n}\n```",
+    "f1": 0.5
+  },
+  {
+    "case_id": "medium_017",
+    "difficulty": "medium",
+    "category": "namespace_confusion",
+    "model": "glm-5",
+    "question": "Both `celery.app.utils` and `celery.app.__init__` export a function called `bugreport`. Are they the same function?",
+    "prediction": {
+      "direct_deps": [
+        "celery.app.utils"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.utils.bugreport"
+      ],
+      "indirect_deps": [
+        "celery.app.bugreport",
+        "celery._state.get_current_app"
+      ],
+      "implicit_deps": []
+    },
+    "raw_output": "\n\n{\"ground_truth\": {\"direct_deps\": [\"celery.app.utils\"], \"indirect_deps\": [], \"implicit_deps\": []}}",
+    "f1": 0.0
+  },
+  {
+    "case_id": "medium_018",
+    "difficulty": "medium",
+    "category": "re_export_chain",
+    "model": "glm-5",
+    "question": "What is the full dependency chain when calling `celery.app.disable_trace()`?",
+    "prediction": {
+      "direct_deps": [
+        "celery.app.trace",
+        "celery.app.trace.disable_trace"
+      ],
+      "indirect_deps": [
+        "celery.states",
+        "celery.exceptions",
+        "celery.utils.log",
+        "celery.utils.time",
+        "celery.signals",
+        "celery.events"
+      ],
+      "implicit_deps": [
+        "logging",
+        "sys",
+        "time",
+        "os",
+        "threading",
+        "traceback",
+        "warnings",
+        "collections",
+        "functools"
+      ]
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state.disable_trace"
+      ],
+      "indirect_deps": [
+        "celery._state.app_or_default",
+        "celery._state._app_or_default"
+      ],
+      "implicit_deps": []
+    },
+    "raw_output": "\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.trace\",\n      \"celery.app.trace.disable_trace\"\n    ],\n    \"indirect_deps\": [\n      \"celery.states\",\n      \"celery.exceptions\",\n      \"celery.utils.log\",\n      \"celery.utils.time\",\n      \"celery.signals\",\n      \"celery.events\"\n    ],\n    \"implicit_deps\": [\n      \"logging\",\n      \"sys\",\n      \"time\",\n      \"os\",\n      \"threading\",\n      \"traceback\",\n      \"warnings\",\n      \"collections\",\n      \"functools\"\n    ]\n  }\n}",
+    "f1": 0.0
+  },
+  {
+    "case_id": "medium_020",
+    "difficulty": "medium",
+    "category": "namespace_confusion",
+    "model": "glm-5",
+    "question": "In the `celery` top-level module, `subtask` is exported. In `celery.canvas`, `subtask` is also defined. Are they the same object?",
+    "prediction": {
+      "direct_deps": [
+        "celery",
+        "celery.canvas"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.signature"
+      ],
+      "indirect_deps": [
+        "celery.canvas.subtask"
+      ],
+      "implicit_deps": []
+    },
+    "raw_output": "\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\"celery\", \"celery.canvas\"],\n    \"indirect_deps\": [],\n    \"implicit_deps\": []\n  }\n}",
+    "f1": 0.0
+  },
+  {
+    "case_id": "hard_015",
+    "difficulty": "hard",
+    "category": "builtin_registration",
+    "model": "glm-5",
+    "question": "Trace the complete dependency chain for `celery.chord_unlock` built-in task registration, including all implicit imports and the callback mechanism.",
+    "prediction": {
+      "direct_deps": [
+        "celery.app.task",
+        "celery.result",
+        "celery.canvas",
+        "celery.exceptions",
+        "celery.utils",
+        "celery.app.registry",
+        "celery.backends"
+      ],
+      "indirect_deps": [
+        "celery.app.utils",
+        "celery.app.config",
+        "celery.app.backends",
+        "celery.result.resultset",
+        "celery.result.group",
+        "celery.backend.base",
+        "celery.backend.redis",
+        "celery.backend.memcached",
+        "celery.canvas.signature",
+        "celery.canvas.group",
+        "celery.canvas.chain",
+        "celery.canvas.chord",
+        "celery.utils.log",
+        "celery.utils.functional",
+        "celery.utils.text",
+        "celery.utils.imports",
+        "celery.signals.task_prerun",
+        "celery.signals.task_postrun",
+        "celery.signals.task_success",
+        "celery.states"
+      ],
+      "implicit_deps": [
+        "celery.canvas.chord",
+        "celery.canvas.group",
+        "celery.canvas.signature",
+        "celery.result.GroupResult",
+        "celery.result.ResultSet",
+        "celery.backend",
+        "celery.signals.task_success",
+        "celery.states"
+      ]
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state.connect_on_app_finalize"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.task",
+        "celery.backends.base._create_chord_error_with_cause",
+        "celery.canvas.maybe_signature",
+        "celery.result.allow_join_result",
+        "celery.result.result_from_tuple"
+      ],
+      "implicit_deps": [
+        "celery.app.base.Celery.backend"
+      ]
+    },
+    "raw_output": "\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.task\",\n      \"celery.result\",\n      \"celery.canvas\",\n      \"celery.exceptions\",\n      \"celery.utils\",\n      \"celery.app.registry\",\n      \"celery.backends\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.utils\",\n      \"celery.app.config\",\n      \"celery.app.backends\",\n      \"celery.result.resultset\",\n      \"celery.result.group\",\n      \"celery.backend.base\",\n      \"celery.backend.redis\",\n      \"celery.backend.memcached\",\n      \"celery.canvas.signature\",\n      \"celery.canvas.group\",\n      \"celery.canvas.chain\",\n      \"celery.canvas.chord\",\n      \"celery.utils.log\",\n      \"celery.utils.functional\",\n      \"celery.utils.text\",\n      \"celery.utils.imports\",\n      \"celery.signals.task_prerun\",\n      \"celery.signals.task_postrun\",\n      \"celery.signals.task_success\",\n      \"celery.states\"\n    ],\n    \"implicit_deps\": [\n      \"celery.canvas.chord\",\n      \"celery.canvas.group\",\n      \"celery.canvas.signature\",\n      \"celery.result.GroupResult\",\n      \"celery.result.ResultSet\",\n      \"celery.backend\",\n      \"celery.signals.task_success\",\n      \"celery.states\"\n    ]\n  }\n}",
+    "f1": 0.0
+  },
+  {
+    "case_id": "medium_021",
+    "difficulty": "medium",
+    "category": "dynamic_loading",
+    "model": "glm-5",
+    "question": "When Celery app is initialized, how does it resolve the fixup classes from the builtin_fixups set?",
+    "prediction": {
+      "direct_deps": [
+        "celery.utils.imports.symbol_by_name",
+        "celery.app.base.builtin_fixups",
+        "celery.app.base.Celery._load_fixup"
+      ],
+      "indirect_deps": [
+        "importlib",
+        "getattr",
+        "sys.modules"
+      ],
+      "implicit_deps": [
+        "celery.signals",
+        "celery.exceptions",
+        "celery.conf"
+      ]
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [
+        "celery.fixups.django.fixup"
+      ],
+      "implicit_deps": []
+    },
+    "raw_output": "\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.imports.symbol_by_name\",\n      \"celery.app.base.builtin_fixups\",\n      \"celery.app.base.Celery._load_fixup\"\n    ],\n    \"indirect_deps\": [\n      \"importlib\",\n      \"getattr\",\n      \"sys.modules\"\n    ],\n    \"implicit_deps\": [\n      \"celery.signals\",\n      \"celery.exceptions\",\n      \"celery.conf\"\n    ]\n  }\n}\n```",
+    "f1": 0.1818
   }
 ]
