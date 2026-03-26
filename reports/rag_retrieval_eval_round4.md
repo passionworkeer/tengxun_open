@@ -29,8 +29,9 @@
 > (89% of total retrieval time) due to `nx.ego_graph` + `nx.shortest_path_length` calls on a 524,844-edge graph.
 > Replaced with a pure Python dict adjacency BFS — retrieval now runs ~225ms per query.
 
-> **Embedding note**: Real embeddings (CodeBERT/UniXcoder) were evaluated but timed out on CPU (>5min for 8086 chunks).
-> The hybrid TF-IDF + char n-gram is fast and effective for code symbol queries.
+> **Embedding note**: Real embeddings via Qwen3-Embedding-8B (ModelScope API) integrated.
+> Bulk pre-computation is rate-limited by ModelScope (~40min for 8086 chunks).
+> Pre-compute script: `scripts/precompute_embeddings.py`. Falls back to TF-IDF when cache unavailable.
 
 ## Headline Numbers (50-case, question_plus_entry)
 

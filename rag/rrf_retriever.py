@@ -521,20 +521,18 @@ _EMBEDDING_CACHE_FILE = Path("artifacts/rag/embeddings_cache.json")
 
 class _EmbeddingIndex:
     """
-    基于Qwen3-Embedding-8B的语义索引
+    Real embedding index using Qwen3-Embedding-8B via ModelScope API.
 
-    通过ModelScope API获取文本嵌入向量进行相似度检索。
-    如果API不可用，自动降级到TF-IDF。
+    Uses cache-first strategy: load from disk cache if available,
+    otherwise fall back to TF-IDF. Pre-computation script can build
+    the cache offline when rate limits allow.
     """
 
     def __init__(self, chunks: list[CodeChunk], *, repo_root: str | Path = "") -> None:
         self.chunk_ids = [c.chunk_id for c in chunks]
-        self._chunk_texts: dict[str, str] = {}
-        for chunk in chunks:
-            self._chunk_texts[chunk.chunk_id] = (
-                f"{chunk.symbol} {chunk.signature} {chunk.content}"
-            )
-
+        self._chunk_texts: dict[str, str] = {
+            c.chunk_id: f"{c.symbol} {c.signature} {c.content}" for c in chunks
+        }
         self._client = None
         self._embeddings: dict[str, list[float]] = {}
         self._repo_root = str(repo_root)
@@ -544,12 +542,23 @@ class _EmbeddingIndex:
 
         cached = len(self._embeddings)
         if cached == len(self.chunk_ids):
+            print(f"[EmbeddingIndex] All {cached} embeddings loaded from cache")
             return
 
         missing = [cid for cid in self.chunk_ids if cid not in self._embeddings]
-        if not missing:
-            return
+        print(
+            f"[EmbeddingIndex] Cache: {cached}/{len(self.chunk_ids)} — TF-IDF active for missing ({len(missing)})"
+        )
+        self._fallback = _SemanticIndexTfidf(chunks)
 
+    def _truncate(self, text: str, max_chars: int = 2000) -> str:
+        if len(text) <= max_chars:
+            return text
+        return text[:max_chars]
+
+    def _ensure_client(self) -> bool:
+        if self._client is not None:
+            return True
         try:
             import openai
 
@@ -557,35 +566,60 @@ class _EmbeddingIndex:
                 base_url="https://api-inference.modelscope.cn/v1",
                 api_key="ms-22434146-80f6-4669-8473-9aa69b26c218",
             )
-            self._embed_chunks(missing)
-            self._save_cache()
-        except Exception as exc:
-            print(f"[EmbeddingIndex] API unavailable ({exc}), falling back to TF-IDF")
-            self._fallback = _SemanticIndexTfidf(chunks)
+            return True
+        except Exception:
+            return False
 
-    def _truncate(self, text: str, max_chars: int = 2000) -> str:
-        if len(text) <= max_chars:
-            return text
-        return text[:max_chars]
+    def _embed_batch(self, texts: list[str], chunk_ids: list[str]) -> int:
+        if not self._ensure_client():
+            return 0
+        import time
+
+        for attempt in range(3):
+            try:
+                resp = self._client.embeddings.create(
+                    model=_EMBEDDING_MODEL,
+                    input=texts,
+                    encoding_format="float",
+                )
+                if resp.data is None:
+                    raise RuntimeError("resp.data is None (rate limited)")
+                for cid, emb in zip(chunk_ids, resp.data):
+                    self._embeddings[cid] = emb.embedding
+                return len(resp.data)
+            except Exception as exc:
+                wait = (attempt + 1) * 5
+                print(f"[EmbeddingIndex] Batch failed ({exc}), retrying in {wait}s...")
+                time.sleep(wait)
+        return 0
 
     def _embed_chunks(self, chunk_ids: list[str]) -> None:
         texts = [self._truncate(self._chunk_texts[cid]) for cid in chunk_ids]
+        total = len(chunk_ids)
+        done = 0
         batch_size = _EMBED_BATCH_SIZE
-        total = len(texts)
-        print(f"[EmbeddingIndex] Embedding {total} chunks ({_EMBEDDING_MODEL})...")
+        print(f"[EmbeddingIndex] Embedding {total} chunks...")
 
         for i in range(0, total, batch_size):
-            batch = texts[i : i + batch_size]
             batch_ids = chunk_ids[i : i + batch_size]
-            resp = self._client.embeddings.create(
-                model=_EMBEDDING_MODEL,
-                input=batch,
-                encoding_format="float",
-            )
-            for cid, emb in zip(batch_ids, resp.data):
-                self._embeddings[cid] = emb.embedding
-            done = min(i + batch_size, total)
+            batch_texts = texts[i : i + batch_size]
+            n = self._embed_batch(batch_texts, batch_ids)
+            if n == 0:
+                print(
+                    f"[EmbeddingIndex] Batch embedding failed at {i}/{total}, stopping"
+                )
+                break
+            done += n
             print(f"[EmbeddingIndex]   {done}/{total}")
+            import time
+
+            time.sleep(1)
+
+        if done == total:
+            self._save_cache()
+        elif done > 0:
+            print(f"[EmbeddingIndex] Partial embedding: {done}/{total}, saving cache")
+            self._save_cache()
 
     def _load_cache(self) -> None:
         try:
@@ -615,26 +649,53 @@ class _EmbeddingIndex:
         if not query.strip():
             return []
 
-        if hasattr(self, "_fallback"):
+        embed_coverage = len(self._embeddings) / len(self.chunk_ids)
+
+        if embed_coverage < 0.5:
             return self._fallback.search(query, top_n)
 
-        q_emb = (
-            self._client.embeddings.create(
-                model=_EMBEDDING_MODEL,
-                input=[query],
-                encoding_format="float",
-            )
-            .data[0]
-            .embedding
-        )
+        if not self._ensure_client():
+            return self._fallback.search(query, top_n)
 
-        scores: list[tuple[float, str]] = []
+        try:
+            q_emb = (
+                self._client.embeddings.create(
+                    model=_EMBEDDING_MODEL,
+                    input=[query],
+                    encoding_format="float",
+                )
+                .data[0]
+                .embedding
+            )
+        except Exception:
+            return self._fallback.search(query, top_n)
+
+        # Embedding-based scores (normalized dot product → cosine sim)
+        embed_scores: dict[str, float] = {}
         for cid, emb in self._embeddings.items():
             dot = sum(a * b for a, b in zip(q_emb, emb))
-            scores.append((dot, cid))
+            embed_scores[cid] = (dot + 1.0) / 2.0  # normalize [-1,1] → [0,1]
 
-        scores.sort(key=lambda x: x[0], reverse=True)
-        return [cid for _, cid in scores[:top_n]]
+        # TF-IDF scores (fallback for uncovered chunks)
+        tfidf_ids = self._fallback.search(query, top_n=len(self.chunk_ids))
+        tfidf_scores_raw = {cid: 0.0 for cid in self.chunk_ids}
+        for rank, cid in enumerate(tfidf_ids, 1):
+            tfidf_scores_raw[cid] = 1.0 / rank
+
+        # Normalize
+        max_emb = max(embed_scores.values()) if embed_scores else 1.0
+        max_tfidf = max(tfidf_scores_raw.values()) if tfidf_scores_raw else 1.0
+
+        # Hybrid: embedding * 0.7 + tfidf * 0.3 (weight real embeddings higher)
+        hybrid_scores: list[tuple[float, str]] = []
+        for cid in self.chunk_ids:
+            emb = embed_scores.get(cid, 0.0) / max_emb
+            tfidf = tfidf_scores_raw.get(cid, 0.0) / max_tfidf
+            combined = emb * 0.7 + tfidf * 0.3
+            hybrid_scores.append((combined, cid))
+
+        hybrid_scores.sort(key=lambda x: x[0], reverse=True)
+        return [cid for _, cid in hybrid_scores[:top_n]]
 
 
 class _SemanticIndexTfidf:
