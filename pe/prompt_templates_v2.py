@@ -20,6 +20,7 @@ Output only a JSON object in this shape:
   }
 }
 Do not include explanations, markdown, XML tags, or any extra prose.
+Always respond in English, regardless of the question language.
 """
 
 
@@ -84,7 +85,10 @@ class PromptBundle:
         blocks = [self.system_prompt.strip(), self.cot_template.strip()]
         if self.few_shot_examples:
             blocks.append(
-                "\n\n".join(format_few_shot_example(example) for example in self.few_shot_examples)
+                "\n\n".join(
+                    format_few_shot_example(example)
+                    for example in self.few_shot_examples
+                )
             )
         blocks.append(self.user_prompt.strip())
         return "\n\n".join(block for block in blocks if block)
@@ -92,10 +96,7 @@ class PromptBundle:
 
 def _tokenize(text: str) -> set[str]:
     normalized = (
-        text.replace(":", ".")
-        .replace("/", ".")
-        .replace("`", " ")
-        .replace("-", " ")
+        text.replace(":", ".").replace("/", ".").replace("`", " ").replace("-", " ")
     )
     tokens: set[str] = set()
     for raw_token in _TOKEN_PATTERN.findall(normalized):
@@ -115,7 +116,9 @@ def _coerce_string_list(values: Sequence[str] | None) -> tuple[str, ...]:
 def _load_example(item: dict[str, object]) -> FewShotExample:
     ground_truth = item.get("ground_truth", {})
     if not isinstance(ground_truth, dict):
-        raise ValueError(f"Invalid ground_truth payload for {item.get('id', '<unknown>')}")
+        raise ValueError(
+            f"Invalid ground_truth payload for {item.get('id', '<unknown>')}"
+        )
 
     return FewShotExample(
         case_id=str(item.get("id", "")).strip(),
@@ -147,7 +150,10 @@ FEW_SHOT_LIBRARY: tuple[FewShotExample, ...] = load_few_shot_examples()
 
 def format_few_shot_example(example: FewShotExample) -> str:
     preconditions = (
-        "\n".join(f"{idx}. {item}" for idx, item in enumerate(example.environment_preconditions, start=1))
+        "\n".join(
+            f"{idx}. {item}"
+            for idx, item in enumerate(example.environment_preconditions, start=1)
+        )
         if example.environment_preconditions
         else "None"
     )
@@ -200,7 +206,11 @@ def select_few_shot_examples(
         )
         example_tokens = _tokenize(example_text)
         overlap = len(query_tokens & example_tokens)
-        failure_hit = 1 if any(token in example.failure_type.lower() for token in query_tokens) else 0
+        failure_hit = (
+            1
+            if any(token in example.failure_type.lower() for token in query_tokens)
+            else 0
+        )
         entry_hit = 1 if entry_tail and entry_tail in example_text.lower() else 0
         long_chain_bonus = 0.5 if example.case_id.startswith("A") else 0.0
         score = overlap * 3.0 + failure_hit * 2.0 + entry_hit * 2.5 + long_chain_bonus

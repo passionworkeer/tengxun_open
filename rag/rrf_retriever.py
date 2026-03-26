@@ -304,46 +304,37 @@ class HybridRetriever:
             entry_symbol=entry_symbol,
         )
 
-    # ── NetworkX graph ──────────────────────────────────────────────
+    # ── Fast dict-based graph ────────────────────────────────────────
 
     def _build_graph(self) -> None:
-        import networkx as nx
-
-        self._nx_graph = nx.Graph()
-        chunk_ids = [c.chunk_id for c in self.chunks]
-        self._nx_graph.add_nodes_from(chunk_ids)
+        self._graph: dict[str, list[str]] = {c.chunk_id: [] for c in self.chunks}
 
         for chunk in self.chunks:
             # module siblings
             for sibling_id in self.module_to_ids.get(chunk.module, []):
                 if sibling_id != chunk.chunk_id:
-                    self._nx_graph.add_edge(chunk.chunk_id, sibling_id, rel="sibling")
+                    self._graph[chunk.chunk_id].append(sibling_id)
+                    self._graph.setdefault(sibling_id, []).append(chunk.chunk_id)
             # import targets
-            self._connect_targets(chunk.chunk_id, chunk.imports, rel="import")
-            # string targets (dynamic references like "celery.app.trace.build_tracer")
-            self._connect_targets(
-                chunk.chunk_id, chunk.string_targets, rel="string_target"
-            )
-            # code references (function calls, attribute access)
+            self._connect_targets(chunk.chunk_id, chunk.imports)
+            # string targets
+            self._connect_targets(chunk.chunk_id, chunk.string_targets)
+            # code references
             self._connect_references(chunk)
 
-    def _connect_targets(
-        self, source_id: str, targets: Iterable[str], rel: str = "import"
-    ) -> None:
+    def _connect_targets(self, source_id: str, targets: Iterable[str]) -> None:
         for target in targets:
             normalized = normalize_symbol_target(target)
             for candidate_id in self._resolve_target_ids(normalized):
                 if source_id != candidate_id:
-                    self._nx_graph.add_edge(source_id, candidate_id, rel=rel)
+                    self._graph.setdefault(source_id, []).append(candidate_id)
 
     def _connect_references(self, chunk: CodeChunk) -> None:
         for reference in chunk.references:
             normalized = normalize_symbol_target(reference)
             for candidate_id in self._resolve_reference_ids(chunk, normalized):
                 if chunk.chunk_id != candidate_id:
-                    self._nx_graph.add_edge(
-                        chunk.chunk_id, candidate_id, rel="reference"
-                    )
+                    self._graph.setdefault(chunk.chunk_id, []).append(candidate_id)
 
     def _resolve_target_ids(self, target: str) -> list[str]:
         if target in self.symbol_to_ids:
@@ -402,8 +393,6 @@ class HybridRetriever:
         top_n: int,
         query_mode: str,
     ) -> list[str]:
-        import networkx as nx
-
         seeds: set[str] = set()
         if query_mode == "question_plus_entry":
             if entry_symbol:
@@ -421,24 +410,26 @@ class HybridRetriever:
         if not seeds:
             return []
 
-        # BFS via NetworkX, max depth 2, Top-K=10
+        # Fast dict-based BFS, max depth 2
         visited: dict[str, int] = {}
-        for seed in seeds:
-            if seed not in self._nx_graph:
+        edge_rel: dict[str, str] = {}  # chunk_id -> best edge rel from nearest seed
+        queue: list[tuple[str, int]] = [(s, 0) for s in seeds]
+        for s in seeds:
+            visited[s] = 0
+            edge_rel[s] = "seed"
+
+        while queue:
+            curr, dist = queue.pop(0)
+            if dist >= 2:
                 continue
-            # ego_graph gives BFS neighborhood within radius
-            try:
-                subgraph = nx.ego_graph(self._nx_graph, seed, radius=2)
-                for node in subgraph.nodes():
-                    dist = (
-                        nx.shortest_path_length(self._nx_graph, seed, node)
-                        if node != seed
-                        else 0
-                    )
-                    if node not in visited or visited[node] > dist:
-                        visited[node] = dist
-            except nx.NodeNotFound:
-                continue
+            for neighbor in self._graph.get(curr, ()):
+                if neighbor in visited and visited[neighbor] <= dist + 1:
+                    continue
+                visited[neighbor] = dist + 1
+                # Determine edge rel from seed: inherit from curr or detect
+                if curr in edge_rel:
+                    edge_rel[neighbor] = edge_rel[curr]
+                queue.append((neighbor, dist + 1))
 
         if not visited:
             return []
@@ -451,18 +442,13 @@ class HybridRetriever:
                 continue
             overlap = len(query_tokens & set(self.chunk_tokens.get(chunk_id, [])))
             score = 1.0 / (1 + distance) + overlap * 0.05 + _kind_bonus(chunk.kind)
-            # edge-type bonus: direct import > reference > sibling
-            for seed in seeds:
-                if seed in self._nx_graph and chunk_id in self._nx_graph:
-                    edge_data = self._nx_graph.get_edge_data(seed, chunk_id)
-                    if edge_data:
-                        rel = edge_data.get("rel", "")
-                        if rel == "import":
-                            score += 0.3
-                        elif rel == "string_target":
-                            score += 0.25
-                        elif rel == "reference":
-                            score += 0.15
+            rel = edge_rel.get(chunk_id, "")
+            if rel == "import":
+                score += 0.3
+            elif rel == "string_target":
+                score += 0.25
+            elif rel == "reference":
+                score += 0.15
             scored.append((score, chunk_id))
         scored.sort(key=lambda item: item[0], reverse=True)
         return [chunk_id for _, chunk_id in scored[:top_n]]

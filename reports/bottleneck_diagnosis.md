@@ -21,6 +21,14 @@
 - 各难度 F1（分三个 baseline）
 - 典型 bad cases
 
+## 标注来源说明
+
+当前评测集共 50 条，其中：
+- **12 条** failure_type 为人工推断（迁移自旧 schema 的 migration draft，failure_type 尚未在源码层面逐一验证）
+- **38 条** failure_type 为基于源码验证的确定标注
+
+上述统计将在后续逐条审核后更新。
+
 ## 分层指标表
 
 | Model | Easy F1 | Medium F1 | Hard F1 | Avg F1 | Notes |

@@ -22,7 +22,7 @@
                                                    "celery._state._get_active_apps"
                                                ],
                              "implicit_deps":  [
-                                                   "celery.app.shared_task"
+                                                   "celery._state._announce_app_finalized"
                                                ]
                          }
     },

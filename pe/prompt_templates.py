@@ -11,6 +11,7 @@ You are a senior Python static analysis expert working on cross-file dependency 
 Resolve the final dependency targets precisely against the provided Celery source context.
 Only output a JSON array of fully qualified names (FQNs).
 Do not include explanations, markdown, XML tags, or any extra prose.
+Always respond in English, regardless of the question language.
 """
 
 
@@ -54,7 +55,10 @@ class PromptBundle:
         blocks = [self.system_prompt.strip(), self.cot_template.strip()]
         if self.few_shot_examples:
             blocks.append(
-                "\n\n".join(format_few_shot_example(example) for example in self.few_shot_examples)
+                "\n\n".join(
+                    format_few_shot_example(example)
+                    for example in self.few_shot_examples
+                )
             )
         blocks.append(self.user_prompt.strip())
         return "\n\n".join(block for block in blocks if block)
@@ -459,10 +463,7 @@ class Task:
 
 def _tokenize(text: str) -> set[str]:
     normalized = (
-        text.replace(":", ".")
-        .replace("/", ".")
-        .replace("`", " ")
-        .replace("-", " ")
+        text.replace(":", ".").replace("/", ".").replace("`", " ").replace("-", " ")
     )
     tokens: set[str] = set()
     for raw_token in _TOKEN_PATTERN.findall(normalized):
@@ -512,7 +513,9 @@ def select_few_shot_examples(
         )
         example_tokens = _tokenize(example_text)
         overlap = len(query_tokens & example_tokens)
-        category_hit = 1 if any(token in example.category for token in query_tokens) else 0
+        category_hit = (
+            1 if any(token in example.category for token in query_tokens) else 0
+        )
         entry_hit = 1 if entry_tail and entry_tail in example_text.lower() else 0
         hard_bonus = 0.25 if example.difficulty == "hard" else 0.0
         score = overlap * 3.0 + category_hit * 2.0 + entry_hit * 2.5 + hard_bonus
