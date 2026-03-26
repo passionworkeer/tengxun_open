@@ -1,0 +1,150 @@
+[
+  {
+    "case_id": "easy_001",
+    "difficulty": "easy",
+    "category": "re_export",
+    "failure_type": "Type C",
+    "model": "gpt-5.4",
+    "question": "Which real class does `celery.Celery` resolve to in the top-level lazy API?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "no_rag": {
+      "raw_output": "Error code: 401 - {'code': 'INVALID_API_KEY', 'message': 'Invalid API key'}",
+      "prediction": null,
+      "f1": 0.0
+    },
+    "with_rag": {
+      "raw_output": "Error code: 401 - {'code': 'INVALID_API_KEY', 'message': 'Invalid API key'}",
+      "prediction": null,
+      "f1": 0.0,
+      "context_preview": "[Retrieved 1] celery (celery/__init__.py:1-180) | source=bm25, graph\n\"\"\"Distributed Task Queue.\"\"\"\n# :copyright: (c) 2017-2026 Asif Saif Uddin, celery core and individual\n#                 contributor..."
+    },
+    "delta": 0.0
+  },
+  {
+    "case_id": "easy_002",
+    "difficulty": "easy",
+    "category": "re_export",
+    "failure_type": "Type C",
+    "model": "gpt-5.4",
+    "question": "Which real function does the top-level `celery.shared_task` symbol resolve to?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.shared_task"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "no_rag": {
+      "raw_output": "Error code: 401 - {'code': 'INVALID_API_KEY', 'message': 'Invalid API key'}",
+      "prediction": null,
+      "f1": 0.0
+    },
+    "with_rag": {
+      "raw_output": "Error code: 401 - {'code': 'INVALID_API_KEY', 'message': 'Invalid API key'}",
+      "prediction": null,
+      "f1": 0.0,
+      "context_preview": "[Retrieved 1] celery (celery/__init__.py:1-180) | source=bm25, graph\n\"\"\"Distributed Task Queue.\"\"\"\n# :copyright: (c) 2017-2026 Asif Saif Uddin, celery core and individual\n#                 contributor..."
+    },
+    "delta": 0.0
+  },
+  {
+    "case_id": "easy_003",
+    "difficulty": "easy",
+    "category": "loader_alias",
+    "failure_type": "Type E",
+    "model": "gpt-5.4",
+    "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('default')` resolve to?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [
+        "celery.loaders.get_loader_cls"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "no_rag": {
+      "raw_output": "Error code: 401 - {'code': 'INVALID_API_KEY', 'message': 'Invalid API key'}",
+      "prediction": null,
+      "f1": 0.0
+    },
+    "with_rag": {
+      "raw_output": "Error code: 401 - {'code': 'INVALID_API_KEY', 'message': 'Invalid API key'}",
+      "prediction": null,
+      "f1": 0.0,
+      "context_preview": "[Retrieved 1] celery.loaders (celery/loaders/__init__.py:1-18) | source=bm25, graph\n\"\"\"Get loader by name.\n\nLoaders define how configuration is read, what happens\nwhen workers start, when tasks are ex..."
+    },
+    "delta": 0.0
+  },
+  {
+    "case_id": "easy_004",
+    "difficulty": "easy",
+    "category": "alias_resolution",
+    "failure_type": "Type D",
+    "model": "gpt-5.4",
+    "question": "What pool implementation does `celery.concurrency.get_implementation('processes')` resolve to?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.prefork.TaskPool"
+      ],
+      "indirect_deps": [
+        "celery.concurrency.__init__.ALIASES"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "no_rag": {
+      "raw_output": "Error code: 401 - {'code': 'INVALID_API_KEY', 'message': 'Invalid API key'}",
+      "prediction": null,
+      "f1": 0.0
+    },
+    "with_rag": {
+      "raw_output": "Error code: 401 - {'code': 'INVALID_API_KEY', 'message': 'Invalid API key'}",
+      "prediction": null,
+      "f1": 0.0,
+      "context_preview": "[Retrieved 1] celery.concurrency.get_implementation (celery/concurrency/__init__.py:41-43) | source=bm25, graph\ndef get_implementation(cls):\n    \"\"\"Return pool implementation by name.\"\"\"\n    return sy..."
+    },
+    "delta": 0.0
+  },
+  {
+    "case_id": "medium_001",
+    "difficulty": "medium",
+    "category": "backend_alias",
+    "failure_type": "Type E",
+    "model": "gpt-5.4",
+    "question": "Which backend class does `celery.app.backends.by_name('redis')` resolve to?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.backends.redis.RedisBackend"
+      ],
+      "indirect_deps": [
+        "celery.app.backends.by_name",
+        "celery.app.backends.BACKEND_ALIASES"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "no_rag": {
+      "raw_output": "Error code: 401 - {'code': 'INVALID_API_KEY', 'message': 'Invalid API key'}",
+      "prediction": null,
+      "f1": 0.0
+    },
+    "with_rag": {
+      "raw_output": "Error code: 401 - {'code': 'INVALID_API_KEY', 'message': 'Invalid API key'}",
+      "prediction": null,
+      "f1": 0.0,
+      "context_preview": "[Retrieved 1] celery.app.backends.by_url (celery/app/backends.py:59-69) | source=bm25, graph\ndef by_url(backend=None, loader=None):\n    \"\"\"Get backend class by URL.\"\"\"\n    url = None\n    if backend an..."
+    },
+    "delta": 0.0
+  }
+]
