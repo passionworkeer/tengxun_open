@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import os
 import re
 from collections import Counter, defaultdict, deque
 from dataclasses import dataclass
@@ -512,6 +513,7 @@ class HybridRetriever:
             return []
 
         query_tokens = set(_tokenize(question))
+        query_literals = _extract_string_literals(question)
         scored: list[tuple[float, str]] = []
         for chunk_id, distance in visited.items():
             chunk = self.chunk_by_id.get(chunk_id)
@@ -526,6 +528,15 @@ class HybridRetriever:
                 score += 0.25
             elif rel == "reference":
                 score += 0.15
+            # Type D专项：字符串字面量匹配boost
+            # 当问题中的字符串字面量（如 'processes', 'threads'）
+            # 匹配到 chunk 的 string_targets 时，给显著boost
+            chunk_literal_targets = (
+                set(chunk.string_targets) if chunk.string_targets else set()
+            )
+            literal_overlap = len(query_literals & chunk_literal_targets)
+            if literal_overlap > 0:
+                score += literal_overlap * 0.8
             scored.append((score, chunk_id))
         scored.sort(key=lambda item: item[0], reverse=True)
         return [chunk_id for _, chunk_id in scored[:top_n]]
@@ -620,9 +631,12 @@ class _EmbeddingIndex:
         try:
             import openai
 
+            api_key = os.environ.get("MODELSCOPE_API_KEY", "")
+            if not api_key:
+                return False
             self._client = openai.OpenAI(
                 base_url="https://api-inference.modelscope.cn/v1",
-                api_key="ms-22434146-80f6-4669-8473-9aa69b26c218",
+                api_key=api_key,
             )
             return True
         except Exception:
@@ -960,6 +974,16 @@ def _extract_symbol_like_strings(text: str) -> list[str]:
         r"(?:[A-Za-z_][A-Za-z0-9_]*)(?:[.:][A-Za-z_][A-Za-z0-9_]*)+", text
     )
     return [normalize_symbol_target(match) for match in matches]
+
+
+def _extract_string_literals(text: str) -> set[str]:
+    """Extract quoted string literals from text for Type D disambiguation.
+
+    Matches single-quoted and double-quoted strings like 'processes', "threads".
+    These are often alias/argument values that determine which symbol to resolve to.
+    """
+    quoted = re.findall(r"['\"]([a-zA-Z_][a-zA-Z0-9_]*)['\"]", text)
+    return set(quoted)
 
 
 def _looks_like_fqn(value: str) -> bool:

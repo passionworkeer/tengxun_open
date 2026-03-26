@@ -18,6 +18,7 @@ Run in background: nohup python3 scripts/precompute_embeddings.py &
 """
 
 import json
+import os
 import time
 import sys
 from pathlib import Path
@@ -40,9 +41,12 @@ from rag.ast_chunker import chunk_repository
 
 
 def build_client() -> OpenAI:
+    api_key = os.environ.get("MODELSCOPE_API_KEY", "")
+    if not api_key:
+        raise RuntimeError("MODELSCOPE_API_KEY environment variable not set")
     return OpenAI(
         base_url="https://api-inference.modelscope.cn/v1",
-        api_key="ms-22434146-80f6-4669-8473-9aa69b26c218",
+        api_key=api_key,
     )
 
 
