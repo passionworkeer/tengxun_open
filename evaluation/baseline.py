@@ -223,8 +223,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--rrf-k",
         type=int,
-        default=60,
-        help="RRF reciprocal rank fusion k parameter (default 60).",
+        default=30,
+        help="RRF reciprocal rank fusion k parameter (default 30).",
+    )
+    parser.add_argument(
+        "--weights",
+        default="",
+        help="Comma-separated weights for BM25,Semantic,Graph sources, e.g. '0.25,0.05,0.7'. "
+        "When empty, uses unweighted RRF. Recommended: '0.25,0.05,0.7' (BM25,Semantic,Graph).",
     )
     return parser
 
@@ -262,7 +268,8 @@ def evaluate_retrieval(
     top_k: int,
     per_source: int,
     query_mode: str,
-    rrf_k: int = 60,
+    rrf_k: int = 30,
+    weights: dict[str, float] | None = None,
 ) -> dict[str, Any]:
     """
     运行RAG检索评测
@@ -276,6 +283,7 @@ def evaluate_retrieval(
         per_source: 每个检索来源保留的结果数
         query_mode: 查询模式
         rrf_k: RRF融合参数
+        weights: 加权融合权重，格式 {"bm25": 0.25, "semantic": 0.05, "graph": 0.7}
 
     Returns:
         包含各来源检索指标和详细案例结果的字典
@@ -298,6 +306,7 @@ def evaluate_retrieval(
             per_source=per_source,
             query_mode=query_mode,
             rrf_k=rrf_k,
+            weights=weights,
         )
         source_chunk_ids = {
             "bm25": list(trace.bm25),
@@ -367,6 +376,7 @@ def evaluate_retrieval(
         "setting": {
             "query_mode": query_mode,
             "rrf_k": rrf_k,
+            "weights": weights,
             "query_inputs": (
                 ["question"]
                 if query_mode == "question_only"
@@ -396,7 +406,8 @@ def preview_prompt(
     per_source: int,
     prompt_module: ModuleType,
     query_mode: str,
-    rrf_k: int = 60,
+    rrf_k: int = 30,
+    weights: dict[str, float] | None = None,
 ) -> str:
     """
     预览组装后的prompt
@@ -411,6 +422,7 @@ def preview_prompt(
         per_source=per_source,
         query_mode=query_mode,
         rrf_k=rrf_k,
+        weights=weights,
     )
     bundle = prompt_module.build_prompt_bundle(
         question=case.question,
@@ -449,6 +461,21 @@ def main() -> int:
             "num_chunks": len(retriever.chunks),
         }
 
+    weights: dict[str, float] | None = None
+    if args.weights:
+        parts = args.weights.split(",")
+        if len(parts) == 3:
+            weights = {
+                "bm25": float(parts[0]),
+                "semantic": float(parts[1]),
+                "graph": float(parts[2]),
+            }
+            summary["rag_index"]["weights"] = weights
+        else:
+            raise ValueError(
+                f"--weights must be 3 comma-separated floats, got: {args.weights}"
+            )
+
     if args.mode in {"rag", "all"} and retriever is not None:
         summary["retrieval"] = evaluate_retrieval(
             cases=cases,
@@ -457,6 +484,7 @@ def main() -> int:
             per_source=args.per_source,
             query_mode=args.query_mode,
             rrf_k=args.rrf_k,
+            weights=weights,
         )
 
     if args.report_path is not None:
@@ -483,6 +511,7 @@ def main() -> int:
                 per_source=args.per_source,
                 query_mode=args.query_mode,
                 rrf_k=args.rrf_k,
+                weights=weights,
             )
         )
 
@@ -497,6 +526,7 @@ def main() -> int:
                 prompt_module=prompt_module,
                 query_mode=args.query_mode,
                 rrf_k=args.rrf_k,
+                weights=weights,
             )
         )
 

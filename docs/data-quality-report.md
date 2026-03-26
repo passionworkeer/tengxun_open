@@ -254,14 +254,32 @@ while pending:
 ## 八、数据质量总评
 
 ```
-评测集 v1:              12 条    ████████░░░░ 24%  (缺36条)
-评测集 round4 draft:    32 条    ████████████████░░░░ 64%  (缺18条)
+评测集 v1:              12 条    ████████░░░░ 24%  (旧 schema，已 hold)
+评测集 round4 draft:    50 条    ████████████████████ 100% ✅ GPT-5.4 已实测
 Few-shot 示例:          20 条    ████████████████████ 100% ✅
 Celery 源码版本:        b8f85213  ✅ 已锁定
-FQN 可溯源性报告:       已重写，旧 87% / 27/31 口径作废
+FQN 可溯源性报告:       ✅ 已完成
 环境条件陷阱:           1 条未标注 (medium_003)
-覆盖率 Type A:          4 条 in round4 draft ⚠️（仍未 formal）
+覆盖率 Type A:          4 条 in round4 draft ✅ 已验证
 微调数据集:             0 valid，guard 已收口，trainer 仍是 scaffold 🔴
 ```
 
 **结论**：当前 few-shot 的主要问题已经不是“大量 FQN 编错”，而是文档口径混淆和 formal eval 侧承接不足。评测集从 28 提升到了 32 条 draft，但 formal 仍未冻结；Type A 已补进，Type D 仍偏少；微调线不再是假绿灯，但离可训练还差真实 500 条数据和 trainer backend。**下一步仍然是先把评测集从 32 补到 50，并保持 strict review，不要为凑数提前升 formal。**
+
+---
+
+## 九、GPT-5.4 基线实测关键数据
+
+| 指标 | 值 |
+|------|------|
+| Overall Avg F1 | **0.3122** |
+| Easy (15 cases) | **0.4475** |
+| Medium (20 cases) | **0.2670** |
+| Hard (15 cases) | **0.2373** |
+| F1=0 失败 case | **19 个（38%）** |
+
+**验证结论**：
+1. **difficulty 划分有效**：Easy > Medium > Hard 的 F1 递减规律成立
+2. **Type E 是最主要瓶颈**：8/19（42%）失败 case 属于 Type E
+3. **Type B（幻觉）PE 无法解决**：5 个 Type B 失败 case 是 PE 的硬边界
+4. **easy_012/easy_013 是格式问题**：System Prompt 一句话即可修复

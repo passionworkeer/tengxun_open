@@ -8,27 +8,33 @@
 
 > 经过 LoRA 领域微调的 9B 模型，在窄域任务上能否以 1/10 推理成本逼近顶级模型？
 
-这是工业界真正关心的 ROI 问题。
+---
+
+## 模型基线（最终配置）
+
+| 角色 | 模型 | Benchmark | 来源 |
+|------|------|-----------|------|
+| Baseline A | GPT-5.4 | SWE-Bench Pro 57.7% | 闭源商业 |
+| Baseline B | GLM-5 | SWE-Bench Verified 77.8% | 开源 MIT，ModelScope API |
+| Baseline C | Qwen3.5-9B | —（待测） | 开源本地，未微调 |
+| FT 目标 | Qwen3.5-9B + LoRA | —（待测） | 端侧微调 |
+
+> 注：SWE-Bench Pro 与 Verified 是不同测试集，不可直接对比大小。
 
 ---
 
-## 核心研究成果
+## 当前完成进度
 
-| 发现 | 描述 |
-|------|------|
-| **共性天花板** | GPT-5.4 在 Hard 级隐式依赖场景下召回率显著下降，当前所有模型的共性瓶颈是 **Type D/E 类失效** |
-| **RAG 补偿效果** | 三路 RRF RAG 对 Type C/D 有显著补偿，但对 Type E（动态加载/字符串映射）无效 |
-| **工程建议** | 仅对 `implicit_level ≥ 3` 的模块启用完整 RAG+FT 策略，约占 35%，可节省约 65% Token 消耗 |
-
----
-
-## 模型基线
-
-| 模型 | 类型 | 定位 |
-|------|------|------|
-| GPT-5.4 | 闭源商业 | 国际顶尖商业模型天花板 |
-| GLM-5 | 开源 MIT | 开源代码模型最强 |
-| Qwen3.5-9B | 开源，本地微调 | 微调基座，ROI 研究目标 |
+| 模块 | 状态 | 关键产物 |
+|------|------|---------|
+| 评测集（50条） | ✅ | `data/eval_cases_migrated_draft_round4.json` |
+| Few-shot（20条） | ✅ | `pe/prompt_templates_v2.py`, `data/fewshot_examples_20.json` |
+| GPT-5.4 Baseline | ✅ | `reports/gpt5_results_archived/` |
+| GLM-5 Baseline | ⬜ 待跑 | `evaluation/run_glm_eval.py` |
+| Qwen3.5-9B Baseline | ⬜ 待跑 | — |
+| RAG v2 | ✅ | Graph 单路 R@5=0.331，RRF k=30 |
+| Qwen3 Embedding | ⚠️ 配额用尽 | 缓存 5825/8086 (72%) |
+| LoRA 微调 | ⬜ 待跑 | `finetune/train_lora.py` |
 
 ---
 
@@ -40,17 +46,21 @@
         按函数 / 类 / 全局作用域精确切割
 
 索引层（三路并行）
-    ├── 向量索引：CodeBERT / text-embedding-3-small
-    ├── BM25 索引：函数名 + 类名 + 模块名关键词精确匹配
-    └── 图索引：import + 继承树 NetworkX 构图
+    ├── BM25：函数名 + 类名 + 关键词精确匹配
+    ├── Semantic：Qwen3-Embedding-8B（ModelScope API）
+    │               回退：TF-IDF + char 3-5 n-gram
+    └── Graph：dict 邻接 BFS
+                import (+0.3) / string_target (+0.25) / reference (+0.15)
 
 融合层
-    └── RRF(k=60) 三路合并
+    └── RRF(k=30) 三路合并  ← k=30 最优（已验证 k=30 > k=60 > k=120）
 
-上下文管理
-    ├── Top-1 直接依赖：全量代码片段
-    ├── Top-2~5 间接依赖：函数签名 + Docstring（压缩）
-    └── Token 超限时：摘要压缩
+上下文管理（分层渲染）
+    ├── Top-1：全量代码片段
+    └── Top-2~5：函数签名 + Docstring（压缩）
+
+Embedding 缓存
+    └── artifacts/rag/embeddings_cache.json（475MB，5825/8086 已缓存）
 ```
 
 ---
@@ -59,44 +69,63 @@
 
 ```
 celery-dep-analysis/
-├── README.md                      # 本文档
-├── Makefile                      # 快捷命令入口
-├── plan.md                       # 完整实施方案
-├── task.md                       # 考核任务要求
 │
-├── data/                         # 数据目录
-│   ├── eval_cases.json           # 正式评测集（12 条旧 schema）
-│   ├── eval_cases_migrated_draft_round4.json  # 新 schema draft（32 条）
-│   ├── fewshot_examples_20.json  # 20 条 few-shot 示例库
-│   └── finetune_dataset_500.jsonl # 微调数据集（500 条）
+├── README_中文.md                    # 本文档
+├── plan.md                           # 完整实施方案
+├── task.md                           # 考核任务要求
+├── Makefile                          # 快捷命令入口
 │
-├── evaluation/                   # 评测模块
-│   ├── baseline.py               # 数据集概览 / prompt 预览 / RAG 检索评测
-│   └── metrics.py                # Recall@K / MRR 等指标计算
+├── data/                             # 数据目录
+│   ├── eval_cases_migrated_draft_round4.json  # 正式评测集（50条，schema_v2）
+│   ├── fewshot_examples_20.json      # 20条 Few-shot 示例
+│   ├── finetune_dataset_500.jsonl    # 微调数据集（500条）
+│   └── archive/                       # 已归档的旧版本数据
 │
-├── pe/                           # 提示词工程模块
-│   ├── prompt_templates_v2.py    # System Prompt + CoT + Few-shot 库
-│   └── post_processor.py         # FQN 格式校验 + 去重 + 过滤
+├── evaluation/                       # 评测模块
+│   ├── baseline.py                   # RAG 检索评测（Recall@K, MRR）
+│   ├── metrics.py                    # 指标计算
+│   ├── run_glm_eval.py              # GLM-5 评测
+│   └── run_qwen_eval.py             # Qwen 评测
 │
-├── rag/                          # 检索增强模块
-│   ├── ast_chunker.py            # AST 代码级分块
-│   └── rrf_retriever.py          # BM25 / semantic / graph + RRF 融合检索
+├── rag/                              # 检索增强模块
+│   ├── ast_chunker.py                # AST 代码级分块
+│   └── rrf_retriever.py              # BM25 / Semantic / Graph + RRF 融合
 │
-├── finetune/                     # 微调模块
-│   ├── data_guard.py             # 数据验证流水线（防幻觉）
-│   └── train_lora.py             # LoRA 训练脚手架
+├── pe/                               # 提示词工程模块
+│   ├── prompt_templates_v2.py         # System Prompt + CoT + Few-shot
+│   └── post_processor.py             # FQN 格式校验 + 去重
 │
-├── reports/                      # 分析报告
-│   ├── bottleneck_diagnosis.md   # 瓶颈诊断报告
-│   ├── pe_optimization.md        # PE 优化报告
-│   └── ablation_study.md         # 消融实验报告
+├── finetune/                         # 微调模块
+│   ├── data_guard.py                 # 数据验证流水线（防幻觉）
+│   └── train_lora.py                 # LoRA 训练脚手架
 │
-├── docs/                         # 项目文档
-│   ├── dataset_schema.md         # 数据集字段定义
-│   ├── celery_case_mining.md     # Celery 源码挖掘指南
-│   └── ...
+├── scripts/                           # 脚本
+│   ├── precompute_embeddings.py       # 预计算 Embedding 缓存
+│   ├── generate_finetune_data.py     # 从评测结果生成微调数据
+│   ├── run_finetuned_eval.py        # 微调后评测
+│   ├── compare_results.py            # 基线 vs 微调对比报告
+│   ├── train_lora.sh                 # LoRA 训练 shell
+│   └── archive/                      # 已归档的旧脚本
 │
-└── external/celery/             # Celery 源码快照
+├── configs/                          # 配置文件
+│   └── lora_9b.toml                 # Qwen3.5-9B LoRA 配置
+│
+├── reports/                          # 分析报告
+│   ├── rag_retrieval_eval_round4.md # RAG 检索评测报告（最新）
+│   ├── bottleneck_diagnosis.md        # 瓶颈诊断报告
+│   ├── pe_optimization.md            # PE 优化报告
+│   ├── ablation_study.md             # 消融实验报告
+│   └── gpt5_results_archived/        # GPT-5 归档结果
+│
+├── docs/                              # 项目文档
+│   ├── remaining_work_checklist.md   # 当前工作清单
+│   ├── execution_roadmap.md           # 执行路线图
+│   ├── detailed_stage_playbook.md     # 逐阶段执行手册
+│   ├── dataset_schema.md              # 数据集字段定义
+│   └── drafts_archived_20260326/     # 已归档的历史草稿
+│
+└── external/celery/                # Celery 源码快照
+                                      # commit: b8f85213
 ```
 
 ---
@@ -112,44 +141,38 @@ pip install -r requirements.txt
 ### 2. 查看评测集摘要
 
 ```bash
-python -m evaluation.baseline --eval-cases data/eval_cases.json
+python -m evaluation.baseline --eval-cases data/eval_cases_migrated_draft_round4.json
 ```
 
-### 3. 验证微调数据集
+### 3. 运行 RAG 检索评测
 
 ```bash
-python -m finetune.data_guard data/finetune_dataset_500.jsonl
+python -m evaluation.baseline --mode rag \
+  --eval-cases data/eval_cases_migrated_draft_round4.json \
+  --repo-root external/celery --top-k 5 \
+  --report-path artifacts/rag/eval_v2_50cases.json
 ```
 
-### 4. 运行评测
+### 4. 补全 Embedding 缓存（ModelScope 配额刷新后）
 
 ```bash
-# 基线评测
-make eval-baseline
+python3 scripts/precompute_embeddings.py
+```
 
-# PE 消融
-make eval-pe
+### 5. 预训练 LoRA
 
-# RAG 检索评测
-make eval-rag
-
-# 完整消融矩阵
-make eval-all
-
-# 训练模型
-make train
+```bash
+bash scripts/train_lora.sh
 ```
 
 ---
 
 ## 失效类型分类
 
-基于基线测试的 Bad Case 归纳出 5 类失效模式：
-
 | 类型 | 失效特征 | 典型案例 |
 |------|---------|---------|
 | **Type A** | 长上下文截断丢失 | 超出窗口导致上游定义节点被遗漏 |
-| **Type B** | 隐式依赖断裂（幻觉） | `@app.task` 装饰器注册时模型编造不存在的内部调用 |
+| **Type B** | 隐式依赖幻觉 | `@app.task` 装饰器注册时模型编造不存在的内部调用 |
 | **Type C** | 再导出链断裂 | 跨多层 `__init__.py` 别名转发，链路在中间节点中断 |
 | **Type D** | 跨文件命名空间混淆 | 同名函数/类导致张冠李戴 |
 | **Type E** | 动态加载与字符串引用失配 | `importlib`/配置字符串，模型无法把字符串入口映射回真实符号 |
@@ -166,46 +189,14 @@ make train
 
 ---
 
-## 数据格式
+## 当前 RAG 评测结果（50-case，question_plus_entry，k=30）
 
-### 评测案例 (eval_cases.json)
-
-```json
-{
-  "id": "celery_hard_021",
-  "question": "分析 celery.app.task.Task.__call__ 的完整依赖链",
-  "source_file": "celery/app/task.py",
-  "ground_truth": {
-    "direct_deps": ["celery.app.trace.build_tracer"],
-    "indirect_deps": ["celery.utils.functional.maybe_list"],
-    "implicit_deps": ["celery.app.builtins.add_backend_cleanup_task"]
-  },
-  "difficulty": "hard",
-  "failure_type": "Type B",
-  "implicit_level": 4
-}
-```
-
-### 微调数据 (finetune_dataset_500.jsonl)
-
-```jsonl
-{"instruction": "分析以下 Python 函数的完整跨文件依赖链", "input": "...", "output": "...", "difficulty": "hard", "verified": true}
-```
-
----
-
-## 注意事项
-
-### 编码问题
-
-- 所有 JSON 文件使用 `UTF-8` 编码，带 BOM 标记
-- 读取时使用 `encoding="utf-8-sig"` 以兼容带 BOM 的文件
-- 写入时使用 `ensure_ascii=False` 以正确输出中文
-
-### 依赖版本
-
-- Python 3.10+
-- 请参考 `requirements.txt` 获取完整依赖列表
+| Source | Recall@5 | MRR | Notes |
+|:-------|:---------:|:----:|:------|
+| BM25 | 0.183 | 0.316 | 关键词匹配 |
+| Semantic（TF-IDF fallback） | 0.063 | 0.147 | 弱，预期 Qwen3 Embedding 可大幅提升 |
+| **Graph** | **0.331** | **0.480** | **最强单源** |
+| **Fused (k=30)** | **0.294** | **0.449** | BM25+Semantic+Graph 融合 |
 
 ---
 
@@ -213,6 +204,6 @@ make train
 
 - [plan.md](plan.md) - 完整实施方案
 - [task.md](task.md) - 考核任务要求
+- [docs/remaining_work_checklist.md](docs/remaining_work_checklist.md) - 当前工作清单
 - [docs/dataset_schema.md](docs/dataset_schema.md) - 数据集字段定义
-- [docs/detailed_stage_playbook.md](docs/detailed_stage_playbook.md) - 逐阶段执行手册
-- [docs/celery_case_mining.md](docs/celery_case_mining.md) - Celery 源码挖掘指南
+- [docs/execution_roadmap.md](docs/execution_roadmap.md) - 执行路线图
