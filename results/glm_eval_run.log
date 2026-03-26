@@ -1,0 +1,30 @@
+Loaded 50 eval cases.
+[1/50] Running easy_001...
+  Attempt 1 ERROR: Connection error.
+  Attempt 2 ERROR: Error code: 429 - {'error': {'message': "You have exceeded today's quota for model ZhipuAI/GLM-5,  please try again tomorrow, or consider using other models", 'request_id': 'ec010b9e-3dcd-4557-9f64-131fe7eaf089'}}
+  Attempt 3 ERROR: Error code: 429 - {'error': {'message': 'We have to rate limit you for model ZhipuAI/GLM-5. If you need higher limits, please consider other (commercial) API providers.', 'request_id': 'ebf1695c-48b7-44de-9bb2-90d42f496841'}}
+  Attempt 4 ERROR: Error code: 429 - {'error': {'message': 'We have to rate limit you for model ZhipuAI/GLM-5. If you need higher limits, please consider other (commercial) API providers.', 'request_id': '25d2ad12-7ba3-4320-88ea-01d475c0504f'}}
+  Attempt 5 ERROR: Error code: 429 - {'error': {'message': 'We have to rate limit you for model ZhipuAI/GLM-5. If you need higher limits, please consider other (commercial) API providers.', 'request_id': '748a9d88-6c12-4f85-9c34-69fabd4e6704'}}
+  F1: 0.0000
+[2/50] Running easy_002...
+  Attempt 1 ERROR: Error code: 429 - {'error': {'message': "You have exceeded today's quota for model ZhipuAI/GLM-5,  please try again tomorrow, or consider using other models", 'request_id': '2f94f0fe-117b-4c17-a2c2-a89afdc416c5'}}
+  Attempt 2 ERROR: Error code: 429 - {'error': {'message': "You have exceeded today's quota for model ZhipuAI/GLM-5,  please try again tomorrow, or consider using other models", 'request_id': '342d526b-0abc-41c0-ae56-ddf5e99b9bbf'}}
+  Attempt 3 ERROR: Error code: 429 - {'error': {'message': "You have exceeded today's quota for model ZhipuAI/GLM-5,  please try again tomorrow, or consider using other models", 'request_id': '60d8e43a-33b4-40cf-9065-382e3d4965f3'}}
+  Attempt 4 ERROR: Error code: 429 - {'error': {'message': 'We have to rate limit you for model ZhipuAI/GLM-5. If you need higher limits, please consider other (commercial) API providers.', 'request_id': 'f0d111e9-dfb2-413e-a16f-72e4b67aed65'}}
+  Attempt 5 ERROR: Error code: 429 - {'error': {'message': 'We have to rate limit you for model ZhipuAI/GLM-5. If you need higher limits, please consider other (commercial) API providers.', 'request_id': '7472b885-e0d3-4034-8fe1-abb85554366b'}}
+  F1: 0.0000
+[3/50] Running easy_003...
+  Attempt 1 ERROR: Error code: 429 - {'error': {'message': 'We have to rate limit you for model ZhipuAI/GLM-5. If you need higher limits, please consider other (commercial) API providers.', 'request_id': 'da8e95a9-897d-4411-b475-3a2101d999dd'}}
+  Attempt 2 ERROR: Error code: 429 - {'error': {'message': "You have exceeded today's quota for model ZhipuAI/GLM-5,  please try again tomorrow, or consider using other models", 'request_id': '65dba912-3d10-4eff-b1a4-229cb36f2b1d'}}
+  Attempt 3 ERROR: Error code: 429 - {'error': {'message': "You have exceeded today's quota for model ZhipuAI/GLM-5,  please try again tomorrow, or consider using other models", 'request_id': '1f3caacd-ba31-445d-87dd-d00e7a264dc5'}}
+  Attempt 4 ERROR: Error code: 429 - {'error': {'message': "You have exceeded today's quota for model ZhipuAI/GLM-5,  please try again tomorrow, or consider using other models", 'request_id': 'e6332689-4dd4-4168-9249-ebbb244c6154'}}
+  Attempt 5 ERROR: Error code: 429 - {'error': {'message': 'We have to rate limit you for model ZhipuAI/GLM-5. If you need higher limits, please consider other (commercial) API providers.', 'request_id': '6e433d6e-03f8-4fe5-b9b2-a5ba805405fd'}}
+  F1: 0.0000
+[4/50] Running easy_004...
+  Attempt 1 ERROR: Error code: 429 - {'error': {'message': 'We have to rate limit you for model ZhipuAI/GLM-5. If you need higher limits, please consider other (commercial) API providers.', 'request_id': '2decf676-9204-4f13-be5e-b21fc7065d5c'}}
+  Attempt 2 ERROR: Error code: 429 - {'error': {'message': 'We have to rate limit you for model ZhipuAI/GLM-5. If you need higher limits, please consider other (commercial) API providers.', 'request_id': 'deec34b2-5c37-44ec-a623-c14148f7f6ca'}}
+  Attempt 3 ERROR: Error code: 429 - {'error': {'message': "You have exceeded today's quota for model ZhipuAI/GLM-5,  please try again tomorrow, or consider using other models", 'request_id': '9fa0d378-990c-45c1-a899-64792e0eb3ae'}}
+  Attempt 4 ERROR: Error code: 429 - {'error': {'message': 'We have to rate limit you for model ZhipuAI/GLM-5. If you need higher limits, please consider other (commercial) API providers.', 'request_id': '787d9136-8002-4ac3-ae53-a46a88182e0a'}}
+  Attempt 5 ERROR: Error code: 429 - {'error': {'message': 'We have to rate limit you for model ZhipuAI/GLM-5. If you need higher limits, please consider other (commercial) API providers.', 'request_id': 'e85b9655-cc23-41ba-a6b4-4d568e527462'}}
+  F1: 0.0000
+[5/50] Running medium_001...

@@ -13,7 +13,7 @@
       "indirect_deps": [],
       "implicit_deps": []
     },
-    "raw_output": "'NoneType' object is not subscriptable",
+    "raw_output": null,
     "f1": 0.0
   },
   {
@@ -30,7 +30,7 @@
       "indirect_deps": [],
       "implicit_deps": []
     },
-    "raw_output": "'NoneType' object is not subscriptable",
+    "raw_output": null,
     "f1": 0.0
   },
   {
@@ -39,19 +39,7 @@
     "category": "loader_alias",
     "model": "ZhipuAI/GLM-5",
     "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('default')` resolve to?",
-    "prediction": {
-      "direct_deps": [
-        "celery.utils.imports",
-        "celery.loaders.default"
-      ],
-      "indirect_deps": [
-        "celery.loaders.base"
-      ],
-      "implicit_deps": [
-        "celery.utils.imports",
-        "celery.loaders.base"
-      ]
-    },
+    "prediction": null,
     "ground_truth": {
       "direct_deps": [
         "celery.loaders.default.Loader"
@@ -63,7 +51,7 @@
         "celery.utils.imports.symbol_by_name"
       ]
     },
-    "raw_output": "```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.imports\",\n      \"celery.loaders.default\"\n    ],\n    \"indirect_deps\": [\n      \"celery.loaders.base\"\n    ],\n    \"implicit_deps\": [\n      \"celery.utils.imports\",\n      \"celery.loaders.base\"\n    ]\n  }\n}\n```",
+    "raw_output": null,
     "f1": 0.0
   },
   {
@@ -84,29 +72,7 @@
         "celery.utils.imports.symbol_by_name"
       ]
     },
-    "raw_output": "'NoneType' object is not subscriptable",
-    "f1": 0.0
-  },
-  {
-    "case_id": "medium_001",
-    "difficulty": "medium",
-    "category": "backend_alias",
-    "model": "ZhipuAI/GLM-5",
-    "question": "Which backend class does `celery.app.backends.by_name('redis')` resolve to?",
-    "prediction": null,
-    "ground_truth": {
-      "direct_deps": [
-        "celery.backends.redis.RedisBackend"
-      ],
-      "indirect_deps": [
-        "celery.app.backends.by_name",
-        "celery.app.backends.BACKEND_ALIASES"
-      ],
-      "implicit_deps": [
-        "celery.utils.imports.symbol_by_name"
-      ]
-    },
-    "raw_output": "Connection error.",
+    "raw_output": null,
     "f1": 0.0
   }
 ]

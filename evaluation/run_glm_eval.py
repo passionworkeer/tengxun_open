@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import argparse
+import time
 from pathlib import Path
 from typing import Any
 
@@ -26,7 +27,9 @@ def build_prompt_v2(case: EvalCase, context: str = "") -> str:
     return "\n\n".join(parts)
 
 
-def parse_response(text: str) -> dict[str, list[str]] | None:
+def parse_response(text: str | None) -> dict[str, list[str]] | None:
+    if not text:
+        return None
     try:
         text = text.strip()
         import re
@@ -43,7 +46,7 @@ def parse_response(text: str) -> dict[str, list[str]] | None:
             "indirect_deps": gt.get("indirect_deps", []),
             "implicit_deps": gt.get("implicit_deps", []),
         }
-    except (json.JSONDecodeError, AttributeError, KeyError):
+    except (json.JSONDecodeError, AttributeError, KeyError, TypeError):
         return None
 
 
@@ -62,7 +65,7 @@ def compute_f1(pred: dict[str, list[str]], gt: dict[str, list[str]]) -> float:
     return metrics.f1
 
 
-def run_glm_eval(
+def run_eval(
     cases: list[EvalCase],
     api_key: str,
     model: str = "ZhipuAI/GLM-5",
@@ -70,10 +73,7 @@ def run_glm_eval(
     output_path: Path | None = None,
     max_cases: int | None = None,
 ) -> list[dict[str, Any]]:
-    client = OpenAI(
-        base_url=base_url,
-        api_key=api_key,
-    )
+    client = OpenAI(base_url=base_url, api_key=api_key)
 
     if max_cases is not None:
         cases = cases[:max_cases]
@@ -87,24 +87,42 @@ def run_glm_eval(
         prediction = None
         raw_output = None
 
-        for attempt in range(3):
+        for attempt in range(5):
             try:
                 response = client.chat.completions.create(
                     model=model,
                     messages=[{"role": "user", "content": prompt}],
                     stream=False,
-                    timeout=300,
+                    timeout=180,
                 )
-                msg = response.choices[0].message
-                raw_output = msg.content if msg and msg.content else ""
-                prediction = parse_response(raw_output)
-                break
+                msg = response.choices[0].message if response.choices else None
+
+                if msg is None:
+                    print(f"  Attempt {attempt + 1}: message is None", flush=True)
+                    time.sleep(3)
+                    continue
+
+                raw_output = msg.content
+
+                if not raw_output and msg.reasoning_content:
+                    raw_output = msg.reasoning_content
+
+                if raw_output:
+                    prediction = parse_response(raw_output)
+                    if prediction:
+                        break
+                    print(
+                        f"  Attempt {attempt + 1}: parse failed, retrying...",
+                        flush=True,
+                    )
+                else:
+                    print(f"  Attempt {attempt + 1}: empty content", flush=True)
+
+                time.sleep(3)
+
             except Exception as e:
                 print(f"  Attempt {attempt + 1} ERROR: {e}", flush=True)
-                import time
-
                 time.sleep(5)
-                raw_output = str(e)
 
         gt_dict = {
             "direct_deps": list(case.direct_gold_fqns) if case.direct_gold_fqns else [],
@@ -138,58 +156,32 @@ def run_glm_eval(
                 json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8"
             )
 
-    print(f"\nAll 50 cases completed. Results saved to {output_path}")
-    return results
-
+    print(f"\nAll cases completed. Results saved to {output_path}")
     return results
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Run GLM-5 evaluation on Celery dependency analysis."
+        description="Run model evaluation on Celery dependency analysis."
+    )
+    parser.add_argument("--api-key", type=str, required=True)
+    parser.add_argument("--model", type=str, default="ZhipuAI/GLM-5")
+    parser.add_argument(
+        "--base-url", type=str, default="https://api-inference.modelscope.cn/v1"
     )
     parser.add_argument(
-        "--cases",
-        type=Path,
-        default=Path("data/eval_cases_migrated_draft_round4.json"),
-        help="Path to evaluation dataset.",
+        "--cases", type=Path, default=Path("data/eval_cases_migrated_draft_round4.json")
     )
     parser.add_argument(
-        "--api-key",
-        type=str,
-        required=True,
-        help="ZhipuAI API key.",
+        "--output", type=Path, default=Path("results/glm_eval_results.json")
     )
-    parser.add_argument(
-        "--model",
-        type=str,
-        default="ZhipuAI/GLM-5",
-        help="Model name (default: ZhipuAI/GLM-5).",
-    )
-    parser.add_argument(
-        "--base-url",
-        type=str,
-        default="https://api-inference.modelscope.cn/v1",
-        help="API base URL.",
-    )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=Path("results/glm_eval_results.json"),
-        help="Output path for results.",
-    )
-    parser.add_argument(
-        "--max-cases",
-        type=int,
-        default=None,
-        help="Limit number of cases (for testing).",
-    )
+    parser.add_argument("--max-cases", type=int, default=None)
     args = parser.parse_args()
 
     cases = load_eval_cases(args.cases)
     print(f"Loaded {len(cases)} eval cases.")
 
-    run_glm_eval(
+    run_eval(
         cases=cases,
         api_key=args.api_key,
         model=args.model,
