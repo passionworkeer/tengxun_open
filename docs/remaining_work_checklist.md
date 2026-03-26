@@ -64,9 +64,20 @@
   - `finetune/train_qlora.py` 已支持 `--config`，但当前仍是 scaffold-only，尚未接入真实 trainer backend
   - `configs/qlora_7b.toml` 已新增
   - `data/finetune_dataset_500.jsonl` 已补占位，但当前仍为 0 条有效记录
+- RAG 独立评测链已往前推进一格：
+  - `evaluation/baseline.py` 现已兼容 `legacy_v1 + schema_v2` 双 schema，避免 round4 draft 静默退化成全 0
+  - `evaluation/baseline.py` 现已支持 `question_only / question_plus_entry` 两种 query mode
+  - `evaluation/baseline.py` 现已把 `chunk_symbols` 与 `expanded_fqns` 两种评测口径拆开
+  - 当前首份 round4 question-only 独立报告已落地：`artifacts/rag/rag_eval_round4_question_only.json`
+  - round4 `question_plus_entry` 对照报告已落地：`artifacts/rag/rag_eval_round4_question_plus_entry.json`
+  - 当前对应文字报告已落地：`reports/rag_retrieval_eval_round4.md`
+  - 当前结论已明确：fused `chunk_symbols` 从 `0.2962 / 0.5120`（`question_only`）下降到 `0.2147 / 0.4969`（`question_plus_entry`）
+  - `question_plus_entry` 并没有修复 Type D；fused `chunk_symbols` 下 Type D Recall@5 仍为 `0.0000`
+  - 现阶段默认 RAG headline 仍以 `question_only + chunk_symbols` 为准，`question_plus_entry` 只保留为诊断对照
 - 当前最高优先级已切到高价值 eval 继续扩充：
   - 基于 `docs/drafts/eval_high_value_candidates_round4.md` 起草下一批 Type A / Type D / hard
   - 使用 round 15 gate 拦住双问题、值语义题、schema 不可表达题
+  - `review_round20_round4_candidate_refresh.md` 将收口本轮严格 reviewer 与 Type D 候选筛选结果
   - 继续扩 eval，但维持 `data/eval_cases.json` 的 hold 结论
 
 ## 审稿结论摘要
@@ -129,8 +140,8 @@
 | 阶段 2 | 评测集设计与人工标注 | 进行中（32 条 draft 已到位） | `32 -> 50`，并维持 formal hold |
 | 阶段 3 | Baseline 与瓶颈诊断 | 未开始 | 评测集新 schema 稳定后启动 |
 | 阶段 4 | Prompt Engineering | 进行中（20 条 few-shot 正式池已补齐） | 将正式池写入 prompt template / JSON 工件 |
-| 阶段 5 | RAG | 原型已落地，独立评测未开始 | 产出 Recall@5 / MRR |
-| 阶段 6 | 微调 | 准备中（schema / guard / train scaffold 已对齐） | 生成第一批高质量 500 条候选 |
+| 阶段 5 | RAG | 进行中（`question_only / question_plus_entry` 双口径已跑通，默认仍以 `question_only` 为主） | 锁定默认 query mode + 继续补 Type D 高价值样本 |
+| 阶段 6 | 微调 | 准备中（schema / guard / train scaffold 已对齐，但有效训练数据仍是 `0`） | 生成第一批高质量 500 条候选 |
 | 阶段 7 | 消融与答辩材料 | 未开始 | 等实验结果产出后收口 |
 
 ## 当前 P0 清单（必须先做完）

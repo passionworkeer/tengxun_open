@@ -6,9 +6,9 @@
 
 | 实验组 | Easy F1 | Medium F1 | Hard F1 | Avg F1 | Token 消耗 | 核心验证目的 |
 |--------|---------|-----------|---------|--------|-----------|------------|
-| Baseline (GPT-4o) | TBD | TBD | TBD | TBD | 基准 | 商业模型零样本上限 |
-| Baseline (GLM-5) | TBD | TBD | TBD | TBD | 基准 | 开源最强模型零样本上限 |
-| Baseline (Qwen2.5-Coder-7B) | TBD | TBD | TBD | TBD | 基准 | 微调基座未优化水平 |
+| Baseline (MiniMax-M2.7) | TBD | TBD | TBD | TBD | 基准 | 商业闭源模型上界 |
+| Baseline (GPT-4o) | TBD | TBD | TBD | TBD | 基准 | 业界锚点校准 |
+| Baseline (Qwen3.5-9B) | TBD | TBD | TBD | TBD | 基准 | 微调基座未优化水平 |
 | PE only | TBD | TBD | TBD | TBD | +40% | 纯提示词工程极限 |
 | RAG only（向量） | TBD | TBD | TBD | TBD | +120% | 单路检索基准 |
 | RAG only（三路 RRF） | TBD | TBD | TBD | TBD | +140% | 混合检索增益 |
@@ -21,12 +21,17 @@
 
 | 检索策略 | Recall@5 | MRR | 备注 |
 |---------|---------|-----|------|
-| 向量检索 only | TBD | TBD | 基准 |
-| BM25 only | TBD | TBD | 函数名精确匹配场景 |
-| 图索引 only | TBD | TBD | 静态依赖覆盖范围 |
-| 向量 + BM25 RRF | TBD | TBD | 双路融合 |
-| **三路 RRF（本方案）** | TBD | TBD | 预期最优 |
+| 向量检索 only（`chunk_symbols`） | `0.1506` | `0.3131` | 32 条 round4 draft，`question_only` |
+| BM25 only（`chunk_symbols`） | `0.1910` | `0.4143` | 32 条 round4 draft，`question_only` |
+| 图索引 only（`chunk_symbols`） | `0.2823` | `0.5100` | 当前单路最强 |
+| **三路 RRF（`chunk_symbols`, `question_only`）** | **`0.2962`** | **`0.5120`** | 当前 honest retrieval headline |
+| 三路 RRF（`chunk_symbols`, `question_plus_entry`） | `0.2147` | `0.4969` | 对照实验；当前比 `question_only` 更差 |
+| 三路 RRF（`expanded_fqns`） | `0.2140` | `0.4521` | 启发式扩展视图，不作为纯检索 headline |
 | Text Chunking vs AST Chunking | TBD | TBD | 分块策略对比 |
+
+> 注：当前 RAG 原型已把 `chunk_symbols` 与 `expanded_fqns` 两种口径拆开。后者会利用 imports / string targets / references 做候选扩展，因此不能再被写成“纯 retrieval”分数。
+>
+> 补充：`question_plus_entry` 在当前 round4 draft 上并没有带来 fused honest retrieval 增益，反而把 `chunk_symbols Recall@5` 从 `0.2962` 拉到 `0.2147`。现阶段默认口径仍应保持 `question_only`。
 
 ## 检索-生成四象限分析
 
@@ -52,6 +57,14 @@
 - RAG 图索引在 Type E 场景表现：
 - FT 的必要性：
 - PE + RAG + FT 是 Type E 场景唯一有效策略：是/否
+
+## 当前 RAG 快照
+
+- 当前独立检索评测已能在 `32` 条 `schema_v2` round4 draft 上运行，见 `reports/rag_retrieval_eval_round4.md`。
+- 当前 honest retrieval headline 是 `fused chunk_symbols Recall@5 = 0.2962 / MRR = 0.5120`。
+- 当前 `question_plus_entry` 对照实验已补齐，但 fused `chunk_symbols` 下降到 `0.2147 / 0.4969`，因此不能当作默认查询口径。
+- 当前最弱切片仍是 `Type D`；在 `fused chunk_symbols` 视图下，`Type D Recall@5 = 0.0000`。
+- 这说明当前 RAG 原型最先补到的是结构链路型问题，而不是命名空间混淆问题。
 
 ### 最终工程建议
 

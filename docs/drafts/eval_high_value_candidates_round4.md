@@ -162,11 +162,11 @@
 
 ## Recommended Keep Set
 
-优先进入下一批正式起草的 6 条：
+本节已被 `docs/drafts/review_round20_round4_candidate_refresh.md` 的严格筛选结果部分取代。
 
-1. Candidate 01
-2. Candidate 02
-3. Candidate 03
-4. Candidate 04
-5. Candidate 05
-6. Candidate 06
+当前更稳的下一批正式起草顺序是：
+
+1. 重写 `lpmerge` 路由合并语义题
+2. 重写 quorum delayed-route rewrite 题
+3. 起草 `expand_router_string` Type D 条目
+4. 起草 `MapRoute.__call__` Type D 条目
