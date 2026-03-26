@@ -493,5 +493,385 @@
     },
     "raw_output": "用户希望我回答一个关于 Celery 内部机制的具体技术问题，然后以特定的 JSON 格式返回结果。\n\n**问题分析：**\n*   **条件 1：** 线程中没有当前 app（`celery.current_app` 未设置或为 `None`）。\n*   **条件 2：** 未设置 `CELERY_LOADER` 环境变量。\n*   **动作：** 首次访问 `celery.current_app.loader`。\n*   **目标：** 确定哪个 Loader 类被实例化。\n\n**逐步推理：**\n\n1.  **访问 `celery.current_app`：**\n    *   当调用 `celery.current_app` 时，它会检查当前线程状态。\n    *   如果没有设置当前 app（条件 1），它将回退到“默认” app。\n    *   Celery 通常使用 `celery.app.defaults` 或 `celery.Celery` 创建一个默认实例。\n    *   在现代 Celery（4.0+）中，`celery.current_app` 指向 `celery._state._get_current_app()`。\n    *   如果为空，它返回 `celery._state.default_app`。\n    *   `default_app` 通常是 `celery.Celery()` 的一个实例。\n\n2.  **默认 App 配置：**\n    *   当实例化 `celery.Celery()`（默认 app）时，它会设置其默认配置。\n    *   默认配置通常在 `celery.app.defaults` 中定义。\n    *   在 `celery/app/defaults.py` 中查找，存在默认的 `loader` 设置。\n    *   默认设置是 `app.loader_cls`。\n    *   `loader_cls` 的默认值是什么？\n    *   在 `celery/app/base.py` 中，`Celery` 类定义了属性。\n    *   `loader_cls` 的默认值通常是 `'celery.loaders.default:Loader'`。\n\n3.  **处理 `CELERY_LOADER` 环境变量：**\n    *   Celery 配置更新顺序通常涉及从环境变量加载。\n    *   然而，问题陈述“未设置 `CELERY_LOADER`”。\n    *   因此，实例化机制依赖于 `Celery` 类属性中定义的内部默认值。\n\n4.  **解析 Loader 类：**\n    *   `celery.current_app` 属性访问触发 `__getattr__` 或属性逻辑。\n    *   `loader` 属性定义为类上的属性或在首次访问时初始化。\n    *   通常，它是 `app.loader`。\n    *   在 `celery/app/base.py` 内部：\n        ```python\n        @property\n        def loader(self):\n            return self._loader\n        ```\n    *   `_loader` 初始化：\n        ```python\n        def _get_loader(self):\n            return self.loader_cls(self)\n        ```\n    *   `self.loader_cls` 是从配置中解析的。\n    *   `Celery` 类的 `loader_cls` 属性默认为 `'celery.loaders.default:Loader'`。\n    *   等等，我们检查 `celery.Celery` 定义的默认值。\n    *   通常，如果在配置中未找到（且没有环境变量），它会回退到类上定义的字符串：`'celery.loaders.default:Loader'`。\n\n5.  **验证默认 Loader：**\n    *   Celery 中的标准默认 loader 是 `celery.loaders.default.Loader`。\n    *   这个类处理基本的配置加载，但在没有显式配置模块时，并不像 Django 的 `loaders.app` 那样进行繁重的搜索。\n    *   关键是，`celery.current_app` 创建一个“默认” app 实例。\n    *   这个默认 app 的 `loader_",
     "f1": 0.0
+  },
+  {
+    "case_id": "celery_hard_013",
+    "difficulty": "hard",
+    "category": "shared_task_proxy_autofinalize",
+    "model": "glm-5",
+    "question": "`celery.app.shared_task` 返回的 Proxy 首次解析任务对象时，触发 finalize 回调链的关键入口符号是什么？",
+    "prediction": null,
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery.tasks",
+        "celery.app.base.Celery.finalize"
+      ],
+      "indirect_deps": [
+        "celery._state._announce_app_finalized"
+      ],
+      "implicit_deps": [
+        "celery._state.connect_on_app_finalize",
+        "celery.app.base.Celery._task_from_fun"
+      ]
+    },
+    "raw_output": null,
+    "f1": 0.0
+  },
+  {
+    "case_id": "celery_hard_015",
+    "difficulty": "hard",
+    "category": "autodiscovery_signal_chain",
+    "model": "glm-5",
+    "question": "在 `app.autodiscover_tasks(..., force=False)` 的 lazy 路径下，真正被触发执行的目标函数是什么，以及它由哪条调用链触发？",
+    "prediction": null,
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._autodiscover_tasks"
+      ],
+      "indirect_deps": [
+        "celery.loaders.base.BaseLoader.init_worker",
+        "celery.loaders.base.BaseLoader.import_default_modules",
+        "celery.utils.dispatch.signal.Signal.send"
+      ],
+      "implicit_deps": [
+        "celery.signals.import_modules",
+        "vine.starpromise"
+      ]
+    },
+    "raw_output": null,
+    "f1": 0.0
+  },
+  {
+    "case_id": "celery_hard_018",
+    "difficulty": "hard",
+    "category": "django_task_cls_string_resolution",
+    "model": "glm-5",
+    "question": "在满足 Django fixup 前置条件（`DJANGO_SETTINGS_MODULE` 已设置、`django` 可导入、且 `app.loader_cls` 不含 `django`）且未自定义 `task_cls` 时，`app.Task` 的最终基类解析到哪个真实类？",
+    "prediction": null,
+    "ground_truth": {
+      "direct_deps": [
+        "celery.contrib.django.task.DjangoTask"
+      ],
+      "indirect_deps": [
+        "celery.fixups.django.fixup",
+        "celery.fixups.django.DjangoFixup.install",
+        "celery.app.base.Celery.Task",
+        "celery.app.base.Celery.create_task_cls",
+        "celery.app.base.Celery.subclass_with_self"
+      ],
+      "implicit_deps": [
+        "os.environ.get",
+        "celery.utils.imports.symbol_by_name",
+        "django.conf.settings"
+      ]
+    },
+    "raw_output": null,
+    "f1": 0.0
+  },
+  {
+    "case_id": "celery_medium_017",
+    "difficulty": "medium",
+    "category": "fixup_string_entry_resolution",
+    "model": "glm-5",
+    "question": "在 `Celery.__init__` 中，默认 `builtin_fixups` 的字符串入口 `'celery.fixups.django:fixup'` 最终会被解析到哪个真实函数符号（不考虑后续 install 副作用）？",
+    "prediction": {
+      "direct_deps": [
+        "celery.fixups.django.fixup"
+      ],
+      "indirect_deps": [
+        "celery.fixups.django"
+      ],
+      "implicit_deps": [
+        "importlib"
+      ]
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery.fixups.django.fixup"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.__init__",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": [
+        "celery.app.base.BUILTIN_FIXUPS"
+      ]
+    },
+    "raw_output": "\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.fixups.django.fixup\"\n    ],\n    \"indirect_deps\": [\n      \"celery.fixups.django\"\n    ],\n    \"implicit_deps\": [\n      \"importlib\"\n    ]\n  }\n}\n```",
+    "f1": 0.2857
+  },
+  {
+    "case_id": "celery_medium_020",
+    "difficulty": "medium",
+    "category": "default_app_loader_alias_chain",
+    "model": "glm-5",
+    "question": "`_state._get_current_app` 懒创建 fallback app 后，首次访问 `app.loader` 时，最终实例化到哪个具体 Loader 类？",
+    "prediction": {
+      "direct_deps": [
+        "celery/_state.py",
+        "celery/app/base.py",
+        "celery/loaders/default.py"
+      ],
+      "indirect_deps": [
+        "celery/loaders/__init__.py",
+        "celery/loaders/base.py",
+        "celery/app/__init__.py"
+      ],
+      "implicit_deps": [
+        "celery/utils/imports.py",
+        "celery/exceptions.py"
+      ]
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery.loader",
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [
+        "celery._state._get_current_app",
+        "celery.loaders.get_loader_cls"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.symbol_by_name",
+        "celery.utils.imports.import_from_cwd"
+      ]
+    },
+    "raw_output": "\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery/_state.py\",\n      \"celery/app/base.py\",\n      \"celery/loaders/default.py\"\n    ],\n    \"indirect_deps\": [\n      \"celery/loaders/__init__.py\",\n      \"celery/loaders/base.py\",\n      \"celery/app/__init__.py\"\n    ],\n    \"implicit_deps\": [\n      \"celery/utils/imports.py\",\n      \"celery/exceptions.py\"\n    ]\n  }\n}\n```",
+    "f1": 0.0
+  },
+  {
+    "case_id": "celery_hard_121",
+    "difficulty": "hard",
+    "category": "autodiscovery_import_error_gate",
+    "model": "glm-5",
+    "question": "在 `app.autodiscover_tasks(packages, force=False)` 的延迟执行链中，真正负责判定 `ModuleNotFoundError` 是“候选 tasks 模块缺失可忽略”还是“嵌套导入错误需重抛”的函数是哪个？",
+    "prediction": null,
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.base.find_related_module"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.autodiscover_tasks",
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.loaders.base.BaseLoader.import_default_modules",
+        "celery.loaders.base.BaseLoader.autodiscover_tasks",
+        "celery.loaders.base.autodiscover_tasks"
+      ],
+      "implicit_deps": [
+        "celery.signals.import_modules",
+        "vine.starpromise"
+      ]
+    },
+    "raw_output": null,
+    "f1": 0.0
+  },
+  {
+    "case_id": "celery_hard_122",
+    "difficulty": "hard",
+    "category": "bootstep_lifecycle_instantiation_gate",
+    "model": "glm-5",
+    "question": "在 worker 启动链中，当某个 `StartStopStep.include_if()` 最终为 `False` 时，仍会先执行 step 实例化（触发 `Step.__init__`）的生命周期断点方法是哪个？",
+    "prediction": {
+      "direct_deps": [
+        "Step.__init__"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery.bootsteps.Blueprint.apply"
+      ],
+      "indirect_deps": [
+        "celery.worker.worker.WorkController.__init__",
+        "celery.bootsteps.StartStopStep.include",
+        "celery.bootsteps.Step._should_include"
+      ],
+      "implicit_deps": [
+        "celery.bootsteps.Step.include_if"
+      ]
+    },
+    "raw_output": "\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\"Step.__init__\"],\n    \"indirect_deps\": [],\n    \"implicit_deps\": []\n  }\n}\n```",
+    "f1": 0.0
+  },
+  {
+    "case_id": "celery_hard_024",
+    "difficulty": "hard",
+    "category": "persistent_scheduler_startup_reset",
+    "model": "glm-5",
+    "question": "`PersistentScheduler` 启动阶段若持久化 store 缺失 `utc_enabled` 元数据字段，直接触发 reset（`self._store.clear()`）的方法是哪一个？",
+    "prediction": {
+      "direct_deps": [
+        "setup_schedule"
+      ],
+      "indirect_deps": [
+        "PersistentScheduler.__init__"
+      ],
+      "implicit_deps": [
+        "celery.beat"
+      ]
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery.beat.PersistentScheduler._create_schedule"
+      ],
+      "indirect_deps": [
+        "celery.beat.PersistentScheduler.setup_schedule"
+      ],
+      "implicit_deps": []
+    },
+    "raw_output": "\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\"setup_schedule\"],\n    \"indirect_deps\": [\"PersistentScheduler.__init__\"],\n    \"implicit_deps\": [\"celery.beat\"]\n  }\n}",
+    "f1": 0.0
+  },
+  {
+    "case_id": "celery_hard_025",
+    "difficulty": "hard",
+    "category": "disable_prefetch_runtime_can_consume_patch",
+    "model": "glm-5",
+    "question": "在 `worker_disable_prefetch=True` 且 broker 为 Redis 的前提下，运行时真正改写 `channel_qos.can_consume` 的方法是哪一个？",
+    "prediction": null,
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.consumer.tasks.Tasks.start"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "raw_output": null,
+    "f1": 0.0
+  },
+  {
+    "case_id": "easy_010",
+    "difficulty": "easy",
+    "category": "re_export",
+    "model": "glm-5",
+    "question": "Which real function does `celery.maybe_signature` resolve to in the canvas module?",
+    "prediction": {
+      "direct_deps": [
+        "celery.canvas.maybe_signature"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.maybe_signature"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "raw_output": "\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\"celery.canvas.maybe_signature\"],\n    \"indirect_deps\": [],\n    \"implicit_deps\": []\n  }\n}",
+    "f1": 1.0
+  },
+  {
+    "case_id": "easy_011",
+    "difficulty": "easy",
+    "category": "re_export",
+    "model": "glm-5",
+    "question": "Which real class does `celery.Signature` resolve to?",
+    "prediction": {
+      "direct_deps": [
+        "celery.canvas.Signature"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.Signature"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "raw_output": "\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\"celery.canvas.Signature\"],\n    \"indirect_deps\": [],\n    \"implicit_deps\": []\n  }\n}\n```",
+    "f1": 1.0
+  },
+  {
+    "case_id": "easy_012",
+    "difficulty": "easy",
+    "category": "alias_resolution",
+    "model": "glm-5",
+    "question": "In `celery.concurrency.get_implementation`, what does `get_implementation('eventlet')` resolve to?",
+    "prediction": {
+      "direct_deps": [
+        "celery.concurrency.eventlet.Pool"
+      ],
+      "indirect_deps": [
+        "celery.concurrency.base.BasePool"
+      ],
+      "implicit_deps": [
+        "eventlet"
+      ]
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.eventlet.TaskPool"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "raw_output": "\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.concurrency.eventlet.Pool\"\n    ],\n    \"indirect_deps\": [\n      \"celery.concurrency.base.BasePool\"\n    ],\n    \"implicit_deps\": [\n      \"eventlet\"\n    ]\n  }\n}\n```",
+    "f1": 0.0
+  },
+  {
+    "case_id": "easy_013",
+    "difficulty": "easy",
+    "category": "alias_resolution",
+    "model": "glm-5",
+    "question": "In `celery.concurrency.get_implementation`, what does `get_implementation('solo')` resolve to?",
+    "prediction": null,
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.solo.TaskPool"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "raw_output": null,
+    "f1": 0.0
+  },
+  {
+    "case_id": "easy_014",
+    "difficulty": "easy",
+    "category": "re_export",
+    "model": "glm-5",
+    "question": "What does the Proxy in  wrap at the module level?",
+    "prediction": {
+      "direct_deps": [
+        "celery.app.utils.current_app"
+      ],
+      "indirect_deps": [
+        "celery._state"
+      ],
+      "implicit_deps": []
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state.default_app"
+      ],
+      "indirect_deps": [
+        "celery.local.Proxy"
+      ],
+      "implicit_deps": []
+    },
+    "raw_output": "\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\"celery.app.utils.current_app\"],\n    \"indirect_deps\": [\"celery._state\"],\n    \"implicit_deps\": []\n  }\n}\n```",
+    "f1": 0.0
+  },
+  {
+    "case_id": "easy_015",
+    "difficulty": "easy",
+    "category": "re_export",
+    "model": "glm-5",
+    "question": "What does `celery.app.AppPickler` resolve to in the app module?",
+    "prediction": null,
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.utils.AppPickler"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "raw_output": null,
+    "f1": 0.0
   }
 ]
