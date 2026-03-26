@@ -70,6 +70,48 @@ def rrf_fuse(rankings: dict[str, Iterable[str]], k: int = 60) -> list[RankedResu
             provenance[item_id].add(source_name)
 
     ranked = sorted(fused_scores.items(), key=lambda pair: pair[1], reverse=True)
+
+    results: list[RankedResult] = []
+    for item_id, score in ranked:
+        results.append(
+            RankedResult(
+                item_id=item_id,
+                score=score,
+                source=",".join(sorted(provenance[item_id])),
+            )
+        )
+    return results
+
+
+def rrf_fuse_weighted(
+    rankings: dict[str, Iterable[str]],
+    weights: dict[str, float],
+    k: int = 30,
+) -> list[RankedResult]:
+    """
+    加权倒数排名融合（Weighted Reciprocal Rank Fusion）
+
+    在标准 RRF 基础上乘以来源权重。
+    公式：score(item) = Σ weight[source] / (k + rank(item))
+
+    Args:
+        rankings: 各来源的排序字典，key为来源名，value为排序后的item列表
+        weights: 各来源的权重，key为来源名
+        k: RRF参数，通常30
+
+    Returns:
+        按融合分数排序的结果列表
+    """
+    fused_scores: dict[str, float] = defaultdict(float)
+    provenance: dict[str, set[str]] = defaultdict(set)
+
+    for source_name, items in rankings.items():
+        w = weights.get(source_name, 1.0)
+        for rank, item_id in enumerate(items, start=1):
+            fused_scores[item_id] += w * 1.0 / (k + rank)
+            provenance[item_id].add(source_name)
+
+    ranked = sorted(fused_scores.items(), key=lambda pair: pair[1], reverse=True)
     return [
         RankedResult(
             item_id=item_id,
@@ -145,7 +187,8 @@ class HybridRetriever:
         top_k: int = 5,
         per_source: int = 12,
         query_mode: str = "question_plus_entry",
-        rrf_k: int = 60,
+        rrf_k: int = 30,
+        weights: dict[str, float] | None = None,
     ) -> list[RetrievalHit]:
         return list(
             self.retrieve_with_trace(
@@ -156,6 +199,7 @@ class HybridRetriever:
                 per_source=per_source,
                 query_mode=query_mode,
                 rrf_k=rrf_k,
+                weights=weights,
             ).fused
         )
 
@@ -167,7 +211,8 @@ class HybridRetriever:
         top_k: int = 5,
         per_source: int = 12,
         query_mode: str = "question_plus_entry",
-        rrf_k: int = 60,
+        rrf_k: int = 30,
+        weights: dict[str, float] | None = None,
     ) -> RetrievalTrace:
         query_text = self._build_query_text(
             question=question,
@@ -184,14 +229,15 @@ class HybridRetriever:
             top_n=per_source,
             query_mode=query_mode,
         )
-        fused = rrf_fuse(
-            {
-                "bm25": bm25_ranked,
-                "semantic": semantic_ranked,
-                "graph": graph_ranked,
-            },
-            k=rrf_k,
-        )
+        rankings = {
+            "bm25": bm25_ranked,
+            "semantic": semantic_ranked,
+            "graph": graph_ranked,
+        }
+        if weights:
+            fused = rrf_fuse_weighted(rankings, weights, k=rrf_k)
+        else:
+            fused = rrf_fuse(rankings, k=rrf_k)
         fused_ids = tuple(result.item_id for result in fused)
         hits: list[RetrievalHit] = []
         for result in fused[:top_k]:
@@ -225,7 +271,8 @@ class HybridRetriever:
         top_k: int = 5,
         per_source: int = 12,
         query_mode: str = "question_plus_entry",
-        rrf_k: int = 60,
+        rrf_k: int = 30,
+        weights: dict[str, float] | None = None,
     ) -> str:
         trace = self.retrieve_with_trace(
             question=question,
@@ -235,6 +282,7 @@ class HybridRetriever:
             per_source=per_source,
             query_mode=query_mode,
             rrf_k=rrf_k,
+            weights=weights,
         )
         sections = []
         for rank, hit in enumerate(trace.fused, start=1):
@@ -536,6 +584,7 @@ class _EmbeddingIndex:
         self._client = None
         self._embeddings: dict[str, list[float]] = {}
         self._repo_root = str(repo_root)
+        self._quota_exhausted = False
 
         if _EMBEDDING_CACHE_FILE.exists():
             self._load_cache()
@@ -549,6 +598,13 @@ class _EmbeddingIndex:
         print(
             f"[EmbeddingIndex] Cache: {cached}/{len(self.chunk_ids)} — TF-IDF active for missing ({len(missing)})"
         )
+        # Partial cache: assume quota exhausted (API is slow to respond with 429)
+        # Set exhausted so search() skips API calls and uses TF-IDF directly
+        if 0 < cached < len(self.chunk_ids):
+            self._quota_exhausted = True
+            print(
+                f"[EmbeddingIndex] Partial cache detected, assuming quota exhausted — using TF-IDF"
+            )
         self._fallback = _SemanticIndexTfidf(chunks)
 
     def _truncate(self, text: str, max_chars: int = 2000) -> str:
@@ -558,7 +614,9 @@ class _EmbeddingIndex:
 
     def _ensure_client(self) -> bool:
         if self._client is not None:
-            return True
+            return not self._quota_exhausted
+        if self._quota_exhausted:
+            return False
         try:
             import openai
 
@@ -569,6 +627,10 @@ class _EmbeddingIndex:
             return True
         except Exception:
             return False
+
+    def _quota_hit(self) -> None:
+        self._quota_exhausted = True
+        self._client = None
 
     def _embed_batch(self, texts: list[str], chunk_ids: list[str]) -> int:
         if not self._ensure_client():
@@ -588,6 +650,10 @@ class _EmbeddingIndex:
                     self._embeddings[cid] = emb.embedding
                 return len(resp.data)
             except Exception as exc:
+                if "429" in str(exc) and attempt == 0:
+                    print(f"[EmbeddingIndex] API quota exhausted, stopping")
+                    self._quota_hit()
+                    return 0
                 wait = (attempt + 1) * 5
                 print(f"[EmbeddingIndex] Batch failed ({exc}), retrying in {wait}s...")
                 time.sleep(wait)
@@ -667,31 +733,37 @@ class _EmbeddingIndex:
                 .data[0]
                 .embedding
             )
-        except Exception:
+        except Exception as exc:
+            if "429" in str(exc):
+                print(f"[EmbeddingIndex] API quota exhausted, using TF-IDF only")
+                self._quota_hit()
             return self._fallback.search(query, top_n)
 
-        # Embedding-based scores (normalized dot product → cosine sim)
+        # Embedding-based scores for chunks that have embeddings
         embed_scores: dict[str, float] = {}
         for cid, emb in self._embeddings.items():
             dot = sum(a * b for a, b in zip(q_emb, emb))
-            embed_scores[cid] = (dot + 1.0) / 2.0  # normalize [-1,1] → [0,1]
+            embed_scores[cid] = (dot + 1.0) / 2.0
 
-        # TF-IDF scores (fallback for uncovered chunks)
-        tfidf_ids = self._fallback.search(query, top_n=len(self.chunk_ids))
-        tfidf_scores_raw = {cid: 0.0 for cid in self.chunk_ids}
+        # TF-IDF scores for top candidates (fallback for non-embedded chunks)
+        tfidf_ids = self._fallback.search(query, top_n=top_n * 4)
+        tfidf_scores_raw = {cid: 0.0 for cid in tfidf_ids}
         for rank, cid in enumerate(tfidf_ids, 1):
             tfidf_scores_raw[cid] = 1.0 / rank
 
-        # Normalize
         max_emb = max(embed_scores.values()) if embed_scores else 1.0
         max_tfidf = max(tfidf_scores_raw.values()) if tfidf_scores_raw else 1.0
 
-        # Hybrid: embedding * 0.7 + tfidf * 0.3 (weight real embeddings higher)
+        # Combine: real-embedded chunks use hybrid score, rest use TF-IDF only
+        candidates = set(embed_scores) | set(tfidf_scores_raw)
         hybrid_scores: list[tuple[float, str]] = []
-        for cid in self.chunk_ids:
+        for cid in candidates:
             emb = embed_scores.get(cid, 0.0) / max_emb
             tfidf = tfidf_scores_raw.get(cid, 0.0) / max_tfidf
-            combined = emb * 0.7 + tfidf * 0.3
+            if cid in embed_scores:
+                combined = emb * 0.7 + tfidf * 0.3
+            else:
+                combined = tfidf
             hybrid_scores.append((combined, cid))
 
         hybrid_scores.sort(key=lambda x: x[0], reverse=True)
