@@ -81,22 +81,30 @@ def run_glm_eval(
     results: list[dict[str, Any]] = []
 
     for i, case in enumerate(cases):
-        print(f"[{i + 1}/{len(cases)}] Running {case.case_id}...")
+        print(f"[{i + 1}/{len(cases)}] Running {case.case_id}...", flush=True)
 
         prompt = build_prompt_v2(case, context="")
+        prediction = None
+        raw_output = None
 
-        try:
-            response = client.chat.completions.create(
-                model=model,
-                messages=[{"role": "user", "content": prompt}],
-                stream=False,
-            )
-            raw_output = response.choices[0].message.content
-            prediction = parse_response(raw_output)
-        except Exception as e:
-            print(f"  ERROR: {e}")
-            prediction = None
-            raw_output = str(e)
+        for attempt in range(3):
+            try:
+                response = client.chat.completions.create(
+                    model=model,
+                    messages=[{"role": "user", "content": prompt}],
+                    stream=False,
+                    timeout=300,
+                )
+                msg = response.choices[0].message
+                raw_output = msg.content if msg and msg.content else ""
+                prediction = parse_response(raw_output)
+                break
+            except Exception as e:
+                print(f"  Attempt {attempt + 1} ERROR: {e}", flush=True)
+                import time
+
+                time.sleep(5)
+                raw_output = str(e)
 
         gt_dict = {
             "direct_deps": list(case.direct_gold_fqns) if case.direct_gold_fqns else [],
@@ -122,14 +130,16 @@ def run_glm_eval(
             "f1": round(f1, 4),
         }
         results.append(result)
-        print(f"  F1: {f1:.4f}")
+        print(f"  F1: {f1:.4f}", flush=True)
 
-    if output_path:
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(
-            json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8"
-        )
-        print(f"\nResults saved to {output_path}")
+        if output_path:
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(
+                json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8"
+            )
+
+    print(f"\nAll 50 cases completed. Results saved to {output_path}")
+    return results
 
     return results
 

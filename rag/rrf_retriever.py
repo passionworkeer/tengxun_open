@@ -48,6 +48,19 @@ class RetrievalTrace:
 
 
 def rrf_fuse(rankings: dict[str, Iterable[str]], k: int = 60) -> list[RankedResult]:
+    """
+    倒数排名融合（Reciprocal Rank Fusion）
+
+    将多个排序列表融合为一个统一排序。
+    公式：score(item) = Σ 1/(k + rank(item))
+
+    Args:
+        rankings: 各来源的排序字典，key为来源名，value为排序后的item列表
+        k: RRF参数，通常60
+
+    Returns:
+        按融合分数排序的结果列表
+    """
     fused_scores: dict[str, float] = defaultdict(float)
     provenance: dict[str, set[str]] = defaultdict(set)
 
@@ -68,6 +81,22 @@ def rrf_fuse(rankings: dict[str, Iterable[str]], k: int = 60) -> list[RankedResu
 
 
 class HybridRetriever:
+    """
+    混合检索器
+
+    整合 BM25、语义检索和图检索三种方式，
+    使用 RRF 融合各来源的结果。
+
+    索引构建：
+    1. 符号到chunk_id的映射
+    2. 模块到chunk_id的映射
+    3. 基础名到chunk_id的映射（用于短名称匹配）
+    4. 父符号到chunk_id的映射（用于类方法）
+    5. BM25索引
+    6. 语义索引（TF-IDF + 字符n-gram）
+    7. 依赖图
+    """
+
     def __init__(self, chunks: Sequence[CodeChunk]) -> None:
         self.chunks = list(chunks)
         self.chunk_by_id = {chunk.chunk_id: chunk for chunk in self.chunks}
@@ -101,7 +130,7 @@ class HybridRetriever:
             self.chunk_tokens[chunk.chunk_id] = _tokenize(token_text)
 
         self._bm25 = _BM25Index(self.chunk_tokens)
-        self._semantic = _SemanticIndex(self.chunks)
+        self._semantic = _EmbeddingIndex(self.chunks)
         self._build_graph()
 
     @classmethod
@@ -481,34 +510,152 @@ class HybridRetriever:
         return "\n".join(lines[:2])
 
 
-# ── Semantic Index: Enhanced TF-IDF + Character N-gram ──────────────
+# ── Semantic Index: Qwen3-Embedding-8B via ModelScope API ───────────
 
 
-class _SemanticIndex:
-    """Hybrid semantic index combining:
-    1. Word-level TF-IDF on tokenized code (identifier splitting)
-    2. Character n-gram TF-IDF for partial symbol matching
+_EMBEDDING_MODEL = "Qwen/Qwen3-Embedding-8B"
+_EMBEDDING_DIM = 4096
+_EMBED_BATCH_SIZE = 50
+_EMBEDDING_CACHE_FILE = Path("artifacts/rag/embeddings_cache.json")
 
-    Fast on CPU, effective for code-style queries.
+
+class _EmbeddingIndex:
+    """
+    基于Qwen3-Embedding-8B的语义索引
+
+    通过ModelScope API获取文本嵌入向量进行相似度检索。
+    如果API不可用，自动降级到TF-IDF。
+    """
+
+    def __init__(self, chunks: list[CodeChunk], *, repo_root: str | Path = "") -> None:
+        self.chunk_ids = [c.chunk_id for c in chunks]
+        self._chunk_texts: dict[str, str] = {}
+        for chunk in chunks:
+            self._chunk_texts[chunk.chunk_id] = (
+                f"{chunk.symbol} {chunk.signature} {chunk.content}"
+            )
+
+        self._client = None
+        self._embeddings: dict[str, list[float]] = {}
+        self._repo_root = str(repo_root)
+
+        if _EMBEDDING_CACHE_FILE.exists():
+            self._load_cache()
+
+        cached = len(self._embeddings)
+        if cached == len(self.chunk_ids):
+            return
+
+        missing = [cid for cid in self.chunk_ids if cid not in self._embeddings]
+        if not missing:
+            return
+
+        try:
+            import openai
+
+            self._client = openai.OpenAI(
+                base_url="https://api-inference.modelscope.cn/v1",
+                api_key="ms-22434146-80f6-4669-8473-9aa69b26c218",
+            )
+            self._embed_chunks(missing)
+            self._save_cache()
+        except Exception as exc:
+            print(f"[EmbeddingIndex] API unavailable ({exc}), falling back to TF-IDF")
+            self._fallback = _SemanticIndexTfidf(chunks)
+
+    def _truncate(self, text: str, max_chars: int = 2000) -> str:
+        if len(text) <= max_chars:
+            return text
+        return text[:max_chars]
+
+    def _embed_chunks(self, chunk_ids: list[str]) -> None:
+        texts = [self._truncate(self._chunk_texts[cid]) for cid in chunk_ids]
+        batch_size = _EMBED_BATCH_SIZE
+        total = len(texts)
+        print(f"[EmbeddingIndex] Embedding {total} chunks ({_EMBEDDING_MODEL})...")
+
+        for i in range(0, total, batch_size):
+            batch = texts[i : i + batch_size]
+            batch_ids = chunk_ids[i : i + batch_size]
+            resp = self._client.embeddings.create(
+                model=_EMBEDDING_MODEL,
+                input=batch,
+                encoding_format="float",
+            )
+            for cid, emb in zip(batch_ids, resp.data):
+                self._embeddings[cid] = emb.embedding
+            done = min(i + batch_size, total)
+            print(f"[EmbeddingIndex]   {done}/{total}")
+
+    def _load_cache(self) -> None:
+        try:
+            import json
+
+            raw = json.loads(_EMBEDDING_CACHE_FILE.read_text())
+            self._embeddings = {
+                cid: emb for cid, emb in raw.items() if cid in self.chunk_ids
+            }
+            print(
+                f"[EmbeddingIndex] Cache loaded: {len(self._embeddings)}/{len(self.chunk_ids)}"
+            )
+        except Exception:
+            self._embeddings = {}
+
+    def _save_cache(self) -> None:
+        try:
+            _EMBEDDING_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+            import json
+
+            _EMBEDDING_CACHE_FILE.write_text(json.dumps(self._embeddings))
+            print(f"[EmbeddingIndex] Cache saved: {len(self._embeddings)} chunks")
+        except Exception as exc:
+            print(f"[EmbeddingIndex] Cache save failed: {exc}")
+
+    def search(self, query: str, top_n: int) -> list[str]:
+        if not query.strip():
+            return []
+
+        if hasattr(self, "_fallback"):
+            return self._fallback.search(query, top_n)
+
+        q_emb = (
+            self._client.embeddings.create(
+                model=_EMBEDDING_MODEL,
+                input=[query],
+                encoding_format="float",
+            )
+            .data[0]
+            .embedding
+        )
+
+        scores: list[tuple[float, str]] = []
+        for cid, emb in self._embeddings.items():
+            dot = sum(a * b for a, b in zip(q_emb, emb))
+            scores.append((dot, cid))
+
+        scores.sort(key=lambda x: x[0], reverse=True)
+        return [cid for _, cid in scores[:top_n]]
+
+
+class _SemanticIndexTfidf:
+    """
+    TF-IDF回退索引
+
+    当嵌入API不可用时的回退方案。
+    结合词级TF-IDF和字符n-gram进行检索。
     """
 
     def __init__(self, chunks: list[CodeChunk]) -> None:
         self.chunk_ids = [c.chunk_id for c in chunks]
-
-        # ── Word-level token map ─────────────────────────────────
         word_map: dict[str, list[str]] = {}
         for chunk in chunks:
             text = " ".join([chunk.symbol, chunk.signature, chunk.content])
             word_map[chunk.chunk_id] = _tokenize(text)
-
         self._word_index = _MiniTfidfIndex(word_map)
-
-        # ── Char n-gram map (3-5 grams) ─────────────────────────
         char_map: dict[str, list[str]] = {}
         for chunk in chunks:
             text = chunk.symbol + " " + chunk.signature
             char_map[chunk.chunk_id] = _char_ngrams(text, n_min=3, n_max=5)
-
         self._char_index = _MiniTfidfIndex(char_map)
 
     def search(self, query: str, top_n: int) -> list[str]:
@@ -516,14 +663,11 @@ class _SemanticIndex:
             return []
         word_results = self._word_index.search(query, top_n=top_n)
         char_results = self._char_index.search(query, top_n=top_n)
-
-        # Score fusion: word * 0.6 + char * 0.4
         scores: dict[str, float] = {}
         for rank, cid in enumerate(word_results, 1):
             scores[cid] = scores.get(cid, 0.0) + (1.0 / rank) * 0.6
         for rank, cid in enumerate(char_results, 1):
             scores[cid] = scores.get(cid, 0.0) + (1.0 / rank) * 0.4
-
         return [
             cid
             for cid, _ in sorted(scores.items(), key=lambda x: x[1], reverse=True)[
@@ -576,6 +720,15 @@ def _char_ngrams(text: str, n_min: int, n_max: int) -> list[str]:
 
 
 class _BM25Index:
+    """
+    BM25检索索引
+
+    BM25是一种基于词频的经典检索算法。
+    参数：
+    - k1: 词频饱和参数（默认1.5）
+    - b: 文档长度归一化参数（默认0.75）
+    """
+
     def __init__(
         self, token_map: dict[str, list[str]], k1: float = 1.5, b: float = 0.75
     ) -> None:
@@ -631,6 +784,14 @@ class _BM25Index:
 
 
 def _kind_bonus(kind: str) -> float:
+    """
+    根据代码块类型给予额外加分
+
+    - method: 0.18 (类方法权重最高)
+    - function/async_function: 0.12
+    - class: 0.08
+    - 其他: 0.0
+    """
     if kind == "method":
         return 0.18
     if kind in {"function", "async_function"}:
@@ -641,6 +802,14 @@ def _kind_bonus(kind: str) -> float:
 
 
 def _tokenize(text: str) -> list[str]:
+    """
+    分词函数
+
+    处理：
+    1. 特殊字符替换（: -> .，/ -> . 等）
+    2. 标识符提取
+    3. 驼峰分词
+    """
     normalized = (
         text.replace(":", ".").replace("/", ".").replace("`", " ").replace("-", " ")
     )
@@ -661,6 +830,16 @@ def _extract_symbol_like_strings(text: str) -> list[str]:
 
 
 def _looks_like_fqn(value: str) -> bool:
+    """
+    检查字符串是否像FQN（完全限定名）
+
+    必须包含至少一个点，且每个部分都是有效的Python标识符。
+
+    Examples:
+        "celery.app.trace" -> True
+        "foo" -> False (没有点)
+        "123.foo" -> False (部分以数字开头)
+    """
     if "." not in value:
         return False
     for part in value.split("."):

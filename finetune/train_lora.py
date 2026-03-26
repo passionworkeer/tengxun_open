@@ -1,3 +1,14 @@
+"""
+LoRA微调训练模块
+
+功能：
+1. 训练配置管理（TOML配置文件支持）
+2. 命令行参数解析
+3. 数据集预检
+
+训练后端尚未实现，当前仅为脚手架代码。
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -10,30 +21,38 @@ from typing import Any
 
 @dataclass(frozen=True)
 class TrainingConfig:
+    """
+    训练配置
+
+    基于Qwen3.5-9B的LoRA微调配置。
+    """
+
     model_name: str = "Qwen3.5-9B"
     dataset_path: str = "data/finetune_dataset_500.jsonl"
     output_dir: str = "artifacts/lora/qwen3.5-9b"
     learning_rate: float = 2e-4
     batch_size: int = 2
     num_epochs: int = 3
-    lora_r: int = 16
-    lora_alpha: int = 32
+    lora_r: int = 16  # LoRA秩
+    lora_alpha: int = 32  # LoRA缩放因子
     lora_dropout: float = 0.05
+    # 目标模块：Qwen的attention参数
     target_modules: tuple[str, ...] = ("q_proj", "k_proj", "v_proj", "o_proj")
-    validation_split: float = 0.1
-    early_stopping_patience: int = 3
-    max_seq_length: int = 2048
-    gradient_accumulation_steps: int = 8
-    gradient_checkpointing: bool = True
-    load_in_4bit: bool = True
-    eval_steps: int = 50
-    metric_for_best_model: str = "eval_f1"
+    validation_split: float = 0.1  # 10%验证集
+    early_stopping_patience: int = 3  # 早停耐心值
+    max_seq_length: int = 2048  # 最大序列长度
+    gradient_accumulation_steps: int = 8  # 梯度累积
+    gradient_checkpointing: bool = True  # 梯度检查点，防OOM
+    load_in_4bit: bool = True  # 4bit量化加载
+    eval_steps: int = 50  # 评估间隔
+    metric_for_best_model: str = "eval_f1"  # 最佳模型指标
 
 
 CONFIG_FIELD_NAMES = {field.name for field in fields(TrainingConfig)}
 
 
 def build_parser() -> argparse.ArgumentParser:
+    """构建命令行参数解析器"""
     parser = argparse.ArgumentParser(description="LoRA training scaffold.")
     parser.add_argument("--config", type=Path, help="Optional TOML config file.")
     parser.add_argument("--model-name")
@@ -81,6 +100,15 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def load_config_file(path: Path) -> dict[str, Any]:
+    """
+    加载TOML配置文件
+
+    Args:
+        path: 配置文件路径
+
+    Returns:
+        配置字典
+    """
     if not path.exists():
         raise FileNotFoundError(f"Config file not found: {path}")
     if path.suffix.lower() != ".toml":
@@ -94,6 +122,17 @@ def load_config_file(path: Path) -> dict[str, Any]:
 
 
 def build_config(args: argparse.Namespace) -> TrainingConfig:
+    """
+    构建训练配置
+
+    配置优先级：默认配置 -> TOML文件 -> 命令行参数
+
+    Args:
+        args: 解析后的命令行参数
+
+    Returns:
+        TrainingConfig对象
+    """
     values = asdict(TrainingConfig())
 
     if args.config is not None:
@@ -134,6 +173,12 @@ def build_config(args: argparse.Namespace) -> TrainingConfig:
 
 
 def main() -> int:
+    """
+    主入口函数
+
+    验证数据集存在且非空，输出配置信息。
+    训练后端尚未实现。
+    """
     args = build_parser().parse_args()
     config = build_config(args)
 

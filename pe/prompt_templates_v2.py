@@ -1,3 +1,18 @@
+"""
+提示词模板模块 V2
+
+功能：
+1. System Prompt：定义角色和输出格式
+2. CoT模板：链式推理引导
+3. Few-shot示例库：按失效类型配比的示例选择
+4. Prompt构建：组装完整的prompt
+
+核心设计理念：
+- 严格区分 direct_deps / indirect_deps / implicit_deps 三级依赖
+- 针对 Type A-E 五类失效模式设计
+- 最小化幻觉，只输出JSON格式答案
+"""
+
 from __future__ import annotations
 
 import json
@@ -51,6 +66,15 @@ _TOKEN_PATTERN = re.compile(r"[A-Za-z_][A-Za-z0-9_]+")
 
 @dataclass(frozen=True)
 class GroundTruth:
+    """
+    标准答案数据结构
+
+    区分三种依赖类型：
+    - direct_deps: 直接依赖（当前文件直接导入）
+    - indirect_deps: 间接依赖（通过其他模块再导出）
+    - implicit_deps: 隐式依赖（装饰器、动态加载等）
+    """
+
     direct_deps: tuple[str, ...]
     indirect_deps: tuple[str, ...]
     implicit_deps: tuple[str, ...]
@@ -65,6 +89,16 @@ class GroundTruth:
 
 @dataclass(frozen=True)
 class FewShotExample:
+    """
+    Few-shot示例
+
+    包含一个问题案例的完整信息：
+    - 问题描述
+    - 环境前提条件
+    - 推理步骤
+    - 标准答案
+    """
+
     case_id: str
     failure_type: str
     title: str
@@ -76,6 +110,12 @@ class FewShotExample:
 
 @dataclass(frozen=True)
 class PromptBundle:
+    """
+    完整Prompt包
+
+    包含组装prompt的所有组件。
+    """
+
     system_prompt: str
     cot_template: str
     few_shot_examples: tuple[FewShotExample, ...]
@@ -181,6 +221,25 @@ def select_few_shot_examples(
     max_examples: int = 6,
     library: Sequence[FewShotExample] | None = None,
 ) -> list[FewShotExample]:
+    """
+    选择最相关的few-shot示例
+
+    选择策略（多因子评分）：
+    1. token重叠度（权重3.0）：问题与示例的文本重叠
+    2. 失效类型匹配（权重2.0）：失败类型关键词匹配
+    3. 入口符号匹配（权重2.5）：入口符号在示例中出现
+    4. 长链路加分（0.5）：case_id以A开头表示长链案例优先
+
+    Args:
+        question: 当前问题
+        context: 检索上下文
+        entry_symbol: 入口符号
+        max_examples: 最大选择数量
+        library: 可选的示例库
+
+    Returns:
+        选中的示例列表，按相关性排序
+    """
     examples = list(library or FEW_SHOT_LIBRARY)
     if max_examples <= 0 or not examples:
         return []

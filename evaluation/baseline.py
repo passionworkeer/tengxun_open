@@ -1,3 +1,16 @@
+"""
+基线评测模块
+
+功能：
+1. 加载和解析评测数据集（支持新旧两种schema）
+2. 生成数据集统计摘要
+3. 运行RAG检索评测
+4. 预览prompt效果
+
+用法示例：
+    python -m evaluation.baseline --mode all --eval-cases data/eval_cases.json
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -13,11 +26,33 @@ from evaluation.metrics import mean_reciprocal_rank, recall_at_k, reciprocal_ran
 from rag.rrf_retriever import HybridRetriever, build_retriever
 
 
+# 支持的检索来源
 RETRIEVAL_SOURCES = ("bm25", "semantic", "graph", "fused")
 
 
 @dataclass(frozen=True)
 class EvalCase:
+    """
+    评测案例数据结构
+
+    Attributes:
+        case_id: 案例唯一标识
+        difficulty: 难度等级 (easy/medium/hard)
+        category: 失败类型分类
+        question: 问题描述
+        entry_file: 入口文件路径
+        entry_symbol: 入口符号（函数/类名）
+        gold_fqns: 标准答案FQN列表
+        reasoning_hint: 推理提示
+        source_note: 来源备注
+        source_schema: 数据schema版本
+        failure_type: 失效类型 (Type A/B/C/D/E)
+        implicit_level: 隐式依赖层级
+        direct_gold_fqns: 直接依赖标准答案
+        indirect_gold_fqns: 间接依赖标准答案
+        implicit_gold_fqns: 隐式依赖标准答案
+    """
+
     case_id: str
     difficulty: str
     category: str
@@ -36,9 +71,27 @@ class EvalCase:
 
 
 def load_eval_cases(path: Path) -> list[EvalCase]:
+    """
+    加载评测案例数据集
+
+    支持两种schema：
+    - legacy_v1: 使用 gold_fqns 字段
+    - schema_v2: 使用 ground_truth 字段（含 direct_deps/indirect_deps/implicit_deps）
+
+    Args:
+        path: JSON文件路径
+
+    Returns:
+        EvalCase 对象列表
+
+    Raises:
+        FileNotFoundError: 文件不存在
+        ValueError: 数据格式错误
+    """
     if not path.exists():
         raise FileNotFoundError(f"Eval dataset not found: {path}")
 
+    # 使用 utf-8-sig 兼容带 BOM 的文件
     raw = json.loads(path.read_text(encoding="utf-8-sig"))
     if not isinstance(raw, list):
         raise ValueError(f"Eval dataset must be a JSON array: {path}")
@@ -60,6 +113,23 @@ def load_eval_cases(path: Path) -> list[EvalCase]:
 
 
 def summarize_cases(cases: list[EvalCase]) -> dict[str, Any]:
+    """
+    生成数据集统计摘要
+
+    统计内容：
+    - 案例总数
+    - 难度分布
+    - 类别分布
+    - Schema分布
+    - 失效类型分布
+    - 平均gold目标数量
+
+    Args:
+        cases: 案例列表
+
+    Returns:
+        包含各项统计指标的字典
+    """
     difficulty_counter = Counter(case.difficulty for case in cases)
     category_counter = Counter(case.category for case in cases)
     schema_counter = Counter(case.source_schema for case in cases)
@@ -84,6 +154,7 @@ def summarize_cases(cases: list[EvalCase]) -> dict[str, Any]:
 
 
 def build_parser() -> argparse.ArgumentParser:
+    """构建命令行参数解析器"""
     parser = argparse.ArgumentParser(
         description="Summarize eval data, preview prompts, and evaluate retrieval quality."
     )
@@ -103,7 +174,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--mode",
         choices=["baseline", "pe", "rag", "all"],
         default="baseline",
-        help="baseline=dataset summary, pe=prompt preview metadata, rag=retrieval metrics, all=summary + rag + pe preview metadata.",
+        help="baseline=数据集摘要, pe=prompt预览元数据, rag=检索指标, all=完整评测",
     )
     parser.add_argument(
         "--top-k",
@@ -121,7 +192,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--query-mode",
         choices=["question_only", "question_plus_entry"],
         default="question_plus_entry",
-        help="question_only=retrieve from natural language only; question_plus_entry=also use entry_symbol and entry_file metadata.",
+        help="question_only=仅用自然语言检索; question_plus_entry=同时使用 entry_symbol 和 entry_file 元数据.",
     )
     parser.add_argument(
         "--case-id",
@@ -159,11 +230,22 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def load_prompt_module(version: str) -> ModuleType:
+    """加载提示词模板模块"""
     module_name = "pe.prompt_templates_v2" if version == "v2" else "pe.prompt_templates"
     return importlib.import_module(module_name)
 
 
 def select_case(cases: list[EvalCase], case_id: str) -> EvalCase | None:
+    """
+    根据case_id选择案例
+
+    Args:
+        cases: 案例列表
+        case_id: 要查找的案例ID，为空则返回第一个
+
+    Returns:
+        找到的案例或None
+    """
     if not cases:
         return None
     if not case_id:
@@ -182,6 +264,22 @@ def evaluate_retrieval(
     query_mode: str,
     rrf_k: int = 60,
 ) -> dict[str, Any]:
+    """
+    运行RAG检索评测
+
+    对每个案例执行三路检索（BM25/Semantic/Graph）并计算指标。
+
+    Args:
+        cases: 案例列表
+        retriever: 混合检索器实例
+        top_k: 取前K个结果计算指标
+        per_source: 每个检索来源保留的结果数
+        query_mode: 查询模式
+        rrf_k: RRF融合参数
+
+    Returns:
+        包含各来源检索指标和详细案例结果的字典
+    """
     chunk_rankings: dict[str, list[list[str]]] = {
         source: [] for source in RETRIEVAL_SOURCES
     }
@@ -300,6 +398,11 @@ def preview_prompt(
     query_mode: str,
     rrf_k: int = 60,
 ) -> str:
+    """
+    预览组装后的prompt
+
+    包含 system prompt、CoT模板、few-shot示例和用户问题。
+    """
     context = retriever.build_context(
         question=case.question,
         entry_symbol=case.entry_symbol,
@@ -319,6 +422,11 @@ def preview_prompt(
 
 
 def main() -> int:
+    """
+    主入口函数
+
+    解析参数、加载数据、执行评测、输出结果。
+    """
     args = build_parser().parse_args()
     prompt_module = load_prompt_module(args.prompt_version)
     cases = load_eval_cases(args.eval_cases)
@@ -396,6 +504,11 @@ def main() -> int:
 
 
 def _parse_legacy_case(item: dict[str, Any], index: int) -> EvalCase:
+    """
+    解析旧schema（legacy_v1）的案例格式
+
+    使用 gold_fqns 字段作为标准答案。
+    """
     case_id = _require_string(item, "id", index)
     question = _require_string(item, "question", index, case_id=case_id)
     entry_file = _require_string(item, "entry_file", index, case_id=case_id)
@@ -420,6 +533,11 @@ def _parse_legacy_case(item: dict[str, Any], index: int) -> EvalCase:
 
 
 def _parse_schema_v2_case(item: dict[str, Any], index: int) -> EvalCase:
+    """
+    解析新schema（schema_v2）的案例格式
+
+    使用 ground_truth 字段，包含 direct_deps、indirect_deps、implicit_deps。
+    """
     case_id = _require_string(item, "id", index)
     question = _require_string(item, "question", index, case_id=case_id)
     source_file = _require_string(item, "source_file", index, case_id=case_id)
@@ -461,6 +579,11 @@ def _summarize_ranked_lists(
     ranked_lists: Sequence[Sequence[str]],
     top_k: int,
 ) -> dict[str, Any]:
+    """
+    汇总排序列表的评测指标
+
+    按难度等级和失效类型分别计算 Recall@K 和 MRR。
+    """
     if len(cases) != len(ranked_lists):
         raise ValueError("Cases and ranked_lists must be aligned.")
 
@@ -505,6 +628,11 @@ def _aggregate_bucket_metrics(
     recall_buckets: dict[str, list[float]],
     rr_buckets: dict[str, list[float]],
 ) -> dict[str, Any]:
+    """
+    聚合指标桶的统计数据
+
+    计算每个桶（难度等级/失效类型）的平均召回率和平均倒数排名。
+    """
     return {
         bucket: {
             "avg_recall_at_k": round(sum(recall_values) / len(recall_values), 4),
@@ -520,6 +648,18 @@ def _aggregate_bucket_metrics(
 
 
 def _build_query_text(case: EvalCase, query_mode: str) -> str:
+    """
+    构建检索查询文本
+
+    Args:
+        case: 评测案例
+        query_mode: 查询模式
+            - question_only: 仅使用问题文本
+            - question_plus_entry: 同时使用问题、符号名和文件路径
+
+    Returns:
+        组装后的查询文本
+    """
     if query_mode == "question_only":
         return case.question.strip()
     if query_mode != "question_plus_entry":
@@ -536,6 +676,11 @@ def _build_query_text(case: EvalCase, query_mode: str) -> str:
 
 
 def _normalize_ranked_items(values: Iterable[Any]) -> tuple[str, ...]:
+    """
+    规范化并去重排名项目列表
+
+    过滤空值和重复项。
+    """
     seen: set[str] = set()
     normalized: list[str] = []
     for value in values:
@@ -553,6 +698,11 @@ def _require_string(
     index: int,
     case_id: str = "",
 ) -> str:
+    """
+    获取必需字符串字段
+
+    验证字段存在且为非空字符串。
+    """
     value = item.get(key)
     if not isinstance(value, str) or not value.strip():
         label = case_id or f"#{index}"
