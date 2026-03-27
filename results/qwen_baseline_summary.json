@@ -1,0 +1,70 @@
+{
+  "total_cases": 54,
+  "valid_results": 9,
+  "parse_failures": 45,
+  "overall_f1_mean": 0.2222,
+  "overall_f1_std": 0.4157,
+  "overall_f1_median": 0.0,
+  "by_difficulty": {
+    "easy": {
+      "count": 4,
+      "total": 15,
+      "f1_mean": 0.25,
+      "f1_std": 0.433,
+      "f1_median": 0.0
+    },
+    "medium": {
+      "count": 4,
+      "total": 19,
+      "f1_mean": 0.25,
+      "f1_std": 0.433,
+      "f1_median": 0.0
+    },
+    "hard": {
+      "count": 1,
+      "total": 20,
+      "f1_mean": 0.0,
+      "f1_std": 0.0,
+      "f1_median": 0.0
+    }
+  },
+  "by_category": {
+    "alias_resolution": {
+      "count": 2,
+      "f1_mean": 0.0
+    },
+    "app_task_registration": {
+      "count": 0,
+      "f1_mean": 0.0
+    },
+    "backend_alias": {
+      "count": 1,
+      "f1_mean": 0.0
+    },
+    "loader_alias": {
+      "count": 2,
+      "f1_mean": 0.5
+    },
+    "name_generation": {
+      "count": 1,
+      "f1_mean": 0.0
+    },
+    "re_export": {
+      "count": 2,
+      "f1_mean": 0.5
+    },
+    "shared_task_registration": {
+      "count": 1,
+      "f1_mean": 0.0
+    },
+    "unknown": {
+      "count": 0,
+      "f1_mean": 0.0
+    }
+  },
+  "failure_distribution": {
+    "perfect_match": 2,
+    "f1_zero": 7,
+    "parse_failed": 45
+  }
+}
