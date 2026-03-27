@@ -1,5 +1,7 @@
 #!/bin/bash
-# Step 2: 启动微调训练
+# Step 2: 启动微调训练（LoRA）
+# 用法: bash scripts/step2_train.sh
+# 说明: 使用nohup挂载后台运行，不阻塞终端
 
 set -e
 

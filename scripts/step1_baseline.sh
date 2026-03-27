@@ -1,5 +1,7 @@
 #!/bin/bash
-# Step 1: Qwen基线推理
+# Step 1: Qwen基线推理（未微调版本）
+# 用法: bash scripts/step1_baseline.sh [模型路径]
+# 示例: bash scripts/step1_baseline.sh ~/models/Qwen3.5-9B-Instruct
 
 set -e
 

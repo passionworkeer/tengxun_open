@@ -1,3 +1,16 @@
+"""
+Qwen3.5 模型评测脚本
+用法: python evaluation/run_qwen_eval.py --cases data/eval_cases.json --output results/qwen_eval.json
+
+参数:
+    --cases: 评测数据集路径（默认: data/eval_cases.json）
+    --api-key: API密钥（默认: EMPTY 用于本地部署）
+    --base-url: API地址（默认: http://localhost:8000/v1）
+    --model: 模型名称（默认: Qwen/Qwen3.5-9B）
+    --output: 输出结果路径（默认: results/qwen3_eval_results.json）
+    --max-cases: 限制评测案例数量（用于测试）
+"""
+
 from __future__ import annotations
 
 import json
@@ -12,6 +25,10 @@ from evaluation.metrics import compute_set_metrics
 
 
 def build_prompt_v2(case: EvalCase, context: str = "") -> str:
+    """
+    构建发送给模型的提示词
+    包含问题、入口符号、文件和可选的上下文信息
+    """
     parts = [f"Question: {case.question.strip()}"]
     if case.entry_symbol:
         parts.append(f"Entry Symbol: {case.entry_symbol.strip()}")
@@ -28,6 +45,11 @@ def build_prompt_v2(case: EvalCase, context: str = "") -> str:
 
 
 def parse_response(text: str) -> dict[str, list[str]] | None:
+    """
+    解析模型输出的JSON响应
+    尝试从模型输出中提取ground_truth字段
+    包含错误处理和正则匹配
+    """
     try:
         text = text.strip()
         import re
