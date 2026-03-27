@@ -1,0 +1,91 @@
+[
+  {
+    "case_id": "easy_001",
+    "difficulty": "easy",
+    "category": "re_export",
+    "failure_type": "Type C",
+    "question": "Which real class does `celery.Celery` resolve to in the top-level lazy API?",
+    "entry_symbol": "",
+    "entry_file": "celery/__init__.py",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 0,
+    "rag_available": true,
+    "model_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery\"\n    ],\n    \"indirect_deps\": [\n      \"celery.__init__\"\n    ],\n    \"implicit_deps\": []\n  }\n}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery"
+      ],
+      "indirect_deps": [
+        "celery.__init__"
+      ],
+      "implicit_deps": []
+    },
+    "f1": 0.6667
+  },
+  {
+    "case_id": "easy_002",
+    "difficulty": "easy",
+    "category": "re_export",
+    "failure_type": "Type C",
+    "question": "Which real function does the top-level `celery.shared_task` symbol resolve to?",
+    "entry_symbol": "",
+    "entry_file": "celery/__init__.py",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.shared_task"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 0,
+    "rag_available": true,
+    "model_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.shared_task\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app\"\n    ],\n    \"implicit_deps\": []\n  }\n}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.shared_task"
+      ],
+      "indirect_deps": [
+        "celery.app"
+      ],
+      "implicit_deps": []
+    },
+    "f1": 0.6667
+  },
+  {
+    "case_id": "easy_003",
+    "difficulty": "easy",
+    "category": "loader_alias",
+    "failure_type": "Type E",
+    "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('default')` resolve to?",
+    "entry_symbol": "",
+    "entry_file": "celery/loaders/__init__.py",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 0,
+    "rag_available": true,
+    "model_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.default_loader.DefaultLoader\"\n    ],\n    \"indirect_deps\": [\n      \"celery.loaders.get_loader_cls\"\n    ],\n    \"implicit_deps\": [\n      \"celery.loaders.base.BaseLoader\"\n    ]\n  }\n}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.loaders.default_loader.DefaultLoader"
+      ],
+      "indirect_deps": [
+        "celery.loaders.get_loader_cls"
+      ],
+      "implicit_deps": [
+        "celery.loaders.base.BaseLoader"
+      ]
+    },
+    "f1": 0.0
+  }
+]

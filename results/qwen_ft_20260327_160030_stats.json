@@ -1,0 +1,16 @@
+{
+  "total_cases": 3,
+  "by_difficulty": {
+    "easy": {
+      "count": 3,
+      "avg_f1": 0.3333,
+      "min_f1": 0.0,
+      "max_f1": 1.0
+    }
+  },
+  "overall": {
+    "avg_f1": 0.3333,
+    "min_f1": 0.0,
+    "max_f1": 1.0
+  }
+}

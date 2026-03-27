@@ -1,0 +1,68 @@
+[
+  {
+    "case_id": "easy_001",
+    "difficulty": "easy",
+    "category": "re_export",
+    "question": "Which real class does `celery.Celery` resolve to in the top-level lazy API?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\": {\"direct_deps\": [\"celery.app.base.Celery\"], \"indirect_deps\": [], \"implicit_deps\": []}}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 1.0
+  },
+  {
+    "case_id": "easy_002",
+    "difficulty": "easy",
+    "category": "re_export",
+    "question": "Which real function does the top-level `celery.shared_task` symbol resolve to?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.shared_task"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\": {\"direct_deps\": [\"celery.app.task\"], \"indirect_deps\": [], \"implicit_deps\": []}}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.task"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0
+  },
+  {
+    "case_id": "easy_003",
+    "difficulty": "easy",
+    "category": "loader_alias",
+    "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('default')` resolve to?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\": {\"direct_deps\": [\"celery.loaders.base\"], \"indirect_deps\": [], \"implicit_deps\": []}}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.loaders.base"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "case_id": "easy_001",
+    "difficulty": "easy",
+    "category": "re_export",
+    "question": "Which real class does `celery.Celery` resolve to in the top-level lazy API?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "Okay, let's figure out where the Celery class is defined. The user is asking about the real class that `celery.Celery` resolves to in the top-level lazy API. The entry file is celery/__init__.py.\n\nFirst, I need to recall how Celery's structure works. Celery uses a lazy loading mechanism for its classes. The top-level `celery.Celery` is probably an alias or a reference to a class defined elsewhere. \n\nLooking at the Celery source code, the main Celery class is typically in the celery/app.py module. The __init__.py file might import this class and expose it at the top level. So when you import celery.Celery, it's actually pointing to celery.app.Celery.\n\nWait, but the example given in the problem shows \"celery.app.base.Celery\". Hmm, maybe there's a base class involved. Let me think. In some versions of Celery, the Celery class might be in celery/app/base.py. But I need to check the actual structure.\n\nAlternatively, maybe the Celery class is in celery/app.py, which in turn inherits from a base class. But the question is about the real class that the top-level Celery resolves to. So the direct dependency would be the module path where the class is defined.\n\nLooking up the Celery source code, the main Celery class is indeed in celery/app.py. The __init__.py imports it from there. So the direct_deps should be [\"celery.app.Celery\"]. Wait, but the example shows \"celery.app.base.Celery\". Maybe there's a version difference. Let me check.\n\nWait, in Celery's codebase, the Celery class is defined in celery/app.py. The __init__.py does something like:\n\nfrom .app import Celery\n\nSo the top-level celery.Celery is an alias to celery.app.Celery. Therefore, the direct dependency is celery.app.Celery. But the example given in the problem shows \"celery.app.base.Celery\". Maybe that's a different version. Wait, perhaps in some versions, the Celery class is in celery/app/base.py. Let me verify.\n\nAlternatively, maybe the Celery class is in celery/app.py, which imports from celery/app/base.py. So the actual class is in celery/app/base.py. But the direct dependency would be the",
+    "extracted_prediction": null,
+    "f1": 0.0
+  }
+]
