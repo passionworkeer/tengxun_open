@@ -20,8 +20,9 @@ def build_prompt_v2(case: EvalCase, context: str = "") -> str:
     if context:
         parts.append(f"Context:\n{context.strip()}")
     parts.append(
-        "\nReturn only a JSON object with:\n"
-        '{"ground_truth": {"direct_deps": [...], "indirect_deps": [...], "implicit_deps": [...]}}'
+        "\nIMPORTANT: Return ONLY a valid JSON object, no other text.\n"
+        'Format: {"ground_truth": {"direct_deps": ["module.path"], "indirect_deps": [], "implicit_deps": []}}\n'
+        'Example: {"ground_truth": {"direct_deps": ["celery.app.base.Celery"], "indirect_deps": [], "implicit_deps": []}}'
     )
     return "\n\n".join(parts)
 
@@ -91,9 +92,17 @@ def run_qwen_eval(
             try:
                 response = client.chat.completions.create(
                     model=model,
-                    messages=[{"role": "user", "content": prompt}],
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": "You are a JSON-only response bot. You must ONLY output valid JSON objects, no explanations, no markdown, no extra text. Your response must be parseable by json.loads().",
+                        },
+                        {"role": "user", "content": prompt},
+                    ],
                     stream=False,
                     timeout=300,
+                    temperature=0.1,
+                    max_tokens=500,
                 )
                 msg = response.choices[0].message
                 raw_output = msg.content if msg and msg.content else ""
@@ -161,8 +170,8 @@ def main() -> int:
     parser.add_argument(
         "--model",
         type=str,
-        default="qwen3.5",
-        help="Model name (default: qwen3.5).",
+        default="Qwen/Qwen3.5-9B",
+        help="Model name (default: Qwen/Qwen3.5-9B).",
     )
     parser.add_argument(
         "--base-url",

@@ -1,0 +1,107 @@
+[
+  {
+    "case_id": "easy_001",
+    "difficulty": "easy",
+    "category": "re_export",
+    "model": "qwen3.5",
+    "question": "Which real class does `celery.Celery` resolve to in the top-level lazy API?",
+    "prediction": null,
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "raw_output": "The user is asking about the `celery.Celery` class in the top-level lazy API and which real class it resolves to. They want me to return a JSON object with dependency information.\n\nHowever, this question is about Celery's internal implementation details. The `celery.Celery` is a lazy-loaded class that resolves to the actual `Celery` class when accessed.\n\nLooking at Celery's structure:\n- `celery/__init__.py` contains the lazy loading mechanism\n- `celery.Celery` is actually imported from `celery.app.Celery`\n- The actual class is defined in `celery/app.py` as `class Celery`\n\nThis is a code analysis question about the Celery library's architecture. The `celery.Celery` in the top-level module is a lazy proxy that resolves to the actual `celery.app.Celery` class.\n\nFor the JSON response, I need to provide:\n- direct_deps: Direct dependencies of the resolved class\n- indirect_deps: Indirect dependencies\n- implicit_deps: Implicit dependencies\n\nSince this is about Celery's internal class structure, the dependencies would be:\n- direct_deps: The modules that the Celery class directly imports/uses\n- indirect_deps: Modules that are imported by direct dependencies\n- implicit_deps: Dependencies that are not explicitly imported but required\n\nHowever, I should note that I don't have access to the actual `celery/__init__.py` file to analyze it. This is a general knowledge question about Celery's architecture.\n\nThe `celery.Celery` class resolves to `celery.app.Celery`. The main dependencies would be:\n\nDirect dependencies (what Celery class directly uses):\n- celery.app.base\n- celery.utils\n- celery.schedules\n- celery.task\n- etc.\n\nBut since I need to provide a reasonable answer based on my knowledge of Celery's architecture, I'll provide the most accurate information I can.\n\nActually, looking at this more carefully - this appears to be asking about a specific code analysis task where I should examine the actual `celery/__init__.py` file. Since I don't have access to that file, I need to provide what I know about Celery's architecture.\n\n\n</think>\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\"celery.app\"],\n    \"indirect_deps\": [\"celery.beat\",",
+    "f1": 0.0
+  },
+  {
+    "case_id": "easy_002",
+    "difficulty": "easy",
+    "category": "re_export",
+    "model": "qwen3.5",
+    "question": "Which real function does the top-level `celery.shared_task` symbol resolve to?",
+    "prediction": null,
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.shared_task"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "raw_output": "The user is asking about a specific symbol resolution in the Celery library, specifically about `celery.shared_task`. They want to know what real function this symbol resolves to in the `celery/__init__.py` file.\n\nThis is a code analysis question about the Celery Python library. The `celery.shared_task` is a decorator used in Celery for creating shared tasks.\n\nLet me think about what `celery.shared_task` resolves to:\n\nIn Celery's architecture, `shared_task` is typically a decorator that wraps task functions. It's usually defined in the `celery` module's `__init__.py` file.\n\nLooking at Celery's structure:\n- `celery.shared_task` is a decorator that allows tasks to be shared across workers\n- It's typically an alias to `celery.task.shared_task` or similar\n- The actual implementation is usually in `celery/decorators.py` or `celery/app.py`\n\nHowever, I need to be careful here. The question asks about what the symbol \"resolves to\" in `celery/__init__.py`. This is asking about the actual function that this symbol points to.\n\nIn Celery's `__init__.py`, `shared_task` is typically defined as:\n```python\nshared_task = task.shared_task\n```\n\nOr it might be imported from somewhere else.\n\nThe actual implementation of `shared_task` is typically in `celery/decorators.py` as a decorator function.\n\nLet me think about the dependencies:\n- `direct_deps`: Direct dependencies of `shared_task` - what modules/functions it directly imports or calls\n- `indirect_deps`: Indirect dependencies - modules that are imported by direct dependencies\n- `implicit_deps`: Implicit dependencies - things that are assumed but not explicitly imported\n\nFor `celery.shared_task`:\n- Direct deps would include things like `celery.task`, `celery.decorators`, etc.\n- Indirect deps would be modules those imports depend on\n\n\n- Implicit deps would be things like Celery's application structure\n\nHowever, I'm not certain about the exact implementation details without being able to examine the actual Celery source code. This is a specific question about Celery's internal structure.\n\nGiven the constraints of the question format (JSON with direct_deps, indirect_deps, implicit_deps), I should provide a reasonable answer based on my knowledge of Celery's architecture.\n\nActually, I need to reconsider. The question",
+    "f1": 0.0
+  },
+  {
+    "case_id": "easy_003",
+    "difficulty": "easy",
+    "category": "loader_alias",
+    "model": "qwen3.5",
+    "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('default')` resolve to?",
+    "prediction": null,
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "raw_output": "The user is asking about what `get_loader_cls('default')` resolves to in the Celery codebase, specifically in `celery/loaders/__init__.py`.\n\nHowever, the user is asking me to return a JSON object with dependency information (direct_deps, indirect_deps, implicit_deps), but this doesn't match the actual question being asked. The question is about what class `get_loader_cls('default')` returns, not about dependencies.\n\nThis seems like a mismatch between the question and the expected output format. Let me think about what the actual answer should be:\n\nIn Celery's loader system, `get_loader_cls('default')` typically resolves to the default loader class, which is usually `celery.loaders.base.BaseLoader` or a specific default loader class.\n\nHowever, the user is asking for a JSON object with dependency information, which doesn't seem to match the question at all. This appears to be a template-based question where the expected output format doesn't match the actual question being asked.\n\nGiven the instruction to return only a JSON object with the specified format, I need to provide an answer that fits this format, even though it doesn't directly answer the question about what `get_loader_cls('default')` resolves to.\n\nActually, looking at this more carefully, this seems like a test question where I need to provide dependency information about the code. But the question is asking about what a function returns, not about dependencies.\n\nLet me reconsider - perhaps this is asking me to analyze the dependencies of the code that contains `get_loader_cls('default')`. But that still doesn't make complete sense with the question format.\n\nGiven the constraints, I should provide a JSON object with the specified structure. Since I don't have access to the actual Celery codebase to analyze dependencies, I'll need to make reasonable assumptions based on typical Celery structure.\n\nActually, I should be honest - I cannot accurately determine the dependency structure without access to the actual codebase. However, I need to provide a JSON response as requested.\n\nLet me think about what `get_loader_cls('default')` actually returns in Celery:\n\n\nIn Celery, the default loader is typically `celery.loaders.base.BaseLoader` or `celery.loaders.app_loader.AppLoader`. The function `get_loader_cls` in `celery/loaders/__init__.py` returns a class based on the loader name provided.\n\nFor the dependency structure, I'll need to make reasonable assumptions about",
+    "f1": 0.0
+  },
+  {
+    "case_id": "easy_004",
+    "difficulty": "easy",
+    "category": "alias_resolution",
+    "model": "qwen3.5",
+    "question": "What pool implementation does `celery.concurrency.get_implementation('processes')` resolve to?",
+    "prediction": {
+      "direct_deps": [
+        "celery.concurrency.processes"
+      ],
+      "indirect_deps": [
+        "celery.beat",
+        "celery.worker",
+        "celery.utils"
+      ],
+      "implicit_deps": [
+        "multiprocessing",
+        "os",
+        "sys"
+      ]
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.prefork.TaskPool"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "raw_output": "The user is asking about what pool implementation `celery.concurrency.get_implementation('processes')` resolves to in Celery.\n\nThis is a technical question about Celery's concurrency implementation. Let me think about what this function does:\n\nIn Celery, `celery.concurrency.get_implementation()` is a function that returns a pool implementation class based on the pool type string provided. When you call `get_implementation('processes')`, it should return the `ProcessPool` implementation class.\n\nHowever, the user is asking me to return a JSON object with dependency information (direct_deps, indirect_deps, implicit_deps). This seems like they want to know about the dependencies of this function/implementation.\n\nLooking at the structure, this appears to be asking about what the `get_implementation('processes')` call resolves to in terms of the pool implementation class.\n\nIn Celery, the process pool implementation is typically `ProcessPool` from `celery.concurrency.processes`.\n\nBut the return format they want is about dependencies, not the actual class name. This seems like a mismatch in the question format.\n\nLet me reconsider - they want me to return a JSON object with dependency information about what this function resolves to. This is unusual because:\n1. The question asks about what implementation it resolves to\n2. But the return format asks for dependency information\n\nThis might be a test question where I need to identify the actual pool implementation class that `get_implementation('processes')` returns.\n\nIn Celery's concurrency module:\n- `get_implementation('processes')` returns `ProcessPool`\n- This is defined in `celery/concurrency/processes.py`\n\nThe dependencies would be:\n- Direct: celery.concurrency.processes module\n- Indirect: various dependencies for process pool functionality\n- Implicit: Python multiprocessing\n\nHowever, I'm not certain about the exact dependency structure expected here. This seems like it might be testing knowledge of Celery's internal structure.\n\nGiven the constraints, I should provide the most accurate information I can about what `get_implementation('processes')` resolves to.\n</think>\n\n{\"ground_truth\": {\"direct_deps\": [\"celery.concurrency.processes\"], \"indirect_deps\": [\"celery.beat\", \"celery.worker\", \"celery.utils\"], \"implicit_deps\": [\"multiprocessing\", \"os\", \"sys\"]}}\n",
+    "f1": 0.0
+  },
+  {
+    "case_id": "medium_001",
+    "difficulty": "medium",
+    "category": "backend_alias",
+    "model": "qwen3.5",
+    "question": "Which backend class does `celery.app.backends.by_name('redis')` resolve to?",
+    "prediction": {
+      "direct_deps": [
+        "redis"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "ground_truth": {
+      "direct_deps": [
+        "celery.backends.redis.RedisBackend"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "raw_output": "The user is asking about what backend class `celery.app.backends.by_name('redis')` resolves to in the Celery library.\n\nLet me think about this. In Celery, the `by_name` function is used to resolve backend names to actual backend classes. For Redis, this would typically resolve to the `Redis` backend class.\n\nHowever, the user is asking me to return a JSON object with \"ground_truth\" containing \"direct_deps\", \"indirect_deps\", and \"implicit_deps\". This seems to be asking about dependencies, not the actual class name.\n\nWait, let me reconsider. The question is asking which backend class `celery.app.backends.by_name('redis')` resolves to. The answer should be something like `celery.backends.redis.Redis` or similar.\n\nBut the return format asks for dependencies (direct_deps, indirect_deps, implicit_deps). This doesn't match the question being asked.\n\nLet me look at the Entry File mentioned: `celery/app/backends.py`. This is where the `by_name` function would be defined.\n\nIn Celery, when you call `by_name('redis')`, it resolves to the Redis backend class, which is typically `celery.backends.redis.Redis`.\n\nHowever, the expected output format is asking for dependencies, not the class name. This seems like a mismatch.\n\nGiven the constraints, I should provide the ground truth about what `by_name('redis')` resolves to, but format it according to the requested JSON structure. Since the question is about which class it resolves to, not about dependencies, I'll need to interpret this carefully.\n\nActually, looking at this more carefully, I think there might be some confusion in the prompt. The question asks about which backend class is resolved, but the output format expects dependency information. \n\nLet me provide the most accurate answer I can based on Celery's actual implementation. In Celery, `celery.app.backends.by_name('redis')` resolves to `celery.backends.redis.Redis` backend class.\n\nSince the output format requires dependencies, I'll need to think about what dependencies the Redis backend has. The Redis backend typically depends on the `redis` Python library for Redis connectivity.\n\n\n```json\n{\"ground_truth\": {\"direct_deps\": [\"redis\"], \"indirect_deps\": [], \"implicit_deps\": []}}\n```\n\nThis captures that the Redis backend directly depends on the redis library, with no indirect or implicit dependencies.\n</think>\n\n```json\n{\"ground_truth\": {\"",
+    "f1": 0.0
+  }
+]

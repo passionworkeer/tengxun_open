@@ -1,0 +1,87 @@
+[
+  {
+    "case_id": "easy_001",
+    "difficulty": "easy",
+    "category": "re_export",
+    "model": "Qwen/Qwen3.5-9B",
+    "question": "Which real class does `celery.Celery` resolve to in the top-level lazy API?",
+    "prediction": null,
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "raw_output": "Okay, let's see. The user is asking about the real class that `celery.Celery` resolves to in the top-level lazy API. The entry file is celery/__init__.py. I need to figure out where the Celery class is actually defined.\n\nFirst, I remember that in Python, when you import something from a package, sometimes it's a lazy import. So maybe the Celery class isn't directly in the __init__.py but is imported from another module. Let me think about the structure of the Celery package.\n\nLooking at the Celery documentation or source code, the main Celery class is usually in the celery.app module. Specifically, I think it's in celery/app/base.py. Wait, but the example given in the problem shows \"celery.app.base.Celery\" as a direct dependency. But I need to confirm if that's accurate.\n\nWait, in the Celery source code, the __init__.py file probably imports the Celery class from another module. Let me recall. The top-level Celery class is typically an alias or a reference to the class defined in celery/app/base.py. So when you do from celery import Celery, it's actually importing the Celery class from celery.app.base.\n\nBut wait, maybe there's a lazy loading mechanism here. The question mentions the \"top-level lazy API\". So perhaps the __init__.py uses some lazy import to defer the loading of the Celery class until it's actually needed. But regardless of the lazy aspect, the actual class that it resolves to should still be the one defined in celery.app.base.Celery.\n\nSo the direct dependency would be \"celery.app.base.Celery\". The indirect and implicit dependencies would be empty unless there's some other module involved. But according to the example provided in the question, the answer should have direct_deps as [\"celery.app.base.Celery\"], and the others empty.\n\nWait, but I should check if there's any other module. For example, sometimes in Celery, the main class might be in celery/app/__init__.py, but I think the actual implementation is in base.py. Let me think again. The Celery class is defined in celery/app/base.py, and then imported into the main celery package's __init__.py. So when you import Celery from celery, it's pointing to celery.app.base.Celery.\n\nTherefore, the",
+    "f1": 0.0
+  },
+  {
+    "case_id": "easy_002",
+    "difficulty": "easy",
+    "category": "re_export",
+    "model": "Qwen/Qwen3.5-9B",
+    "question": "Which real function does the top-level `celery.shared_task` symbol resolve to?",
+    "prediction": null,
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.shared_task"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "raw_output": "Okay, let's see. The user is asking which real function the top-level `celery.shared_task` symbol resolves to. The entry file is celery/__init__.py. I need to figure out what this symbol points to.\n\nFirst, I remember that in Celery, the shared_task decorator is used to create tasks. But I need to check the actual module structure. Let me think about how Celery's modules are organized. The main module is celery/__init__.py, which probably imports from other modules.\n\nLooking at the Celery source code, the shared_task is likely defined in the celery/app.py or celery/decorators.py. Wait, in the Celery documentation, the shared_task is a decorator that's part of the Celery app. So when you import celery.shared_task, it's probably coming from the app module.\n\nWait, in the celery/__init__.py, there's a line that does something like shared_task = app.shared_task. Let me check. The celery/__init__.py file typically initializes the Celery app and exports some symbols. For example, the Celery class is imported from celery.app.base, and then shared_task might be an attribute of the Celery app instance.\n\nWait, in the Celery source code, the shared_task decorator is actually defined in celery/app.py. The Celery class has a shared_task attribute which is a decorator. So when you do from celery import shared_task, it's actually the shared_task from the Celery app instance. But how is that exposed in the __init__.py?\n\nLooking at the celery/__init__.py code, there's a line like:\n\nfrom celery.app import Celery\n\nThen, the shared_task is probably assigned as Celery.shared_task. Wait, but in the actual code, the Celery class is from celery.app.base, and the shared_task is a method or attribute on the Celery class. Wait, no. Let me think again.\n\nIn Celery, the shared_task decorator is part of the Celery app's configuration. When you create a Celery app instance, you can use the shared_task decorator. But the top-level import in celery/__init__.py might be setting shared_task to the shared_task from the default app.\n\nWait, in the celery/__init__.py, there's a line that does:\n\nshared_task = Celery.shared_task\n\nBut wait, the Celery class is from celery",
+    "f1": 0.0
+  },
+  {
+    "case_id": "easy_003",
+    "difficulty": "easy",
+    "category": "loader_alias",
+    "model": "Qwen/Qwen3.5-9B",
+    "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('default')` resolve to?",
+    "prediction": null,
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "raw_output": "Okay, let's see. The user is asking about what `get_loader_cls('default')` resolves to in the `celery.loaders.get_loader_cls` function. The entry file is celery/loaders/__init__.py.\n\nFirst, I need to recall how Celery's loader system works. From what I remember, Celery uses loaders to handle different backend configurations. The `get_loader_cls` function probably maps loader names to their corresponding classes.\n\nLooking at the code structure, the loaders module likely has a dictionary that maps loader names to their class paths. For the 'default' loader, I think it's the 'celery.loaders.app_loader.AppLoader' class. But I need to verify this.\n\nIn the celery/loaders/__init__.py file, there's probably a function called `get_loader_cls` that takes a loader name and returns the corresponding class. The 'default' loader is typically the AppLoader. Let me think about the code.\n\nIn the loaders module, there's a `default_loader` variable that points to the AppLoader. The `get_loader_cls` function might check if the loader name is 'default' and return the AppLoader class. Alternatively, it could be using a registry or a dictionary.\n\nWait, in Celery's codebase, the `get_loader_cls` function is defined in the loaders/__init__.py. Let me try to recall or reconstruct the code. The function might look something like this:\n\ndef get_loader_cls(loader_name):\n    if loader_name == 'default':\n        return AppLoader\n    else:\n        # handle other loaders\n        ...\n\nBut I need to confirm. Alternatively, maybe it's using a registry. For example, there's a `loaders` module that has a `default_loader` attribute. The `get_loader_cls` function might retrieve the class from a registry.\n\nWait, in the Celery source code, the `get_loader_cls` function in loaders/__init__.py is part of the loader registry. The 'default' loader is mapped to the AppLoader class. So when you call get_loader_cls('default'), it returns the AppLoader class, which is located in celery.loaders.app_loader.\n\nSo the direct dependency would be the module path where AppLoader is defined. That's celery.loaders.app_loader.AppLoader. Therefore, the direct_deps should include that module path.\n\nBut the user's example",
+    "f1": 0.0
+  },
+  {
+    "case_id": "easy_004",
+    "difficulty": "easy",
+    "category": "alias_resolution",
+    "model": "Qwen/Qwen3.5-9B",
+    "question": "What pool implementation does `celery.concurrency.get_implementation('processes')` resolve to?",
+    "prediction": null,
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.prefork.TaskPool"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "raw_output": "Okay, let's see. The user is asking about the pool implementation that `celery.concurrency.get_implementation('processes')` resolves to. The entry file is celery/concurrency/__init__.py. I need to figure out what this function returns when called with 'processes' as the argument.\n\nFirst, I should recall how Celery's concurrency module works. Celery supports different pool implementations like 'prefork', 'thread', 'solo', etc. The 'processes' option might be an alias for one of these. But I need to check the actual code in the celery/concurrency/__init__.py file to confirm.\n\nLooking at the code, the get_implementation function probably checks the provided pool type and returns the corresponding class. For 'processes', it might map to the 'prefork' pool. Wait, in Celery, the 'processes' pool is actually an alias for 'prefork'. Let me think. The Celery documentation mentions that 'processes' is a deprecated alias for 'prefork'. So when you call get_implementation('processes'), it should resolve to the 'prefork' pool implementation.\n\nBut to be sure, I should check the actual code. In the celery/concurrency/__init__.py file, there's a function called get_implementation. Let me imagine the code structure. The function likely has a dictionary or a mapping that associates pool names with their respective classes. For example:\n\npool_classes = {\n    'prefork': PreforkPool,\n    'threads': ThreadPool,\n    'solo': SoloPool,\n    'processes': PreforkPool,  # Maybe this is the case\n}\n\nSo when you call get_implementation('processes'), it would return the PreforkPool class. Therefore, the direct dependency would be the module path where PreforkPool is defined. In Celery, the PreforkPool is in celery/concurrency/prefork.py. So the direct_deps would be [\"celery.concurrency.prefork.PreforkPool\"].\n\nWait, but the user's question is about the pool implementation that the function resolves to. So the answer should be the class name and its module path. The example given in the problem shows direct_deps as a list of module paths. So the correct answer would be that 'processes' resolves to the PreforkPool class in celery.concurrency.prefork.\n\nBut I need to",
+    "f1": 0.0
+  },
+  {
+    "case_id": "medium_001",
+    "difficulty": "medium",
+    "category": "backend_alias",
+    "model": "Qwen/Qwen3.5-9B",
+    "question": "Which backend class does `celery.app.backends.by_name('redis')` resolve to?",
+    "prediction": null,
+    "ground_truth": {
+      "direct_deps": [
+        "celery.backends.redis.RedisBackend"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "raw_output": "Okay, let's figure out this question. The user is asking which backend class the function `celery.app.backends.by_name('redis')` resolves to. The entry file is celery/app/backends.py.\n\nFirst, I need to recall how Celery's backend system works. Celery uses a backend registry to map backend names to their corresponding classes. The `by_name` function is part of this registry. So when you call `by_name('redis')`, it should return the backend class associated with the 'redis' name.\n\nLooking at the Celery source code, specifically the backends.py file. The `by_name` function is likely a method that looks up the backend class by its name. In Celery's backend system, each backend has a name attribute. For Redis, the backend class is probably `RedisBackend` located in the `celery.app.backends.redis` module.\n\nWait, but the question is about the class that `by_name('redis')` resolves to. So the function `by_name` would return the actual backend class. In Celery's code, the `by_name` function is part of the `BaseBackend` class or a registry. Let me think. The `by_name` function is probably a method that maps the string 'redis' to the corresponding backend class. \n\nIn the Celery source code, the `by_name` function is defined in `celery/app/backends.py`. It uses a registry to map backend names to their classes. For Redis, the backend class is `RedisBackend` from `celery.backends.redis`. So when you call `by_name('redis')`, it should return the `RedisBackend` class.\n\nBut wait, the entry file is celery/app/backends.py. So the `by_name` function is in that file. Let me check how the registry is set up. The `by_name` function is likely a method that looks up the backend class by name. The registry is probably a dictionary where keys are backend names and values are the backend classes. For Redis, the entry would be 'redis' mapped to the `RedisBackend` class.\n\nSo the answer should be that `by_name('redis')` resolves to the `RedisBackend` class. But the question is asking for the backend class, so the direct dependency would be the module path where that class is defined. The `RedisBackend` class is in `celery.backends.redis.Redis",
+    "f1": 0.0
+  }
+]

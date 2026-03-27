@@ -1,0 +1,30 @@
+[
+  {
+    "case_id": "case_0",
+    "difficulty": "easy",
+    "category": "re_export",
+    "question": "Which real class does `celery.Celery` resolve to in the top-level lazy API?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "Here's a thinking process that leads to the answer:\n\n1.  **Analyze the Request:**\n    *   Target: `celery.Celery` class.\n    *   Context: \"top-level lazy API\" (referring to how Celery is imported and instantiated).\n    *   Question: Which *real* class does it resolve to?\n\n2.  **Recall/Research Celery's Architecture:**\n    *   Celery is a Python task queue.\n    *   It uses a lazy loading pattern to avoid heavy imports until necessary.\n    *   The top-level `celery` module is often imported as `from celery import Celery`.\n    *   When I write `app = Celery('myapp')`, what is actually happening under the hood?\n    *   I know that `Celery` is a class. Is it a simple class? No, it's a bit more complex due to the lazy initialization.\n    *   Wait, the question asks about the *real class* it resolves to. This implies there might be a metaclass or a factory involved.\n    *   Actually, `celery.Celery` is the actual class definition found in `celery.app.base`.\n    *   However, the question mentions the \"top-level lazy API\". This suggests looking at how the module is structured.\n    *   Let's check the source code or documentation regarding `celery.Celery`.\n    *   In `celery/__init__.py`, there is a `Celery` import.\n    *   Historically, `celery.Celery` was defined in `celery.app.base`.\n    *   Is there a wrapper?\n    *   Let's consider the specific phrasing \"top-level lazy API\".\n    *   In older versions or specific contexts, there might be a distinction between the lazy loader and the actual class.\n    *   But usually, `celery.Celery` *is* the class.\n    *   Wait, is the question referring to the fact that `Celery` is a subclass of something specific?\n    *   Or is it referring to the `Celery` object being a `Base` class?\n    *   Let's dig deeper into the specific implementation details.\n    *   In `celery/__init__.py`:\n        ```python\n        from celery.app.base import Celery\n        ```"
+  },
+  {
+    "case_id": "case_1",
+    "difficulty": "easy",
+    "category": "re_export",
+    "question": "Which real function does the top-level `celery.shared_task` symbol resolve to?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.shared_task"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "This is a question about Celery, a Python distributed task queue system. The user is asking about the `celery.shared_task` symbol and what real function it resolves to.\n\nIn Celery, `shared_task` is actually a decorator that's used to create tasks that can be shared across multiple workers. However, I need to be careful here because:\n\n1. In older versions of Celery, there was a `shared_task` decorator\n2. In modern Celery (3.0+), the `shared_task` decorator was deprecated in favor of `@shared_task` which is actually a decorator factory\n\nLet me think about what `celery.shared_task` actually resolves to:\n\nIn Celery, when you import it, `celery.shared_task` is typically a decorator that wraps the task function. The actual implementation depends on the version:\n\n- In Celery 3.x and earlier: `shared_task` was a decorator that would register a task and make it available to workers\n- In Celery 4.x+: `shared_task` is actually a `@shared_task` decorator that creates a task class\n\nThe key thing to understand is that `celery.shared_task` is a **decorator** that returns a function/class. When you use `@shared_task` on a function, it wraps that function and returns a task object.\n\nHowever, the question asks what \"real function\" it resolves to. This is asking about the actual underlying function object.\n\nIn Celery's implementation, `celery.shared_task` typically resolves to:\n- A decorator function that returns a `Task` class or instance\n- The actual underlying function is often `celery.app.task` or similar\n\nLet me be more specific. In Celery, `shared_task` is actually an alias for `task` in many versions. The decorator:\n\n```python\n@celery.shared_task\ndef my_task():\n    pass\n```\n\nIs essentially:\n```python\n@celery.task\ndef my_task():\n    pass\n```\n\nSo `celery.shared_task` typically resolves to the `task` decorator from Celery's app.\n</think>\n\nIn Celery, the top-level `celery.shared_task` symbol resolves to a **decorator factory function** that returns a `Task` class or instance. It is functionally equivalent to the `@task` decorator and is used to define Celery tasks that can be shared across multiple workers.\n\n### Key"
+  }
+]
