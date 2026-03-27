@@ -1,0 +1,42 @@
+[
+  {
+    "variant": "baseline",
+    "num_cases": 50,
+    "easy_f1": 0.4778,
+    "medium_f1": 0.1785,
+    "hard_f1": 0.1831,
+    "avg_f1": 0.2697
+  },
+  {
+    "variant": "system_prompt",
+    "num_cases": 50,
+    "easy_f1": 0.5814,
+    "medium_f1": 0.3659,
+    "hard_f1": 0.421,
+    "avg_f1": 0.4471
+  },
+  {
+    "variant": "cot",
+    "num_cases": 50,
+    "easy_f1": 0.5414,
+    "medium_f1": 0.3918,
+    "hard_f1": 0.3832,
+    "avg_f1": 0.4341
+  },
+  {
+    "variant": "fewshot",
+    "num_cases": 50,
+    "easy_f1": 0.5264,
+    "medium_f1": 0.6626,
+    "hard_f1": 0.5527,
+    "avg_f1": 0.5887
+  },
+  {
+    "variant": "postprocess",
+    "num_cases": 50,
+    "easy_f1": 0.5832,
+    "medium_f1": 0.6939,
+    "hard_f1": 0.5683,
+    "avg_f1": 0.623
+  }
+]

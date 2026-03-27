@@ -1,0 +1,923 @@
+[
+  {
+    "case_id": "easy_001",
+    "difficulty": "easy",
+    "failure_type": "Type C",
+    "f1": 0.6667,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.local.recreate_module"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": [\n      \"celery.local.recreate_module\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "easy_002",
+    "difficulty": "easy",
+    "failure_type": "Type C",
+    "f1": 0.0,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.__init__.shared_task"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.__init__.__all__"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.__init__.shared_task\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": [\n      \"celery.__init__.__all__\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "easy_003",
+    "difficulty": "easy",
+    "failure_type": "Type E",
+    "f1": 0.8571,
+    "prediction": {
+      "direct_deps": [
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [
+        "celery.loaders.get_loader_cls"
+      ],
+      "implicit_deps": [
+        "celery.loaders.LOADER_ALIASES",
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "raw_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.loaders.default.Loader\"],\"indirect_deps\":[\"celery.loaders.get_loader_cls\"],\"implicit_deps\":[\"celery.loaders.LOADER_ALIASES\",\"celery.utils.imports.symbol_by_name\"]}}"
+  },
+  {
+    "case_id": "easy_004",
+    "difficulty": "easy",
+    "failure_type": "Type D",
+    "f1": 0.2857,
+    "prediction": {
+      "direct_deps": [
+        "celery.concurrency.prefork.TaskPool"
+      ],
+      "indirect_deps": [
+        "celery.concurrency.get_implementation",
+        "kombu.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": [
+        "celery.concurrency.ALIASES"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.concurrency.prefork.TaskPool\"\n    ],\n    \"indirect_deps\": [\n      \"celery.concurrency.get_implementation\",\n      \"kombu.utils.imports.symbol_by_name\"\n    ],\n    \"implicit_deps\": [\n      \"celery.concurrency.ALIASES\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_001",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 1.0,
+    "prediction": {
+      "direct_deps": [
+        "celery.backends.redis.RedisBackend"
+      ],
+      "indirect_deps": [
+        "celery.app.backends.by_name",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": [
+        "celery.app.backends.BACKEND_ALIASES"
+      ]
+    },
+    "raw_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.backends.redis.RedisBackend\"],\"indirect_deps\":[\"celery.app.backends.by_name\",\"celery.utils.imports.symbol_by_name\"],\"implicit_deps\":[\"celery.app.backends.BACKEND_ALIASES\"]}}"
+  },
+  {
+    "case_id": "medium_002",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 0.5714,
+    "prediction": {
+      "direct_deps": [
+        "celery.loaders.app:AppLoader"
+      ],
+      "indirect_deps": [
+        "celery.loaders.get_loader_cls"
+      ],
+      "implicit_deps": [
+        "celery.loaders.LOADER_ALIASES",
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "raw_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.loaders.app:AppLoader\"],\"indirect_deps\":[\"celery.loaders.get_loader_cls\"],\"implicit_deps\":[\"celery.loaders.LOADER_ALIASES\",\"celery.utils.imports.symbol_by_name\"]}}"
+  },
+  {
+    "case_id": "medium_003",
+    "difficulty": "medium",
+    "failure_type": "Type D",
+    "f1": 0.2857,
+    "prediction": {
+      "direct_deps": [
+        "celery.concurrency.thread.TaskPool"
+      ],
+      "indirect_deps": [
+        "celery.concurrency.get_implementation",
+        "kombu.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": [
+        "celery.concurrency.ALIASES"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.concurrency.thread.TaskPool\"\n    ],\n    \"indirect_deps\": [\n      \"celery.concurrency.get_implementation\",\n      \"kombu.utils.imports.symbol_by_name\"\n    ],\n    \"implicit_deps\": [\n      \"celery.concurrency.ALIASES\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_004",
+    "difficulty": "medium",
+    "failure_type": "Type C",
+    "f1": 1.0,
+    "prediction": {
+      "direct_deps": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.app.base.Celery.gen_task_name"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.imports.gen_task_name\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": [\n      \"celery.app.base.Celery.gen_task_name\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "hard_001",
+    "difficulty": "hard",
+    "failure_type": "Type B",
+    "f1": 0.5,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [
+        "celery._state.connect_on_app_finalize",
+        "celery._state._get_active_apps"
+      ],
+      "implicit_deps": [
+        "celery._state._announce_app_finalized"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery._task_from_fun\"\n    ],\n    \"indirect_deps\": [\n      \"celery._state.connect_on_app_finalize\",\n      \"celery._state._get_active_apps\"\n    ],\n    \"implicit_deps\": [\n      \"celery._state._announce_app_finalized\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "hard_002",
+    "difficulty": "hard",
+    "failure_type": "Type B",
+    "f1": 0.8,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.task"
+      ],
+      "implicit_deps": [
+        "celery.app.base.Celery._tasks"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery._task_from_fun\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.task\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.base.Celery._tasks\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "hard_003",
+    "difficulty": "hard",
+    "failure_type": "Type B",
+    "f1": 0.6667,
+    "prediction": {
+      "direct_deps": [
+        "celery._state._announce_app_finalized"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.finalize"
+      ],
+      "implicit_deps": [
+        "celery._state._on_app_finalizers"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery._state._announce_app_finalized\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.finalize\"\n    ],\n    \"implicit_deps\": [\n      \"celery._state._on_app_finalizers\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "hard_004",
+    "difficulty": "hard",
+    "failure_type": "Type E",
+    "f1": 0.75,
+    "prediction": {
+      "direct_deps": [
+        "celery.worker.request.Request"
+      ],
+      "indirect_deps": [
+        "celery.worker.strategy.default",
+        "celery.app.task.Task.Request"
+      ],
+      "implicit_deps": [
+        "celery.app.task.Task"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.worker.request.Request\"\n    ],\n    \"indirect_deps\": [\n      \"celery.worker.strategy.default\",\n      \"celery.app.task.Task.Request\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.task.Task\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "easy_007",
+    "difficulty": "easy",
+    "failure_type": "Type C",
+    "f1": 0.5,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.task.Task"
+      ],
+      "indirect_deps": [
+        "celery.local.recreate_module"
+      ],
+      "implicit_deps": [
+        "celery.__compat__"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.task.Task\"\n    ],\n    \"indirect_deps\": [\n      \"celery.local.recreate_module\"\n    ],\n    \"implicit_deps\": [\n      \"celery.__compat__\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_005",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 0.4444,
+    "prediction": {
+      "direct_deps": [
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.loader",
+        "celery.app.base.Celery._get_default_loader",
+        "celery.loaders.get_loader_cls"
+      ],
+      "implicit_deps": [
+        "celery.app.base.DEFAULT_LOADER"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.default.Loader\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.loader\",\n      \"celery.app.base.Celery._get_default_loader\",\n      \"celery.loaders.get_loader_cls\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.base.DEFAULT_LOADER\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_008",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 0.5,
+    "prediction": {
+      "direct_deps": [
+        "celery.worker.strategy.default"
+      ],
+      "indirect_deps": [
+        "celery.app.task.Task.start_strategy",
+        "kombu.utils.imports.instantiate"
+      ],
+      "implicit_deps": [
+        "celery.app.task.Task.Strategy"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.worker.strategy.default\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.task.Task.start_strategy\",\n      \"kombu.utils.imports.instantiate\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.task.Task.Strategy\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_hard_014",
+    "difficulty": "hard",
+    "failure_type": "Type B",
+    "f1": 0.8,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery.task"
+      ],
+      "indirect_deps": [
+        "celery.app.builtins.add_backend_cleanup_task",
+        "celery._state.connect_on_app_finalize",
+        "celery._state._announce_app_finalized"
+      ],
+      "implicit_deps": [
+        "celery.app.base.Celery.finalize"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery.task\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.builtins.add_backend_cleanup_task\",\n      \"celery._state.connect_on_app_finalize\",\n      \"celery._state._announce_app_finalized\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.base.Celery.finalize\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_hard_016",
+    "difficulty": "hard",
+    "failure_type": "Type E",
+    "f1": 0.6,
+    "prediction": {
+      "direct_deps": [
+        "celery.loaders.base.find_related_module"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery._autodiscover_tasks_from_fixups",
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.loaders.base.BaseLoader.autodiscover_tasks"
+      ],
+      "implicit_deps": [
+        "importlib.import_module"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.base.find_related_module\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery._autodiscover_tasks_from_fixups\",\n      \"celery.app.base.Celery._autodiscover_tasks\",\n      \"celery.loaders.base.BaseLoader.autodiscover_tasks\"\n    ],\n    \"implicit_deps\": [\n      \"importlib.import_module\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_hard_019",
+    "difficulty": "hard",
+    "failure_type": "Type E",
+    "f1": 0.5,
+    "prediction": {
+      "direct_deps": [
+        "kombu.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [
+        "celery.loaders.base.BaseLoader.config_from_object",
+        "celery.loaders.base.BaseLoader._smart_import"
+      ],
+      "implicit_deps": []
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"kombu.utils.imports.symbol_by_name\"\n    ],\n    \"indirect_deps\": [\n      \"celery.loaders.base.BaseLoader.config_from_object\",\n      \"celery.loaders.base.BaseLoader._smart_import\"\n    ],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "easy_005",
+    "difficulty": "easy",
+    "failure_type": "Type B",
+    "f1": 0.5,
+    "prediction": {
+      "direct_deps": [
+        "celery._state.get_current_app"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.local.Proxy",
+        "celery._state.current_app"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery._state.get_current_app\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": [\n      \"celery.local.Proxy\",\n      \"celery._state.current_app\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "easy_006",
+    "difficulty": "easy",
+    "failure_type": "Type B",
+    "f1": 0.2857,
+    "prediction": {
+      "direct_deps": [
+        "celery._state.get_current_task"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery._state.current_task",
+        "celery._state._task_stack"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery._state.get_current_task\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": [\n      \"celery._state.current_task\",\n      \"celery._state._task_stack\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "easy_008",
+    "difficulty": "easy",
+    "failure_type": "Type C",
+    "f1": 0.5,
+    "prediction": {
+      "direct_deps": [
+        "celery.canvas.group"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.__init__.group"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.canvas.group\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": [\n      \"celery.__init__.group\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_006",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 1.0,
+    "prediction": {
+      "direct_deps": [
+        "celery.backends.rpc.RPCBackend"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery._get_backend",
+        "celery.app.backends.by_url",
+        "celery.app.backends.by_name",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": [
+        "celery.app.backends.BACKEND_ALIASES"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.backends.rpc.RPCBackend\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery._get_backend\",\n      \"celery.app.backends.by_url\",\n      \"celery.app.backends.by_name\",\n      \"celery.utils.imports.symbol_by_name\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.backends.BACKEND_ALIASES\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_007",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 0.5333,
+    "prediction": {
+      "direct_deps": [
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [
+        "celery._state._get_current_app",
+        "celery.app.base.Celery.loader",
+        "celery.app.base.Celery._get_loader",
+        "celery.loaders.get_loader_cls"
+      ],
+      "implicit_deps": [
+        "celery._state.current_app",
+        "celery._state.default_app",
+        "celery.app.base.DEFAULT_LOADER"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.default.Loader\"\n    ],\n    \"indirect_deps\": [\n      \"celery._state._get_current_app\",\n      \"celery.app.base.Celery.loader\",\n      \"celery.app.base.Celery._get_loader\",\n      \"celery.loaders.get_loader_cls\"\n    ],\n    \"implicit_deps\": [\n      \"celery._state.current_app\",\n      \"celery._state.default_app\",\n      \"celery.app.base.DEFAULT_LOADER\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_hard_013",
+    "difficulty": "hard",
+    "failure_type": "Type B",
+    "f1": 0.5,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery.tasks"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.finalize"
+      ],
+      "implicit_deps": [
+        "celery.app.shared_task"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery.tasks\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.finalize\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.shared_task\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_hard_015",
+    "difficulty": "hard",
+    "failure_type": "Type B",
+    "f1": 0.1818,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery._autodiscover_tasks"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.autodiscover_tasks",
+        "celery._state.connect_on_app_finalize",
+        "celery._state._announce_app_finalized"
+      ],
+      "implicit_deps": [
+        "celery.app.base.Celery.finalize"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery._autodiscover_tasks\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.autodiscover_tasks\",\n      \"celery._state.connect_on_app_finalize\",\n      \"celery._state._announce_app_finalized\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.base.Celery.finalize\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_hard_018",
+    "difficulty": "hard",
+    "failure_type": "Type E",
+    "f1": 0.5333,
+    "prediction": {
+      "direct_deps": [
+        "celery.fixups.django.DjangoTask"
+      ],
+      "indirect_deps": [
+        "celery.fixups.django.fixup",
+        "celery.fixups.django.DjangoFixup.install",
+        "celery.app.base.Celery.Task",
+        "celery.app.base.Celery.create_task_cls"
+      ],
+      "implicit_deps": [
+        "celery.app.base.Celery.task_cls"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.fixups.django.DjangoTask\"\n    ],\n    \"indirect_deps\": [\n      \"celery.fixups.django.fixup\",\n      \"celery.fixups.django.DjangoFixup.install\",\n      \"celery.app.base.Celery.Task\",\n      \"celery.app.base.Celery.create_task_cls\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.base.Celery.task_cls\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_medium_017",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 0.8571,
+    "prediction": {
+      "direct_deps": [
+        "celery.fixups.django.fixup"
+      ],
+      "indirect_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": [
+        "celery.app.base.BUILTIN_FIXUPS"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.fixups.django.fixup\"\n    ],\n    \"indirect_deps\": [\n      \"celery.utils.imports.symbol_by_name\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.base.BUILTIN_FIXUPS\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_medium_020",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 0.5714,
+    "prediction": {
+      "direct_deps": [
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.loader",
+        "celery.app.base.Celery._get_default_loader",
+        "celery.loaders.get_loader_cls",
+        "celery._state._get_current_app"
+      ],
+      "implicit_deps": [
+        "celery._state.default_app",
+        "celery.loaders.default",
+        "celery.local.Proxy"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.default.Loader\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.loader\",\n      \"celery.app.base.Celery._get_default_loader\",\n      \"celery.loaders.get_loader_cls\",\n      \"celery._state._get_current_app\"\n    ],\n    \"implicit_deps\": [\n      \"celery._state.default_app\",\n      \"celery.loaders.default\",\n      \"celery.local.Proxy\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_hard_121",
+    "difficulty": "hard",
+    "failure_type": "Type A",
+    "f1": 0.6154,
+    "prediction": {
+      "direct_deps": [
+        "celery.loaders.base.find_related_module"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.autodiscover_tasks",
+        "celery.loaders.base.BaseLoader.autodiscover_tasks",
+        "celery.loaders.base.autodiscover_tasks"
+      ],
+      "implicit_deps": [
+        "ModuleNotFoundError"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.base.find_related_module\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.autodiscover_tasks\",\n      \"celery.loaders.base.BaseLoader.autodiscover_tasks\",\n      \"celery.loaders.base.autodiscover_tasks\"\n    ],\n    \"implicit_deps\": [\n      \"ModuleNotFoundError\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_hard_122",
+    "difficulty": "hard",
+    "failure_type": "Type A",
+    "f1": 0.2222,
+    "prediction": {
+      "direct_deps": [
+        "celery.bootsteps.Blueprint.apply"
+      ],
+      "indirect_deps": [
+        "celery.bootsteps.Blueprint.claim_steps",
+        "celery.bootsteps.Step.__init__",
+        "celery.bootsteps.StartStopStep.include_if"
+      ],
+      "implicit_deps": []
+    },
+    "raw_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.bootsteps.Blueprint.apply\"],\"indirect_deps\":[\"celery.bootsteps.Blueprint.claim_steps\",\"celery.bootsteps.Step.__init__\",\"celery.bootsteps.StartStopStep.include_if\"],\"implicit_deps\":[]}}"
+  },
+  {
+    "case_id": "celery_hard_024",
+    "difficulty": "hard",
+    "failure_type": "Type A",
+    "f1": 0.8,
+    "prediction": {
+      "direct_deps": [
+        "celery.beat.PersistentScheduler.setup_schedule"
+      ],
+      "indirect_deps": [
+        "celery.beat.PersistentScheduler._create_schedule"
+      ],
+      "implicit_deps": [
+        "celery.beat.PersistentScheduler._store"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.beat.PersistentScheduler.setup_schedule\"\n    ],\n    \"indirect_deps\": [\n      \"celery.beat.PersistentScheduler._create_schedule\"\n    ],\n    \"implicit_deps\": [\n      \"celery.beat.PersistentScheduler._store\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_hard_025",
+    "difficulty": "hard",
+    "failure_type": "Type A",
+    "f1": 0.4,
+    "prediction": {
+      "direct_deps": [
+        "celery.worker.consumer.consumer.Consumer._disable_prefetch_count"
+      ],
+      "indirect_deps": [
+        "celery.worker.consumer.tasks.Tasks.start",
+        "celery.worker.consumer.consumer.Consumer.disable_prefetch"
+      ],
+      "implicit_deps": [
+        "kombu.transport.redis.QoS.can_consume"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.worker.consumer.consumer.Consumer._disable_prefetch_count\"\n    ],\n    \"indirect_deps\": [\n      \"celery.worker.consumer.tasks.Tasks.start\",\n      \"celery.worker.consumer.consumer.Consumer.disable_prefetch\"\n    ],\n    \"implicit_deps\": [\n      \"kombu.transport.redis.QoS.can_consume\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "easy_010",
+    "difficulty": "easy",
+    "failure_type": "Type C",
+    "f1": 0.6667,
+    "prediction": {
+      "direct_deps": [
+        "celery.canvas.maybe_signature"
+      ],
+      "indirect_deps": [
+        "celery.local.recreate_module"
+      ],
+      "implicit_deps": []
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.canvas.maybe_signature\"\n    ],\n    \"indirect_deps\": [\n      \"celery.local.recreate_module\"\n    ],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "easy_011",
+    "difficulty": "easy",
+    "failure_type": "Type C",
+    "f1": 0.6667,
+    "prediction": {
+      "direct_deps": [
+        "celery.canvas.Signature"
+      ],
+      "indirect_deps": [
+        "celery.local.recreate_module"
+      ],
+      "implicit_deps": []
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.canvas.Signature\"\n    ],\n    \"indirect_deps\": [\n      \"celery.local.recreate_module\"\n    ],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "easy_012",
+    "difficulty": "easy",
+    "failure_type": "Type E",
+    "f1": 0.4,
+    "prediction": {
+      "direct_deps": [
+        "celery.concurrency.eventlet.TaskPool"
+      ],
+      "indirect_deps": [
+        "celery.concurrency.get_implementation",
+        "kombu.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": [
+        "celery.concurrency.ALIASES"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.concurrency.eventlet.TaskPool\"\n    ],\n    \"indirect_deps\": [\n      \"celery.concurrency.get_implementation\",\n      \"kombu.utils.imports.symbol_by_name\"\n    ],\n    \"implicit_deps\": [\n      \"celery.concurrency.ALIASES\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "easy_013",
+    "difficulty": "easy",
+    "failure_type": "Type E",
+    "f1": 0.4,
+    "prediction": {
+      "direct_deps": [
+        "celery.concurrency.solo.TaskPool"
+      ],
+      "indirect_deps": [
+        "celery.concurrency.get_implementation",
+        "kombu.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": [
+        "celery.concurrency.ALIASES"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.concurrency.solo.TaskPool\"\n    ],\n    \"indirect_deps\": [\n      \"celery.concurrency.get_implementation\",\n      \"kombu.utils.imports.symbol_by_name\"\n    ],\n    \"implicit_deps\": [\n      \"celery.concurrency.ALIASES\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "easy_014",
+    "difficulty": "easy",
+    "failure_type": "Type C",
+    "f1": 0.5,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.local.Proxy"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": [\n      \"celery.local.Proxy\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "easy_015",
+    "difficulty": "easy",
+    "failure_type": "Type C",
+    "f1": 1.0,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.utils.AppPickler"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "raw_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.app.utils.AppPickler\"],\"indirect_deps\":[],\"implicit_deps\":[]}}"
+  },
+  {
+    "case_id": "easy_016",
+    "difficulty": "easy",
+    "failure_type": "Type C",
+    "f1": 0.6667,
+    "prediction": {
+      "direct_deps": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.utils.__init__"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.imports.gen_task_name\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": [\n      \"celery.utils.__init__\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_011",
+    "difficulty": "medium",
+    "failure_type": "Type C",
+    "f1": 1.0,
+    "prediction": {
+      "direct_deps": [
+        "kombu.utils.uuid.uuid"
+      ],
+      "indirect_deps": [
+        "celery.utils.uuid"
+      ],
+      "implicit_deps": []
+    },
+    "raw_output": "{\"ground_truth\":{\"direct_deps\":[\"kombu.utils.uuid.uuid\"],\"indirect_deps\":[\"celery.utils.uuid\"],\"implicit_deps\":[]}}"
+  },
+  {
+    "case_id": "medium_012",
+    "difficulty": "medium",
+    "failure_type": "Type B",
+    "f1": 0.75,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [
+        "celery._state.connect_on_app_finalize",
+        "celery._state._get_active_apps"
+      ],
+      "implicit_deps": [
+        "celery._state._announce_app_finalized"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery._task_from_fun\"\n    ],\n    \"indirect_deps\": [\n      \"celery._state.connect_on_app_finalize\",\n      \"celery._state._get_active_apps\"\n    ],\n    \"implicit_deps\": [\n      \"celery._state._announce_app_finalized\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_013",
+    "difficulty": "medium",
+    "failure_type": "Type B",
+    "f1": 0.5,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery.task"
+      ],
+      "indirect_deps": [
+        "celery.app.builtins.add_backend_cleanup_task",
+        "celery._state.connect_on_app_finalize",
+        "celery._state._announce_app_finalized"
+      ],
+      "implicit_deps": [
+        "celery.app.base.Celery.finalize"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery.task\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.builtins.add_backend_cleanup_task\",\n      \"celery._state.connect_on_app_finalize\",\n      \"celery._state._announce_app_finalized\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.base.Celery.finalize\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_014",
+    "difficulty": "medium",
+    "failure_type": "Type B",
+    "f1": 0.4,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.builtins.add_accumulate_task.<locals>.accumulate"
+      ],
+      "indirect_deps": [
+        "celery.app.builtins.add_accumulate_task",
+        "celery.app.base.Celery.task"
+      ],
+      "implicit_deps": []
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.builtins.add_accumulate_task.<locals>.accumulate\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.builtins.add_accumulate_task\",\n      \"celery.app.base.Celery.task\"\n    ],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "medium_015",
+    "difficulty": "medium",
+    "failure_type": "Type D",
+    "f1": 1.0,
+    "prediction": {
+      "direct_deps": [
+        "kombu.utils.uuid.uuid"
+      ],
+      "indirect_deps": [
+        "celery.utils.uuid"
+      ],
+      "implicit_deps": [
+        "celery.utils.gen_unique_id"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"kombu.utils.uuid.uuid\"\n    ],\n    \"indirect_deps\": [\n      \"celery.utils.uuid\"\n    ],\n    \"implicit_deps\": [\n      \"celery.utils.gen_unique_id\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_016",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 0.8,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.registry.TaskRegistry"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.__init__",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": []
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.registry.TaskRegistry\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.__init__\",\n      \"celery.utils.imports.symbol_by_name\"\n    ],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "medium_017",
+    "difficulty": "medium",
+    "failure_type": "Type D",
+    "f1": 0.5714,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.__init__.bugreport"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.bugreport",
+        "celery.app.utils.bugreport"
+      ],
+      "implicit_deps": [
+        "celery._state.get_current_app"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.__init__.bugreport\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.bugreport\",\n      \"celery.app.utils.bugreport\"\n    ],\n    \"implicit_deps\": [\n      \"celery._state.get_current_app\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_018",
+    "difficulty": "medium",
+    "failure_type": "Type C",
+    "f1": 0.0,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.trace.disable_trace"
+      ],
+      "indirect_deps": [
+        "celery.app.disable_trace"
+      ],
+      "implicit_deps": []
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.trace.disable_trace\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.disable_trace\"\n    ],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "medium_020",
+    "difficulty": "medium",
+    "failure_type": "Type D",
+    "f1": 0.8,
+    "prediction": {
+      "direct_deps": [
+        "celery.canvas.signature"
+      ],
+      "indirect_deps": [
+        "celery.canvas.subtask",
+        "celery.local.recreate_module"
+      ],
+      "implicit_deps": []
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.canvas.signature\"\n    ],\n    \"indirect_deps\": [\n      \"celery.canvas.subtask\",\n      \"celery.local.recreate_module\"\n    ],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "hard_015",
+    "difficulty": "hard",
+    "failure_type": "Type B",
+    "f1": 0.4211,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.builtins.add_unlock_chord_task",
+        "celery._state.connect_on_app_finalize",
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.task",
+        "celery.app.base.Celery.gen_task_name",
+        "celery.utils.imports.gen_task_name",
+        "celery.canvas.maybe_signature",
+        "celery.result.allow_join_result",
+        "celery.exceptions.ChordError"
+      ],
+      "implicit_deps": [
+        "celery.app.base.Celery._tasks",
+        "celery.app.base.Celery.tasks",
+        "celery._state._announce_app_finalized"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.builtins.add_unlock_chord_task\",\n      \"celery._state.connect_on_app_finalize\",\n      \"celery.app.base.Celery._task_from_fun\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.task\",\n      \"celery.app.base.Celery.gen_task_name\",\n      \"celery.utils.imports.gen_task_name\",\n      \"celery.canvas.maybe_signature\",\n      \"celery.result.allow_join_result\",\n      \"celery.exceptions.ChordError\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.base.Celery._tasks\",\n      \"celery.app.base.Celery.tasks\",\n      \"celery._state._announce_app_finalized\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_021",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 0.6667,
+    "prediction": {
+      "direct_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [
+        "celery.app.base.BUILTIN_FIXUPS",
+        "celery.fixups.django.fixup"
+      ],
+      "implicit_deps": [
+        "celery.app.base.Celery.__init__"
+      ]
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.imports.symbol_by_name\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.BUILTIN_FIXUPS\",\n      \"celery.fixups.django.fixup\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.base.Celery.__init__\"\n    ]\n  }\n}"
+  }
+]

@@ -9,7 +9,7 @@
 | Baseline (GPT-5.4) | 0.4475 | 0.2670 | 0.2373 | 0.3122 | 基准 | 国际商业模型天花板，零样本上限 |
 | Baseline (GLM-5) | TBD | TBD | TBD | TBD | 基准 | 开源最强模型零样本上限 |
 | Baseline (Qwen3.5-9B) | TBD | TBD | TBD | TBD | 基准 | 微调基座未优化水平 |
-| PE only | TBD | TBD | TBD | TBD | +40% | 纯提示词工程极限 |
+| PE only | 0.5832 | 0.6939 | 0.5683 | 0.6230 | +~40% | SP+Few-shot+后处理（跳过 CoT），已实测 |
 | RAG only（向量） | TBD | TBD | TBD | TBD | +120% | 单路检索基准 |
 | RAG only（三路 RRF） | TBD | TBD | TBD | TBD | +140% | 混合检索增益 |
 | FT only | TBD | TBD | TBD | TBD | 0 | 领域知识固化效果 |
@@ -17,7 +17,7 @@
 | PE + FT | TBD | TBD | TBD | TBD | +40% | 无检索的内化知识组合 |
 | **PE + RAG + FT** | TBD | TBD | TBD | TBD | +150% | 三者协同增益验证 |
 
-> **说明**：GPT-5.4 基线已实测。其他 9 组实验尚未执行。
+> **说明**：GPT-5.4 基线和 PE only 已实测。其余 8 组实验尚未执行。
 
 ---
 

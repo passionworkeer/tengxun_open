@@ -12,6 +12,7 @@
 | 评测集（50条） | ✅ 完成 | `data/eval_cases_migrated_draft_round4.json` |
 | Few-shot（20条） | ✅ 完成 | `pe/prompt_templates_v2.py`, `data/fewshot_examples_20.json` |
 | GPT-5.4 Baseline | ✅ 完成 | `results/gpt5_results_archived/` |
+| PE 增量实验 | ✅ 完成 | Avg F1: 0.27→0.62（+131%），`results/pe_eval/` |
 | GLM-5 Baseline | ⚠️ 待跑 | `evaluation/run_glm_eval.py` |
 | Qwen3.5-9B Baseline | ⚠️ 待跑 | — |
 | RAG v2 检索 | ✅ 完成 | Graph 单路 R@5=0.331，RRF k=30 最优 |
