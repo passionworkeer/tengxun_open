@@ -15,7 +15,7 @@ lora_dropout: 0.05
 additional_target: [embed_tokens, lm_head]  # 可选：也微调 embedding
 
 ### 数据集配置
-dataset: identity,alpaca_zh  # 可以换成你自己的数据集
+dataset: fintune_qwen_dep  # 可以换成你自己的数据集
 template: qwen
 cutoff_len: 1024
 max_samples: 10000
@@ -23,7 +23,7 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### 输出配置
-output_dir: ./saves/qwen3.5-9b/lora/sft
+output_dir: ./saves/qwen3.5-9b/lora/finetune_dep
 logging_steps: 10
 save_steps: 500
 plot_loss: true
