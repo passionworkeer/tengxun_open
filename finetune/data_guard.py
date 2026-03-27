@@ -330,6 +330,7 @@ def validate_record(record: dict[str, Any]) -> list[str]:
         )
     else:
         errors.extend(_validate_dep_lists(ground_truth))
+        errors.extend(validate_fqns_in_ground_truth(ground_truth))
 
     return errors
 

@@ -15,4 +15,16 @@ outputs/
 reports/*.png
 reports/*.pdf
 .env
+.env.*
+*.env
+api_key*
+apikey*
+api_key*
+*token*
+*credential*
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+.ssh/
 

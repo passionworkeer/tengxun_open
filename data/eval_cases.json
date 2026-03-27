@@ -270,9 +270,7 @@
         "celery.fixups.django.DjangoFixup.autodiscover_tasks",
         "celery.loaders.base.autodiscover_tasks"
       ],
-      "implicit_deps": [
-        "importlib.import_module"
-      ]
+      "implicit_deps": []
     },
     "reasoning_hint": "Fixups produce package names, then loader.autodiscover_tasks flows to find_related_module, which performs importlib.import_module.",
     "source_note": "double-review accepted"
@@ -321,8 +319,7 @@
         "celery.utils.dispatch.signal.Signal.send"
       ],
       "implicit_deps": [
-        "celery.signals.import_modules",
-        "vine.starpromise"
+        "celery.signals.import_modules"
       ]
     },
     "reasoning_hint": "force=False 时只注册 `starpromise(self._autodiscover_tasks, ...)` 为 `import_modules` receiver；worker 启动经 `init_worker -> import_default_modules -> Signal.send` 才实际调用该 receiver 并执行 `_autodiscover_tasks`。",
@@ -349,9 +346,7 @@
         "celery.app.base.Celery.subclass_with_self"
       ],
       "implicit_deps": [
-        "os.environ.get",
-        "celery.utils.imports.symbol_by_name",
-        "django.conf.settings"
+        "celery.utils.imports.symbol_by_name"
       ]
     },
     "reasoning_hint": "fixup 先基于环境条件决定是否安装；安装后把 `app.task_cls` 改写为字符串 `celery.contrib.django.task:DjangoTask`，随后在 `app.Task` 访问时经 `subclass_with_self` 调用 `symbol_by_name` 解析为真实类。",
@@ -609,8 +604,7 @@
         "celery.loaders.base.BaseLoader._smart_import"
       ],
       "implicit_deps": [
-        "celery.utils.imports.import_from_cwd",
-        "importlib.import_module"
+        "celery.utils.imports.import_from_cwd"
       ]
     },
     "reasoning_hint": "config_from_object calls _smart_import; if direct module import fails, it falls back to symbol_by_name(path, imp=imp).",
@@ -637,8 +631,7 @@
         "celery.loaders.base.autodiscover_tasks"
       ],
       "implicit_deps": [
-        "celery.signals.import_modules",
-        "vine.starpromise"
+        "celery.signals.import_modules"
       ]
     },
     "reasoning_hint": "`force=False` 只注册 `signals.import_modules` 回调；触发阶段不写死 worker。只要走到 `import_default_modules -> signals.import_modules.send`，最终扫描链会落到 `find_related_module`，并在该函数内基于 `module_name == e.name` 判定吞/抛。",
@@ -715,19 +708,17 @@
     "category": "parameter_shadowing_module_function",
     "failure_type": "Type D",
     "implicit_level": 4,
-    "question": "在 `celery/app/routes.py` 中，`expand_router_string(router)` 的参数名 `router` 与它自身函数名相同（参数遮蔽了模块级同名函数）。当调用 `expand_router_string('my.router.module:RouterClass')` 时，函数体内的 `router` 最终指向哪个真实符号？",
+    "question": "在 `celery/app/routes.py` 中，调用 `expand_router_string('my.router.module:RouterClass')` 时，负责把字符串参数 `router` 解析成真实符号的函数是哪个？",
     "source_file": "celery/app/routes.py",
     "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
     "ground_truth": {
       "direct_deps": [
         "celery.utils.imports.symbol_by_name"
       ],
-      "indirect_deps": [
-        "kombu.utils.imports.symbol_by_name"
-      ],
+      "indirect_deps": [],
       "implicit_deps": []
     },
-    "reasoning_hint": "函数体内对 `router` 的每次访问都是参数绑定，不再是模块级函数。`symbol_by_name(router)` 在函数体内被调用时，`router` 已是参数（解析后的类或函数对象），不是未解析的字符串。参数遮蔽使模块级同名函数在函数体内完全不可见。",
+    "reasoning_hint": "`expand_router_string` 内部首先执行 `router = symbol_by_name(router)`，参数名遮蔽不会改变真正负责解析字符串的函数。",
     "source_note": "Type D parameter shadowing: function name = parameter name"
   },
   {
@@ -821,21 +812,21 @@
     "category": "env_var_dynamic_alias_override",
     "failure_type": "Type D",
     "implicit_level": 3,
-    "question": "在 `celery/concurrency/__init__.py` 中，`CELERY_CUSTOM_WORKER_POOL` 环境变量会覆盖 `ALIASES['custom']`。设置该环境变量后，`get_implementation('custom')` 实际解析到哪个符号？",
+    "question": "在 `celery/concurrency/__init__.py` 中，若在首次导入前设置 `CELERY_CUSTOM_WORKER_POOL='celery.concurrency.thread:TaskPool'`，那么 `get_implementation('custom')` 最终返回哪个 Celery 类？",
     "source_file": "celery/concurrency/__init__.py",
     "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
     "ground_truth": {
       "direct_deps": [
-        "celery.utils.imports.symbol_by_name"
+        "celery.concurrency.thread.TaskPool"
       ],
       "indirect_deps": [
-        "kombu.utils.imports.symbol_by_name"
+        "celery.concurrency.get_implementation"
       ],
       "implicit_deps": [
-        "celery.concurrency.__init__.ALIASES"
+        "celery.concurrency.ALIASES"
       ]
     },
-    "reasoning_hint": "环境变量 `CELERY_CUSTOM_WORKER_POOL` 在模块加载时执行，覆盖 `ALIASES['custom']`。之后 `get_implementation('custom')` 调用 `symbol_by_name(ALIASES['custom'])`，解析到用户自定义的类（字符串值来自环境变量）。",
+    "reasoning_hint": "模块导入时把环境变量写入 `ALIASES['custom']`，随后 `get_implementation('custom')` 按该别名返回线程池类。",
     "source_note": "Type D: env var dynamically overrides ALIASES at module load time"
   },
   {
@@ -906,9 +897,7 @@
         "celery.loaders.base.BaseLoader.import_default_modules",
         "celery.utils.dispatch.signal.Signal.send"
       ],
-      "implicit_deps": [
-        "vine.starpromise"
-      ]
+      "implicit_deps": []
     },
     "reasoning_hint": "force=False 时不直接调用 `_autodiscover_tasks`，而是注册 `starpromise(self._autodiscover_tasks, ...)` 为 `import_modules` signal 的 receiver（weak=False）。Worker 启动时经 `init_worker → import_default_modules → Signal.send('import_modules')` 才触发 receiver 调用链。",
     "source_note": "Type A: signal lazy trigger — starpromise registration → signal.send → receiver"
@@ -919,19 +908,20 @@
     "category": "symbol_by_name_resolution_chain",
     "failure_type": "Type E",
     "implicit_level": 3,
-    "question": "在 `celery/utils/imports.py` 中，`celery.utils.imports.instantiate` 函数底层依赖哪个导入解析函数？当调用 `instantiate('celery.concurrency.prefork:TaskPool')` 时，它将字符串路径解析到哪个真实符号？",
+    "question": "在 `celery/utils/imports.py` 中，`instantiate('celery.concurrency.prefork:TaskPool')` 这条链路最终解析到哪个真实 Celery 符号？中间依赖哪个导入解析函数？",
     "source_file": "celery/utils/imports.py",
     "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
     "ground_truth": {
       "direct_deps": [
-        "celery.utils.imports.symbol_by_name"
+        "celery.concurrency.prefork.TaskPool"
       ],
       "indirect_deps": [
-        "kombu.utils.imports.symbol_by_name"
+        "celery.utils.imports.instantiate",
+        "celery.utils.imports.symbol_by_name"
       ],
       "implicit_deps": []
     },
-    "reasoning_hint": "`celery.utils.imports.instantiate` 在函数体内调用 `symbol_by_name(name)(*args, **kwargs)`。`symbol_by_name` 从 `kombu.utils.imports` 导入并重新导出。所以 `instantiate('celery.concurrency.prefork:TaskPool')` = `symbol_by_name('celery.concurrency.prefork:TaskPool')()` = 实例化 `celery.concurrency.prefork.TaskPool`。",
+    "reasoning_hint": "`instantiate` 直接调用本模块已导入的 `symbol_by_name(name)`，最终把字符串解析为 `celery.concurrency.prefork.TaskPool`。",
     "source_note": "Medium: instantiate → symbol_by_name (same function, re-export)"
   },
   {
@@ -1067,7 +1057,7 @@
     "category": "extension_class_entry_point",
     "failure_type": "Type E",
     "implicit_level": 2,
-    "question": "`celery.utils.imports.load_extension_classes(namespace)` 通过 `importlib.metadata.entry_points` 获取入口点名称和值。如果 namespace 为 `'celery.worker.pool'`，获取到的 `value` 字段的格式是什么？",
+    "question": "`celery.utils.imports.load_extension_classes(namespace)` 这条扩展加载链里，哪个 Celery 函数先枚举 entry point 的 `(name, value)`，哪个 Celery 函数再把 `value` 字符串解析成真实类？",
     "source_file": "celery/utils/imports.py",
     "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
     "ground_truth": {
@@ -1076,11 +1066,11 @@
         "celery.utils.imports.load_extension_classes"
       ],
       "indirect_deps": [
-        "importlib.metadata.entry_points"
+        "celery.utils.imports.symbol_by_name"
       ],
       "implicit_deps": []
     },
-    "reasoning_hint": "`entry_points(group='celery.worker.pool')` 返回已注册的入口点，格式为 'package:class' 字符串。`load_extension_class_names` yield `(name, value)` 元组，`load_extension_classes` 再用 `symbol_by_name(value)` 将字符串解析为实际类。",
+    "reasoning_hint": "`load_extension_class_names` 负责枚举 entry point 名称和值，`load_extension_classes` 再把 value 字符串交给 `symbol_by_name` 解析。",
     "source_note": "Easy: entry_points value format is 'package:class' string for symbol_by_name"
   },
   {
