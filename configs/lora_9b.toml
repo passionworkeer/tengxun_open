@@ -1,18 +1,31 @@
-model_name = "Qwen3.5-9B"
-dataset_path = "data/finetune_dataset_500.jsonl"
-output_dir = "artifacts/lora/qwen3.5-9b"
-learning_rate = 0.0002
-batch_size = 2
-num_epochs = 3
-lora_r = 16
-lora_alpha = 32
-lora_dropout = 0.05
-target_modules = ["q_proj", "k_proj", "v_proj", "o_proj"]
-validation_split = 0.1
-early_stopping_patience = 3
-max_seq_length = 2048
-gradient_accumulation_steps = 8
-gradient_checkpointing = true
-load_in_4bit = true
-eval_steps = 50
-metric_for_best_model = "eval_f1"
+# Qwen3.5-9B LoRA 微调配置
+# ==============================
+# 模型配置
+model_name = "Qwen3.5-9B"                           # 模型名称
+dataset_path = "data/finetune_dataset_500.jsonl"   # 微调数据集路径
+output_dir = "artifacts/lora/qwen3.5-9b"            # 模型输出目录
+
+# 训练超参数
+learning_rate = 0.0002                              # 学习率 2e-4
+batch_size = 2                                      # Batch大小
+num_epochs = 3                                      # 训练轮数
+
+# LoRA配置
+lora_r = 16                                         # LoRA秩
+lora_alpha = 32                                     # LoRA缩放因子
+lora_dropout = 0.05                                 # Dropout率
+
+# 目标模块（需要微调的层）
+target_modules = ["q_proj", "k_proj", "v_proj", "o_proj"]  # Attention的Q/K/V/O投影层
+
+# 训练配置
+validation_split = 0.1                             # 验证集比例 10%
+early_stopping_patience = 3                        # 早停耐心值
+max_seq_length = 2048                              # 最大序列长度
+gradient_accumulation_steps = 8                    # 梯度累积步数
+gradient_checkpointing = true                      # 梯度检查点（节省显存）
+load_in_4bit = true                                # 4bit量化加载
+
+# 评估配置
+eval_steps = 50                                     # 评估间隔步数
+metric_for_best_model = "eval_f1"                  # 最佳模型指标
