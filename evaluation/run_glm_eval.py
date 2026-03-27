@@ -170,7 +170,7 @@ def main() -> int:
         "--base-url", type=str, default="https://api-inference.modelscope.cn/v1"
     )
     parser.add_argument(
-        "--cases", type=Path, default=Path("data/eval_cases_migrated_draft_round4.json")
+        "--cases", type=Path, default=Path("data/eval_cases.json")
     )
     parser.add_argument(
         "--output", type=Path, default=Path("results/glm_eval_results.json")

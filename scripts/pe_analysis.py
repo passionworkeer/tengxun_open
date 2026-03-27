@@ -18,7 +18,7 @@ cids = list(variants["baseline"].keys())
 
 # 加载 eval case 的 failure_type
 eval_cases = json.loads(
-    Path("data/eval_cases_migrated_draft_round4.json").read_text(encoding="utf-8-sig")
+    Path("data/eval_cases.json").read_text(encoding="utf-8-sig")
 )
 case_meta = {c["id"]: c for c in eval_cases}
 

@@ -19,7 +19,7 @@ BASE_URL = "https://aigw-gzgy2.cucloud.cn:8443"
 API_KEY = "sk-sp-oRAg9bMjrnEZjXpIW2NqXPeN6RtW3LpM"
 MODEL = "glm-5"
 MAX_TOKENS = 16384  # 必须够大，thinking 会吃掉大量 token
-CASES_PATH = Path("data/eval_cases_migrated_draft_round4.json")
+CASES_PATH = Path("data/eval_cases.json")
 OUTPUT_PATH = Path("results/glm5_cucloud_eval_results.json")
 PROMPT_SUFFIX = '\nReturn only a JSON object with:\n{"ground_truth": {"direct_deps": [...], "indirect_deps": [...], "implicit_deps": [...]}}'
 

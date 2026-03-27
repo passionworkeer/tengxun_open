@@ -197,7 +197,7 @@ def main() -> int:
     parser.add_argument(
         "--cases",
         type=Path,
-        default=Path("data/eval_cases_migrated_draft_round4.json"),
+        default=Path("data/eval_cases.json"),
     )
     parser.add_argument(
         "--output",

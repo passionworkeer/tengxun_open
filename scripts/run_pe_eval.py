@@ -36,7 +36,7 @@ from pe.prompt_templates_v2 import (
 
 API_BASE_URL = "https://ai.td.ee/v1"
 DEFAULT_MODEL = "gpt-5.4"
-DATA_PATH = Path("data/eval_cases_migrated_draft_round4.json")
+DATA_PATH = Path("data/eval_cases.json")
 OUTPUT_DIR = Path("results/pe_eval")
 
 

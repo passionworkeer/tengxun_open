@@ -14,7 +14,7 @@ def analyze_results(results_path: str = "results/qwen3_eval_results.json"):
         results = json.load(f)
 
     # Load original cases for failure_type
-    cases = json.load(open("data/eval_cases_migrated_draft_round4.json"))
+    cases = json.load(open("data/eval_cases.json"))
     case_map = {c["id"]: c for c in cases}
 
     # Add failure_type
@@ -69,7 +69,7 @@ def generate_report(results_path: str = "results/qwen3_eval_results.json"):
     with open(results_path) as f:
         results = json.load(f)
 
-    cases = json.load(open("data/eval_cases_migrated_draft_round4.json"))
+    cases = json.load(open("data/eval_cases.json"))
     case_map = {c["id"]: c for c in cases}
 
     for r in results:

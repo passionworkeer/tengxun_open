@@ -207,7 +207,7 @@ def run_finetuned_eval(
 def main():
     parser = argparse.ArgumentParser(description="Run evaluation with fine-tuned model")
     parser.add_argument(
-        "--cases", type=Path, default=Path("data/eval_cases_migrated_draft_round4.json")
+        "--cases", type=Path, default=Path("data/eval_cases.json")
     )
     parser.add_argument("--base-model", type=str, default="Qwen/Qwen2.5-7B-Instruct")
     parser.add_argument(

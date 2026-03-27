@@ -15,7 +15,7 @@ from evaluation.metrics import compute_set_metrics
 API_KEY = "sk-sp-oRAg9bMjrnEZjXpIW2NqXPeN6RtW3LpM"
 BASE_URL = "https://aigw-gzgy2.cucloud.cn:8443"
 MODEL = "glm-5"
-CASES_PATH = Path("data/eval_cases_migrated_draft_round4.json")
+CASES_PATH = Path("data/eval_cases.json")
 OUTPUT_PATH = Path("results/glm5_cucloud_full.json")
 
 
