@@ -149,7 +149,8 @@
 补充说明：
 
 - `finetune_dataset_500.jsonl` 是历史正式 500 条训练资产。
-- 若目标是严格答辩或去污染复验，使用 `finetune_dataset_500_strict.jsonl`，并配合 `configs/train_config_strict_20260329.yaml` / `make train-strict`。
+- 若目标是严格答辩或去污染复验，使用 `finetune_dataset_500_strict.jsonl`，并配合权威 strict replay 配置 `configs/train_config_strict_replay_20260329.yaml` / `make train-strict`。
+- `configs/train_config_strict_20260329.yaml` 仅保留为第一版 strict 草案，不再作为推荐重训入口。
 
 ---
 

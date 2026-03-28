@@ -28,6 +28,11 @@ Qwen 这条线现在分成两部分：
   - 目的：下一次重训时保留逐步 `eval_loss` 证据，而不是只留下最终 `eval_loss`
 - strict 一键脚本已补齐：`scripts/run_qwen_strict_full.sh`
 
+这里的推荐关系要说清楚：
+
+- `configs/train_config_strict_20260329.yaml` 只是第一版 strict 草案
+- 当前权威重训入口是 `configs/train_config_strict_replay_20260329.yaml`
+
 ## 3. 当前没法在这台机器上直接跑完的原因
 
 当前桌面环境是：
