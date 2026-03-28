@@ -51,6 +51,10 @@
 - GLM 主要受结构化输出适配影响
 - Qwen strict baseline 很低，说明开源模型在这个任务上需要系统增强
 
+建议配图：
+
+- `img/final_delivery/01_model_baselines_20260328.png`
+
 ## Slide 5. Prompt Engineering 主结果
 
 放正式 54-case progressive 结果：
@@ -66,6 +70,10 @@
 - PE 是当前最强单项优化
 - 但 union F1 不足以反映层级是否放对
 
+建议配图：
+
+- `img/final_delivery/02_pe_progression_20260328.png`
+
 ## Slide 6. strict 增补：为什么要看 macro 和 mislayer
 
 这一页只解释两个指标：
@@ -76,6 +84,10 @@
 核心句：
 
 > 很多方法只是把 FQN 找到了，但放错层；如果只看 union，会高估效果。
+
+建议配图：
+
+- `img/final_delivery/03_bottleneck_heatmap_20260328.png`
 
 ## Slide 7. strict PE 搜索：什么有效，什么无效
 
@@ -118,6 +130,11 @@
 - `FT only`
 - `PE + FT`
 - `PE + RAG + FT`
+
+建议配图：
+
+- RAG：`img/final_delivery/05_rag_end_to_end_20260328.png`
+- Qwen 策略：`img/final_delivery/06_qwen_strategies_20260328.png`
 
 ## Slide 10. 最终策略建议
 
