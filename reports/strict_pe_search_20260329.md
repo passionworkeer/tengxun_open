@@ -145,6 +145,18 @@ Smoke 结果：
    - assistant few-shot 改写
    - 这两条线都已经有 full-run 反证
 
+## GLM Stability Note
+
+这一轮也补测了 Zhipu 官方 `glm-5` 的 `thinking` 路线，结论是：
+
+- 官方 `thinking + stream` smoke 在首个 case 长时间无结果落盘，最终手动中断
+- 官方 `thinking + non-stream` smoke 同样在首个 case 阻塞，未形成可复验结果文件
+
+因此正式口径里不建议把 GLM `thinking` 模式纳入主实验矩阵。更稳妥的写法是：
+
+- 保留已有稳定 GLM strict baseline：`results/glm_eval_strict_replay_20260329_strict.json`
+- 将 `thinking` 记为“已尝试但因 endpoint 稳定性不足未纳入正式对比”的探索路径
+
 ## Repro Commands
 
 ```bash
