@@ -1,6 +1,6 @@
 # Remaining Work Checklist
 
-> 更新日期：2026-03-26
+> 更新日期：2026-03-28
 > 所有历史草稿已归档至 `docs/drafts_archived_20260326/`
 
 ---
@@ -13,33 +13,38 @@
 | Few-shot（20条） | ✅ 完成 | `pe/prompt_templates_v2.py`, `data/fewshot_examples_20.json` |
 | GPT-5.4 Baseline | ✅ 完成 | `results/gpt5_results_archived/` |
 | PE 增量实验 | ✅ 完成 | Avg F1: 0.27→0.62（+131%），`results/pe_eval/` |
-| GLM-5 Baseline | ⚠️ 待跑 | `evaluation/run_glm_eval.py` |
+| GLM-5 Baseline | 🚧 官方接口重跑中 | `evaluation/run_glm_eval.py`, `results/glm_eval_raw_official_20260328.json` |
 | Qwen3.5-9B Baseline | ⚠️ 待跑 | — |
 | RAG v2 检索 | ✅ 完成 | Graph 单路 R@5=0.331，RRF k=30 最优 |
-| Qwen3 Embedding 集成 | ⚠️ 配额用尽 | 缓存 5825/8086 (72%)，明日继续 |
+| Qwen3 Embedding 集成 | ⚠️ 非默认 | ModelScope 历史缓存 6571/8086，保留为 fallback |
+| Google Embedding 集成 | 🚧 进行中 | `gemini-embedding-001` 已接入，Google 缓存 4360/8086 |
 | LoRA 微调 | ⚠️ 待跑 | `finetune/train_lora.py`, `configs/lora_9b.toml` |
 
 ---
 
 ## 当前 P0 清单
 
-### P0-01：GLM-5 基线评估
-- 状态：API 已验证可用，接入 `evaluation/baseline.py`
-- 待执行：`python3 -m evaluation.baseline --mode rag --eval-cases data/eval_cases_migrated_draft_round4.json --repo-root external/celery --top-k 5`
-- 目标：拿到 GLM-5 在 50-case 上的真实 Recall/F1
+### P0-01：GLM-5 基线评估 / 原始响应采集
+- 状态：官方 `open.bigmodel.cn` 已验证可用；稳定评测走 `thinking=disabled`，原始数据采集走 `thinking=enabled + save_raw_response`
+- 当前原始文件：`results/glm_eval_raw_official_20260328.json`
+- 目标：先完整保存 54 条 raw response（含 `reasoning_content` / `usage`），后续再整理成正式评测分析
 
 ### P0-02：Qwen3.5-9B 基线评估
 - 状态：待执行
 - 目标：拿到 Qwen3.5-9B 在 50-case 上的真实 Recall/F1（作为 FT 前对照）
 
 ### P0-03：Embedding 缓存补全
-- 状态：5825/8086 完成，ModelScope 配额用尽
-- 待执行（明日）：`python3 scripts/precompute_embeddings.py`
-- 目标：8086 全部 embedding 缓存完成，RAG Semantic 源从 TF-IDF 升级到真实 Qwen3 Embedding
+- 状态：已切换优先路线为 Google embedding，ModelScope 保留为 fallback
+- Google 当前进度：`4360/8086`
+- ModelScope 历史进度：`6571/8086`
+- 参考文档：`docs/embedding_strategy_20260327.md`
+- 已落地报告：`artifacts/rag/eval_google_54cases_20260328.json`
+- 待执行：继续 `uv run python scripts/precompute_embeddings.py`
+- 目标：补齐 Google 独立缓存，并以此作为正式 semantic 路径
 
 ### P0-04：RAG Embedding 效果验证
-- 前置：P0-03 完成
-- 目标：对比 TF-IDF vs 真实 Embedding 的 RAG 效果提升
+- 状态：已拿到一版 Google provider 正式结果，待和 ModelScope / TF-IDF 做并排分析
+- 目标：对比 TF-IDF vs ModelScope vs Google 的 RAG 效果提升
 
 ### P0-05：Graph-Weighted Fusion
 - 状态：发现 graph 单路 > fused 的问题
@@ -92,5 +97,6 @@
 2. ✅ Few-shot 20 条正式池稳定
 3. ✅ RAG v2 检索评测完成（Graph 单路 R@5=0.331）
 4. ⬜ GLM-5 / Qwen3.5-9B Baseline 实测
-5. ⬜ 完整消融矩阵（10 组实验）
-6. ⬜ LoRA 微调训练 + 端到端评测
+5. 🚧 Google embedding cache 补齐 + 正式 RAG 评测
+6. ⬜ 完整消融矩阵（10 组实验）
+7. ⬜ LoRA 微调训练 + 端到端评测

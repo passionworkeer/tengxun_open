@@ -4,6 +4,7 @@ import json
 import argparse
 import time
 import re
+import signal
 from pathlib import Path
 from typing import Any
 
@@ -64,11 +65,64 @@ def compute_f1(pred: dict[str, list[str]], gt: dict[str, list[str]]) -> float:
     return metrics.f1
 
 
+def _load_existing_results(output_path: Path | None) -> list[dict[str, Any]]:
+    if output_path is None or not output_path.exists():
+        return []
+    try:
+        data = json.loads(output_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return []
+    return data if isinstance(data, list) else []
+
+
+class RequestTimeoutError(TimeoutError):
+    pass
+
+
+def _alarm_handler(signum: int, frame: object) -> None:
+    raise RequestTimeoutError("cucloud request timed out")
+
+
+def _invoke_case_request(
+    *,
+    client: anthropic.Anthropic,
+    prompt: str,
+    model: str,
+    max_tokens: int,
+    timeout: int,
+) -> tuple[str | None, str | None]:
+    previous = signal.signal(signal.SIGALRM, _alarm_handler)
+    signal.alarm(timeout)
+    try:
+        response = client.messages.create(
+            model=model,
+            max_tokens=max_tokens,
+            messages=[{"role": "user", "content": prompt}],
+            timeout=timeout,
+        )
+    finally:
+        signal.alarm(0)
+        signal.signal(signal.SIGALRM, previous)
+
+    raw_output = None
+    thinking_output = None
+    for block in response.content:
+        text = getattr(block, "text", None)
+        thinking = getattr(block, "thinking", None)
+        if text and raw_output is None:
+            raw_output = text
+        if thinking and thinking_output is None:
+            thinking_output = thinking
+    return raw_output, thinking_output
+
+
 def run_eval(
     cases: list[EvalCase],
     api_key: str,
     base_url: str,
     model: str = "glm-5",
+    max_tokens: int = 8192,
+    request_timeout: int = 180,
     output_path: Path | None = None,
     max_cases: int | None = None,
 ) -> list[dict[str, Any]]:
@@ -77,28 +131,30 @@ def run_eval(
     if max_cases is not None:
         cases = cases[:max_cases]
 
-    results: list[dict[str, Any]] = []
+    results = _load_existing_results(output_path)
+    completed_case_ids = {item.get("case_id") for item in results}
 
     for i, case in enumerate(cases):
+        if case.case_id in completed_case_ids:
+            print(f"[{i + 1}/{len(cases)}] Skipping {case.case_id} (already done)", flush=True)
+            continue
+
         print(f"[{i + 1}/{len(cases)}] Running {case.case_id}...", flush=True)
 
         prompt = build_prompt_v2(case, context="")
         prediction = None
         raw_output = None
+        thinking_output = None
 
         for attempt in range(5):
             try:
-                response = client.messages.create(
+                raw_output, thinking_output = _invoke_case_request(
+                    client=client,
+                    prompt=prompt,
                     model=model,
-                    max_tokens=1024,
-                    messages=[{"role": "user", "content": prompt}],
+                    max_tokens=max_tokens,
+                    timeout=request_timeout,
                 )
-
-                raw_output = None
-                for block in response.content:
-                    if block.type == "text":
-                        raw_output = block.text
-                        break
 
                 if raw_output:
                     prediction = parse_response(raw_output)
@@ -138,9 +194,11 @@ def run_eval(
             "prediction": prediction,
             "ground_truth": gt_dict,
             "raw_output": raw_output,
+            "thinking_output": thinking_output,
             "f1": round(f1, 4),
         }
         results.append(result)
+        completed_case_ids.add(case.case_id)
         print(f"  F1: {f1:.4f}", flush=True)
 
         if output_path:
@@ -176,6 +234,8 @@ def main() -> int:
         type=Path,
         default=Path("results/glm5_cucloud_eval_results.json"),
     )
+    parser.add_argument("--max-tokens", type=int, default=8192)
+    parser.add_argument("--request-timeout", type=int, default=180)
     parser.add_argument("--max-cases", type=int, default=None)
     args = parser.parse_args()
 
@@ -187,6 +247,8 @@ def main() -> int:
         api_key=args.api_key,
         base_url=args.base_url,
         model=args.model,
+        max_tokens=args.max_tokens,
+        request_timeout=args.request_timeout,
         output_path=args.output,
         max_cases=args.max_cases,
     )

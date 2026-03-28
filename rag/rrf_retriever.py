@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import math
-import os
 import re
 from collections import Counter, defaultdict, deque
 from dataclasses import dataclass
@@ -13,6 +12,12 @@ from .ast_chunker import (
     chunk_repository,
     module_name_from_path,
     normalize_symbol_target,
+)
+from .embedding_provider import (
+    EmbeddingProviderClient,
+    load_embedding_cache,
+    resolve_embedding_config,
+    save_embedding_cache,
 )
 
 
@@ -569,18 +574,15 @@ class HybridRetriever:
         return "\n".join(lines[:2])
 
 
-# ── Semantic Index: Qwen3-Embedding-8B via ModelScope API ───────────
+# ── Semantic Index: provider-aware embeddings ────────────────────────
 
 
-_EMBEDDING_MODEL = "Qwen/Qwen3-Embedding-8B"
-_EMBEDDING_DIM = 4096
 _EMBED_BATCH_SIZE = 50
-_EMBEDDING_CACHE_FILE = Path("artifacts/rag/embeddings_cache.json")
 
 
 class _EmbeddingIndex:
     """
-    Real embedding index using Qwen3-Embedding-8B via ModelScope API.
+    Real embedding index using provider-aware embeddings.
 
     Uses cache-first strategy: load from disk cache if available,
     otherwise fall back to TF-IDF. Pre-computation script can build
@@ -593,29 +595,27 @@ class _EmbeddingIndex:
             c.chunk_id: f"{c.symbol} {c.signature} {c.content}" for c in chunks
         }
         self._client = None
+        self._config = resolve_embedding_config()
         self._embeddings: dict[str, list[float]] = {}
         self._repo_root = str(repo_root)
         self._quota_exhausted = False
 
-        if _EMBEDDING_CACHE_FILE.exists():
+        if self._config.cache_file.exists():
             self._load_cache()
 
         cached = len(self._embeddings)
         if cached == len(self.chunk_ids):
-            print(f"[EmbeddingIndex] All {cached} embeddings loaded from cache")
+            print(
+                f"[EmbeddingIndex] All {cached} embeddings loaded from cache "
+                f"({self._config.provider_label})"
+            )
             return
 
         missing = [cid for cid in self.chunk_ids if cid not in self._embeddings]
         print(
-            f"[EmbeddingIndex] Cache: {cached}/{len(self.chunk_ids)} — TF-IDF active for missing ({len(missing)})"
+            f"[EmbeddingIndex] Cache loaded: {cached}/{len(self.chunk_ids)} "
+            f"from {self._config.cache_file} ({self._config.provider_label})"
         )
-        # Partial cache: assume quota exhausted (API is slow to respond with 429)
-        # Set exhausted so search() skips API calls and uses TF-IDF directly
-        if 0 < cached < len(self.chunk_ids):
-            self._quota_exhausted = True
-            print(
-                f"[EmbeddingIndex] Partial cache detected, assuming quota exhausted — using TF-IDF"
-            )
         self._fallback = _SemanticIndexTfidf(chunks)
 
     def _truncate(self, text: str, max_chars: int = 2000) -> str:
@@ -629,15 +629,9 @@ class _EmbeddingIndex:
         if self._quota_exhausted:
             return False
         try:
-            import openai
-
-            api_key = os.environ.get("MODELSCOPE_API_KEY", "")
-            if not api_key:
+            self._client = EmbeddingProviderClient(self._config)
+            if not self._client.available():
                 return False
-            self._client = openai.OpenAI(
-                base_url="https://api-inference.modelscope.cn/v1",
-                api_key=api_key,
-            )
             return True
         except Exception:
             return False
@@ -653,16 +647,12 @@ class _EmbeddingIndex:
 
         for attempt in range(3):
             try:
-                resp = self._client.embeddings.create(
-                    model=_EMBEDDING_MODEL,
-                    input=texts,
-                    encoding_format="float",
-                )
-                if resp.data is None:
-                    raise RuntimeError("resp.data is None (rate limited)")
-                for cid, emb in zip(chunk_ids, resp.data):
-                    self._embeddings[cid] = emb.embedding
-                return len(resp.data)
+                embeddings = self._client.batch_embed(texts)
+                if not embeddings:
+                    raise RuntimeError("empty embeddings response")
+                for cid, emb in zip(chunk_ids, embeddings):
+                    self._embeddings[cid] = emb
+                return len(embeddings)
             except Exception as exc:
                 if "429" in str(exc) and attempt == 0:
                     print(f"[EmbeddingIndex] API quota exhausted, stopping")
@@ -703,12 +693,10 @@ class _EmbeddingIndex:
 
     def _load_cache(self) -> None:
         try:
-            import json
-
-            raw = json.loads(_EMBEDDING_CACHE_FILE.read_text())
-            self._embeddings = {
-                cid: emb for cid, emb in raw.items() if cid in self.chunk_ids
-            }
+            self._embeddings = load_embedding_cache(
+                self._config,
+                valid_chunk_ids=set(self.chunk_ids),
+            )
             print(
                 f"[EmbeddingIndex] Cache loaded: {len(self._embeddings)}/{len(self.chunk_ids)}"
             )
@@ -717,10 +705,7 @@ class _EmbeddingIndex:
 
     def _save_cache(self) -> None:
         try:
-            _EMBEDDING_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
-            import json
-
-            _EMBEDDING_CACHE_FILE.write_text(json.dumps(self._embeddings))
+            save_embedding_cache(self._config, self._embeddings)
             print(f"[EmbeddingIndex] Cache saved: {len(self._embeddings)} chunks")
         except Exception as exc:
             print(f"[EmbeddingIndex] Cache save failed: {exc}")
@@ -738,15 +723,7 @@ class _EmbeddingIndex:
             return self._fallback.search(query, top_n)
 
         try:
-            q_emb = (
-                self._client.embeddings.create(
-                    model=_EMBEDDING_MODEL,
-                    input=[query],
-                    encoding_format="float",
-                )
-                .data[0]
-                .embedding
-            )
+            q_emb = self._client.embed_query(query)
         except Exception as exc:
             if "429" in str(exc):
                 print(f"[EmbeddingIndex] API quota exhausted, using TF-IDF only")
