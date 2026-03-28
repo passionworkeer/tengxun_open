@@ -85,6 +85,7 @@ def build_report_lines(root: Path) -> list[str]:
             "## 数据集与任务覆盖",
             "",
             f"- 正式评测集：`{len(cases)}` 条，位于 `data/eval_cases.json`",
+            "- 标注方式：正式 `54-case` 全部为手工标注",
             f"- 微调数据集：`{finetune_count}` 条，位于 `data/finetune_dataset_500.jsonl`",
             "- 任务方向：Celery 跨文件依赖分析 / 动态解析 / 再导出链 / 字符串符号解析",
             "- 失效模式：Type A-E 五类均已定义并在评测集内覆盖",
@@ -142,7 +143,7 @@ def build_report_lines(root: Path) -> list[str]:
         lines.extend(
             [
                 "",
-                "- 口径说明：这是在 `data/eval_cases.json` 正式 54 条上的新版结果，优先级高于旧的 50-case `results/pe_eval/`。",
+                "- 口径说明：这是在 `data/eval_cases.json` 正式 54 条上的权威结果；`results/pe_eval/` 中的 50-case 结果仅作历史归档。",
                 "",
             ]
         )
@@ -151,7 +152,7 @@ def build_report_lines(root: Path) -> list[str]:
             [
                 "## Prompt Engineering",
                 "",
-                "- `54-case` 正式重跑尚未落盘；旧版 `50-case` 结果位于 `results/pe_eval/`。",
+                "- `54-case` 正式重跑尚未落盘；`results/pe_eval/` 中的 50-case 结果仅作历史参考。",
                 "",
             ]
         )
@@ -226,7 +227,7 @@ def build_report_lines(root: Path) -> list[str]:
             "|------|----------|------|",
             "| 评测集 ≥50 条 | 完成 | 正式集 54 条 |",
             "| 瓶颈诊断 | 完成 | Type A-E 已定义并有报告 |",
-            "| PE 四维优化 | 完成 | 旧 50-case 已有；54-case 新版以 `results/pe_eval_54_20260328/` 为准 |",
+            "| PE 四维优化 | 完成 | `results/pe_eval_54_20260328/` 为正式结果；50-case 目录仅作归档 |",
             "| RAG 检索评测 | 完成 | 最新 Google embedding 已重跑 54-case |",
             "| 微调数据集 ≥500 条 | 完成 | 正式集 500 条 |",
             "| LoRA 微调 | 完成 | Qwen FT/PE+FT/PE+RAG+FT 已有结果 |",
@@ -239,6 +240,7 @@ def build_report_lines(root: Path) -> list[str]:
         [
             "## 结果口径说明",
             "",
+            "- 主评分指标采用三层并集后的 FQN 精确匹配；`direct / indirect / implicit` 三层标签仍保留在正式数据中用于诊断与展示。",
             "- 当前仓库的正式口径已切换到 `2026-03-28` 的 Google embedding 结果，不再使用旧的 `qwen_pe_rag_ft_20260327_163613_stats.json` 作为对外主口径。",
             "- `Qwen PE + RAG + FT` 以 `results/qwen_pe_rag_ft_google_20260328_stats.json` 为准。",
             "- 若后续继续补实验，只是扩展分析，不影响当前这版“完整消融矩阵已完成”的结论。",

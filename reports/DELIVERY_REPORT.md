@@ -35,7 +35,7 @@
 
 | 数据 | 规模 | 当前状态 |
 |------|------|------|
-| 正式评测集 | `54` 条 | 完成 |
+| 正式评测集 | `54` 条 | 完成，全部手工标注 |
 | Few-shot 示例库 | `20` 条 | 完成 |
 | 微调数据集 | `500` 条 | 完成 |
 
@@ -48,9 +48,10 @@
 
 ### 3.3 Ground Truth 口径
 
-- 统一采用 FQN 级别评分
-- 正式 schema 统一到 `direct_deps / indirect_deps / implicit_deps`
-- 微调数据由 `finetune/data_guard.py` 做严格源码存在性校验
+- 主评分指标采用三层并集后的 FQN 精确匹配
+- 正式 schema 保留 `direct_deps / indirect_deps / implicit_deps` 三层，用于标注、分析与展示
+- 正式 `54-case` 的 difficulty / failure_type / ground_truth 全部按源码阅读手工标注
+- 微调数据由 `finetune/data_guard.py` 对 Celery 内部 FQN 做源码存在性校验，对白名单外部依赖包做显式放行
 
 ## 4. 基线模型表现
 
@@ -122,7 +123,7 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 源码切片(AST chunking)
 -> 三路检索(BM25 / Semantic / Graph)
 -> RRF 融合
--> 上下文构造(question_plus_entry；仅 5/54 条样本含 entry_symbol / entry_file)
+-> 上下文构造(question_plus_entry；54/54 条样本含 source_file，5/54 条样本另有显式 entry_symbol)
 -> 生成模型输出 FQN JSON
 ```
 
@@ -189,7 +190,8 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 ### 7.3 结论
 
 - 现有日志显示 loss 收敛平稳，没有出现明显的发散。
-- 但当前仓库只保留了最终 `eval_loss`，没有完整的逐轮验证曲线，因此“不过拟合”证据是中等强度，不是最强形式。
+- 当前仓库已经保留了基于正式训练日志导出的 step-level train loss 曲线（`img/final_delivery/07_training_curve_20260328.png`）以及最终 `eval_loss=0.4779`。
+- 但训练日志中没有逐步验证集曲线，因此“不过拟合”证据仍是中等强度，不是最强形式。
 
 ## 8. 当前消融矩阵
 

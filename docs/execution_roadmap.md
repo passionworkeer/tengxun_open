@@ -1,5 +1,8 @@
 # Execution Roadmap
 
+> 历史路线图说明：本文件保留的是项目推进阶段的 planning snapshot，不代表当前正式完成状态。
+> 当前正式完成度与资产边界以 `reports/project_progress_20260328.md` 和 `docs/official_asset_manifest.md` 为准。
+
 本文件是"简版路线图"。如果要按阶段执行，请直接配合 [detailed_stage_playbook.md](detailed_stage_playbook.md) 一起使用。
 
 ## 总体策略

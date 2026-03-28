@@ -35,6 +35,12 @@
 | Qwen PE + FT | 0.5233 | 0.5370 | 0.2624 | 0.4315 | 开源模型高性价比路线 |
 | Qwen PE + RAG + FT | 0.4985 | 0.4805 | 0.3672 | 0.4435 | 最新 Google embedding，当前开源最优 |
 
+## 正式评分口径
+
+- 主评分指标：将 `direct_deps / indirect_deps / implicit_deps` 三层并集后做 FQN 精确匹配。
+- 三层标签仍完整保留在正式数据里，用于瓶颈诊断、few-shot 构造和 bad case 展示。
+- 正式资产边界与历史归档清单见：[`docs/official_asset_manifest.md`](docs/official_asset_manifest.md)
+
 ## 图表速览
 
 ![模型基线对比](img/final_delivery/01_model_baselines_20260328.png)
@@ -47,7 +53,7 @@
 
 ### 已完成
 
-- 正式评测集：[`data/eval_cases.json`](data/eval_cases.json)，`54` 条
+- 正式评测集：[`data/eval_cases.json`](data/eval_cases.json)，`54` 条，全部手工标注
 - 正式 few-shot 库：[`data/fewshot_examples_20.json`](data/fewshot_examples_20.json)，`20` 条
 - 正式微调集：[`data/finetune_dataset_500.jsonl`](data/finetune_dataset_500.jsonl)，`500` 条
 - GPT / GLM / Qwen baseline
@@ -81,13 +87,16 @@
 ### 直接 `git pull` 能不能拿到这个缓存
 
 - **不能。**
-- `artifacts/` 没有进 git，这个缓存文件约 `326MB`，因此只存在于本地运行环境。
+- `artifacts/` 没有进 git，这个缓存文件约 `326MB`，因此不会跟随仓库自动分发。
 
 ### 实际影响
 
 - 如果你还在这台机器上继续跑 Qwen 的 RAG 相关实验，可以直接复用，不需要重新切片。
-- 如果你换到另一台机器重新拉仓库，只会拿到代码、结果 JSON 和报告，不会自动拿到这个 embedding cache。
-- 跨机器复用需要手动复制该文件；否则重新运行 embedding 预计算。
+- 如果你换到另一台机器重新拉仓库，拿到的是代码、结果 JSON、报告和完整的重建脚本，不会自动拿到这个 embedding cache。
+- 跨机器复现有两条路：
+  - 手动复制这份 cache，直接复用。
+  - 运行 `scripts/precompute_embeddings.py` 在新机器上重新生成 cache。
+- 因此正式 RAG 方案是**可复现的**，只是大体积 cache 没有直接进 git。
 
 ## Quick Start
 
@@ -212,6 +221,7 @@ celery-dep-analysis/
 ├── docs/                              # 操作说明与结构文档
 │   ├── repository_map_20260328.md     # 仓库地图与正式文件索引
 │   ├── qwen_remaining_runs_20260328.md # Qwen 实验复现说明
+│   ├── official_asset_manifest.md      # 正式资产清单与口径说明
 │   └── SERVER_DATA_GUIDE.md           # 服务器 / 数据使用说明
 │
 └── img/final_delivery/                # 正式图表输出
@@ -239,6 +249,7 @@ celery-dep-analysis/
 - 消融矩阵：[`reports/ablation_study.md`](reports/ablation_study.md)
 - 当前进度：[`reports/project_progress_20260328.md`](reports/project_progress_20260328.md)
 - Qwen 复现实验说明：[`docs/qwen_remaining_runs_20260328.md`](docs/qwen_remaining_runs_20260328.md)
+- 正式资产清单：[`docs/official_asset_manifest.md`](docs/official_asset_manifest.md)
 
 ## 当前最稳的对外结论
 

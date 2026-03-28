@@ -11,17 +11,18 @@
 ## 推荐阅读顺序
 
 1. [`README.md`](../README.md)
-2. [`reports/DELIVERY_REPORT.md`](../reports/DELIVERY_REPORT.md)
-3. [`reports/ablation_study.md`](../reports/ablation_study.md)
-4. [`reports/bottleneck_diagnosis.md`](../reports/bottleneck_diagnosis.md)
-5. [`reports/pe_optimization.md`](../reports/pe_optimization.md)
-6. [`reports/rag_pipeline.md`](../reports/rag_pipeline.md)
-7. [`docs/qwen_remaining_runs_20260328.md`](./qwen_remaining_runs_20260328.md)
+2. [`docs/official_asset_manifest.md`](./official_asset_manifest.md)
+3. [`reports/DELIVERY_REPORT.md`](../reports/DELIVERY_REPORT.md)
+4. [`reports/ablation_study.md`](../reports/ablation_study.md)
+5. [`reports/bottleneck_diagnosis.md`](../reports/bottleneck_diagnosis.md)
+6. [`reports/pe_optimization.md`](../reports/pe_optimization.md)
+7. [`reports/rag_pipeline.md`](../reports/rag_pipeline.md)
+8. [`docs/qwen_remaining_runs_20260328.md`](./qwen_remaining_runs_20260328.md)
 
 ## 当前正式仓库结构
 
 交付时建议把项目名称表述为 `celery-dep-analysis`。  
-仓库当前真实目录名仍然是 `tengxun_open`，两者对应的是同一套内容。
+仓库当前真实目录名仍然是 `tengxun`，两者对应的是同一套内容。
 
 ```text
 celery-dep-analysis/
@@ -98,6 +99,7 @@ celery-dep-analysis/
 ├── docs/                              # 结构文档与操作说明
 │   ├── repository_map_20260328.md
 │   ├── qwen_remaining_runs_20260328.md
+│   ├── official_asset_manifest.md
 │   └── SERVER_DATA_GUIDE.md
 │
 └── img/final_delivery/                # 正式图表输出
@@ -158,6 +160,7 @@ celery-dep-analysis/
 这里放“继续开发 / 继续补跑”用的操作说明：
 
 - [`docs/qwen_remaining_runs_20260328.md`](./qwen_remaining_runs_20260328.md)：Qwen 正式实验怎么复现
+- [`docs/official_asset_manifest.md`](./official_asset_manifest.md)：正式资产与历史归档边界
 - [`docs/repository_map_20260328.md`](./repository_map_20260328.md)：这份文件
 
 ## 哪些文件不要当正式版
@@ -181,4 +184,4 @@ celery-dep-analysis/
 - 当前机器上可以直接复用，不需要重新切片或重新 embedding
 - 这个文件没有进入 git，因为 `artifacts/` 被忽略且文件过大
 - 如果你在另一台机器重新拉仓库，只会拿到代码和正式报告，不会自动拿到这个 326MB 缓存文件
-- 若要跨机器复用，需手动复制该文件；否则重新运行 embedding 预计算
+- 若要跨机器复用，需手动复制该文件；否则运行 `scripts/precompute_embeddings.py` 重新生成

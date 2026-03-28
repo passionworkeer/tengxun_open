@@ -105,7 +105,7 @@ curl http://localhost:8000/v1/models
 
 - 已有完整 cache：`artifacts/rag/embeddings_cache_google_gemini_embedding_001_3072.json`
 
-如果本地没有完整 Google embedding cache，脚本会按当前 provider 继续走检索路径；正式结果建议在已有完整 cache 的机器上跑。
+如果本地没有完整 Google embedding cache，可以先运行 `python3 scripts/precompute_embeddings.py` 按正式配置重建；正式结果不依赖“必须拷贝这台机器的 cache 文件”。
 
 ## 正式复现入口
 
@@ -192,6 +192,7 @@ uv run --with openai python run_qwen_ablation_eval.py \
 默认 adapter 路径：
 
 - `LLaMA-Factory/saves/qwen3.5-9b/lora/finetune_20260327_143745`
+- 也可以通过环境变量 `QWEN_LORA_ADAPTER_PATH` 统一指定 LoRA adapter
 
 命令：
 
