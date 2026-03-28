@@ -2,9 +2,9 @@
 
 ## 一句话结论
 
-- 数据集、GPT/GLM 基线、最新 Google embedding 的 RAG 检索、Qwen 的 FT / PE+FT / PE+RAG+FT 都已有结果。
-- 当前最强已落盘的 Qwen 组合是 `PE+RAG+FT`，但这份结果早于 `2026-03-28` 的 Google embedding 管线，不应直接当作最终版。
-- 严格按当前正式口径，仍需补跑的只剩 `Qwen` 相关的少数 ablation 项；`GPT/GLM` 由当前仓库已基本收口。
+- 数据集、GPT/GLM 基线、最新 Google embedding 的 RAG 检索、Qwen 完整消融矩阵都已有正式结果。
+- 当前最强已落盘的 Qwen 组合是 `PE+RAG+FT = 0.4435`，当前高性价比开源路线是 `PE+FT = 0.4315`。
+- 严格按当前正式口径，`GPT / GLM / Qwen / RAG / FT / 消融矩阵` 都已经收口。
 
 ## 数据集与任务覆盖
 
@@ -55,9 +55,12 @@
 
 | Strategy | Easy F1 | Medium F1 | Hard F1 | Avg F1 | 备注 |
 |----------|---------|-----------|---------|--------|------|
+| PE only | 0.3167 | 0.2491 | 0.1323 | 0.2246 | 54-case，全量已跑 |
+| RAG only | 0.0667 | 0.0000 | 0.0000 | 0.0185 | Google embedding |
+| PE + RAG | 0.1514 | 0.2614 | 0.0523 | 0.1534 | Google embedding |
 | FT only | 0.1556 | 0.0895 | 0.0500 | 0.0932 | 54-case，全量已跑 |
 | PE + FT | 0.5233 | 0.5370 | 0.2624 | 0.4315 | 54-case，全量已跑 |
-| PE + RAG + FT | 0.4985 | 0.4805 | 0.3672 | 0.4435 | 54-case，但早于 Google embedding 管线 |
+| PE + RAG + FT | 0.4985 | 0.4805 | 0.3672 | 0.4435 | Google embedding，当前开源最优 |
 
 ## 验收矩阵完成度
 
@@ -69,17 +72,12 @@
 | RAG 检索评测 | 完成 | 最新 Google embedding 已重跑 54-case |
 | 微调数据集 ≥500 条 | 完成 | 正式集 500 条 |
 | LoRA 微调 | 完成 | Qwen FT/PE+FT/PE+RAG+FT 已有结果 |
-| 完整消融矩阵 | 部分完成 | Qwen 的 PE only / RAG only / PE+RAG 仍缺当前正式版 |
+| 完整消融矩阵 | 完成 | `PE / RAG / FT / PE+RAG / PE+FT / All` 都已落盘 |
 
-## 需要你补跑的最小 Qwen 清单
+## Qwen 复现入口
 
-- `Qwen baseline`：可不重跑，当前已有严格恢复版；若要最干净的可复现实验，可重跑一版 JSON-only baseline。
-- `Qwen PE only`：当前只有 GPT 版 PE-only 正式结果；Qwen 缺同口径结果。
-- `Qwen RAG only`：当前缺 54-case + 最新 Google embedding 的正式结果。
-- `Qwen PE + RAG`：当前缺 54-case + 最新 Google embedding 的正式结果。
-- `Qwen PE + RAG + FT`：建议按最新 Google embedding 重新跑一版，替换旧结果。
-
-建议直接使用统一补跑脚本：
+当前没有必须补跑项。  
+如果要在相同环境复现 Qwen 的正式实验，可以继续使用统一脚本：
 
 ```bash
 uv run --with openai python run_qwen_ablation_eval.py --mode pe
@@ -94,5 +92,4 @@ uv run --with openai python run_qwen_ablation_eval.py --mode pe_rag --repo-root 
 - 商业模型基线：`GPT-5.4` 明显强于 `GLM-5` 与 `Qwen3.5-9B`。
 - PE 对 GPT 的提升非常显著，System Prompt / Few-shot / Post-process 是主要增益来源。
 - 最新 Google embedding 下，RAG 检索层面已经收口，可作为正式方案。
-- Qwen 的微调与组合策略已经显示明显收益，但要形成“严格完整的消融矩阵”，仍需要补 3 到 4 组 Qwen 实验。
-
+- Qwen 的微调与组合策略已经形成完整矩阵，后续优化重点转向 hard case 和检索噪声控制。

@@ -140,7 +140,7 @@ tengxun_open/
 
 这里放“继续开发 / 继续补跑”用的操作说明：
 
-- [`docs/qwen_remaining_runs_20260328.md`](./qwen_remaining_runs_20260328.md)：Qwen 剩余实验怎么跑
+- [`docs/qwen_remaining_runs_20260328.md`](./qwen_remaining_runs_20260328.md)：Qwen 正式实验怎么复现
 - [`docs/repository_map_20260328.md`](./repository_map_20260328.md)：这份文件
 
 ## 哪些文件不要当正式版

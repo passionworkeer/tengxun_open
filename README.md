@@ -13,8 +13,8 @@
 1. **PE 是当前最强单项增益**  
    在正式 `54-case` 口径上，GPT-5.4 从 `baseline 0.2745` 提升到 `postprocess 0.6062`，绝对提升 `+0.3317`，相对提升 `+120.8%`。
 
-2. **Qwen 的主要收益来自 PE 与 FT 的组合，而不是 FT 单独使用**  
-   Qwen strict baseline 仅 `0.0370`，`FT only` 到 `0.0932`，但 `PE + FT` 直接到 `0.4315`。这说明微调负责补领域知识，PE 负责把知识稳定地提取成可评分的 FQN 输出。
+2. **Qwen 的完整消融矩阵已经补齐，最佳开源组合是 `PE + RAG + FT`**  
+   Qwen strict baseline 仅 `0.0370`，`PE only` 到 `0.2246`，`FT only` 到 `0.0932`，`PE + FT` 到 `0.4315`，最终 `PE + RAG + FT` 到 `0.4435`。这说明 PE 是开源模型的核心增益源，FT 负责领域适配，RAG 只有在和 PE/FT 组合时才真正有价值。
 
 3. **RAG 的价值是“定向修复 hard 场景”，不是无脑全局提分**  
    GPT-5.4 端到端 `No-RAG 0.2783 -> With-RAG 0.2940`，总体只提升 `+0.0157`；但 `Hard` 难度从 `0.1980 -> 0.3372`，提升 `+0.1392`。RAG 更像是针对 Type A / Type E 的补偿模块。
@@ -28,9 +28,12 @@
 | Qwen3.5-9B Baseline | 0.0667 | 0.0526 | 0.0000 | 0.0370 | 严格恢复版，45/54 parse fail |
 | GPT-5.4 PE only | 0.6651 | 0.6165 | 0.5522 | 0.6062 | 54-case 正式重跑 |
 | GPT-5.4 RAG only | 0.2722 | 0.2656 | 0.3372 | 0.2940 | 端到端 weighted RAG |
+| Qwen PE only | 0.3167 | 0.2491 | 0.1323 | 0.2246 | 正式 54-case |
+| Qwen RAG only | 0.0667 | 0.0000 | 0.0000 | 0.0185 | 最新 Google embedding |
+| Qwen PE + RAG | 0.1514 | 0.2614 | 0.0523 | 0.1534 | 最新 Google embedding |
 | Qwen FT only | 0.1556 | 0.0895 | 0.0500 | 0.0932 | LoRA 后正式结果 |
-| Qwen PE + FT | 0.5233 | 0.5370 | 0.2624 | 0.4315 | 当前最稳的开源路线 |
-| Qwen PE + RAG + FT | 0.4985 | 0.4805 | 0.3672 | 0.4435 | 已有结果，但早于最新 Google embedding |
+| Qwen PE + FT | 0.5233 | 0.5370 | 0.2624 | 0.4315 | 开源模型高性价比路线 |
+| Qwen PE + RAG + FT | 0.4985 | 0.4805 | 0.3672 | 0.4435 | 最新 Google embedding，当前开源最优 |
 
 ## 图表速览
 
@@ -51,17 +54,19 @@
 - GPT PE 四阶段正式重跑
 - Google embedding 版本 RAG 检索正式评测
 - GPT 端到端 RAG 正式评测
-- Qwen FT / PE+FT / 旧版 PE+RAG+FT
+- Qwen `PE / RAG / PE+RAG / FT / PE+FT / PE+RAG+FT` 全矩阵
 - 最终图表与正式报告
 
-### 仍待补跑
+### 如需复现 Qwen 完整矩阵
 
-- Qwen `PE only`
-- Qwen `RAG only`
-- Qwen `PE + RAG`
-- 建议重跑 Qwen `PE + RAG + FT` 以对齐最新 Google embedding
+- 现在没有必须补跑项。
+- 如果你想在同一环境重现这 4 组正式结果，仍然可以直接使用统一入口：
+  - `Qwen PE only`
+  - `Qwen RAG only`
+  - `Qwen PE + RAG`
+  - `Qwen PE + RAG + FT`
 
-详细命令见：
+复现命令见：
 
 - [`docs/qwen_remaining_runs_20260328.md`](docs/qwen_remaining_runs_20260328.md)
 
@@ -105,7 +110,7 @@ make eval-rag
 make report
 ```
 
-### 4. Qwen 剩余补跑
+### 4. Qwen 完整消融复现
 
 ```bash
 uv run --with openai python run_qwen_ablation_eval.py --mode pe
@@ -147,10 +152,10 @@ tengxun_open/
 - RAG 方案：[`reports/rag_pipeline.md`](reports/rag_pipeline.md)
 - 消融矩阵：[`reports/ablation_study.md`](reports/ablation_study.md)
 - 当前进度：[`reports/project_progress_20260328.md`](reports/project_progress_20260328.md)
-- Qwen 补跑说明：[`docs/qwen_remaining_runs_20260328.md`](docs/qwen_remaining_runs_20260328.md)
+- Qwen 复现实验说明：[`docs/qwen_remaining_runs_20260328.md`](docs/qwen_remaining_runs_20260328.md)
 
 ## 当前最稳的对外结论
 
 - 如果只看商业模型上界，`GPT-5.4` 仍明显领先。
-- 如果只看“可训练开源模型”的正式结果，当前最稳的是 `Qwen PE + FT = 0.4315`。
-- 如果允许把旧版 RAG+FT 结果作为参考，当前最高开源结果是 `Qwen PE + RAG + FT = 0.4435`，但仍建议按最新 embedding 再补一版。
+- 如果只看“可训练开源模型”的最高正式结果，当前最优是 `Qwen PE + RAG + FT = 0.4435`。
+- 如果考虑工程复杂度与性价比，`Qwen PE + FT = 0.4315` 仍然是很强的默认路线。

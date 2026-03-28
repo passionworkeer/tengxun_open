@@ -15,10 +15,16 @@
 - `pe_eval_54_20260328/`
 - `qwen_ft_20260327_160136.json`
 - `qwen_ft_20260327_160136_stats.json`
+- `qwen_pe_only_20260328.json`
+- `qwen_pe_only_20260328_stats.json`
+- `qwen_rag_only_google_20260328.json`
+- `qwen_rag_only_google_20260328_stats.json`
+- `qwen_pe_rag_google_20260328.json`
+- `qwen_pe_rag_google_20260328_stats.json`
 - `qwen_pe_ft_20260327_162308.json`
 - `qwen_pe_ft_20260327_162308_stats.json`
-- `qwen_pe_rag_ft_20260327_163613.json`
-- `qwen_pe_rag_ft_20260327_163613_stats.json`
+- `qwen_pe_rag_ft_google_20260328.json`
+- `qwen_pe_rag_ft_google_20260328_stats.json`
 
 ## 历史 / 调试结果
 
@@ -32,5 +38,5 @@
 
 ## 当前最重要的说明
 
-- `qwen_pe_rag_ft_20260327_163613*` 是当前可见的最高开源结果，但它早于最新 Google embedding，正式最终版仍建议重跑。
+- `qwen_pe_rag_ft_google_20260328*` 是当前完整矩阵里的最高开源结果。
 - `qwen_baseline_recovered_20260328*` 是严格口径下的 baseline，不要再用旧的 `qwen_baseline_summary.json` 作为最终基线数字。

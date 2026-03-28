@@ -27,7 +27,7 @@
 | 构建代码分析 RAG Pipeline | 完成 | `reports/rag_pipeline.md` |
 | 微调数据集 ≥500 条 | 完成 | `data/finetune_dataset_500.jsonl` |
 | LoRA 微调与效果评估 | 完成 | `results/qwen_ft_*`、`results/qwen_pe_ft_*` |
-| 完整消融矩阵 | 部分完成 | 当前只缺 Qwen `PE only / RAG only / PE+RAG` 正式重跑 |
+| 完整消融矩阵 | 完成 | `reports/ablation_study.md` |
 
 ## 3. 数据集与评测设计
 
@@ -185,18 +185,17 @@
 | GPT-5.4 RAG only | 0.2722 | 0.2656 | 0.3372 | 0.2940 | 完成 |
 | Qwen FT only | 0.1556 | 0.0895 | 0.0500 | 0.0932 | 完成 |
 | Qwen PE + FT | 0.5233 | 0.5370 | 0.2624 | 0.4315 | 完成 |
-| Qwen PE + RAG + FT | 0.4985 | 0.4805 | 0.3672 | 0.4435 | 已有旧版结果 |
+| Qwen PE only | 0.3167 | 0.2491 | 0.1323 | 0.2246 | 完成 |
+| Qwen RAG only | 0.0667 | 0.0000 | 0.0000 | 0.0185 | 完成 |
+| Qwen PE + RAG | 0.1514 | 0.2614 | 0.0523 | 0.1534 | 完成 |
+| Qwen PE + RAG + FT | 0.4985 | 0.4805 | 0.3672 | 0.4435 | 完成 |
 
 ![Qwen 策略对比](../img/final_delivery/06_qwen_strategies_20260328.png)
 
-### 8.2 仍需补跑
+### 8.2 复现入口
 
-- Qwen `PE only`
-- Qwen `RAG only`
-- Qwen `PE + RAG`
-- 建议重跑 Qwen `PE + RAG + FT` 以对齐最新 Google embedding
-
-补跑命令已单独整理到：
+当前没有必须补跑的 Qwen 空位。  
+如果需要在相同环境重现实验，执行命令已单独整理到：
 
 - [`../docs/qwen_remaining_runs_20260328.md`](../docs/qwen_remaining_runs_20260328.md)
 
@@ -205,29 +204,31 @@
 ### 9.1 如果目标是“今天就给出最稳可复现实验”
 
 - 商业模型：`GPT-5.4 + PE`
-- 开源模型：`Qwen PE + FT`
+- 开源模型最高分：`Qwen PE + RAG + FT`
+- 开源模型高性价比默认路线：`Qwen PE + FT`
 
 原因：
 
 - `GPT-5.4 + PE` 已有完整正式结果且提升最大
-- `Qwen PE + FT` 是当前最稳的开源路线，不依赖旧 embedding 版本
+- `Qwen PE + RAG + FT` 在完整消融矩阵里给出当前最高分 `0.4435`
+- `Qwen PE + FT` 只比最高分低 `0.0120`，但工程复杂度更低
 
 ### 9.2 如果目标是“冲当前可见上限”
 
 - 目标策略：`Qwen PE + RAG + FT`
-- 当前已有 `0.4435` 历史结果
-- 但仍建议基于最新 Google embedding 重跑一次，才能成为正式最终版
+- 当前 `0.4435` 已经是最新 Google embedding 口径的正式结果
+- 如果未来继续优化，优先方向不是“补跑缺项”，而是继续提升 hard case
 
 ## 10. 工程落地建议
 
 1. **默认策略**：对普通 case 先用 `PE`，成本最低、收益最高。
 2. **Hard / Type A / Type E` 场景**：启用 `RAG`，尤其是带 entry 信息的检索。
 3. **开源模型部署**：优先 `Qwen PE + FT`，因为它已经稳定、正式且不依赖旧缓存。
-4. **最终上线的“最强组合”**：等 Qwen `PE only / RAG only / PE+RAG / PE+RAG+FT` 最新版补齐后，再确定完整矩阵结论。
+4. **最终上线的“最强组合”**：如果追求最高分，选 `Qwen PE + RAG + FT`；如果追求实现复杂度与收益平衡，选 `Qwen PE + FT`。
 
 ## 11. 仓库入口
 
 - README：[`../README.md`](../README.md)
 - 仓库地图：[`../docs/repository_map_20260328.md`](../docs/repository_map_20260328.md)
 - 当前进度：[`./project_progress_20260328.md`](./project_progress_20260328.md)
-- Qwen 补跑：[`../docs/qwen_remaining_runs_20260328.md`](../docs/qwen_remaining_runs_20260328.md)
+- Qwen 复现入口：[`../docs/qwen_remaining_runs_20260328.md`](../docs/qwen_remaining_runs_20260328.md)

@@ -6,7 +6,7 @@
 - 正式评测结果
 - 正式 PE 结果
 - 正式 RAG 检索结果
-- 当前可用的 Qwen 微调结果
+- 完整 Qwen 消融结果
 - 训练日志
 
 输出：
@@ -361,46 +361,65 @@ def make_qwen_strategy_chart(
     *,
     output_path: Path,
     qwen_baseline: dict[str, Any],
+    qwen_pe: dict[str, Any],
+    qwen_rag: dict[str, Any],
+    qwen_pe_rag: dict[str, Any],
     qwen_ft: dict[str, Any],
     qwen_pe_ft: dict[str, Any],
     qwen_pe_rag_ft: dict[str, Any],
 ) -> None:
-    labels = ["Baseline", "FT", "PE+FT", "PE+RAG+FT"]
+    labels = ["Baseline", "PE", "RAG", "PE+RAG", "FT", "PE+FT", "All"]
     avg_vals = [
         qwen_baseline["avg_f1"],
+        qwen_pe["avg_f1"],
+        qwen_rag["avg_f1"],
+        qwen_pe_rag["avg_f1"],
         qwen_ft["avg_f1"],
         qwen_pe_ft["avg_f1"],
         qwen_pe_rag_ft["avg_f1"],
     ]
     easy_vals = [
         qwen_baseline["by_difficulty"]["easy"]["avg_f1"],
+        qwen_pe["easy"],
+        qwen_rag["easy"],
+        qwen_pe_rag["easy"],
         qwen_ft["easy"],
         qwen_pe_ft["easy"],
         qwen_pe_rag_ft["easy"],
     ]
     medium_vals = [
         qwen_baseline["by_difficulty"]["medium"]["avg_f1"],
+        qwen_pe["medium"],
+        qwen_rag["medium"],
+        qwen_pe_rag["medium"],
         qwen_ft["medium"],
         qwen_pe_ft["medium"],
         qwen_pe_rag_ft["medium"],
     ]
     hard_vals = [
         qwen_baseline["by_difficulty"]["hard"]["avg_f1"],
+        qwen_pe["hard"],
+        qwen_rag["hard"],
+        qwen_pe_rag["hard"],
         qwen_ft["hard"],
         qwen_pe_ft["hard"],
         qwen_pe_rag_ft["hard"],
     ]
 
-    fig, axes = plt.subplots(1, 2, figsize=(14, 5.5))
-    bars = axes[0].bar(labels, avg_vals, color=["#BDBDBD", "#A1D99B", "#74C476", "#31A354"])
+    fig, axes = plt.subplots(1, 2, figsize=(16, 5.8))
+    bars = axes[0].bar(
+        labels,
+        avg_vals,
+        color=["#BDBDBD", "#9ECAE1", "#FDD0A2", "#FDAE6B", "#A1D99B", "#74C476", "#31A354"],
+    )
     axes[0].set_ylim(0, 0.55)
     axes[0].set_ylabel("Avg F1")
-    axes[0].set_title("Current Open-model Strategy Comparison")
+    axes[0].set_title("Qwen Full Ablation Matrix")
     axes[0].tick_params(axis="x", rotation=15)
     axes[0].bar_label(bars, fmt="%.3f", fontsize=8, padding=3)
 
     x = np.arange(len(labels))
-    width = 0.25
+    width = 0.22
     axes[1].bar(x - width, easy_vals, width, label="Easy", color="#4C78A8")
     axes[1].bar(x, medium_vals, width, label="Medium", color="#F58518")
     axes[1].bar(x + width, hard_vals, width, label="Hard", color="#54A24B")
@@ -410,7 +429,7 @@ def make_qwen_strategy_chart(
     axes[1].set_title("Difficulty Breakdown")
     axes[1].legend()
 
-    fig.suptitle("Qwen Family: PE Dominates, FT Alone Is Not Enough", fontsize=14, fontweight="bold")
+    fig.suptitle("Qwen Family: All Wins, RAG-only Fails", fontsize=14, fontweight="bold")
     fig.tight_layout()
     output_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output_path, dpi=180, bbox_inches="tight")
@@ -460,9 +479,12 @@ def main() -> int:
     pe_summary = load_json(ROOT / "results/pe_eval_54_20260328/pe_summary.json")
     rag_google = load_json(ROOT / "results/rag_google_eval_54cases_20260328.json")
     rag_e2e = load_json(ROOT / "results/gpt_rag_e2e_54cases_20260328_summary.json")
+    qwen_pe = load_qwen_stats(ROOT / "results/qwen_pe_only_20260328_stats.json")
+    qwen_rag = load_qwen_stats(ROOT / "results/qwen_rag_only_google_20260328_stats.json")
+    qwen_pe_rag = load_qwen_stats(ROOT / "results/qwen_pe_rag_google_20260328_stats.json")
     qwen_ft = load_qwen_stats(ROOT / "results/qwen_ft_20260327_160136_stats.json")
     qwen_pe_ft = load_qwen_stats(ROOT / "results/qwen_pe_ft_20260327_162308_stats.json")
-    qwen_pe_rag_ft = load_qwen_stats(ROOT / "results/qwen_pe_rag_ft_20260327_163613_stats.json")
+    qwen_pe_rag_ft = load_qwen_stats(ROOT / "results/qwen_pe_rag_ft_google_20260328_stats.json")
     training = parse_training_log(ROOT / "logs/train_20260327_143745.log")
 
     gpt_summary = summarize_baseline_results(gpt_results, case_map=case_map)
@@ -483,9 +505,12 @@ def main() -> int:
         "rag_retrieval": rag_google["retrieval"],
         "rag_end_to_end": rag_e2e["summary"],
         "qwen_strategies": {
+            "pe_only": qwen_pe,
+            "rag_only": qwen_rag,
+            "pe_rag": qwen_pe_rag,
             "ft_only": qwen_ft,
             "pe_ft": qwen_pe_ft,
-            "pe_rag_ft_legacy": qwen_pe_rag_ft,
+            "pe_rag_ft": qwen_pe_rag_ft,
         },
         "training": {
             "point_count": len(training["points"]),
@@ -523,6 +548,9 @@ def main() -> int:
     make_qwen_strategy_chart(
         output_path=args.output_dir / "06_qwen_strategies_20260328.png",
         qwen_baseline=qwen_recovered,
+        qwen_pe=qwen_pe,
+        qwen_rag=qwen_rag,
+        qwen_pe_rag=qwen_pe_rag,
         qwen_ft=qwen_ft,
         qwen_pe_ft=qwen_pe_ft,
         qwen_pe_rag_ft=qwen_pe_rag_ft,

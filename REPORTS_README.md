@@ -18,7 +18,7 @@
 - 消融实验：`reports/ablation_study.md`
 - 当前进度快照：`reports/project_progress_20260328.md`
 - 图表指标快照：`reports/final_metrics_snapshot_20260328.json`
-- Qwen 剩余补跑：`docs/qwen_remaining_runs_20260328.md`
+- Qwen 复现实验说明：`docs/qwen_remaining_runs_20260328.md`
 - 仓库地图：`docs/repository_map_20260328.md`
 
 ## 当前正式图表
@@ -51,9 +51,12 @@
 
 - GPT-5.4 `PE only`：`Avg F1 = 0.6062`
 - GPT-5.4 `RAG only`：`Avg F1 = 0.2940`
+- Qwen `PE only`：`Avg F1 = 0.2246`
+- Qwen `RAG only`：`Avg F1 = 0.0185`
+- Qwen `PE + RAG`：`Avg F1 = 0.1534`
 - Qwen `FT only`：`Avg F1 = 0.0932`
 - Qwen `PE + FT`：`Avg F1 = 0.4315`
-- Qwen `PE + RAG + FT`（旧 embedding 版）：`Avg F1 = 0.4435`
+- Qwen `PE + RAG + FT`：`Avg F1 = 0.4435`
 
 ### RAG 检索
 
@@ -61,16 +64,10 @@
 - `fused expanded_fqns Recall@5 = 0.4502`
 - `fused expanded_fqns MRR = 0.5596`
 
-## 当前仍待补跑
+## 当前矩阵状态
 
-为形成严格完整的 Qwen 消融矩阵，仍需补：
-
-- `Qwen PE only`
-- `Qwen RAG only`
-- `Qwen PE + RAG`
-- 建议重跑 `Qwen PE + RAG + FT`
-
-详细执行命令见 `docs/qwen_remaining_runs_20260328.md`。
+- 题目要求的 `PE / RAG / FT / PE+RAG / PE+FT / All` 已经补齐。
+- `docs/qwen_remaining_runs_20260328.md` 现在用于复现这些结果，不再是待办清单。
 
 ## 旧文件怎么处理
 

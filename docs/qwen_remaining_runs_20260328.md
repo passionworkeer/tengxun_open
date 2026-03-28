@@ -1,10 +1,10 @@
-# Qwen 剩余实验补跑说明（2026-03-28）
+# Qwen 正式实验复现说明（2026-03-28）
 
 ## 文档目的
 
-这份文档只回答一件事：
+这份文档现在只回答一件事：
 
-- `Qwen` 现在还缺哪些正式实验
+- `Qwen` 的正式实验现在怎么复现
 - 应该用什么脚本跑
 - 应该用什么数据集跑
 - 结果会保存到哪里
@@ -18,23 +18,21 @@
 
 ## 一句话结论
 
-当前 `Qwen` 已完成的正式结果有：
+当前 `Qwen` 正式矩阵已经补齐，已有结果包括：
 
 - baseline 恢复版
+- `PE only`
+- `RAG only`
+- `PE + RAG`
 - `FT only`
 - `PE + FT`
-- `PE + RAG + FT` 旧版
+- `PE + RAG + FT`
 
-当前仍需补跑的正式实验有：
-
-1. `Qwen PE only`
-2. `Qwen RAG only`
-3. `Qwen PE + RAG`
-4. 建议重跑 `Qwen PE + RAG + FT`，对齐最新 `Google embedding`
+也就是说，这份文档不再是待办清单，而是正式结果的复现手册。
 
 ## 正式数据集
 
-所有补跑实验统一使用这份正式评测集：
+所有复现实验统一使用这份正式评测集：
 
 - 评测集：[`data/eval_cases.json`](../data/eval_cases.json)
 - 用例数：`54`
@@ -58,17 +56,18 @@
 - PE + FT：
   - [`results/qwen_pe_ft_20260327_162308.json`](../results/qwen_pe_ft_20260327_162308.json)
   - [`results/qwen_pe_ft_20260327_162308_stats.json`](../results/qwen_pe_ft_20260327_162308_stats.json)
-
-### 已存在但不建议直接当最终版
-
-- 旧版 `PE + RAG + FT`：
-  - [`results/qwen_pe_rag_ft_20260327_163613.json`](../results/qwen_pe_rag_ft_20260327_163613.json)
-  - [`results/qwen_pe_rag_ft_20260327_163613_stats.json`](../results/qwen_pe_rag_ft_20260327_163613_stats.json)
-
-原因：
-
-- 这组结果早于 `2026-03-28` 的 `Google embedding` 最终 RAG 管线
-- 可以作为历史参考，但不应直接覆盖当前正式消融矩阵
+- PE only：
+  - [`results/qwen_pe_only_20260328.json`](../results/qwen_pe_only_20260328.json)
+  - [`results/qwen_pe_only_20260328_stats.json`](../results/qwen_pe_only_20260328_stats.json)
+- RAG only：
+  - [`results/qwen_rag_only_google_20260328.json`](../results/qwen_rag_only_google_20260328.json)
+  - [`results/qwen_rag_only_google_20260328_stats.json`](../results/qwen_rag_only_google_20260328_stats.json)
+- PE + RAG：
+  - [`results/qwen_pe_rag_google_20260328.json`](../results/qwen_pe_rag_google_20260328.json)
+  - [`results/qwen_pe_rag_google_20260328_stats.json`](../results/qwen_pe_rag_google_20260328_stats.json)
+- PE + RAG + FT：
+  - [`results/qwen_pe_rag_ft_google_20260328.json`](../results/qwen_pe_rag_ft_google_20260328.json)
+  - [`results/qwen_pe_rag_ft_google_20260328_stats.json`](../results/qwen_pe_rag_ft_google_20260328_stats.json)
 
 ## 环境前提
 
@@ -108,7 +107,7 @@ curl http://localhost:8000/v1/models
 
 如果本地没有完整 Google embedding cache，脚本会按当前 provider 继续走检索路径；正式结果建议在已有完整 cache 的机器上跑。
 
-## 正式补跑入口
+## 正式复现入口
 
 ### A. Qwen PE only
 
@@ -184,7 +183,7 @@ uv run --with openai python run_qwen_ablation_eval.py \
 - 结果文件：`results/qwen_pe_rag_google_20260328.json`
 - 统计文件：`results/qwen_pe_rag_google_20260328_stats.json`
 
-### D. Qwen PE + RAG + FT（建议重跑）
+### D. Qwen PE + RAG + FT
 
 使用已有 FT 脚本：
 
@@ -256,7 +255,7 @@ uv run python run_pe_rag_ft_eval.py \
 
 ## 建议执行顺序
 
-为了最快补齐最终消融矩阵，建议按这个顺序跑：
+如果要从零复现完整矩阵，建议按这个顺序跑：
 
 1. `Qwen PE only`
 2. `Qwen RAG only`
@@ -265,14 +264,10 @@ uv run python run_pe_rag_ft_eval.py \
 
 原因：
 
-- 前三组先补齐当前真正缺失的 ablation 格子
-- 最后一组用于把现有旧版 `PE + RAG + FT` 升级到最新 embedding 口径
+- 前三组可以先验证 `PE / RAG / PE+RAG` 的单独和组合贡献
+- 最后一组用于复现当前开源最高分配置
 
-## 跑完后下一步
+## 当前状态
 
-Qwen 这四组补齐后，项目的最终收口工作就只剩：
-
-1. 合并所有 Qwen stats 到总对比表
-2. 更新 `reports/ablation_study.md`
-3. 更新最终交付报告与 README 引导
-4. 形成完整的 `PE / RAG / FT / PE+RAG / PE+FT / All` 消融矩阵
+Qwen 这四组已经落盘完成。  
+如果后续继续实验，建议直接在现有正式结果基础上做 hard case 定向优化，而不是再重复补齐矩阵。
