@@ -2,10 +2,6 @@
 jedi>=0.19.2
 rank-bm25>=0.2.2
 
-# Parsing and retrieval
-tree-sitter>=0.24.0
-tree-sitter-python>=0.23.6
-
 # Embedding models
 sentence-transformers>=2.7.0
 transformers>=4.40.0
