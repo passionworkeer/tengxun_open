@@ -10,17 +10,17 @@ RAG_REPORT_DIR ?= artifacts/rag
 .PHONY: help eval-baseline eval-pe eval-rag eval-rag-draft eval-ft eval-all train report report-final lint-data
 
 help:
-	@echo "Available targets:"
-	@echo "  make eval-baseline  - summarize the current eval dataset"
-	@echo "  make eval-pe        - preview PE prompt metadata with v2 few-shot assets"
-	@echo "  make eval-rag       - run retrieval metrics on the formal eval dataset"
-	@echo "  make eval-rag-draft - run retrieval metrics on the 32-case round4 draft and write a JSON report"
-	@echo "  make eval-ft        - placeholder for checkpoint evaluation wiring"
-	@echo "  make eval-all       - run summary + retrieval + prompt preview metadata"
-	@echo "  make train          - validate the LoRA scaffold config, then fail until trainer wiring exists"
-	@echo "  make report         - generate final charts + metrics snapshot"
-	@echo "  make report-final   - alias of make report"
-	@echo "  make lint-data      - validate finetune dataset with data_guard.py"
+	@echo "可用目标："
+	@echo "  make eval-baseline  - 输出正式评测集摘要"
+	@echo "  make eval-pe        - 预览 PE 提示词元数据（v2 few-shot 方案）"
+	@echo "  make eval-rag       - 运行正式评测集的检索指标"
+	@echo "  make eval-rag-draft - 运行 32 条 draft 评测集的检索指标并写入 JSON 报告"
+	@echo "  make eval-ft        - 预留给微调模型评测入口"
+	@echo "  make eval-all       - 一次性输出摘要、检索结果与提示词元数据"
+	@echo "  make train          - 校验 LoRA 训练配置并运行训练脚手架"
+	@echo "  make report         - 生成最终图表与指标快照"
+	@echo "  make report-final   - 等同于 make report"
+	@echo "  make lint-data      - 用 data_guard.py 校验微调数据"
 
 eval-baseline:
 	$(PYTHON) -m evaluation.baseline --mode baseline --eval-cases $(EVAL_CASES)
@@ -35,7 +35,7 @@ eval-rag-draft:
 	$(PYTHON) -m evaluation.baseline --mode rag --eval-cases $(RAG_DRAFT_CASES) --query-mode question_only --report-path $(RAG_REPORT_DIR)/rag_eval_round4_question_only.json
 
 eval-ft:
-	@echo "eval-ft is not wired yet; produce a checkpoint first and add a dedicated evaluation entrypoint."
+	@echo "eval-ft 当前还没有单独接线；请先产出 checkpoint，再补专门评测入口。"
 
 eval-all:
 	$(PYTHON) -m evaluation.baseline --mode all --prompt-version v2 --eval-cases $(EVAL_CASES)
@@ -53,7 +53,7 @@ lint-data:
 	$(PYTHON) -m finetune.data_guard $(FINETUNE_DATA)
 
 report-status:
-	@echo "Reports:"
+	@echo "正式报告："
 	@echo "  - reports/DELIVERY_REPORT.md"
 	@echo "  - reports/bottleneck_diagnosis.md"
 	@echo "  - reports/pe_optimization.md"

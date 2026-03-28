@@ -123,26 +123,95 @@ uv run --with openai python run_qwen_ablation_eval.py --mode pe_rag --repo-root 
 
 ## 仓库结构
 
+交付视角下，这个仓库可以理解为：
+
 ```text
-tengxun_open/
-├── README.md
-├── Makefile
-├── data/
-├── evaluation/
-├── pe/
-├── rag/
-├── finetune/
-├── configs/
-├── scripts/
-├── results/
-├── reports/
-├── docs/
-└── img/final_delivery/
+celery-dep-analysis/
+├── README.md                          # 项目总览、核心结论、复现入口
+├── Makefile                           # 一键复现入口
+├── requirements.txt                   # Python 依赖
+├── Dockerfile                         # 统一复现环境
+│
+├── data/                              # 正式数据资产
+│   ├── eval_cases.json                # 54 条正式评测集
+│   ├── finetune_dataset_500.jsonl     # 500 条正式微调数据
+│   └── fewshot_examples_20.json       # 20 条正式 few-shot 示例
+│
+├── evaluation/                        # 模型评测与指标计算
+│   ├── baseline.py                    # 数据摘要 / Prompt 预览 / RAG 检索评测入口
+│   ├── metrics.py                     # F1 / Recall@K / MRR 等指标计算
+│   ├── run_gpt_eval.py                # GPT-5.4 基线评测
+│   ├── run_glm_eval.py                # GLM-5 基线评测
+│   ├── run_gpt_rag_eval.py            # GPT-5.4 端到端 RAG 评测
+│   └── run_qwen_eval.py               # Qwen 基线评测
+│
+├── pe/                                # Prompt Engineering 方案
+│   ├── prompt_templates_v2.py         # System Prompt + CoT + Few-shot 模板
+│   ├── prompt_templates.py            # 旧版提示词模板
+│   └── post_processor.py              # 输出解析、过滤、排序与去重
+│
+├── rag/                               # RAG Pipeline
+│   ├── ast_chunker.py                 # AST 级代码切片
+│   ├── embedding_provider.py          # Embedding Provider 抽象层
+│   └── rrf_retriever.py               # 三路检索 + RRF 融合
+│
+├── finetune/                          # 微调与数据校验
+│   ├── train_lora.py                  # LoRA 训练脚本
+│   └── data_guard.py                  # 数据质量校验流水线
+│
+├── configs/                           # 正式训练配置
+│   ├── lora_9b.toml                   # LoRA 基础配置
+│   ├── qlora_9b.toml                  # QLoRA 配置
+│   └── train_config_20260327_143745.yaml # 实际训练使用配置
+│
+├── experiments/                       # 实验组织层
+│   └── README.md                      # 实验矩阵与后续 Notebook 说明
+│
+├── scripts/                           # 数据、图表、结果整理脚本
+│   ├── generate_final_delivery_assets.py  # 生成最终图表与指标快照
+│   ├── generate_project_progress_report.py # 生成项目进度报告
+│   ├── recover_qwen_baseline.py           # 恢复 Qwen strict baseline
+│   └── precompute_embeddings.py           # 预计算 embedding 缓存
+│
+├── results/                           # 所有原始结果 JSON
+│   ├── gpt5_eval_results.json
+│   ├── glm_eval_scored_20260328.json
+│   ├── qwen_baseline_recovered_summary_20260328.json
+│   ├── qwen_pe_only_20260328_stats.json
+│   ├── qwen_rag_only_google_20260328_stats.json
+│   ├── qwen_pe_rag_google_20260328_stats.json
+│   ├── qwen_ft_20260327_160136_stats.json
+│   ├── qwen_pe_ft_20260327_162308_stats.json
+│   └── qwen_pe_rag_ft_google_20260328_stats.json
+│
+├── reports/                           # 正式报告文档
+│   ├── DELIVERY_REPORT.md             # 总交付报告
+│   ├── bottleneck_diagnosis.md        # 瓶颈诊断报告
+│   ├── pe_optimization.md             # PE 优化报告
+│   ├── rag_pipeline.md                # RAG 技术报告
+│   ├── ablation_study.md              # 完整消融实验报告
+│   └── project_progress_20260328.md   # 项目进度快照
+│
+├── docs/                              # 操作说明与结构文档
+│   ├── repository_map_20260328.md     # 仓库地图与正式文件索引
+│   ├── qwen_remaining_runs_20260328.md # Qwen 实验复现说明
+│   └── SERVER_DATA_GUIDE.md           # 服务器 / 数据使用说明
+│
+└── img/final_delivery/                # 正式图表输出
+    ├── 01_model_baselines_20260328.png
+    ├── 02_pe_progression_20260328.png
+    ├── 03_bottleneck_heatmap_20260328.png
+    ├── 04_rag_retrieval_20260328.png
+    ├── 05_rag_end_to_end_20260328.png
+    ├── 06_qwen_strategies_20260328.png
+    └── 07_training_curve_20260328.png
 ```
 
-完整地图见：
+说明：
 
-- [`docs/repository_map_20260328.md`](docs/repository_map_20260328.md)
+- 仓库当前实际目录名是 `tengxun_open/`
+- 对外汇报或交付时，可以把项目名称写成 `celery-dep-analysis`
+- 真实正式文件地图见 [`docs/repository_map_20260328.md`](docs/repository_map_20260328.md)
 
 ## 权威文档入口
 

@@ -20,18 +20,22 @@
 
 ## 当前正式仓库结构
 
+交付时建议把项目名称表述为 `celery-dep-analysis`。  
+仓库当前真实目录名仍然是 `tengxun_open`，两者对应的是同一套内容。
+
 ```text
-tengxun_open/
-├── README.md
-├── Makefile
-├── requirements.txt
+celery-dep-analysis/
+├── README.md                          # 项目总览、核心结论、复现入口
+├── Makefile                           # 一键复现实验入口
+├── requirements.txt                   # Python 依赖
+├── Dockerfile                         # Docker 复现环境
 │
-├── data/
+├── data/                              # 正式数据资产
 │   ├── eval_cases.json
 │   ├── finetune_dataset_500.jsonl
 │   └── fewshot_examples_20.json
 │
-├── evaluation/
+├── evaluation/                        # 评测代码与指标计算
 │   ├── baseline.py
 │   ├── metrics.py
 │   ├── run_gpt_eval.py
@@ -39,30 +43,36 @@ tengxun_open/
 │   ├── run_gpt_rag_eval.py
 │   └── run_qwen_eval.py
 │
-├── pe/
-│   └── prompt_templates_v2.py
+├── pe/                                # Prompt Engineering 方案
+│   ├── prompt_templates_v2.py
+│   ├── prompt_templates.py
+│   └── post_processor.py
 │
-├── rag/
+├── rag/                               # RAG Pipeline
 │   ├── ast_chunker.py
 │   ├── embedding_provider.py
 │   └── rrf_retriever.py
 │
-├── finetune/
+├── finetune/                          # 微调与数据校验
 │   ├── data_guard.py
 │   └── train_lora.py
 │
-├── configs/
+├── configs/                           # 正式训练配置
 │   ├── lora_9b.toml
 │   ├── qlora_9b.toml
 │   └── train_config_20260327_143745.yaml
 │
-├── scripts/
+├── experiments/                       # 实验组织层
+│   └── README.md
+│
+├── scripts/                           # 数据、图表与结果整理脚本
 │   ├── generate_final_delivery_assets.py
 │   ├── generate_project_progress_report.py
 │   ├── recover_qwen_baseline.py
+│   ├── precompute_embeddings.py
 │   └── ...
 │
-├── results/
+├── results/                           # 所有原始结果 JSON
 │   ├── gpt5_eval_results.json
 │   ├── glm_eval_results.json
 │   ├── glm_eval_scored_20260328.json
@@ -70,10 +80,13 @@ tengxun_open/
 │   ├── pe_eval_54_20260328/
 │   ├── gpt_rag_e2e_54cases_20260328.json
 │   ├── qwen_ft_20260327_160136*.json
+│   ├── qwen_pe_only_20260328*.json
+│   ├── qwen_rag_only_google_20260328*.json
+│   ├── qwen_pe_rag_google_20260328*.json
 │   ├── qwen_pe_ft_20260327_162308*.json
-│   └── qwen_pe_rag_ft_20260327_163613*.json
+│   └── qwen_pe_rag_ft_google_20260328*.json
 │
-├── reports/
+├── reports/                           # 正式交付报告
 │   ├── DELIVERY_REPORT.md
 │   ├── bottleneck_diagnosis.md
 │   ├── pe_optimization.md
@@ -82,11 +95,12 @@ tengxun_open/
 │   ├── project_progress_20260328.md
 │   └── final_metrics_snapshot_20260328.json
 │
-├── docs/
+├── docs/                              # 结构文档与操作说明
 │   ├── repository_map_20260328.md
-│   └── qwen_remaining_runs_20260328.md
+│   ├── qwen_remaining_runs_20260328.md
+│   └── SERVER_DATA_GUIDE.md
 │
-└── img/final_delivery/
+└── img/final_delivery/                # 正式图表输出
     ├── 01_model_baselines_20260328.png
     ├── 02_pe_progression_20260328.png
     ├── 03_bottleneck_heatmap_20260328.png
@@ -118,9 +132,12 @@ tengxun_open/
 - [`results/qwen_baseline_recovered_summary_20260328.json`](../results/qwen_baseline_recovered_summary_20260328.json)
 - [`results/pe_eval_54_20260328/pe_summary.json`](../results/pe_eval_54_20260328/pe_summary.json)
 - [`results/gpt_rag_e2e_54cases_20260328_summary.json`](../results/gpt_rag_e2e_54cases_20260328_summary.json)
+- [`results/qwen_pe_only_20260328_stats.json`](../results/qwen_pe_only_20260328_stats.json)
+- [`results/qwen_rag_only_google_20260328_stats.json`](../results/qwen_rag_only_google_20260328_stats.json)
+- [`results/qwen_pe_rag_google_20260328_stats.json`](../results/qwen_pe_rag_google_20260328_stats.json)
 - [`results/qwen_ft_20260327_160136_stats.json`](../results/qwen_ft_20260327_160136_stats.json)
 - [`results/qwen_pe_ft_20260327_162308_stats.json`](../results/qwen_pe_ft_20260327_162308_stats.json)
-- [`results/qwen_pe_rag_ft_20260327_163613_stats.json`](../results/qwen_pe_rag_ft_20260327_163613_stats.json)
+- [`results/qwen_pe_rag_ft_google_20260328_stats.json`](../results/qwen_pe_rag_ft_google_20260328_stats.json)
 
 ### `reports/`
 
