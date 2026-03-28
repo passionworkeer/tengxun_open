@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import argparse
+import os
 import time
 import re
 from pathlib import Path
@@ -21,7 +22,7 @@ from evaluation.metrics import compute_set_metrics
 
 
 BASE_URL = "https://aigw-gzgy2.cucloud.cn:8443"
-API_KEY = "sk-sp-oRAg9bMjrnEZjXpIW2NqXPeN6RtW3LpM"
+API_KEY = os.environ.get("CUCLOUD_API_KEY", "")
 MODEL = "glm-5"
 MAX_TOKENS = 16384
 
@@ -206,6 +207,8 @@ def main() -> int:
     )
     parser.add_argument("--max-cases", type=int, default=None)
     args = parser.parse_args()
+    if not args.api_key:
+        raise SystemExit("CUCLOUD_API_KEY is not set and --api-key was not provided.")
 
     cases = load_eval_cases(args.cases)
     print(f"Loaded {len(cases)} cases. max_tokens={MAX_TOKENS}")

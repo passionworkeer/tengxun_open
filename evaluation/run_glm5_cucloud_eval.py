@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import argparse
+import os
 import time
 import re
 import signal
@@ -216,7 +217,7 @@ def main() -> int:
         description="Run GLM-5 evaluation via Anthropic SDK on cucloud."
     )
     parser.add_argument(
-        "--api-key", type=str, default="sk-sp-oRAg9bMjrnEZjXpIW2NqXPeN6RtW3LpM"
+        "--api-key", type=str, default=os.environ.get("CUCLOUD_API_KEY", "")
     )
     parser.add_argument(
         "--base-url",
@@ -238,6 +239,8 @@ def main() -> int:
     parser.add_argument("--request-timeout", type=int, default=180)
     parser.add_argument("--max-cases", type=int, default=None)
     args = parser.parse_args()
+    if not args.api_key:
+        raise SystemExit("CUCLOUD_API_KEY is not set and --api-key was not provided.")
 
     cases = load_eval_cases(args.cases)
     print(f"Loaded {len(cases)} eval cases.")

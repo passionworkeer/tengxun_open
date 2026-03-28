@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 import time
@@ -15,7 +16,7 @@ from evaluation.baseline import EvalCase, load_eval_cases
 from evaluation.metrics import compute_set_metrics
 
 BASE_URL = "https://aigw-gzgy2.cucloud.cn:8443"
-API_KEY = "sk-sp-oRAg9bMjrnEZjXpIW2NqXPeN6RtW3LpM"
+API_KEY = os.environ.get("CUCLOUD_API_KEY", "")
 MODEL = "glm-5"
 MAX_TOKENS = 16384
 CASES_PATH = Path("data/eval_cases.json")
@@ -73,6 +74,8 @@ def compute_f1(pred, gt):
 
 
 def run():
+    if not API_KEY:
+        raise SystemExit("CUCLOUD_API_KEY is not set.")
     done = json.loads(OUTPUT_PATH.read_text(encoding="utf-8"))
     done_ids = {r["case_id"] for r in done}
 

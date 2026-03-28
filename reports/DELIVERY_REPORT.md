@@ -65,8 +65,27 @@
 ### 4.1 结论
 
 - GPT-5.4 是当前明显的商业模型上界。
-- GLM-5 在当前任务上的主要问题不是“会不会想”，而是输出过长、被 thinking 吃掉预算，最终 FQN 落地能力弱。
+- GLM-5 在本任务上更常输出自然语言描述而不是结构化 FQN JSON，导致评分工具难以稳定解析；`0.0666` 更反映输出格式适配问题，而不是模型代码理解能力的绝对上界。
 - Qwen 原始 baseline 的主要问题是解析失败和输出不稳定，因此 strict baseline 很低。
+
+### 4.2 评测口径说明
+
+GPT-5.4 与 GLM-5 使用完全相同的 baseline prompt：
+
+- 单条 `user` 消息
+- 相同的 `build_prompt_v2` 问题组织方式
+- 相同的 `Return only a JSON object` 输出要求
+
+因此这两个商业模型之间的对比是严格公平的。
+
+Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`。原因不是为了“优化分数”，而是为了让开源模型至少能输出可解析的结构化结果；即便在这个最小约束下，正式 strict baseline 仍然有 `45/54` 的 parse failure，平均 F1 只有 `0.0370`。
+
+因此 Qwen baseline 的数字应理解为：
+
+- “在最低限度格式约束下的开源模型起点”
+- 主要用于支撑 `PE / RAG / FT / All` 在同一模型内部的相对增益分析
+
+而不是与 GPT-5.4 / GLM-5 做完全同口径的绝对横向比较。
 
 ## 5. Prompt Engineering 系统优化
 
@@ -155,7 +174,7 @@
 | 微调数据集 | `data/finetune_dataset_500.jsonl` |
 | 训练轮数 | `3` |
 | 有效 batch | `batch=2, grad_accum=8` |
-| LoRA rank / alpha | `16 / 32` |
+| LoRA rank / alpha | `4 / 8` |
 
 ### 7.2 训练日志摘要
 
@@ -198,6 +217,13 @@
 如果需要在相同环境重现实验，执行命令已单独整理到：
 
 - [`../docs/qwen_remaining_runs_20260328.md`](../docs/qwen_remaining_runs_20260328.md)
+
+### 8.3 一个反直觉但重要的现象
+
+- `Qwen PE + RAG = 0.1534`，明显低于 `Qwen PE only = 0.2246`
+- 这说明未微调的 Qwen 虽然能从 PE 中获得输出约束收益，但还不能稳定利用额外检索上下文
+- 检索结果引入更多跨文件片段后，模型更容易被噪声干扰，输出格式和最终 FQN 收敛反而变差
+- 只有在加入 FT 后，模型才具备把检索上下文转化为稳定 FQN 输出的能力，因此 `PE + RAG + FT = 0.4435` 才真正体现出 RAG 的价值
 
 ## 9. 当前最稳的策略选择
 

@@ -176,7 +176,7 @@
 ```bash
 # GPT-5.4
 python3 -m evaluation.run_gpt_eval \
-    --api-key "sk-..." \
+    --api-key "<api-key>" \
     --cases data/eval_cases_migrated_draft_round4.json \
     --output results/gpt5_eval_results.json \
     --max-cases 50

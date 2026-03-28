@@ -7,8 +7,8 @@ PE（Prompt Engineering）四维度逐步叠加评测脚本
 每步独立记录 Easy / Medium / Hard / Avg F1。
 
 用法：
-  python -m scripts.run_pe_eval --api-key sk-xxx
-  python -m scripts.run_pe_eval --api-key sk-xxx --max-cases 5  # 调试用
+  python -m scripts.run_pe_eval --api-key <api-key>
+  python -m scripts.run_pe_eval --api-key <api-key> --max-cases 5  # 调试用
 """
 
 from __future__ import annotations

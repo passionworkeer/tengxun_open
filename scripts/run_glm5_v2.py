@@ -1,6 +1,7 @@
 """GLM-5 cucloud 评测 v2 - 带 resume，保存全部原始输出"""
 
 import json
+import os
 import re
 import sys
 import time
@@ -12,7 +13,7 @@ import anthropic
 from evaluation.baseline import load_eval_cases
 from evaluation.metrics import compute_set_metrics
 
-API_KEY = "sk-sp-oRAg9bMjrnEZjXpIW2NqXPeN6RtW3LpM"
+API_KEY = os.environ.get("CUCLOUD_API_KEY", "")
 BASE_URL = "https://aigw-gzgy2.cucloud.cn:8443"
 MODEL = "glm-5"
 CASES_PATH = Path("data/eval_cases.json")
@@ -100,6 +101,8 @@ def compute_f1(pred, gt_dict):
 
 
 def main():
+    if not API_KEY:
+        raise SystemExit("CUCLOUD_API_KEY is not set.")
     cases = load_eval_cases(CASES_PATH)
     print(f"Loaded {len(cases)} eval cases")
 
