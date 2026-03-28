@@ -1,0 +1,22 @@
+[
+  {
+    "variant": "fewshot",
+    "num_cases": 54,
+    "easy_f1": 0.6229,
+    "medium_f1": 0.4993,
+    "hard_f1": 0.5327,
+    "avg_f1": 0.546,
+    "avg_macro_f1": 0.4035,
+    "avg_mislayer_rate": 0.1679
+  },
+  {
+    "variant": "postprocess",
+    "num_cases": 54,
+    "easy_f1": 0.6181,
+    "medium_f1": 0.598,
+    "hard_f1": 0.5708,
+    "avg_f1": 0.5935,
+    "avg_macro_f1": 0.3323,
+    "avg_mislayer_rate": 0.3074
+  }
+]

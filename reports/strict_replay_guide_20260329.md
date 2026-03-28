@@ -52,6 +52,27 @@
 
 详见：`reports/strict_scoring_audit_20260329.md`
 
+### 本分支已完成的 strict replay
+
+本次实际新跑出的结果如下：
+
+| Replay | 结果文件 | Union F1 | Active-Layer Macro F1 | Mislayer Rate |
+|---|---|---:|---:|---:|
+| GPT PE few-shot strict replay | `results/pe_eval_strict_replay_20260329/pe_fewshot_strict.json` | 0.5460 | 0.4035 | 0.1679 |
+| GPT PE postprocess strict replay | `results/pe_eval_strict_replay_20260329/pe_postprocess_strict.json` | 0.5935 | 0.3323 | 0.3074 |
+| GLM baseline replay (`thinking-mode=disabled`) | `results/glm_eval_strict_replay_20260329_strict.json` | 0.0967 | 0.0432 | 0.0926 |
+
+与历史结果相比：
+
+- GPT PE few-shot：`union -0.0272`，`macro -0.0233`，`mislayer -0.0015`
+- GPT PE postprocess：`union -0.0127`，`macro -0.0233`，`mislayer +0.0037`
+- GLM baseline replay：`union +0.0301`，`macro +0.0037`，`mislayer +0.0370`
+
+这组 replay 支持两个结论：
+
+- few-shot 增益在 strict 资产上仍然成立，不是靠污染撑出来的。
+- postprocess 的确更偏向“提 union、伤层级”，因为 strict macro 比 few-shot 更低，而 mislayer 更高。
+
 ## 3. 哪些结果必须重跑，哪些不用
 
 ### 必须重跑
@@ -129,6 +150,7 @@ python3 -m evaluation.run_glm_eval \
   --api-key "<your-glm-api-key>" \
   --model glm-5 \
   --base-url https://open.bigmodel.cn/api/paas/v4 \
+  --thinking-mode disabled \
   --cases data/eval_cases.json \
   --output results/glm_eval_strict_replay.json
 
@@ -197,6 +219,6 @@ make rescore-strict
 
 ## 7. 当前建议
 
-- 当前最值得立刻重跑的是 GPT PE 的 `fewshot` 和 `postprocess`。
-- 当前不建议为了“看起来完整”去重跑 GLM；价值不高。
+- GPT PE 的 `fewshot` 和 `postprocess` 已经完成 strict replay，可以直接用于答辩。
+- GLM baseline 已完成一次可复验重跑，但要记得固定 `--thinking-mode disabled`。
 - Qwen 如果时间紧，可以先不重跑，把 strict 训练入口和脚本准备好；只有在你准备更新 FT 主结论时再启动。
