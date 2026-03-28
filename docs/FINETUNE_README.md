@@ -83,6 +83,7 @@ make qwen-strict-rerun
 ```
 
 收口说明见：`reports/qwen_strict_closeout_20260329.md`
+GPU runbook 见：`docs/qwen_strict_gpu_runbook_20260329.md`
 
 ## 3. 正式评测入口
 

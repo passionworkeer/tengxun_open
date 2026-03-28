@@ -58,6 +58,7 @@
 - strict PE 搜索增补：[`reports/strict_pe_search_20260329.md`](reports/strict_pe_search_20260329.md)
 - strict FT 执行状态：[`reports/strict_ft_execution_status_20260329.md`](reports/strict_ft_execution_status_20260329.md)
 - Qwen strict-clean 收口说明：[`reports/qwen_strict_closeout_20260329.md`](reports/qwen_strict_closeout_20260329.md)
+- Qwen strict-clean GPU runbook：[`docs/qwen_strict_gpu_runbook_20260329.md`](docs/qwen_strict_gpu_runbook_20260329.md)
 - 训练证据审计：[`reports/training_evidence_audit_20260329.md`](reports/training_evidence_audit_20260329.md)
 - 答辩主讲稿：[`reports/defense_script_20260329.md`](reports/defense_script_20260329.md)
 - 导师追问 Q&A：[`reports/defense_qa_20260329.md`](reports/defense_qa_20260329.md)
@@ -90,6 +91,7 @@ python3 scripts/run_pe_eval.py \
 
 make train-strict
 make qwen-strict-rerun
+RUN_NAME=strict_clean_20260329 ./scripts/package_qwen_strict_run.sh
 ```
 
 ## 图表速览
