@@ -91,9 +91,22 @@
 
 ## Quick Start
 
+### 0. 安装依赖
+
+```bash
+pip install -r requirements.txt
+```
+
+如果你要跑 LoRA / QLoRA 训练，再额外安装：
+
+```bash
+pip install -r requirements-finetune.txt
+```
+
 ### 1. 数据检查
 
 ```bash
+export PYTHONPATH=.
 make lint-data
 ```
 
@@ -101,8 +114,12 @@ make lint-data
 
 ```bash
 make eval-baseline
+export EMBEDDING_PROVIDER=google
+export GOOGLE_API_KEY=你的_google_key
 make eval-rag
 ```
+
+`make eval-rag` 使用正式的 Google embedding 口径，运行前需要先设置 `EMBEDDING_PROVIDER=google` 和 `GOOGLE_API_KEY`。
 
 ### 3. 生成最终图表与指标快照
 
@@ -209,7 +226,7 @@ celery-dep-analysis/
 
 说明：
 
-- 仓库当前实际目录名是 `tengxun_open/`
+- 仓库当前实际目录名是 `tengxun/`
 - 对外汇报或交付时，可以把项目名称写成 `celery-dep-analysis`
 - 真实正式文件地图见 [`docs/repository_map_20260328.md`](docs/repository_map_20260328.md)
 

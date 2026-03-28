@@ -1,11 +1,6 @@
 # Core analysis
-networkx>=3.3
 jedi>=0.19.2
 rank-bm25>=0.2.2
-
-# Parsing and retrieval
-tree-sitter>=0.24.0
-tree-sitter-python>=0.23.6
 
 # Embedding models
 sentence-transformers>=2.7.0
@@ -16,13 +11,6 @@ openai>=1.30.0
 anthropic>=0.25.0
 zhipuai>=2.0.0
 
-# Fine-tuning
-torch>=2.0.0
-peft>=0.10.0
-bitsandbytes>=0.43.0
-datasets>=2.19.0
-accelerate>=0.30.0
-
 # Reporting
 matplotlib>=3.9.2
 pandas>=2.2.0
@@ -30,3 +18,6 @@ seaborn>=0.13.0
 
 # Notebook
 jupyter>=1.0.0
+
+# Testing
+pytest>=7.4.0

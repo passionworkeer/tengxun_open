@@ -116,6 +116,18 @@ def load_qwen_stats(path: Path) -> dict[str, Any]:
     }
 
 
+def difficulty_avg(summary: dict[str, Any], difficulty: str) -> float:
+    by_difficulty = summary.get("by_difficulty")
+    if isinstance(by_difficulty, dict):
+        return float(by_difficulty[difficulty]["avg_f1"])
+
+    rows = summary.get("difficulty_summary", [])
+    for row in rows:
+        if row.get("name") == difficulty:
+            return float(row["avg_f1"])
+    raise KeyError(f"Missing difficulty summary for {difficulty}")
+
+
 def parse_training_log(log_path: Path) -> dict[str, Any]:
     pattern = re.compile(r"^\{'loss':")
     points: list[tuple[float, float]] = []
@@ -161,16 +173,21 @@ def make_model_baselines_chart(
 ) -> None:
     labels = ["Easy", "Medium", "Hard", "Avg"]
     gpt_vals = [
-        gpt_summary["by_difficulty"]["easy"]["avg_f1"],
-        gpt_summary["by_difficulty"]["medium"]["avg_f1"],
-        gpt_summary["by_difficulty"]["hard"]["avg_f1"],
+        difficulty_avg(gpt_summary, "easy"),
+        difficulty_avg(gpt_summary, "medium"),
+        difficulty_avg(gpt_summary, "hard"),
         gpt_summary["avg_f1"],
     ]
-    glm_vals = [0.1048, 0.0681, 0.0367, 0.0666]
+    glm_vals = [
+        difficulty_avg(glm_summary, "easy"),
+        difficulty_avg(glm_summary, "medium"),
+        difficulty_avg(glm_summary, "hard"),
+        glm_summary["avg_f1"],
+    ]
     qwen_vals = [
-        qwen_summary["by_difficulty"]["easy"]["avg_f1"],
-        qwen_summary["by_difficulty"]["medium"]["avg_f1"],
-        qwen_summary["by_difficulty"]["hard"]["avg_f1"],
+        difficulty_avg(qwen_summary, "easy"),
+        difficulty_avg(qwen_summary, "medium"),
+        difficulty_avg(qwen_summary, "hard"),
         qwen_summary["avg_f1"],
     ]
 

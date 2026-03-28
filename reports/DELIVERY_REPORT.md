@@ -122,7 +122,7 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 源码切片(AST chunking)
 -> 三路检索(BM25 / Semantic / Graph)
 -> RRF 融合
--> 上下文构造(question + entry_symbol + entry_file)
+-> 上下文构造(question_plus_entry；仅 5/54 条样本含 entry_symbol / entry_file)
 -> 生成模型输出 FQN JSON
 ```
 

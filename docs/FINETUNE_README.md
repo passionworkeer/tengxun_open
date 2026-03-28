@@ -18,7 +18,7 @@ GPT-5.4 评测结果
       ▼
 ┌─────────────────┐
 │ LoRA 微调训练   │  scripts/train_lora.sh
-│ Qwen3.5-7B     │
+│ Qwen3.5-9B     │
 └─────────────────┘
       │
       ▼
@@ -42,16 +42,13 @@ GPT-5.4 评测结果
 | `scripts/train_lora.sh` | LoRA 微调训练 |
 | `scripts/run_finetuned_eval.py` | 微调后模型评测 |
 | `scripts/compare_results.py` | 对比 GPT5 和微调后结果 |
-| `scripts/run_full_pipeline.sh` | 一键运行全部流程 |
 | `scripts/run_qwen_eval.sh` | Qwen3.5 本地部署评测 |
 
 ## 使用方法
 
 ### 方式1: 一键运行全部流程
 
-```bash
-./scripts/run_full_pipeline.sh all
-```
+当前没有单独的总控脚本，按下面 Step 1 到 Step 4 依次执行即可。
 
 ### 方式2: 分步运行
 
@@ -99,7 +96,7 @@ python scripts/compare_results.py \
 
 ## Qwen3.5 本地部署评测
 
-如果你已经在服务器上部署了 Qwen3.5:
+如果你已经在服务器上部署了 Qwen3.5-9B:
 
 ```bash
 # 确认服务运行中
@@ -112,19 +109,15 @@ curl http://localhost:8000/v1/models
 ## 依赖
 
 ```bash
-pip install \
-    transformers \
-    peft \
-    datasets \
-    accelerate \
-    bitsandbytes \
-    scipy \
-    numpy \
-    matplotlib
+pip install -r requirements-finetune.txt
 ```
+
+`requirements.txt` 只覆盖基线评测、RAG 检索、报告与测试依赖；
+训练相关的 GPU / LoRA 依赖单独放在 `requirements-finetune.txt`，
+避免在非 Linux、非 CUDA 环境里做冷启动验证时直接安装失败。
 
 ## 注意事项
 
-1. **GPU 显存**: 7B 模型 + LoRA 需要约 16GB 显存，建议使用 A100 或同等算力
+1. **GPU 显存**: 9B 模型 + LoRA 需要约 16GB 以上显存，建议使用 A100 或同等算力
 2. **训练时间**: 3 epochs 约需 1-2 小时（取决于数据量和硬件）
 3. **数据质量**: `--min-f1 0.5` 只选择高质量样本，避免学习错误模式

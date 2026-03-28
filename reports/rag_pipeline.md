@@ -20,7 +20,7 @@ Celery 源码
 -> AST chunker
 -> 3 路索引(BM25 / Semantic / Graph)
 -> RRF 融合
--> question + entry_symbol + entry_file 构造查询
+-> question_plus_entry（仅 5/54 条样本含 entry_symbol / entry_file）构造查询
 -> Top-K context build
 -> 送入生成模型
 -> JSON/FQN 输出

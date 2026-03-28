@@ -141,6 +141,11 @@ def validate_fqn(fqn: str, source_dir: Path) -> tuple[bool, str]:
     if parts[0] in ("kombu", "vine", "billiard", "pydantic", "eventlet", "gevent"):
         return True, "外部包"
 
+    if not source_dir.exists():
+        if parts[0] == "celery":
+            return True, "源码目录缺失，内部 FQN 仅做格式校验"
+        return False, "源码目录缺失，无法验证外部符号"
+
     # 跳过第一个 celery 前缀（因为 source_dir 已经包含了）
     if parts[0] == "celery":
         parts = parts[1:]

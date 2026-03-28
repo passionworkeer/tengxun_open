@@ -29,6 +29,7 @@ from pe.prompt_templates_v2 import (
     format_few_shot_example,
 )
 from rag.rrf_retriever import HybridRetriever, build_retriever
+from rag.embedding_provider import resolve_embedding_config
 
 
 BASE_MODEL = "Qwen/Qwen3.5-9B"
@@ -37,6 +38,19 @@ DATA_PATH = Path("data/eval_cases.json")
 REPO_ROOT = Path("external/celery")
 MAX_NEW_TOKENS = 500
 RAG_TOP_K = 5
+PER_SOURCE = 12
+RRF_K = 30
+QUERY_MODE = "question_plus_entry"
+MAX_CONTEXT_TOKENS = 4096
+
+
+def parse_weights(raw: str | None) -> dict[str, float] | None:
+    if not raw:
+        return None
+    parts = [float(item.strip()) for item in raw.split(",")]
+    if len(parts) != 3:
+        raise ValueError("weights must have exactly 3 comma-separated values")
+    return {"bm25": parts[0], "semantic": parts[1], "graph": parts[2]}
 
 
 def load_model(base_model_path: str, adapter_path: str):
@@ -80,6 +94,11 @@ def retrieve_context(
     entry_symbol: str = "",
     entry_file: str = "",
     top_k: int = RAG_TOP_K,
+    per_source: int = PER_SOURCE,
+    query_mode: str = QUERY_MODE,
+    rrf_k: int = RRF_K,
+    weights: dict[str, float] | None = None,
+    max_context_tokens: int = MAX_CONTEXT_TOKENS,
 ) -> str:
     """使用RAG检索相关上下文"""
     if retriever is None:
@@ -90,6 +109,11 @@ def retrieve_context(
             entry_symbol=entry_symbol,
             entry_file=entry_file,
             top_k=top_k,
+            per_source=per_source,
+            query_mode=query_mode,
+            rrf_k=rrf_k,
+            weights=weights,
+            max_context_tokens=max_context_tokens,
         )
         return context
     except Exception as e:
@@ -223,11 +247,24 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=None)
     parser.add_argument("--max-cases", type=int, default=None)
     parser.add_argument("--rag-top-k", type=int, default=RAG_TOP_K)
+    parser.add_argument("--per-source", type=int, default=PER_SOURCE)
+    parser.add_argument("--query-mode", default=QUERY_MODE)
+    parser.add_argument("--rrf-k", type=int, default=RRF_K)
+    parser.add_argument(
+        "--weights",
+        type=str,
+        default=None,
+        help="Optional comma-separated bm25,semantic,graph weights.",
+    )
+    parser.add_argument("--max-context-tokens", type=int, default=MAX_CONTEXT_TOKENS)
     args = parser.parse_args()
 
     if args.output is None:
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
         args.output = Path(f"results/qwen_pe_rag_ft_{ts}.json")
+
+    weights = parse_weights(args.weights)
+    embedding_config = resolve_embedding_config()
 
     # 初始化RAG
     retriever = init_rag(args.repo_root)
@@ -255,6 +292,11 @@ def main() -> int:
             case.entry_symbol,
             case.entry_file,
             top_k=args.rag_top_k,
+            per_source=args.per_source,
+            query_mode=args.query_mode,
+            rrf_k=args.rrf_k,
+            weights=weights,
+            max_context_tokens=args.max_context_tokens,
         )
 
         messages = build_pe_rag_messages(case, context)
@@ -305,9 +347,53 @@ def main() -> int:
     stats = analyze_results(results)
     stats["strategy"] = "PE+RAG+FT" if rag_available else "PE+FT (RAG unavailable)"
     stats["rag_available"] = rag_available
+    stats["model"] = args.base_model
+    stats["adapter_path"] = args.adapter_path
+    stats["eval_cases"] = str(args.cases)
+    stats["embedding"] = {
+        "provider": embedding_config.provider,
+        "model": embedding_config.model,
+        "dimension": embedding_config.dimension,
+        "cache_file": str(embedding_config.cache_file),
+    }
+    if rag_available:
+        stats["rag"] = {
+            "repo_root": str(args.repo_root),
+            "rag_top_k": args.rag_top_k,
+            "per_source": args.per_source,
+            "query_mode": args.query_mode,
+            "rrf_k": args.rrf_k,
+            "weights": weights,
+            "max_context_tokens": args.max_context_tokens,
+        }
     stats_path = args.output.parent / f"{args.output.stem}_stats.json"
     stats_path.write_text(
         json.dumps(stats, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
+    config_path = args.output.parent / f"{args.output.stem}_config.json"
+    config_snapshot = {
+        "experiment": "Qwen PE+RAG+FT",
+        "date": datetime.now().strftime("%Y-%m-%d"),
+        "model": args.base_model,
+        "ft_checkpoint": args.adapter_path,
+        "eval_cases": str(args.cases),
+        "n_cases": len(cases),
+        "embedding": stats["embedding"],
+        "rag": {
+            "available": rag_available,
+            "repo_root": str(args.repo_root),
+            "rag_top_k": args.rag_top_k,
+            "per_source": args.per_source,
+            "query_mode": args.query_mode,
+            "rrf_k": args.rrf_k,
+            "weights": weights,
+            "max_context_tokens": args.max_context_tokens,
+        },
+        "output_file": str(args.output),
+        "stats_file": str(stats_path),
+    }
+    config_path.write_text(
+        json.dumps(config_snapshot, indent=2, ensure_ascii=False), encoding="utf-8"
     )
 
     # 打印结果
@@ -328,6 +414,7 @@ def main() -> int:
         )
     print(f"\n结果文件: {args.output}")
     print(f"统计文件: {stats_path}")
+    print(f"配置快照: {config_path}")
     return 0
 
 
