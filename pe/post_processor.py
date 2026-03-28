@@ -34,7 +34,15 @@ def normalize_fqn(value: str) -> str:
 
     处理引号、转义符，统一格式。
     """
-    return value.strip().strip('"').strip("'").replace(":", ".")
+    text = value.strip().strip('"').strip("'")
+    text = text.replace("::", ".")
+    text = text.replace(":", ".")
+    text = text.replace("/", ".")
+    text = text.replace(".py.", ".")
+    if text.endswith(".py"):
+        text = text[:-3]
+    text = re.sub(r"\.+", ".", text).strip(".")
+    return text
 
 
 def is_valid_fqn(value: str) -> bool:
@@ -77,6 +85,60 @@ def parse_model_output(
     return dedupe_preserve_order(
         candidate for candidate in candidates if is_valid_fqn(candidate)
     )
+
+
+def parse_model_output_layers(
+    raw_output: str,
+    allowed_fqns: Sequence[str] | None = None,
+) -> dict[str, list[str]] | None:
+    """
+    优先保留 direct / indirect / implicit 三层结构。
+
+    若输出可解析成 JSON，则逐层清洗；
+    若无法解析，返回 None，由上层决定是否退回扁平模式。
+    """
+
+    text = raw_output.strip()
+    if not text:
+        return None
+
+    fenced = CODE_FENCE_PATTERN.search(text)
+    if fenced:
+        text = fenced.group(1).strip()
+
+    try:
+        parsed = json.loads(text)
+    except json.JSONDecodeError:
+        return None
+
+    if not isinstance(parsed, dict):
+        return None
+    ground_truth = parsed.get("ground_truth", parsed)
+    if not isinstance(ground_truth, dict):
+        return None
+
+    allow_set = None
+    if allowed_fqns is not None:
+        allow_set = {normalize_fqn(item) for item in allowed_fqns}
+
+    layers: dict[str, list[str]] = {}
+    for key in ("direct_deps", "indirect_deps", "implicit_deps"):
+        values = ground_truth.get(key, [])
+        if not isinstance(values, list):
+            layers[key] = []
+            continue
+        cleaned = []
+        for value in values:
+            if not isinstance(value, str):
+                continue
+            normalized = normalize_fqn(value)
+            if not is_valid_fqn(normalized):
+                continue
+            if allow_set is not None and normalized not in allow_set:
+                continue
+            cleaned.append(normalized)
+        layers[key] = dedupe_preserve_order(cleaned)
+    return layers
 
 
 def dedupe_preserve_order(items: Iterable[str]) -> list[str]:

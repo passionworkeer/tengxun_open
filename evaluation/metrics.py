@@ -9,10 +9,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import re
 from typing import Any, Iterable, Mapping, Sequence
 
 
 LAYER_KEYS = ("direct_deps", "indirect_deps", "implicit_deps")
+_SEPARATOR_RE = re.compile(r"\.+")
 
 
 def _safe_divide(numerator: float, denominator: float) -> float:
@@ -102,6 +104,23 @@ def compute_set_metrics(
     return ClassificationMetrics(precision=precision, recall=recall, f1=f1)
 
 
+def canonicalize_dependency_symbol(value: str) -> str:
+    """
+    将模型输出中常见的路径写法归一成 dotted symbol。
+    """
+
+    item = value.strip().strip('"').strip("'")
+    if not item:
+        return ""
+    item = item.replace("::", ".")
+    item = item.replace(":", ".")
+    item = item.replace("/", ".")
+    item = item.replace(".py.", ".")
+    if item.endswith(".py"):
+        item = item[:-3]
+    return _SEPARATOR_RE.sub(".", item).strip(".")
+
+
 def normalize_dependency_layers(
     payload: Mapping[str, Iterable[str]] | None,
 ) -> dict[str, list[str]]:
@@ -125,7 +144,7 @@ def normalize_dependency_layers(
         for value in values:
             if not isinstance(value, str):
                 continue
-            item = value.strip()
+            item = canonicalize_dependency_symbol(value)
             if not item or item in seen:
                 continue
             seen.add(item)

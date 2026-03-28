@@ -24,12 +24,15 @@ from openai import OpenAI
 
 from evaluation.baseline import EvalCase, load_eval_cases
 from evaluation.metrics import compute_layered_dependency_metrics
-from pe.post_processor import parse_model_output
+from pe.post_processor import parse_model_output, parse_model_output_layers
 from pe.prompt_templates_v2 import (
     SYSTEM_PROMPT,
     COT_TEMPLATE,
+    LAYER_GUARD_RULES,
+    STRICT_LAYER_COT_TEMPLATE,
     OUTPUT_INSTRUCTIONS,
     build_messages,
+    load_few_shot_examples,
     select_few_shot_examples,
     format_few_shot_example,
 )
@@ -103,6 +106,121 @@ def build_fewshot_messages(case: EvalCase) -> list[dict[str, str]]:
     )
 
 
+def build_fewshot_layer_guard_messages(case: EvalCase) -> list[dict[str, str]]:
+    """更强的层级约束，且移除空 Context 噪声。"""
+    return build_messages(
+        question=case.question,
+        context="",
+        entry_symbol=case.entry_symbol,
+        entry_file=case.entry_file,
+        max_examples=6,
+        system_prompt=f"{SYSTEM_PROMPT.strip()}\n\n{LAYER_GUARD_RULES.strip()}",
+        cot_template=STRICT_LAYER_COT_TEMPLATE,
+        include_empty_context=False,
+    )
+
+
+def build_fewshot_assistant_messages(case: EvalCase) -> list[dict[str, str]]:
+    """使用 assistant 形式 few-shot，提升 JSON 跟随性和层级示范强度。"""
+    return build_messages(
+        question=case.question,
+        context="",
+        entry_symbol=case.entry_symbol,
+        entry_file=case.entry_file,
+        max_examples=6,
+        system_prompt=f"{SYSTEM_PROMPT.strip()}\n\n{LAYER_GUARD_RULES.strip()}",
+        cot_template=STRICT_LAYER_COT_TEMPLATE,
+        include_empty_context=False,
+        assistant_fewshot=True,
+    )
+
+
+def _select_targeted_anchor_ids(case: EvalCase) -> list[str]:
+    query = " ".join(
+        part
+        for part in (case.question, case.entry_symbol or "", case.entry_file or "")
+        if part
+    ).lower()
+    anchors: list[str] = []
+    if any(
+        token in query
+        for token in (
+            "shared_task",
+            "finalize",
+            "proxy",
+            "pending",
+            "promise",
+            "decorator",
+            "@app.task",
+        )
+    ):
+        anchors.extend(["B01", "B04"])
+    if any(
+        token in query
+        for token in (
+            "symbol_by_name",
+            "string",
+            "loader",
+            "django",
+            "backend",
+            "fixup",
+            "unpickle",
+            "import",
+        )
+    ):
+        anchors.extend(["E01", "E02"])
+    if any(
+        token in query
+        for token in ("re-export", "alias", "signature", "uuid", "chord", "subtask")
+    ):
+        anchors.append("C03")
+    if any(token in query for token in ("worker", "cli", "current_app")):
+        anchors.append("A01")
+
+    ordered_unique: list[str] = []
+    seen: set[str] = set()
+    for case_id in anchors or ["B01", "E01"]:
+        if case_id in seen:
+            continue
+        seen.add(case_id)
+        ordered_unique.append(case_id)
+        if len(ordered_unique) >= 3:
+            break
+    return ordered_unique
+
+
+def _build_targeted_library(case: EvalCase):
+    library = list(load_few_shot_examples())
+    by_id = {example.case_id: example for example in library}
+    anchors = [
+        by_id[case_id]
+        for case_id in _select_targeted_anchor_ids(case)
+        if case_id in by_id
+    ]
+    anchor_ids = {example.case_id for example in anchors}
+    dynamic = select_few_shot_examples(
+        question=case.question,
+        context="",
+        entry_symbol=case.entry_symbol,
+        max_examples=max(0, 6 - len(anchors)),
+        library=[example for example in library if example.case_id not in anchor_ids],
+    )
+    return anchors + dynamic
+
+
+def build_fewshot_targeted_messages(case: EvalCase) -> list[dict[str, str]]:
+    """只改 few-shot 选择策略，固定注入易错层级样例，再补动态相似样例。"""
+    targeted_library = _build_targeted_library(case)
+    return build_messages(
+        question=case.question,
+        context="",
+        entry_symbol=case.entry_symbol,
+        entry_file=case.entry_file,
+        max_examples=len(targeted_library),
+        library=targeted_library,
+    )
+
+
 # ── 解析与评估 ────────────────────────────────────────────────────
 
 
@@ -131,28 +249,16 @@ def parse_response_v1(raw: str) -> dict[str, list[str]] | None:
 def parse_response_with_postprocess(
     raw: str, case: EvalCase
 ) -> dict[str, list[str]] | None:
-    """+Post-processing：用 post_processor 做格式净化后再解析"""
+    """+Post-processing：优先保留层级，其次退回扁平提取"""
     text = raw.strip()
     if not text:
         return None
-    # 先用 post_processor 提取 FQN 列表
-    gold_all = (
-        list(case.direct_gold_fqns)
-        + list(case.indirect_gold_fqns)
-        + list(case.implicit_gold_fqns)
-    )
+    layered = parse_model_output_layers(text, allowed_fqns=None)
+    if layered is not None:
+        return layered
     cleaned = parse_model_output(text, allowed_fqns=None)
     if not cleaned:
         return parse_response_v1(raw)
-    # 将清理后的 FQN 放回 ground_truth 结构
-    original = parse_response_v1(raw)
-    if original:
-        # 用 cleaned 中的 FQN 替换原始解析结果中各字段
-        # 由于 post_processor 不区分 dep 类型，统一放到 direct_deps
-        original["direct_deps"] = cleaned
-        original["indirect_deps"] = []
-        original["implicit_deps"] = []
-        return original
     return {"direct_deps": cleaned, "indirect_deps": [], "implicit_deps": []}
 
 
@@ -253,6 +359,24 @@ VARIANTS = [
     ("cot", build_cot_messages, parse_response_v1),
     ("fewshot", build_fewshot_messages, parse_response_v1),
     ("postprocess", build_fewshot_messages, parse_response_with_postprocess),
+    ("fewshot_layer_guard", build_fewshot_layer_guard_messages, parse_response_v1),
+    ("fewshot_assistant", build_fewshot_assistant_messages, parse_response_v1),
+    ("fewshot_targeted", build_fewshot_targeted_messages, parse_response_v1),
+    (
+        "postprocess_layer_guard",
+        build_fewshot_layer_guard_messages,
+        parse_response_with_postprocess,
+    ),
+    (
+        "postprocess_assistant",
+        build_fewshot_assistant_messages,
+        parse_response_with_postprocess,
+    ),
+    (
+        "postprocess_targeted",
+        build_fewshot_targeted_messages,
+        parse_response_with_postprocess,
+    ),
 ]
 
 
@@ -263,6 +387,7 @@ def run_variant(
     cases: list[EvalCase],
     client: OpenAI,
     model: str,
+    temperature: float | None = None,
     max_cases: int | None = None,
 ) -> VariantResult:
     result = VariantResult(name=variant_name)
@@ -286,6 +411,7 @@ def run_variant(
                     messages=messages,
                     stream=False,
                     timeout=300,
+                    **({"temperature": temperature} if temperature is not None else {}),
                 )
                 msg = resp.choices[0].message
                 raw_output = msg.content if msg and msg.content else ""
@@ -325,6 +451,12 @@ def main() -> int:
     parser.add_argument("--api-key", required=True, help="GPT-5.4 API key")
     parser.add_argument("--base-url", default=API_BASE_URL)
     parser.add_argument("--model", default=DEFAULT_MODEL)
+    parser.add_argument(
+        "--temperature",
+        type=float,
+        default=None,
+        help="Optional decoding temperature override for search experiments",
+    )
     parser.add_argument("--cases", type=Path, default=DATA_PATH)
     parser.add_argument("--output-dir", type=Path, default=OUTPUT_DIR)
     parser.add_argument(
@@ -337,12 +469,27 @@ def main() -> int:
         help="Comma-separated variants to run, e.g. fewshot,postprocess",
     )
     parser.add_argument(
+        "--case-ids",
+        type=str,
+        default="",
+        help="Comma-separated case ids to run for targeted smoke tests",
+    )
+    parser.add_argument(
         "--resume", action="store_true", help="Skip already-completed variants"
     )
     args = parser.parse_args()
 
     client = OpenAI(base_url=args.base_url, api_key=args.api_key)
     cases = load_eval_cases(args.cases)
+    if args.case_ids.strip():
+        requested_ids = [item.strip() for item in args.case_ids.split(",") if item.strip()]
+        requested_set = set(requested_ids)
+        cases = [case for case in cases if case.case_id in requested_set]
+        found_ids = {case.case_id for case in cases}
+        missing_ids = [case_id for case_id in requested_ids if case_id not in found_ids]
+        if missing_ids:
+            raise SystemExit(f"Unknown case ids: {', '.join(missing_ids)}")
+        print(f"Filtered to {len(cases)} requested cases.")
     print(f"Loaded {len(cases)} eval cases.\n")
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -374,6 +521,7 @@ def main() -> int:
                 cases,
                 client,
                 args.model,
+                args.temperature,
                 args.max_cases,
             )
             out_file.write_text(

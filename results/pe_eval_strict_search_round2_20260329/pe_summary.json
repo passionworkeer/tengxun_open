@@ -1,0 +1,42 @@
+[
+  {
+    "variant": "fewshot_layer_guard",
+    "num_cases": 54,
+    "easy_f1": 0.6848,
+    "medium_f1": 0.6269,
+    "hard_f1": 0.4866,
+    "avg_f1": 0.591,
+    "avg_macro_f1": 0.3408,
+    "avg_mislayer_rate": 0.3889
+  },
+  {
+    "variant": "fewshot_assistant",
+    "num_cases": 54,
+    "easy_f1": 0.6257,
+    "medium_f1": 0.6153,
+    "hard_f1": 0.484,
+    "avg_f1": 0.5696,
+    "avg_macro_f1": 0.2581,
+    "avg_mislayer_rate": 0.4938
+  },
+  {
+    "variant": "postprocess_layer_guard",
+    "num_cases": 54,
+    "easy_f1": 0.6314,
+    "medium_f1": 0.6093,
+    "hard_f1": 0.5358,
+    "avg_f1": 0.5882,
+    "avg_macro_f1": 0.3286,
+    "avg_mislayer_rate": 0.4256
+  },
+  {
+    "variant": "postprocess_assistant",
+    "num_cases": 54,
+    "easy_f1": 0.7057,
+    "medium_f1": 0.6141,
+    "hard_f1": 0.5325,
+    "avg_f1": 0.6093,
+    "avg_macro_f1": 0.3205,
+    "avg_mislayer_rate": 0.4611
+  }
+]

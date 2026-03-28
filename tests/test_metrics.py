@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import unittest
 
-from evaluation.metrics import compute_layered_dependency_metrics
+from evaluation.metrics import (
+    canonicalize_dependency_symbol,
+    compute_layered_dependency_metrics,
+)
 
 
 class LayeredDependencyMetricsTest(unittest.TestCase):
@@ -49,6 +52,26 @@ class LayeredDependencyMetricsTest(unittest.TestCase):
         self.assertEqual(metrics.mislayer_rate, 0.0)
         self.assertTrue(metrics.exact_layer_match)
         self.assertTrue(metrics.exact_union_match)
+
+    def test_canonicalizes_common_symbol_path_variants(self) -> None:
+        gold = {
+            "direct_deps": ["celery.app.base.gen_task_name"],
+            "indirect_deps": [],
+            "implicit_deps": [],
+        }
+        predicted = {
+            "direct_deps": ["celery/app/base.py::gen_task_name"],
+            "indirect_deps": [],
+            "implicit_deps": [],
+        }
+
+        metrics = compute_layered_dependency_metrics(gold, predicted)
+
+        self.assertEqual(metrics.union.f1, 1.0)
+        self.assertEqual(
+            canonicalize_dependency_symbol("celery/app/base.py::gen_task_name"),
+            "celery.app.base.gen_task_name",
+        )
 
 
 if __name__ == "__main__":

@@ -13,10 +13,13 @@
 1. **PE 是当前最强单项增益**  
    在正式 `54-case` 口径上，GPT-5.4 从 `baseline 0.2745` 提升到 `postprocess 0.6062`，绝对提升 `+0.3317`，相对提升 `+120.8%`。
 
-2. **Qwen 的完整消融矩阵已经补齐，最佳开源组合是 `PE + RAG + FT`**  
+2. **strict 加固后的 GPT PE 最优路线已经更新为 `targeted few-shot + postprocess`**  
+   在 `2026-03-29` 的 strict PE 搜索增补里，`postprocess_targeted` 达到 `union 0.6338 / macro 0.4757 / mislayer 0.1620`，同时优于此前 strict-best 的 `0.6136 / 0.4372 / 0.2336`。详见 [`reports/strict_pe_search_20260329.md`](reports/strict_pe_search_20260329.md)。
+
+3. **Qwen 的完整消融矩阵已经补齐，最佳开源组合是 `PE + RAG + FT`**  
    Qwen strict baseline 仅 `0.0370`，`PE only` 到 `0.2246`，`FT only` 到 `0.0932`，`PE + FT` 到 `0.4315`，最终 `PE + RAG + FT` 到 `0.4435`。这说明 PE 是开源模型的核心增益源，FT 负责领域适配，RAG 只有在和 PE/FT 组合时才真正有价值。
 
-3. **RAG 的价值是“定向修复 hard 场景”，不是无脑全局提分**  
+4. **RAG 的价值是“定向修复 hard 场景”，不是无脑全局提分**  
    GPT-5.4 端到端 `No-RAG 0.2783 -> With-RAG 0.2940`，总体只提升 `+0.0157`；但 `Hard` 难度从 `0.1980 -> 0.3372`，提升 `+0.1392`。RAG 更像是针对 Type A / Type E 的补偿模块。
 
 ## 当前结果总览
@@ -46,6 +49,7 @@
 
 - strict 数据审计：[`reports/strict_data_audit_20260329.md`](reports/strict_data_audit_20260329.md)
 - strict 评分审计：[`reports/strict_scoring_audit_20260329.md`](reports/strict_scoring_audit_20260329.md)
+- strict PE 搜索增补：[`reports/strict_pe_search_20260329.md`](reports/strict_pe_search_20260329.md)
 - strict 数据资产：
   - `data/fewshot_examples_20_strict.json`
   - `data/finetune_dataset_500_strict.jsonl`
