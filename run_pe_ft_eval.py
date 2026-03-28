@@ -114,10 +114,22 @@ def parse_response(raw: str) -> dict[str, list[str]] | None:
         else:
             data = json.loads(text)
         gt = data.get("ground_truth", {})
+
+        def normalize_items(items: Any) -> list[str]:
+            if not isinstance(items, list):
+                return []
+            result: list[str] = []
+            for item in items:
+                if isinstance(item, str):
+                    value = item.strip()
+                    if value:
+                        result.append(value)
+            return result
+
         return {
-            "direct_deps": gt.get("direct_deps", []),
-            "indirect_deps": gt.get("indirect_deps", []),
-            "implicit_deps": gt.get("implicit_deps", []),
+            "direct_deps": normalize_items(gt.get("direct_deps", [])),
+            "indirect_deps": normalize_items(gt.get("indirect_deps", [])),
+            "implicit_deps": normalize_items(gt.get("implicit_deps", [])),
         }
     except (json.JSONDecodeError, AttributeError, KeyError):
         return None

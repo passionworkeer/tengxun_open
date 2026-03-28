@@ -1,0 +1,22 @@
+{
+  "input_path": "results/qwen_baseline.json",
+  "cases_path": "data/eval_cases.json",
+  "total_cases": 54,
+  "recovered_cases": 9,
+  "parse_failures": 45,
+  "overall_avg_f1": 0.037,
+  "by_difficulty": {
+    "easy": {
+      "count": 15,
+      "avg_f1": 0.0667
+    },
+    "hard": {
+      "count": 20,
+      "avg_f1": 0.0
+    },
+    "medium": {
+      "count": 19,
+      "avg_f1": 0.0526
+    }
+  }
+}

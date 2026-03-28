@@ -10,11 +10,33 @@
 | `step4_pe_ft.sh` | PE+FT评测 | `bash step4_pe_ft.sh` |
 | `step5_pe_rag_ft.sh` | PE+RAG+FT评测 | `bash step5_pe_rag_ft.sh` |
 
+## 🧪 Qwen 消融补跑入口
+
+当前严格正式口径还缺 `Qwen PE only / RAG only / PE+RAG`。
+
+统一脚本：
+
+```bash
+uv run --with openai python run_qwen_ablation_eval.py --mode pe
+uv run --with openai python run_qwen_ablation_eval.py --mode rag --repo-root external/celery
+uv run --with openai python run_qwen_ablation_eval.py --mode pe_rag --repo-root external/celery
+```
+
+如需沿用最新 Google embedding 的 RAG：
+
+```bash
+export EMBEDDING_PROVIDER=google
+export GOOGLE_API_KEY=你的_google_key
+uv run --with openai python run_qwen_ablation_eval.py --mode rag --repo-root external/celery
+uv run --with openai python run_qwen_ablation_eval.py --mode pe_rag --repo-root external/celery
+```
+
 ## 🛠️ 工具脚本
 
 | 脚本 | 用途 |
 |------|------|
 | `run_qwen_eval.sh` | Qwen评估运行 |
+| `run_qwen_ablation_eval.py` | Qwen baseline / PE / RAG / PE+RAG 统一评测 |
 | `check_download.sh` | 检查模型下载进度 |
 | `start_qwen_vllm.sh` | 启动vLLM服务 |
 

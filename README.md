@@ -1,5 +1,9 @@
 # Celery 跨文件依赖分析 - 项目文档
 
+> 当前权威进度与结果总览：[`reports/project_progress_20260328.md`](reports/project_progress_20260328.md)
+>
+> 说明：仓库内仍保留了若干 `2026-03-27` 的中间文档与 50-case 旧口径报告；如和最新结果冲突，以 `project_progress_20260328.md`、`eval_status_20260328.md`、`glm5_eval_analysis_20260328.md` 为准。
+
 ## 📁 项目结构
 
 ```

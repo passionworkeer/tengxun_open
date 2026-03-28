@@ -69,10 +69,22 @@ def parse_response(text: str) -> dict[str, list[str]] | None:
         else:
             data = json.loads(text.strip())
         gt = data.get("ground_truth", {})
+
+        def normalize_items(items: Any) -> list[str]:
+            if not isinstance(items, list):
+                return []
+            result: list[str] = []
+            for item in items:
+                if isinstance(item, str):
+                    value = item.strip()
+                    if value:
+                        result.append(value)
+            return result
+
         return {
-            "direct_deps": gt.get("direct_deps", []),
-            "indirect_deps": gt.get("indirect_deps", []),
-            "implicit_deps": gt.get("implicit_deps", []),
+            "direct_deps": normalize_items(gt.get("direct_deps", [])),
+            "indirect_deps": normalize_items(gt.get("indirect_deps", [])),
+            "implicit_deps": normalize_items(gt.get("implicit_deps", [])),
         }
     except (json.JSONDecodeError, AttributeError, KeyError):
         return None
@@ -113,8 +125,28 @@ def run_gpt_eval_with_rag(
         cases = cases[:max_cases]
 
     results: list[dict[str, Any]] = []
+    completed_case_ids: set[str] = set()
+    if output_path and output_path.exists():
+        try:
+            existing = json.loads(output_path.read_text(encoding="utf-8"))
+            if isinstance(existing, list):
+                results = existing
+                completed_case_ids = {
+                    item.get("case_id") for item in existing if item.get("case_id")
+                }
+                if completed_case_ids:
+                    print(
+                        f"Resuming from {output_path}: "
+                        f"{len(completed_case_ids)} completed cases"
+                    )
+        except (json.JSONDecodeError, OSError):
+            results = []
+            completed_case_ids = set()
 
     for i, case in enumerate(cases):
+        if case.case_id in completed_case_ids:
+            print(f"[{i + 1}/{len(cases)}] Skipping {case.case_id} (already done)", flush=True)
+            continue
         print(f"[{i + 1}/{len(cases)}] Running {case.case_id}...", flush=True)
 
         gt_dict = {
