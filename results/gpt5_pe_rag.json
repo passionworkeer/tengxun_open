@@ -1,0 +1,1347 @@
+[
+  {
+    "case_id": "easy_001",
+    "difficulty": "easy",
+    "question": "Which real class does `celery.Celery` resolve to in the top-level lazy API?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.app.base.Celery\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "easy_002",
+    "difficulty": "easy",
+    "question": "Which real function does the top-level `celery.shared_task` symbol resolve to?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.shared_task"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.app.__init__.shared_task\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.__init__.shared_task"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "easy_003",
+    "difficulty": "easy",
+    "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('default')` resolve to?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.loaders.DEFAULT_LOADER\",\"celery.utils.imports.symbol_by_name\",\"celery.loaders.default.Loader\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.loaders.DEFAULT_LOADER",
+        "celery.utils.imports.symbol_by_name",
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "easy_004",
+    "difficulty": "easy",
+    "question": "What pool implementation does `celery.concurrency.get_implementation('processes')` resolve to?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.prefork.TaskPool"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.concurrency.prefork.TaskPool\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.concurrency.prefork.TaskPool"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "medium_001",
+    "difficulty": "medium",
+    "question": "Which backend class does `celery.app.backends.by_name('redis')` resolve to?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.backends.redis.RedisBackend"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.backends.redis.RedisBackend\"],\"indirect_deps\":[],\"implicit_deps\":[\"celery.app.backends.BACKEND_ALIASES\",\"celery.utils.imports.symbol_by_name\"]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.backends.redis.RedisBackend"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.app.backends.BACKEND_ALIASES",
+        "celery.utils.imports.symbol_by_name"
+      ]
+    }
+  },
+  {
+    "case_id": "medium_002",
+    "difficulty": "medium",
+    "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('app')` resolve to?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.app.AppLoader"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.loaders.app:AppLoader\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.loaders.app:AppLoader"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "medium_003",
+    "difficulty": "medium",
+    "question": "What pool implementation does `celery.concurrency.get_implementation('threads')` resolve to?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.thread.TaskPool"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.concurrency.thread.TaskPool\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.concurrency.thread.TaskPool"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "medium_004",
+    "difficulty": "medium",
+    "question": "Which helper function does `Celery.gen_task_name` delegate to?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.utils.imports.gen_task_name\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "hard_001",
+    "difficulty": "hard",
+    "question": "When `@shared_task` decorates a function, which real app method ultimately creates the task instance?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.app.__init__.shared_task\",\"celery._state.connect_on_app_finalize\",\"celery._state._get_active_apps\",\"celery.app.base.Celery._task_from_fun\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.__init__.shared_task",
+        "celery._state.connect_on_app_finalize",
+        "celery._state._get_active_apps",
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "hard_002",
+    "difficulty": "hard",
+    "question": "Inside the `@app.task` decorator flow, which real method ultimately constructs and registers the task?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.app.base.Celery._task_from_fun\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "hard_003",
+    "difficulty": "hard",
+    "question": "Which function is responsible for firing all shared-task and built-in finalize callbacks?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state._announce_app_finalized"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery._state.connect_on_app_finalize\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery._state.connect_on_app_finalize"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "hard_004",
+    "difficulty": "hard",
+    "question": "In `celery.worker.strategy.default`, what real class does `task.Request` resolve to?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.request.Request"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.worker.request.create_request_cls\"],\"indirect_deps\":[],\"implicit_deps\":[\"celery.worker.request.Request\"]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.worker.request.create_request_cls"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.worker.request.Request"
+      ]
+    }
+  },
+  {
+    "case_id": "celery_hard_014",
+    "difficulty": "hard",
+    "question": "At app finalize time, which method actually creates the celery.backend_cleanup Task instance?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [
+        "celery.app.builtins.add_backend_cleanup_task",
+        "celery.app.base.Celery.task"
+      ],
+      "implicit_deps": [
+        "celery._state.connect_on_app_finalize",
+        "celery._state._announce_app_finalized"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.app.base.Celery._autodiscover_tasks\"],\"indirect_deps\":[],\"implicit_deps\":[\"celery.app.base.Celery.finalize\",\"celery.app.builtins.add_backend_cleanup_task\",\"celery.app.base.Celery._tasks\"]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery._autodiscover_tasks"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.app.base.Celery.finalize",
+        "celery.app.builtins.add_backend_cleanup_task",
+        "celery.app.base.Celery._tasks"
+      ]
+    }
+  },
+  {
+    "case_id": "celery_hard_016",
+    "difficulty": "hard",
+    "question": "When packages=None, which function finally executes the real importlib.import_module call for package names gathered from Celery._autodiscover_tasks_from_fixups?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.base.find_related_module"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery._autodiscover_tasks_from_fixups",
+        "celery.fixups.django.DjangoFixup.autodiscover_tasks",
+        "celery.loaders.base.autodiscover_tasks"
+      ],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.loaders.base.autodiscover_tasks\",\"celery.loaders.base.find_related_module\",\"importlib.import_module\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.loaders.base.autodiscover_tasks",
+        "celery.loaders.base.find_related_module",
+        "importlib.import_module"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_hard_013",
+    "difficulty": "hard",
+    "question": "`celery.app.shared_task` 返回的 Proxy 首次解析任务对象时，触发 finalize 回调链的关键入口符号是什么？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery.tasks",
+        "celery.app.base.Celery.finalize"
+      ],
+      "indirect_deps": [
+        "celery._state._announce_app_finalized"
+      ],
+      "implicit_deps": [
+        "celery._state.connect_on_app_finalize",
+        "celery.app.base.Celery._task_from_fun"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.local.Proxy.__getattr__\",\"celery.local.Proxy._get_current_object\",\"celery.app.__init__.shared_task.<locals>.create_shared_task.<locals>.__inner\",\"celery._state.connect_on_app_finalize\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.local.Proxy.__getattr__",
+        "celery.local.Proxy._get_current_object",
+        "celery.app.__init__.shared_task.<locals>.create_shared_task.<locals>.__inner",
+        "celery._state.connect_on_app_finalize"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_hard_015",
+    "difficulty": "hard",
+    "question": "在 `app.autodiscover_tasks(..., force=False)` 的 lazy 路径下，真正被触发执行的目标函数是什么，以及它由哪条调用链触发？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._autodiscover_tasks"
+      ],
+      "indirect_deps": [
+        "celery.loaders.base.BaseLoader.init_worker",
+        "celery.loaders.base.BaseLoader.import_default_modules",
+        "celery.utils.dispatch.signal.Signal.send"
+      ],
+      "implicit_deps": [
+        "celery.signals.import_modules"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.app.base.Celery.autodiscover_tasks\",\"celery.signals.Signal.connect\",\"celery.app.base.Celery._autodiscover_tasks\",\"celery.app.base.Celery._autodiscover_tasks_from_fixups\",\"celery.fixups.base.Fixup.autodiscover_tasks\"],\"indirect_deps\":[],\"implicit_deps\":[\"lazy路径下并不会立即执行autodiscover逻辑；force=False时，celery.app.base.Celery.autodiscover_tasks通过celery.signals.Signal.connect把一个starpromise(celery.app.base.Celery._autodiscover_tasks, packages, related_name)挂到signals.import_modules。后续当import_modules信号发送时，才触发调用链：signals.import_modules.send -> starpromise.__call__ -> celery.app.base.Celery._autodiscover_tasks -> celery.app.base.Celery._autodiscover_tasks_from_fixups -> celery.fixups.base.Fixup.autodiscover_tasks。若调用时传入了packages，则目标分支改为celery.app.base.Celery._autodiscover_tasks_from_names。\"]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery.autodiscover_tasks",
+        "celery.signals.Signal.connect",
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.app.base.Celery._autodiscover_tasks_from_fixups",
+        "celery.fixups.base.Fixup.autodiscover_tasks"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "lazy路径下并不会立即执行autodiscover逻辑；force=False时，celery.app.base.Celery.autodiscover_tasks通过celery.signals.Signal.connect把一个starpromise(celery.app.base.Celery._autodiscover_tasks, packages, related_name)挂到signals.import_modules。后续当import_modules信号发送时，才触发调用链：signals.import_modules.send -> starpromise.__call__ -> celery.app.base.Celery._autodiscover_tasks -> celery.app.base.Celery._autodiscover_tasks_from_fixups -> celery.fixups.base.Fixup.autodiscover_tasks。若调用时传入了packages，则目标分支改为celery.app.base.Celery._autodiscover_tasks_from_names。"
+      ]
+    }
+  },
+  {
+    "case_id": "celery_hard_018",
+    "difficulty": "hard",
+    "question": "在满足 Django fixup 前置条件（`DJANGO_SETTINGS_MODULE` 已设置、`django` 可导入、且 `app.loader_cls` 不含 `django`）且未自定义 `task_cls` 时，`app.Task` 的最终基类解析到哪个真实类？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.contrib.django.task.DjangoTask"
+      ],
+      "indirect_deps": [
+        "celery.fixups.django.fixup",
+        "celery.fixups.django.DjangoFixup.install",
+        "celery.app.base.Celery.Task",
+        "celery.app.base.Celery.create_task_cls",
+        "celery.app.base.Celery.subclass_with_self"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.app.base.Celery.Task\",\"celery.app.base.Celery.create_task_cls\",\"celery.app.base.Celery.subclass_with_self\",\"celery.app.task.Task\",\"celery.fixups.django.DjangoFixup.install\",\"celery.fixups.django.DjangoFixup.autodiscover_tasks\"],\"indirect_deps\":[],\"implicit_deps\":[\"celery.fixups.django.fixup\",\"django\"]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery.Task",
+        "celery.app.base.Celery.create_task_cls",
+        "celery.app.base.Celery.subclass_with_self",
+        "celery.app.task.Task",
+        "celery.fixups.django.DjangoFixup.install",
+        "celery.fixups.django.DjangoFixup.autodiscover_tasks"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.fixups.django.fixup",
+        "django"
+      ]
+    }
+  },
+  {
+    "case_id": "celery_medium_017",
+    "difficulty": "medium",
+    "question": "在 `Celery.__init__` 中，默认 `builtin_fixups` 的字符串入口 `'celery.fixups.django:fixup'` 最终会被解析到哪个真实函数符号（不考虑后续 install 副作用）？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.fixups.django.fixup"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.__init__",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": [
+        "celery.app.base.BUILTIN_FIXUPS"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.fixups.django.fixup\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.fixups.django.fixup"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "easy_007",
+    "difficulty": "easy",
+    "question": "顶层符号 `celery.Task` 最终映射到哪个真实类？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.task.Task"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.app.task.Task\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.task.Task"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "easy_005",
+    "difficulty": "easy",
+    "question": "在顶层懒加载 API 中，`celery.current_app` 这个 Proxy 在取值时会直接调用哪个函数来获得 app 对象？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state.get_current_app"
+      ],
+      "indirect_deps": [
+        "celery._state._get_current_app"
+      ],
+      "implicit_deps": [
+        "celery.local.Proxy",
+        "celery._state.default_app",
+        "celery.app.base.Celery"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery._state.get_current_app\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery._state.get_current_app"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "easy_006",
+    "difficulty": "easy",
+    "question": "在顶层懒加载 API 中，`celery.current_task` 在取值时直接调用哪个函数，并最终从哪个状态槽位读取当前任务？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state.get_current_task"
+      ],
+      "indirect_deps": [
+        "celery._state._task_stack.top"
+      ],
+      "implicit_deps": [
+        "celery.local.Proxy",
+        "celery.utils.threads.LocalStack"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery._state.get_current_task\",\"celery._state._task_stack\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery._state.get_current_task",
+        "celery._state._task_stack"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "easy_008",
+    "difficulty": "easy",
+    "question": "从源码\"类定义\"角度看，顶层符号 `celery.group` 对应的真实类定义 FQN 是什么？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.group"
+      ],
+      "indirect_deps": [
+        "celery.canvas.Signature"
+      ],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.canvas.group\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.canvas.group"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "medium_005",
+    "difficulty": "medium",
+    "question": "在未设置 `CELERY_LOADER` 且未显式传入 loader 参数时，`Celery.loader` 属性最终实例化哪个 Loader 类？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.app.AppLoader"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery._get_default_loader",
+        "celery.loaders.get_loader_cls"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.app.base.Celery.loader\",\"celery.app.base.Celery._get_default_loader\",\"celery.loaders.default.Loader\"],\"indirect_deps\":[],\"implicit_deps\":[\"os.environ.CELERY_LOADER\"]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery.loader",
+        "celery.app.base.Celery._get_default_loader",
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "os.environ.CELERY_LOADER"
+      ]
+    }
+  },
+  {
+    "case_id": "medium_006",
+    "difficulty": "medium",
+    "question": "在 `Celery._get_backend` 调用路径里，当 `result_backend='rpc://...'` 时，哪个 backend 类会被解析并由该方法实例化？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._get_backend",
+        "celery.backends.rpc.RPCBackend"
+      ],
+      "indirect_deps": [
+        "celery.app.backends.by_url",
+        "celery.app.backends.by_name"
+      ],
+      "implicit_deps": [
+        "celery.app.backends.BACKEND_ALIASES",
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.app.base.Celery._get_backend\",\"celery.app.backends.by_url\",\"celery.app.backends.by_name\",\"celery.backends.rpc.RPCBackend\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery._get_backend",
+        "celery.app.backends.by_url",
+        "celery.app.backends.by_name",
+        "celery.backends.rpc.RPCBackend"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "medium_007",
+    "difficulty": "medium",
+    "question": "当线程中没有 current app 且未设置 `CELERY_LOADER` 时，首次访问 `celery.current_app.loader` 最终会实例化哪个 Loader 类？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [
+        "celery._state._get_current_app",
+        "celery.app.base.Celery.loader",
+        "celery.loaders.get_loader_cls"
+      ],
+      "implicit_deps": [
+        "celery.local.Proxy",
+        "celery.loaders.LOADER_ALIASES",
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery._state.current_app\",\"celery.app.base.Celery.loader\",\"celery.app.base.Celery._get_default_loader\",\"celery.loaders.default.Loader\"],\"indirect_deps\":[],\"implicit_deps\":[\"os.environ.CELERY_LOADER\"]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery._state.current_app",
+        "celery.app.base.Celery.loader",
+        "celery.app.base.Celery._get_default_loader",
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "os.environ.CELERY_LOADER"
+      ]
+    }
+  },
+  {
+    "case_id": "medium_008",
+    "difficulty": "medium",
+    "question": "`Task.start_strategy` 调用时，`Task.Strategy` 字符串最终会被解析为哪个可调用对象？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.strategy.default"
+      ],
+      "indirect_deps": [
+        "celery.app.task.Task.start_strategy",
+        "celery.utils.imports.instantiate"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.app.task.Task.Strategy\",\"celery.worker.strategy.default\"],\"indirect_deps\":[],\"implicit_deps\":[\"kombu.utils.imports.symbol_by_name\"]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.task.Task.Strategy",
+        "celery.worker.strategy.default"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "kombu.utils.imports.symbol_by_name"
+      ]
+    }
+  },
+  {
+    "case_id": "celery_medium_020",
+    "difficulty": "medium",
+    "question": "`_state._get_current_app` 懒创建 fallback app 后，首次访问 `app.loader` 时，最终实例化到哪个具体 Loader 类？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery.loader",
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [
+        "celery._state._get_current_app",
+        "celery.loaders.get_loader_cls"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.symbol_by_name",
+        "celery.utils.imports.import_from_cwd"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery._state._get_current_app\",\"celery.loaders.default.Loader\"],\"indirect_deps\":[],\"implicit_deps\":[\"celery.app.base.Celery.loader\"]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery._state._get_current_app",
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.app.base.Celery.loader"
+      ]
+    }
+  },
+  {
+    "case_id": "celery_hard_019",
+    "difficulty": "hard",
+    "question": "When BaseLoader.config_from_object receives a string like pkg.mod.CONF that cannot be imported directly as a module, which function ultimately resolves the symbol?",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [
+        "celery.loaders.base.BaseLoader.config_from_object",
+        "celery.loaders.base.BaseLoader._smart_import"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.import_from_cwd"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.utils.imports.symbol_by_name\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_hard_121",
+    "difficulty": "hard",
+    "question": "在 `app.autodiscover_tasks(packages, force=False)` 的延迟执行链中，真正负责判定 `ModuleNotFoundError` 是\"候选 tasks 模块缺失可忽略\"还是\"嵌套导入错误需重抛\"的函数是哪个？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.base.find_related_module"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.autodiscover_tasks",
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.loaders.base.BaseLoader.import_default_modules",
+        "celery.loaders.base.BaseLoader.autodiscover_tasks",
+        "celery.loaders.base.autodiscover_tasks"
+      ],
+      "implicit_deps": [
+        "celery.signals.import_modules"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.loaders.base.BaseLoader.autodiscover_tasks\",\"celery.loaders.base.autodiscover_tasks\",\"celery.loaders.base.find_related_module\",\"celery.loaders.base._RACE_PROTECTION\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.loaders.base.BaseLoader.autodiscover_tasks",
+        "celery.loaders.base.autodiscover_tasks",
+        "celery.loaders.base.find_related_module",
+        "celery.loaders.base._RACE_PROTECTION"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_hard_122",
+    "difficulty": "hard",
+    "question": "在 worker 启动链中，当某个 `StartStopStep.include_if()` 最终为 `False` 时，仍会先执行 step 实例化（触发 `Step.__init__`）的生命周期断点方法是哪个？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.bootsteps.Blueprint.apply"
+      ],
+      "indirect_deps": [
+        "celery.worker.worker.WorkController.__init__",
+        "celery.bootsteps.StartStopStep.include",
+        "celery.bootsteps.Step._should_include"
+      ],
+      "implicit_deps": [
+        "celery.bootsteps.Step.include_if"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.bootsteps.Step.__init__\",\"celery.bootsteps.StartStopStep.include_if\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.bootsteps.Step.__init__",
+        "celery.bootsteps.StartStopStep.include_if"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_hard_024",
+    "difficulty": "hard",
+    "question": "`PersistentScheduler` 启动阶段若持久化 store 缺失 `utc_enabled` 元数据字段，直接触发 reset（`self._store.clear()`）的方法是哪一个？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.beat.PersistentScheduler._create_schedule"
+      ],
+      "indirect_deps": [
+        "celery.beat.PersistentScheduler.setup_schedule"
+      ],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.beat.PersistentScheduler.setup_schedule\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.beat.PersistentScheduler.setup_schedule"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_hard_025",
+    "difficulty": "hard",
+    "question": "在 `worker_disable_prefetch=True` 且 broker 为 Redis 的前提下，运行时真正改写 `channel_qos.can_consume` 的方法是哪一个？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.consumer.tasks.Tasks.start"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.worker.consumer.tasks.Tasks.start\"],\"indirect_deps\":[],\"implicit_deps\":[\"kombu.transport.redis.Channel.qos.can_consume\"]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.worker.consumer.tasks.Tasks.start"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "kombu.transport.redis.Channel.qos.can_consume"
+      ]
+    }
+  },
+  {
+    "case_id": "celery_type_d_001",
+    "difficulty": "hard",
+    "question": "在 `celery/app/routes.py` 中，调用 `expand_router_string('my.router.module:RouterClass')` 时，负责把字符串参数 `router` 解析成真实符号的函数是哪个？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.utils.imports.symbol_by_name\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_type_d_002",
+    "difficulty": "hard",
+    "question": "在 `celery/canvas.py` 中，`celery.canvas._chain`（内部类，被 `@Signature.register_type(name='chain')` 注册）和 `celery.canvas.chain`（公开类，继承 `_chain`）是两个不同的类。当通过 `signature({'subtask_type': 'chain', ...})` 反序列化时，返回的实例属于哪个类？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas._chain"
+      ],
+      "indirect_deps": [
+        "celery.canvas.Signature.TYPES",
+        "celery.canvas.Signature.from_dict"
+      ],
+      "implicit_deps": [
+        "celery.canvas.chain"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.canvas._chain\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.canvas._chain"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_type_d_003",
+    "difficulty": "medium",
+    "question": "在 `celery/canvas.py` 模块级别，`subtask = signature` 和 `maybe_subtask = maybe_signature` 分别是兼容性别名。如果代码中出现引用 'celery.canvas.subtask' 的错误信息，应该追踪到哪个实际执行函数？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.signature"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.canvas.maybe_signature"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.canvas.signature\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.canvas.signature"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_type_d_004",
+    "difficulty": "medium",
+    "question": "在 `celery/utils/nodenames.py` 中，`current_process_index` 并非在文件顶部 import，而是通过 `from .log import current_process_index` 内联在 `_fmt_process_index` 函数体内引入。如果要追踪 `celery.utils.nodenames._fmt_process_index` 调用的 `current_process_index` 的定义来源，应该查看哪个文件的哪个函数？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.log.current_process_index"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.utils.log.current_process_index\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.utils.log.current_process_index"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_type_d_005",
+    "difficulty": "hard",
+    "question": "在 `celery/app/routes.py` 的 `Router.query_router(self, router, ...)` 方法中，参数名 `router` 与方法外的 `celery.app.routes.Router` 类同名。当方法体内访问 `router` 时，它指向什么？",
+    "ground_truth": {
+      "direct_deps": [],
+      "indirect_deps": [
+        "celery.app.routes.Router"
+      ],
+      "implicit_deps": [
+        "celery.utils.functional.maybe_evaluate"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.app.routes.Router.query_router.router\"],\"indirect_deps\":[],\"implicit_deps\":[\"在 celery.app.routes.Router.query_router 方法体内，名称 router 解析为该方法的形参 router，而不是外部同模块中的 celery.app.routes.Router 类\"]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.routes.Router.query_router.router"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "在 celery.app.routes.Router.query_router 方法体内，名称 router 解析为该方法的形参 router，而不是外部同模块中的 celery.app.routes.Router 类"
+      ]
+    }
+  },
+  {
+    "case_id": "celery_type_d_006",
+    "difficulty": "medium",
+    "question": "在 `celery/concurrency/__init__.py` 中，若在首次导入前设置 `CELERY_CUSTOM_WORKER_POOL='celery.concurrency.thread:TaskPool'`，那么 `get_implementation('custom')` 最终返回哪个 Celery 类？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.thread.TaskPool"
+      ],
+      "indirect_deps": [
+        "celery.concurrency.get_implementation"
+      ],
+      "implicit_deps": [
+        "celery.concurrency.ALIASES"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.concurrency.thread.TaskPool\"],\"indirect_deps\":[],\"implicit_deps\":[\"celery.concurrency.__init__.ALIASES\"]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.concurrency.thread.TaskPool"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.concurrency.__init__.ALIASES"
+      ]
+    }
+  },
+  {
+    "case_id": "celery_type_a_001",
+    "difficulty": "hard",
+    "question": "在 `celery/bootsteps.py` 中，`Step._should_include(parent)` 返回 `(False, None)` 时（即 `include_if` 返回 False），Step 的 `__init__` 和 `create` 方法还会被调用吗？`parent.steps` 列表中会包含该 Step 吗？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.bootsteps.Step._should_include",
+        "celery.bootsteps.Step.include",
+        "celery.bootsteps.StartStopStep.include"
+      ],
+      "indirect_deps": [
+        "celery.bootsteps.Step.__init__",
+        "celery.bootsteps.Step.create",
+        "celery.bootsteps.Blueprint.apply"
+      ],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.bootsteps.Step._should_include\",\"celery.bootsteps.Step.include_if\",\"celery.bootsteps.Step.__init__\",\"celery.bootsteps.Step.create\",\"celery.bootsteps.Blueprint.apply\",\"celery.bootsteps.Blueprint._finalize_steps\",\"celery.bootsteps.Blueprint.claim_steps\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.bootsteps.Step._should_include",
+        "celery.bootsteps.Step.include_if",
+        "celery.bootsteps.Step.__init__",
+        "celery.bootsteps.Step.create",
+        "celery.bootsteps.Blueprint.apply",
+        "celery.bootsteps.Blueprint._finalize_steps",
+        "celery.bootsteps.Blueprint.claim_steps"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_type_a_002",
+    "difficulty": "hard",
+    "question": "在 `celery/worker/request.py` 中，当 `acks_late=True` 时，以下情况分别走 `ack`、`reject(requeue=True)`、`reject(requeue=False)` 中的哪条路径：(1) 普通 `Exception`；(2) `TimeLimitExceeded` 且 `acks_on_timeout=False`；(3) `WorkerLostError` 且 `reject_on_worker_lost=False`；(4) `celery.exceptions.Reject` 异常；(5) `celery.exceptions.Ignore` 异常。",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.request.Request.on_failure",
+        "celery.worker.request.Request.on_timeout"
+      ],
+      "indirect_deps": [
+        "celery.worker.request.Request.reject",
+        "celery.worker.request.Request.acknowledge"
+      ],
+      "implicit_deps": [
+        "celery.worker.state.should_terminate"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.worker.request.Request.on_success\",\"celery.worker.request.Request.on_failure\",\"celery.worker.request.Request.acknowledge\",\"celery.worker.request.Request.reject\",\"celery.exceptions.Reject\",\"celery.exceptions.Ignore\",\"billiard.exceptions.WorkerLostError\",\"billiard.exceptions.TimeLimitExceeded\"],\"indirect_deps\":[],\"implicit_deps\":[\"celery.worker.request.Request.task.acks_late\",\"celery.worker.request.Request.task.acks_on_failure_or_timeout\",\"celery.worker.request.Request.task.reject_on_worker_lost\"]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.worker.request.Request.on_success",
+        "celery.worker.request.Request.on_failure",
+        "celery.worker.request.Request.acknowledge",
+        "celery.worker.request.Request.reject",
+        "celery.exceptions.Reject",
+        "celery.exceptions.Ignore",
+        "billiard.exceptions.WorkerLostError",
+        "billiard.exceptions.TimeLimitExceeded"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.worker.request.Request.task.acks_late",
+        "celery.worker.request.Request.task.acks_on_failure_or_timeout",
+        "celery.worker.request.Request.task.reject_on_worker_lost"
+      ]
+    }
+  },
+  {
+    "case_id": "celery_type_a_003",
+    "difficulty": "hard",
+    "question": "在 `celery/app/base.py` 的 `autodiscover_tasks(..., force=False)` 懒路径下，哪个信号（signal）触发 `import_modules` 事件？该事件的哪个接收者（receiver）最终执行 `_autodiscover_tasks`？从信号发送到实际执行之间有几层间接调用？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.signals.import_modules"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.loaders.base.BaseLoader.import_default_modules",
+        "celery.utils.dispatch.signal.Signal.send"
+      ],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.signals.import_modules\",\"celery.app.base.Celery.autodiscover_tasks\",\"celery.app.base.Celery._autodiscover_tasks\",\"celery.app.base.Celery._autodiscover_tasks_from_fixups\",\"celery.app.base.Celery._autodiscover_tasks_from_names\",\"celery.fixups.base.Fixup.autodiscover_tasks\"],\"indirect_deps\":[],\"implicit_deps\":[\"celery.signals.Signal.connect\",\"celery.signals.Signal.send\"]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.signals.import_modules",
+        "celery.app.base.Celery.autodiscover_tasks",
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.app.base.Celery._autodiscover_tasks_from_fixups",
+        "celery.app.base.Celery._autodiscover_tasks_from_names",
+        "celery.fixups.base.Fixup.autodiscover_tasks"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.signals.Signal.connect",
+        "celery.signals.Signal.send"
+      ]
+    }
+  },
+  {
+    "case_id": "celery_medium_019",
+    "difficulty": "medium",
+    "question": "在 `celery/utils/imports.py` 中，`instantiate('celery.concurrency.prefork:TaskPool')` 这条链路最终解析到哪个真实 Celery 符号？中间依赖哪个导入解析函数？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.prefork.TaskPool"
+      ],
+      "indirect_deps": [
+        "celery.utils.imports.instantiate",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.utils.imports.instantiate\",\"celery.utils.imports.symbol_by_name\",\"celery.concurrency.prefork.TaskPool\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.utils.imports.instantiate",
+        "celery.utils.imports.symbol_by_name",
+        "celery.concurrency.prefork.TaskPool"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_medium_021",
+    "difficulty": "medium",
+    "question": "在 `celery/utils/collections.py` 中，`lpmerge(L, R)` 函数的合并策略是什么？当 R 字典中某个键的值是 `None` 时会发生什么？当 R 字典中某个键的值是非 `None` 时会发生什么？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.collections.lpmerge"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_medium_022",
+    "difficulty": "medium",
+    "question": "在 `celery/canvas.py` 中，`Signature.from_dict(d, app=app)` 如何根据字典的 `subtask_type` 字段决定返回哪个子类的实例？`cls.TYPES` 的注册来源是什么？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.Signature.TYPES",
+        "celery.canvas.Signature.from_dict"
+      ],
+      "indirect_deps": [
+        "celery.canvas._chain.from_dict",
+        "celery.canvas.group.from_dict",
+        "celery.canvas._chord.from_dict"
+      ],
+      "implicit_deps": [
+        "celery.canvas.Signature.register_type"
+      ]
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.canvas.Signature.from_dict\",\"celery.canvas.Signature.TYPES\",\"celery.canvas.Signature.register_type\",\"celery.canvas.chain\",\"celery.canvas.xmap\",\"celery.canvas.xstarmap\",\"celery.canvas.chord\",\"celery.canvas.chunks\",\"celery.utils.imports.instantiate\"],\"indirect_deps\":[],\"implicit_deps\":[\"在 celery/canvas.py 中，Signature.from_dict 会先读取 d.get('subtask_type')；若该值存在，则用 cls.TYPES[subtask_type] 取到已注册的子类，并调用该子类的 from_dict(d, app=app)；若不存在，则直接构造 cls(d, app=app)。\",\"cls.TYPES 的来源是 Signature.register_type 注册表。该装饰器/类方法会把类型名映射到具体类：若传入字符串则直接登记，若不传则使用类的 name 属性。\",\"在本文件中注册到 TYPES 的子类包括：chain（name='chain'）、xmap（name='xmap'）、xstarmap（name='xstarmap'）、chord（name='chord'）、chunks（name='chunks'）。\",\"如果 subtask_type 对应的注册值是字符串路径而不是类对象，from_dict 会通过 celery.utils.imports.instantiate 做懒加载实例化。\"]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.canvas.Signature.from_dict",
+        "celery.canvas.Signature.TYPES",
+        "celery.canvas.Signature.register_type",
+        "celery.canvas.chain",
+        "celery.canvas.xmap",
+        "celery.canvas.xstarmap",
+        "celery.canvas.chord",
+        "celery.canvas.chunks",
+        "celery.utils.imports.instantiate"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "在 celery/canvas.py 中，Signature.from_dict 会先读取 d.get('subtask_type')；若该值存在，则用 cls.TYPES[subtask_type] 取到已注册的子类，并调用该子类的 from_dict(d, app=app)；若不存在，则直接构造 cls(d, app=app)。",
+        "cls.TYPES 的来源是 Signature.register_type 注册表。该装饰器/类方法会把类型名映射到具体类：若传入字符串则直接登记，若不传则使用类的 name 属性。",
+        "在本文件中注册到 TYPES 的子类包括：chain（name='chain'）、xmap（name='xmap'）、xstarmap（name='xstarmap'）、chord（name='chord'）、chunks（name='chunks'）。",
+        "如果 subtask_type 对应的注册值是字符串路径而不是类对象，from_dict 会通过 celery.utils.imports.instantiate 做懒加载实例化。"
+      ]
+    }
+  },
+  {
+    "case_id": "celery_medium_023",
+    "difficulty": "medium",
+    "question": "在 `celery/utils/functional.py` 中，`head_from_fun` 生成的函数签名源码存放在哪个命名空间变量中？该函数通过 `exec(definition, namespace)` 执行后，从哪个 key 获取生成的函数对象？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.functional.head_from_fun"
+      ],
+      "indirect_deps": [
+        "celery.utils.functional._argsfromspec",
+        "celery.utils.functional.FUNHEAD_TEMPLATE"
+      ],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.utils.functional.head_from_fun.definition\",\"celery.utils.functional.head_from_fun.namespace[\\\"__source__\\\"]\",\"celery.utils.functional.head_from_fun.namespace[\\\"fun\\\"]\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.utils.functional.head_from_fun.definition",
+        "celery.utils.functional.head_from_fun.namespace[\"__source__\"]",
+        "celery.utils.functional.head_from_fun.namespace[\"fun\"]"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_medium_024",
+    "difficulty": "medium",
+    "question": "在 `celery/backends/base.py` 中，`_create_fake_task_request` 函数创建的任务上下文（Context）中，`delivery_info` 字段的默认值是什么？这个空字典在 errback 执行链中会导致什么问题？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.backends.base._create_fake_task_request"
+      ],
+      "indirect_deps": [
+        "celery.app.task.Context"
+      ],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.app.task.Context\"],\"indirect_deps\":[],\"implicit_deps\":[\"在 celery/backends/base.py 的 _create_fake_task_request 中，Context 被构造时 delivery_info 默认为空字典 {}\",\"这个空的 delivery_info 会使 errback 执行链中基于请求投递元数据的逻辑失效；典型问题是缺少 exchange/routing_key/priority 等信息，导致依赖这些字段的 errback 路由、重试或发布行为无法正确执行，表现为 errback 可能被错误投递或无法按原任务请求上下文执行\"]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.task.Context"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "在 celery/backends/base.py 的 _create_fake_task_request 中，Context 被构造时 delivery_info 默认为空字典 {}",
+        "这个空的 delivery_info 会使 errback 执行链中基于请求投递元数据的逻辑失效；典型问题是缺少 exchange/routing_key/priority 等信息，导致依赖这些字段的 errback 路由、重试或发布行为无法正确执行，表现为 errback 可能被错误投递或无法按原任务请求上下文执行"
+      ]
+    }
+  },
+  {
+    "case_id": "celery_easy_018",
+    "difficulty": "easy",
+    "question": "`celery.app.base.Celery.gen_task_name` 方法将任务名生成委托给哪个工具函数？该工具函数在哪个文件中定义？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.utils.imports.gen_task_name\"],\"indirect_deps\":[],\"implicit_deps\":[\"celery/utils/imports.py\"]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery/utils/imports.py"
+      ]
+    }
+  },
+  {
+    "case_id": "celery_easy_019",
+    "difficulty": "easy",
+    "question": "`celery.utils.imports.import_from_cwd` 与普通的 `import_module` 相比，额外做了什么操作？该操作通过哪个上下文管理器实现？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.cwd_in_path",
+        "celery.utils.imports.import_from_cwd"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.utils.imports.cwd_in_path\",\"importlib.import_module\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.utils.imports.cwd_in_path",
+        "importlib.import_module"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_easy_020",
+    "difficulty": "easy",
+    "question": "`celery.utils.imports.load_extension_classes(namespace)` 这条扩展加载链里，哪个 Celery 函数先枚举 entry point 的 `(name, value)`，哪个 Celery 函数再把 `value` 字符串解析成真实类？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.load_extension_class_names",
+        "celery.utils.imports.load_extension_classes"
+      ],
+      "indirect_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.utils.imports.load_extension_classes\",\"celery.utils.imports.load_extension_class_names\",\"celery.utils.imports.symbol_by_name\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.utils.imports.load_extension_classes",
+        "celery.utils.imports.load_extension_class_names",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_medium_025",
+    "difficulty": "medium",
+    "question": "celery.app.task.Task.Request 是字符串 celery.worker.request:Request，celery.app.task.Task.Strategy 是字符串 celery.worker.strategy:default。这两个字符串在 worker 进程中被解析为哪些真实的类？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.request.Request",
+        "celery.worker.strategy.default"
+      ],
+      "indirect_deps": [
+        "celery.worker.request",
+        "celery.worker.strategy"
+      ],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\": {\"direct_deps\": [\"celery.worker.request.Request\", \"celery.worker.strategy.default\"], \"indirect_deps\": [], \"implicit_deps\": []}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.worker.request.Request",
+        "celery.worker.strategy.default"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_easy_021",
+    "difficulty": "easy",
+    "question": "celery.canvas.Signature 是什么类型的对象？它继承自哪个标准库类？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.Signature"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.canvas.Signature\",\"collections.abc.MutableMapping\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.canvas.Signature",
+        "collections.abc.MutableMapping"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_easy_022",
+    "difficulty": "easy",
+    "question": "celery.utils.uuid 实际上是从哪个外部包的哪个模块的哪个函数重新导出的？",
+    "ground_truth": {
+      "direct_deps": [
+        "kombu.utils.uuid.uuid"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"kombu.utils.uuid.uuid\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "kombu.utils.uuid.uuid"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_easy_023",
+    "difficulty": "easy",
+    "question": "celery.utils.nodename 是在 celery.utils.nodenames 模块中定义的函数，它的完整 FQN 是什么？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.nodenames.nodename"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.utils.nodenames.nodename\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.utils.nodenames.nodename"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  },
+  {
+    "case_id": "celery_easy_024",
+    "difficulty": "easy",
+    "question": "celery.utils.worker_direct 是在 celery.utils.nodenames 模块中定义的函数，它的完整 FQN 是什么？",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.nodenames.worker_direct"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.utils.nodenames.worker_direct\"],\"indirect_deps\":[],\"implicit_deps\":[]}}",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.utils.nodenames.worker_direct"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    }
+  }
+]
