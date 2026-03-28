@@ -1,0 +1,1541 @@
+[
+  {
+    "case_id": "easy_001",
+    "difficulty": "easy",
+    "category": "re_export",
+    "failure_type": "Type C",
+    "question": "Which real class does `celery.Celery` resolve to in the top-level lazy API?",
+    "entry_symbol": "",
+    "entry_file": "celery/__init__.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 5913,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about the real class `celery.Celery` resolves to in the top-level lazy API, along with context files (source code snippets).\n    *   Constraint: Output *ONLY* a valid JSON object. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Task: Identify the actual class definition that `celery.Celery` points to, based on the provided context.\n\n2.  **Analyze the Context:**\n    *   **Retrieved 1 (celery/__init__.py):**\n        *   Shows the top-level `celery` module initialization.\n        *   Contains a section `STATICA_HACK` which is guarded by `if STATICA_HACK:`.\n        *   Inside `STATICA_HACK`, there is an import: `from celery.app.base import Celery`.\n        *   There is a section `old_module, new_module = local.recreate_module(...)`.\n        *   The `by_module` dictionary maps `'celery.app': ['Celery', 'bugreport', 'shared_task']`.\n        *   The `recreate_module` function creates a lazy module.\n        *   However, the question asks what `celery.Celery` resolves to in the *top-level lazy API*.\n        *   Looking at the `STATICA_HACK` block: `from celery.app.base import Celery`. This suggests the underlying class is defined in `celery.app.base`.\n        *   Looking at the `recreate_module` block: It sets up lazy loading. When `celery.Celery` is accessed, it likely triggers the import from `celery.app.base`.\n        *   Retrieved 3 (celery/app/base.py): Shows `class Celery:`. This confirms the class definition location.\n        *   Retrieved 1 explicitly states: `from celery.app.base import Celery` inside the `STATICA_HACK` block which is used for static analysis, but the `recreate_module` logic also points to `'celery.app': ['Celery', ...]`.\n        *   The question asks for the \"real class\".",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery (celery/__init__.py:1-180) | source=bm25, graph\n\"\"\"Distributed Task Queue.\"\"\"\n# :copyright: (c) 2017-2026 Asif Saif Uddin, celery core and individual\n#                 contributor..."
+  },
+  {
+    "case_id": "easy_002",
+    "difficulty": "easy",
+    "category": "re_export",
+    "failure_type": "Type C",
+    "question": "Which real function does the top-level `celery.shared_task` symbol resolve to?",
+    "entry_symbol": "",
+    "entry_file": "celery/__init__.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.shared_task"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 5570,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about the `celery.shared_task` symbol, along with context snippets from source code (specifically `celery/__init__.py` and `celery/app/__init__.py`).\n    *   Constraint: Output *only* a valid JSON object. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Task: Identify the real function that `celery.shared_task` resolves to based on the provided context.\n\n2.  **Analyze the Context:**\n    *   **Snippet 1 (`celery/__init__.py`):**\n        *   Shows `__all__` includes `'shared_task'`.\n        *   Shows a `STATICA_HACK` block (commented out/conditional) that imports `shared_task` from `celery.app`.\n        *   Shows `local.recreate_module` which creates a lazy module.\n        *   The `by_module` dictionary in `recreate_module` maps `'celery.app': ['Celery', 'bugreport', 'shared_task']`.\n        *   This implies `celery.shared_task` is actually `celery.app.shared_task`.\n    *   **Snippet 2 (`celery/app/__init__.py`):**\n        *   Shows the definition of `def shared_task(*args, **kwargs):`.\n        *   Docstring: \"Create shared task (decorator).\"\n        *   This confirms the location of the actual function definition.\n\n3.  **Determine the Resolution:**\n    *   The question asks: \"Which real function does the top-level `celery.shared_task` symbol resolve to?\"\n    *   Based on Snippet 1, `celery.shared_task` is lazily imported from `celery.app`.\n    *   Based on Snippet 2, the function is defined in `celery.app`.\n    *   Therefore, the direct dependency/module path where the function resides is `celery.app`.\n    *   However, the format asks for `direct_deps` as `[\"module.path\"]`. Usually, this means the module where the symbol is defined.\n    *   Looking at the",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery (celery/__init__.py:1-180) | source=bm25, graph\n\"\"\"Distributed Task Queue.\"\"\"\n# :copyright: (c) 2017-2026 Asif Saif Uddin, celery core and individual\n#                 contributor..."
+  },
+  {
+    "case_id": "easy_003",
+    "difficulty": "easy",
+    "category": "loader_alias",
+    "failure_type": "Type E",
+    "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('default')` resolve to?",
+    "entry_symbol": "",
+    "entry_file": "celery/loaders/__init__.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1404,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about `celery.loaders.get_loader_cls`, specifically what `get_loader_cls('default')` resolves to.\n    *   Constraints: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context Provided: Snippets from `celery/loaders/__init__.py`, `celery/app/base.py`, `celery/loaders/base.py`, `celery/loaders/default.py`.\n\n2.  **Analyze the Context:**\n    *   `celery/loaders/__init__.py`:\n        *   Defines `LOADER_ALIASES = { 'app': 'celery.loaders.app:AppLoader', 'default': 'celery.loaders.default:Loader', }`\n        *   Defines `get_loader_cls(loader)`.\n    *   `celery/loaders/__init__.py` (implied logic from snippet 2):\n        *   The function `get_loader_cls` takes a loader name.\n        *   It likely looks up the name in `LOADER_ALIASES`.\n        *   If found, it imports the class using `symbol_by_name` or similar (referenced in snippet 2).\n    *   `LOADER_ALIASES['default']` is `'celery.loaders.default:Loader'`.\n    *   Therefore, `get_loader_cls('default')` resolves to the class `Loader` from `celery.loaders.default`.\n\n3.  **Determine the Output:**\n    *   The question asks what it resolves to.\n    *   The expected JSON format requires `direct_deps`, `indirect_deps`, `implicit_deps`.\n    *   Wait, the format example shows `{\"ground_truth\": {\"direct_deps\": [\"celery.app.base.Celery\"], ...}}`. This looks like a dependency graph format, but the question is asking for the *result* of the function call.\n    *   However, looking closely at the provided format instruction: `Format: {\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`.\n",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.loaders (celery/loaders/__init__.py:1-18) | source=bm25, graph\n\"\"\"Get loader by name.\n\nLoaders define how configuration is read, what happens\nwhen workers start, when tasks are ex..."
+  },
+  {
+    "case_id": "easy_004",
+    "difficulty": "easy",
+    "category": "alias_resolution",
+    "failure_type": "Type D",
+    "question": "What pool implementation does `celery.concurrency.get_implementation('processes')` resolve to?",
+    "entry_symbol": "",
+    "entry_file": "celery/concurrency/__init__.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.prefork.TaskPool"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1525,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's pool implementation resolution (`celery.concurrency.get_implementation('processes')`), along with some retrieved context snippets.\n    *   Constraint: Output *ONLY* a valid JSON object. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Task: Identify the pool implementation class that `celery.concurrency.get_implementation('processes')` resolves to, based on the provided context and general knowledge of Celery (since the context snippets are limited but hint at the structure).\n\n2.  **Analyze the Context:**\n    *   Snippet 1: `get_implementation(cls)` returns `symbol_by_name(cls, ALIASES)`. This means it looks up the name in `ALIASES`.\n    *   Snippet 2: Lists available pool implementations: `celery.concurrency.eventlet.TaskPool`, `celery.concurrency.gevent.TaskPool`, `celery.concurrency.prefork.TaskPool`, `celery.concurrency.solo.TaskPool`, `celery.concurrency.thread.TaskPool`. It mentions `ALIASES`.\n    *   Snippet 3: `celery.concurrency.solo.TaskPool`.\n    *   Snippet 5: `celery.concurrency.asynpool.AsynPool`.\n    *   Missing Information: The specific mapping in `ALIASES` for the string `'processes'`.\n    *   General Knowledge (Celery): In Celery, the pool named `'processes'` typically maps to the `prefork` implementation. The `prefork` pool uses `multiprocessing` (processes). The class is usually `celery.concurrency.prefork.TaskPool`.\n    *   Let's verify with the context provided. Snippet 2 lists `celery.concurrency.prefork.TaskPool` as a string target. It doesn't explicitly show the alias mapping, but standard Celery behavior is `'processes'` -> `prefork`.\n    *   Wait, I need to check if the context *explicitly* states this or if I need to infer it. The prompt asks me to answer based on the context provided (\"",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.concurrency.get_implementation (celery/concurrency/__init__.py:41-43) | source=bm25, graph\ndef get_implementation(cls):\n    \"\"\"Return pool implementation by name.\"\"\"\n    return sy..."
+  },
+  {
+    "case_id": "medium_001",
+    "difficulty": "medium",
+    "category": "backend_alias",
+    "failure_type": "Type E",
+    "question": "Which backend class does `celery.app.backends.by_name('redis')` resolve to?",
+    "entry_symbol": "",
+    "entry_file": "celery/app/backends.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.backends.redis.RedisBackend"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 2149,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery backend resolution (`celery.app.backends.by_name('redis')`), some context snippets (retrieved code/docs), and a strict output format requirement (JSON only).\n    *   Task: Identify the backend class resolved by `celery.app.backends.by_name('redis')`.\n    *   Output Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`.\n    *   Constraint: ONLY output valid JSON, no markdown, no explanations.\n\n2.  **Analyze the Context:**\n    *   [Retrieved 1] `celery.app.backends.by_url`: Shows `by_url` calls `by_name`.\n    *   [Retrieved 2] `celery.app.backends.by_name`: Docstring says \"Get backend class by name/alias.\" References `BACKEND_ALIASES`.\n    *   [Retrieved 3] `celery.app.backends`: Module docstring. Imports `celery.backends.arangodb.ArangoDbBackend`, etc. References `BACKEND_ALIASES`.\n    *   [Retrieved 4] `celery.backends.redis.RedisBackend`: Class definition for `RedisBackend`.\n    *   [Retrieved 5] `celery.result.AsyncResult.get`: Irrelevant to backend class resolution.\n\n3.  **Determine the Answer:**\n    *   The question asks: Which backend class does `celery.app.backends.by_name('redis')` resolve to?\n    *   Based on Celery's architecture (and the provided context snippets, specifically [Retrieved 4] showing `celery.backends.redis.RedisBackend` and [Retrieved 2] referencing `BACKEND_ALIASES` which typically maps 'redis' to `celery.backends.redis.RedisBackend`), the class is `celery.backends.redis.RedisBackend`.\n    *   The context snippet [Retrieved 4] explicitly defines `class RedisBackend(BaseKeyValueStoreBackend, AsyncBackendMixin):` in `celery/backends/redis.py`.\n    *   The `by_name` function looks up aliases. The alias 'redis' maps to the Redis backend class.\n    *   The full path is `celery.backends.redis.RedisBackend`.\n\n4.  **",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.backends.by_url (celery/app/backends.py:59-69) | source=bm25, graph\ndef by_url(backend=None, loader=None):\n    \"\"\"Get backend class by URL.\"\"\"\n    url = None\n    if backend an..."
+  },
+  {
+    "case_id": "medium_002",
+    "difficulty": "medium",
+    "category": "loader_alias",
+    "failure_type": "Type E",
+    "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('app')` resolve to?",
+    "entry_symbol": "",
+    "entry_file": "celery/loaders/__init__.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.app.AppLoader"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1404,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about `celery.loaders.get_loader_cls`, specifically what `get_loader_cls('app')` resolves to.\n    *   Constraints: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context Provided: Snippets from `celery/loaders/__init__.py`, `celery/app/base.py`, `celery/loaders/base.py`, `celery/loaders/default.py`.\n\n2.  **Analyze the Context:**\n    *   Snippet 1 (`celery/loaders/__init__.py`):\n        *   Defines `LOADER_ALIASES = { 'app': 'celery.loaders.app:AppLoader', 'default': 'celery.loaders.default:Loader', }`.\n        *   Defines `get_loader_cls` function (Snippet 2).\n    *   Snippet 2 (`celery/loaders/__init__.py`):\n        *   `def get_loader_cls(loader):`\n        *   Docstring: \"Get loader class by name/alias.\"\n        *   References: `LOADER_ALIASES`, `import_from_cwd`, `symbol_by_name`.\n    *   Snippet 3 (`celery/app/base.py`):\n        *   Shows `loader` property uses `get_loader_cls`.\n    *   Snippet 4 & 5: Less relevant to the specific resolution of the string 'app'.\n\n3.  **Determine the Answer:**\n    *   The question asks what `get_loader_cls('app')` resolves to.\n    *   Looking at `LOADER_ALIASES` in Snippet 1: `'app': 'celery.loaders.app:AppLoader'`.\n    *   The function `get_loader_cls` likely uses this dictionary to map the string 'app' to the string `'celery.loaders.app:AppLoader'`, and then likely imports that class using `symbol_by_name` or similar (implied by references in Snippet 2).\n    *   However, the question asks what it *resolves to*. Usually, this means the",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.loaders (celery/loaders/__init__.py:1-18) | source=bm25, graph\n\"\"\"Get loader by name.\n\nLoaders define how configuration is read, what happens\nwhen workers start, when tasks are ex..."
+  },
+  {
+    "case_id": "medium_003",
+    "difficulty": "medium",
+    "category": "alias_resolution",
+    "failure_type": "Type D",
+    "question": "What pool implementation does `celery.concurrency.get_implementation('threads')` resolve to?",
+    "entry_symbol": "",
+    "entry_file": "celery/concurrency/__init__.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.thread.TaskPool"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1499,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's pool implementation resolution for 'threads', along with some retrieved context snippets.\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Task: Identify the pool implementation class that `celery.concurrency.get_implementation('threads')` resolves to, based on the provided context.\n\n2.  **Analyze the Context:**\n    *   [Retrieved 1] `celery.concurrency.get_implementation`: Returns `symbol_by_name(cls, ALIASES)`. It takes a class name (or string) and looks it up in `ALIASES`.\n    *   [Retrieved 2] `celery.concurrency`: Lists string targets including `celery.concurrency.thread.TaskPool`. It mentions `ALIASES`.\n    *   [Retrieved 3] `celery.concurrency.thread.TaskPool`: Defines the `TaskPool` class in the `thread` module.\n    *   [Retrieved 4] `celery.concurrency.get_available_pool_names`: Returns keys from `ALIASES`.\n    *   [Retrieved 5] `celery.concurrency.asynpool.AsynPool`: Irrelevant to 'threads'.\n\n3.  **Determine the Answer:**\n    *   The question asks what `celery.concurrency.get_implementation('threads')` resolves to.\n    *   Based on Celery's internal structure (and hinted at in [Retrieved 2] where `celery.concurrency.thread.TaskPool` is listed as a string target/implementation), the alias 'threads' typically maps to `celery.concurrency.thread.TaskPool`.\n    *   However, the specific output format requested is `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`.\n    *   This format looks like it expects a dependency path or class path.\n    *   The question asks \"What pool implementation...\". The answer is the class path.\n    *   Looking at [Retrieved 2], the string target is `celery.concurrency",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.concurrency.get_implementation (celery/concurrency/__init__.py:41-43) | source=bm25, graph\ndef get_implementation(cls):\n    \"\"\"Return pool implementation by name.\"\"\"\n    return sy..."
+  },
+  {
+    "case_id": "medium_004",
+    "difficulty": "medium",
+    "category": "name_generation",
+    "failure_type": "Type C",
+    "question": "Which helper function does `Celery.gen_task_name` delegate to?",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 3108,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question (\"Which helper function does `Celery.gen_task_name` delegate to?\"), an entry file path (`celery/app/base.py`), and a context containing several code snippets/retrieved information about the `Celery` class in `celery/app/base.py`.\n    *   Constraint: Output MUST be ONLY a valid JSON object. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Task: Identify the helper function that `Celery.gen_task_name` delegates to, based on the provided context.\n\n2.  **Analyze the Context:**\n    *   I need to find where `gen_task_name` is defined or used, and specifically what it delegates to.\n    *   Looking at the provided snippets:\n        *   [Retrieved 1]: `celery.app.base.Celery._task_from_fun`. It calls `self.gen_task_name(fun.__name__, fun.__module__)`. This shows `gen_task_name` is called, but doesn't show its implementation or delegation.\n        *   [Retrieved 2]: `celery.app.base.Celery.autodiscover_tasks`. No mention of `gen_task_name`.\n        *   [Retrieved 3]: `celery.app.base.Celery.register_task`. References `self.gen_task_name`. No implementation shown.\n        *   [Retrieved 4]: `celery.app.base.Celery.oid`. No mention.\n        *   [Retrieved 5]: `celery.app.base.Celery` class definition. Just a class header and some references.\n\n    *   Wait, the provided context snippets *do not* contain the implementation of `gen_task_name`.\n    *   However, the question asks \"Which helper function does `Celery.gen_task_name` delegate to?\".\n    *   Usually, in Celery's source code (which I might know from general knowledge, but I must rely on the context provided if possible, or infer from standard patterns if the context is insufficient but the question implies a specific answer exists within the ecosystem).\n    *   Let's look closely at the snippets again.\n    *   Sn",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery._task_from_fun (celery/app/base.py:587-630) | source=bm25, graph\n    def _task_from_fun(\n        self,\n        fun,\n        name=None,\n        base=None,\n        b..."
+  },
+  {
+    "case_id": "hard_001",
+    "difficulty": "hard",
+    "category": "shared_task_registration",
+    "failure_type": "Type B",
+    "question": "When `@shared_task` decorates a function, which real app method ultimately creates the task instance?",
+    "entry_symbol": "",
+    "entry_file": "celery/app/__init__.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 3251,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's `@shared_task` decorator, specifically asking which real app method ultimately creates the task instance.\n    *   Entry File: `celery/app/__init__.py`\n    *   Context: Provided code snippets from `celery/app/__init__.py` (shared_task), `celery/app/base.py` (Celery class), and some other modules.\n    *   Constraint: Output ONLY valid JSON, no markdown, no explanations.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n\n2.  **Analyze the Question:**\n    *   Question: \"When `@shared_task` decorates a function, which real app method ultimately creates the task instance?\"\n    *   Key Concept: `@shared_task` decorator mechanism in Celery.\n    *   Goal: Identify the specific method within the Celery app class that actually registers/creates the task.\n\n3.  **Analyze the Context:**\n    *   `[Retrieved 1] celery.app.shared_task`:\n        *   Shows the `shared_task` function.\n        *   Inside `create_shared_task`, there's a lambda: `lambda app: app._task_from_fun(fun, **options)`.\n        *   This lambda is connected via `_state.connect_on_app_finalize`.\n        *   It also iterates over active apps and calls `app._task_from_fun(fun, **options)`.\n        *   The return value is a `Proxy` that calls `task_by_cons`, which accesses `app.tasks[...]`.\n        *   Crucially, the method called on the `app` object to register the task is `_task_from_fun`.\n    *   `[Retrieved 2] celery.app.base.Celery`:\n        *   Shows the `Celery` class definition.\n        *   This is where the `app` object resides.\n        *   The method `_task_from_fun` is likely defined here (or inherited, but usually defined in the base app class).\n    *   `[Retrieved 4] celery.app`:\n        *   Imports `_state`, `Proxy`, etc.\n\n4.  **Synthesize the Answer:**\n    *",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.shared_task (celery/app/__init__.py:24-76) | source=graph\ndef shared_task(*args, **kwargs):\n    \"\"\"Create shared task (decorator).\n\n    This can be used by library authors to ..."
+  },
+  {
+    "case_id": "hard_002",
+    "difficulty": "hard",
+    "category": "app_task_registration",
+    "failure_type": "Type B",
+    "question": "Inside the `@app.task` decorator flow, which real method ultimately constructs and registers the task?",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 3356,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about the Celery `@app.task` decorator flow, specifically asking which real method ultimately constructs and registers the task.\n    *   Entry File: `celery/app/base.py`\n    *   Context: Provided snippets from `celery/app/base.py` (autodiscover_tasks, task, Celery class, __init__, send_task).\n    *   Constraint: Output ONLY a valid JSON object. No markdown, no explanations.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n\n2.  **Analyze the Question:**\n    *   Question: \"Inside the `@app.task` decorator flow, which real method ultimately constructs and registers the task?\"\n    *   Target: Identify the specific method within the Celery application class (likely `celery.app.base.Celery`) that handles the actual creation and registration of a task when the `@task` decorator is used.\n\n3.  **Analyze the Context:**\n    *   [Retrieved 2] `celery.app.base.Celery.task`:\n        *   Docstring: \"Decorator to create a task class out of any callable.\"\n        *   This is the decorator itself.\n        *   It references `_create_task_cls`, `app`.\n        *   Usually, decorators return a function that wraps the original function. When used as `@app.task`, it returns a task class or instance.\n    *   [Retrieved 4] `celery.app.base.Celery.__init__`:\n        *   Sets up the app.\n    *   [Retrieved 5] `celery.app.base.Celery.send_task`:\n        *   Sends a task, not registers it.\n    *   [Retrieved 1] `celery.app.base.Celery.autodiscover_tasks`:\n        *   Discovers tasks, doesn't register them individually via the decorator flow directly.\n\n4.  **External Knowledge Retrieval (Simulated):**\n    *   I need to know the internal implementation of `celery.app.base.Celery.task`.\n    *   In Celery, `@app.task` is a decorator.\n    *   When `@",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery.autodiscover_tasks (celery/app/base.py:779-823) | source=bm25, graph\n    def autodiscover_tasks(self, packages=None,\n                           related_name='tasks..."
+  },
+  {
+    "case_id": "hard_003",
+    "difficulty": "hard",
+    "category": "finalize_callback",
+    "failure_type": "Type B",
+    "question": "Which function is responsible for firing all shared-task and built-in finalize callbacks?",
+    "entry_symbol": "",
+    "entry_file": "celery/_state.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state._announce_app_finalized"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 3052,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question (\"Which function is responsible for firing all shared-task and built-in finalize callbacks?\"), an entry file (`celery/_state.py`), and some context snippets (Retrieved 1-5).\n    *   Constraint: Output ONLY valid JSON. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Task: Identify the function responsible for firing finalize callbacks based on the provided context and code structure.\n\n2.  **Analyze the Context:**\n    *   **Retrieved 1 (celery/_state.py:1-197):**\n        *   Defines `_on_app_finalizers = set()`.\n        *   Docstring says: \"Global set of functions to call whenever a new app is finalized. Shared tasks, and built-in tasks are created by adding callbacks here.\"\n        *   Defines `connect_on_app_finalize`.\n        *   Defines `current_app`, `current_task`.\n    *   **Retrieved 3 (celery/_state.py:49-52):**\n        *   Function `_announce_app_finalized(app)`.\n        *   References `_on_app_finalizers`.\n        *   This function seems to iterate over `_on_app_finalizers` and call them.\n    *   **Question:** \"Which function is responsible for firing all shared-task and built-in finalize callbacks?\"\n    *   **Search for the function:**\n        *   The context mentions `_on_app_finalizers` is the set of callbacks.\n        *   The function `_announce_app_finalized` references `_on_app_finalizers`.\n        *   Usually, when an app is finalized, this function is called to trigger the callbacks.\n        *   Looking at the snippet for `_announce_app_finalized`:\n            ```python\n            def _announce_app_finalized(app):\n                # ...\n                for callback in _on_app_finalizers:\n                    callback(app)\n            ```\n            (Inferred from the name and reference to `_on_app_finalizers`).\n        *   The question asks for the function responsible for *firing* them.\n        *   Based on standard Celery architecture (and",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery._state (celery/_state.py:1-197) | source=bm25, graph\n\"\"\"Internal state.\n\nThis is an internal module containing thread state\nlike the ``current_app``, and ``current_task``.\n\nThis m..."
+  },
+  {
+    "case_id": "hard_004",
+    "difficulty": "hard",
+    "category": "symbol_by_name_resolution",
+    "failure_type": "Type E",
+    "question": "In `celery.worker.strategy.default`, what real class does `task.Request` resolve to?",
+    "entry_symbol": "",
+    "entry_file": "celery/worker/strategy.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.request.Request"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1978,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about the `celery.worker.strategy.default` function, specifically asking what real class `task.Request` resolves to.\n    *   Constraint: Output ONLY valid JSON. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context: Provided snippets from `celery/worker/strategy.py`, `celery/app/task.py`, `celery/worker/strategy.py` (proto1_to_proto2), `celery/worker/strategy.py` (default), and `celery/worker/request.py`.\n\n2.  **Analyze the Context:**\n    *   Snippet 1 (`celery/worker/strategy.py`): Shows imports. Specifically `from .request import create_request_cls`.\n    *   Snippet 4 (`celery/worker/strategy.py`): Shows the `default` function definition. It references `Req` and `Request`.\n    *   Snippet 5 (`celery/worker/request.py`): Shows `class Request`.\n    *   Snippet 2 (`celery/app/task.py`): Shows `class Task`. References `celery.worker.request.Request`.\n\n3.  **Investigate the specific question:** \"In `celery.worker.strategy.default`, what real class does `task.Request` resolve to?\"\n    *   I need to look at the `default` function in `celery/worker/strategy.py`.\n    *   Snippet 4 shows the signature: `def default(task, app, consumer, ...`.\n    *   Snippet 1 shows `from .request import create_request_cls`.\n    *   Usually, in Celery's worker strategy, `task` is the task class (often `celery.app.task.Task` or a subclass).\n    *   However, the question asks about `task.Request`. This implies looking at how `Request` is accessed within the `default` function or how it's resolved relative to the `task` argument.\n    *   Let's look at standard Celery source code knowledge (since the snippets are limited but hint at the structure).\n    *   In `celery/worker/strategy.py`, the `",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.worker.strategy (celery/worker/strategy.py:1-209) | source=bm25, graph\n\"\"\"Task execution strategy (optimization).\"\"\"\nimport logging\n\nfrom kombu.asynchronous.timer import to_timest..."
+  },
+  {
+    "case_id": "celery_hard_014",
+    "difficulty": "hard",
+    "category": "builtin_finalize_registration",
+    "failure_type": "Type B",
+    "question": "At app finalize time, which method actually creates the celery.backend_cleanup Task instance?",
+    "entry_symbol": "",
+    "entry_file": "celery/app/builtins.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [
+        "celery.app.builtins.add_backend_cleanup_task",
+        "celery.app.base.Celery.task"
+      ],
+      "implicit_deps": [
+        "celery._state.connect_on_app_finalize",
+        "celery._state._announce_app_finalized"
+      ]
+    },
+    "rag_context_length": 2342,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's `app.finalize` time, specifically which method creates the `celery.backend_cleanup` Task instance.\n    *   Entry File: `celery/app/builtins.py`\n    *   Context: Several code snippets and metadata about `celery/app/builtins.py`, `celery/canvas.py`, etc.\n    *   Constraint: Output ONLY a valid JSON object. No markdown, no explanations.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n\n2.  **Analyze the Question:**\n    *   Question: \"At app finalize time, which method actually creates the celery.backend_cleanup Task instance?\"\n    *   Key concept: `app.finalize` time, creation of `celery.backend_cleanup` task.\n    *   Entry File: `celery/app/builtins.py`.\n\n3.  **Analyze the Context:**\n    *   [Retrieved 1] `celery/app/builtins.add_backend_cleanup_task`:\n        *   Decorator: `@connect_on_app_finalize`\n        *   Function: `add_backend_cleanup_task(app)`\n        *   Inside: `@app.task(name='celery.backend_cleanup', shared=False, lazy=False)` defines `backend_cleanup`.\n        *   Returns: `backend_cleanup`.\n    *   [Retrieved 3] `celery/app/builtins`:\n        *   Module docstring mentions \"Built-in Tasks\".\n        *   String targets include `celery.backend_cleanup`.\n    *   The question asks for the *method* that creates the task instance at app finalize time.\n    *   Looking at [Retrieved 1], the function `add_backend_cleanup_task` is decorated with `@connect_on_app_finalize`. This decorator ensures the function runs when the app finalizes. Inside this function, the `@app.task` decorator is used to define/return the task instance.\n    *   So, the method responsible is `add_backend_cleanup_task`.\n    *   The path for this method is `celery.app.builtins.add_backend_cleanup_task`.\n\n4.  **Determine Dependencies:**\n    *   The question asks for the method name",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.builtins.add_backend_cleanup_task (celery/app/builtins.py:12-23) | source=bm25, graph\n@connect_on_app_finalize\ndef add_backend_cleanup_task(app):\n    \"\"\"Task used to clean up ..."
+  },
+  {
+    "case_id": "celery_hard_016",
+    "difficulty": "hard",
+    "category": "autodiscovery_fixup_import",
+    "failure_type": "Type E",
+    "question": "When packages=None, which function finally executes the real importlib.import_module call for package names gathered from Celery._autodiscover_tasks_from_fixups?",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.base.find_related_module"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery._autodiscover_tasks_from_fixups",
+        "celery.fixups.django.DjangoFixup.autodiscover_tasks",
+        "celery.loaders.base.autodiscover_tasks"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 3323,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's `autodiscover_tasks` function, specifically asking which function finally executes the real `importlib.import_module` call for package names gathered from `Celery._autodiscover_tasks_from_fixups` when `packages=None`.\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context: Provided snippets from `celery/app/base.py`, `celery/loaders/base.py`, etc.\n\n2.  **Analyze the Question:**\n    *   Target: Identify the function that executes `importlib.import_module`.\n    *   Condition: When `packages=None` in `autodiscover_tasks`.\n    *   Source of packages: `Celery._autodiscover_tasks_from_fixups`.\n    *   Entry File: `celery/app/base.py`.\n\n3.  **Trace the Code (Mental Simulation based on provided context and general Celery knowledge):**\n    *   `autodiscover_tasks(self, packages=None, ...)` (Retrieved 1):\n        *   If `force`: calls `self._autodiscover_tasks(packages, related_name)`.\n        *   If not `force`: connects a signal `import_modules` to `starpromise(self._autodiscover_tasks, ...)`.\n    *   The question asks about the *real* `importlib.import_module` call.\n    *   Usually, `_autodiscover_tasks` is the one that iterates and imports.\n    *   Let's look for `_autodiscover_tasks`. It's not explicitly in the provided snippets (Retrieved 1 shows `autodiscover_tasks` calling `_autodiscover_tasks` if force, or connecting signal).\n    *   However, the question specifically mentions `Celery._autodiscover_tasks_from_fixups`.\n    *   When `packages=None`, `autodiscover_tasks` relies on fixups (like Django).\n    *   The signal `import_modules` is connected to `starpromise(self._autodiscover_tasks, ...)",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery.autodiscover_tasks (celery/app/base.py:779-823) | source=bm25, graph\n    def autodiscover_tasks(self, packages=None,\n                           related_name='tasks..."
+  },
+  {
+    "case_id": "celery_hard_013",
+    "difficulty": "hard",
+    "category": "shared_task_proxy_autofinalize",
+    "failure_type": "Type B",
+    "question": "`celery.app.shared_task` 返回的 Proxy 首次解析任务对象时，触发 finalize 回调链的关键入口符号是什么？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/__init__.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery.tasks",
+        "celery.app.base.Celery.finalize"
+      ],
+      "indirect_deps": [
+        "celery._state._announce_app_finalized"
+      ],
+      "implicit_deps": [
+        "celery._state.connect_on_app_finalize",
+        "celery.app.base.Celery._task_from_fun"
+      ]
+    },
+    "rag_context_length": 3143,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's `celery.app.shared_task` returning a `Proxy` object, specifically asking for the key entry symbol that triggers the `finalize` callback chain when the task object is first resolved.\n    *   Constraint: Output *ONLY* a valid JSON object. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context: Provided snippets from `celery/app/__init__.py`, `celery/app/base.py`, etc.\n\n2.  **Analyze the Question:**\n    *   Question: `celery.app.shared_task` 返回的 Proxy 首次解析任务对象时，触发 finalize 回调链的关键入口符号是什么？ (What is the key entry symbol that triggers the finalize callback chain when the Proxy returned by `celery.app.shared_task` resolves the task object for the first time?)\n    *   Context Snippet 1 (`celery.app.shared_task`):\n        *   Defines `shared_task`.\n        *   Inside `create_shared_task`, it defines `__inner`.\n        *   `__inner` calls `_state.connect_on_app_finalize(lambda app: app._task_from_fun(fun, **options))`.\n        *   It returns `Proxy(task_by_cons)`.\n        *   `task_by_cons` is a function that gets the current app and retrieves the task from `app.tasks`.\n    *   The question asks about the *Proxy* resolving the task object.\n    *   When does the `finalize` callback chain get triggered?\n        *   Looking at Snippet 1: `_state.connect_on_app_finalize(...)` connects a callback.\n        *   The question asks about the *entry symbol* that triggers the `finalize` callback chain *when the Proxy resolves the task object*.\n        *   Wait, the question phrasing is slightly tricky. \"Proxy 首次解析任务对象时，触发 finalize 回调链的关键入口符号是什么？\" (When the Proxy first resolves the task object, what is the key entry symbol that triggers the finalize callback chain?)\n        *   Actually, looking at the code: `_state.connect_on_app_finalize` registers a callback. This callback",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.shared_task (celery/app/__init__.py:24-76) | source=bm25, graph\ndef shared_task(*args, **kwargs):\n    \"\"\"Create shared task (decorator).\n\n    This can be used by library autho..."
+  },
+  {
+    "case_id": "celery_hard_015",
+    "difficulty": "hard",
+    "category": "autodiscovery_signal_chain",
+    "failure_type": "Type B",
+    "question": "在 `app.autodiscover_tasks(..., force=False)` 的 lazy 路径下，真正被触发执行的目标函数是什么，以及它由哪条调用链触发？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._autodiscover_tasks"
+      ],
+      "indirect_deps": [
+        "celery.loaders.base.BaseLoader.init_worker",
+        "celery.loaders.base.BaseLoader.import_default_modules",
+        "celery.utils.dispatch.signal.Signal.send"
+      ],
+      "implicit_deps": [
+        "celery.signals.import_modules"
+      ]
+    },
+    "rag_context_length": 3289,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's `autodiscover_tasks` method, specifically regarding the lazy path (when `force=False`).\n    *   Question: What is the actual target function triggered, and what is the call chain that triggers it?\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context: Provided code snippets from `celery/app/base.py`.\n\n2.  **Analyze the Context:**\n    *   `Retrieved 1`: Shows `Celery.autodiscover_tasks`.\n        *   If `force` is True: calls `self._autodiscover_tasks(...)`.\n        *   If `force` is False (lazy path): connects a signal `signals.import_modules` with `starpromise(self._autodiscover_tasks, packages, related_name, ...)`.\n    *   `Retrieved 2`: Shows `Celery._autodiscover_tasks_from_names`.\n        *   This function seems to be related to the actual discovery logic, but the snippet is very short.\n    *   `Retrieved 5`: Shows `Celery` class definition.\n\n3.  **Identify the Target Function:**\n    *   In the lazy path (`force=False`), `autodiscover_tasks` connects a signal handler.\n    *   The signal handler is created by `starpromise(self._autodiscover_tasks, packages, related_name, ...)`.\n    *   So the actual function that gets executed later (when the signal fires) is `self._autodiscover_tasks`.\n    *   Wait, let's look closer at `Retrieved 1`. It says `signals.import_modules.connect(starpromise(self._autodiscover_tasks, ...))`.\n    *   So the target function is `_autodiscover_tasks`.\n    *   However, usually, `_autodiscover_tasks` calls `_autodiscover_tasks_from_names` or similar. Let's check the code structure mentally or based on common Celery knowledge.\n    *   The question asks for the \"true",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery.autodiscover_tasks (celery/app/base.py:779-823) | source=bm25, graph\n    def autodiscover_tasks(self, packages=None,\n                           related_name='tasks..."
+  },
+  {
+    "case_id": "celery_hard_018",
+    "difficulty": "hard",
+    "category": "django_task_cls_string_resolution",
+    "failure_type": "Type E",
+    "question": "在满足 Django fixup 前置条件（`DJANGO_SETTINGS_MODULE` 已设置、`django` 可导入、且 `app.loader_cls` 不含 `django`）且未自定义 `task_cls` 时，`app.Task` 的最终基类解析到哪个真实类？",
+    "entry_symbol": "",
+    "entry_file": "celery/fixups/django.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.contrib.django.task.DjangoTask"
+      ],
+      "indirect_deps": [
+        "celery.fixups.django.fixup",
+        "celery.fixups.django.DjangoFixup.install",
+        "celery.app.base.Celery.Task",
+        "celery.app.base.Celery.create_task_cls",
+        "celery.app.base.Celery.subclass_with_self"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "rag_context_length": 2480,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Django fixup in Celery, specifically asking for the final base class resolution of `app.Task` under certain conditions (Django fixup prerequisites met, `task_cls` not customized).\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context: Provided snippets from `celery/fixups/django.py`, `t.unit.fixups.test_django.test_DjangoFixup`, etc.\n\n2.  **Analyze the Question:**\n    *   Condition: Django fixup prerequisites met (`DJANGO_SETTINGS_MODULE` set, `django` importable, `app.loader_cls` doesn't contain 'django').\n    *   Condition: `task_cls` is not customized.\n    *   Target: What is the final base class of `app.Task`?\n    *   Source Code Context: `celery/fixups/django.py`.\n\n3.  **Investigate the Code (Mental Simulation & Knowledge Retrieval):**\n    *   I need to find where `app.Task` is modified or defined in the context of the Django fixup.\n    *   Looking at `celery/fixups/django.py` (Retrieved 2 & 5):\n        *   There is a `DjangoFixup` class (implied by `return DjangoFixup(app).install()`).\n        *   There is a `DjangoWorkerFixup` class.\n        *   The question asks about `app.Task`.\n    *   Usually, in Celery, `app.Task` is defined in `celery.app.task.Task`.\n    *   When Django fixup is installed, it often replaces the default `Task` class with a Django-aware one to handle Django-specific task registration, signals, etc.\n    *   Looking at `Retrieved 2`: `String targets: celery.contrib.django.task.DjangoTask`.\n    *   Looking at `Retrieved 3`: `Imports: celery.contrib.django.task, celery.contrib.django.task.DjangoTask`.\n    *   Looking at `Retrieved 3` (test",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.fixups.django.fixup (celery/fixups/django.py:52-63) | source=bm25, graph\ndef fixup(app: \"Celery\", env: str = 'DJANGO_SETTINGS_MODULE') -> Optional[\"DjangoFixup\"]:\n    \"\"\"Install D..."
+  },
+  {
+    "case_id": "celery_medium_017",
+    "difficulty": "medium",
+    "category": "fixup_string_entry_resolution",
+    "failure_type": "Type E",
+    "question": "在 `Celery.__init__` 中，默认 `builtin_fixups` 的字符串入口 `'celery.fixups.django:fixup'` 最终会被解析到哪个真实函数符号（不考虑后续 install 副作用）？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.fixups.django.fixup"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.__init__",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": [
+        "celery.app.base.BUILTIN_FIXUPS"
+      ]
+    },
+    "rag_context_length": 1870,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's `__init__` method, specifically regarding the default `builtin_fixups` string entry `'celery.fixups.django:fixup'`.\n    *   Task: Identify the actual function symbol this string resolves to (ignoring side effects of `install`).\n    *   Constraint: Output *ONLY* a valid JSON object. No markdown, no explanations.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context: Provided snippets from `celery/app/base.py` and `celery/fixups/django.py`.\n\n2.  **Analyze the Question:**\n    *   Question: In `Celery.__init__`, the default `builtin_fixups` string entry `'celery.fixups.django:fixup'` eventually resolves to which real function symbol?\n    *   Key information needed: The function name defined in the module `celery.fixups.django` that corresponds to the string `'celery.fixups.django:fixup'`.\n\n3.  **Analyze the Context:**\n    *   [Retrieved 2] `celery.fixups.django.fixup (celery/fixups/django.py:52-63)`:\n        ```python\n        def fixup(app: \"Celery\", env: str = 'DJANGO_SETTINGS_MODULE') -> Optional[\"DjangoFixup\"]:\n        Docstring: \"Install Django fixup if settings module environment is set.\"\n        ```\n    *   This snippet explicitly shows a function named `fixup` in the module `celery.fixups.django`.\n    *   The string `'celery.fixups.django:fixup'` follows the Python import path convention `module:attribute`.\n    *   Therefore, the string resolves to the function `fixup` defined in `celery.fixups.django`.\n\n4.  **Determine the Output Format:**\n    *   The user wants a JSON object with specific keys: `ground_truth`, `direct_deps`, `indirect_deps`, `implicit_deps`.\n    *   The question asks for the \"real function symbol\".\n    *   Looking at the example: `{\"ground",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.fixups.django.DjangoFixup.__init__ (celery/fixups/django.py:69-73) | source=bm25, graph\n    def __init__(self, app: \"Celery\"):\n        self.app = app\n        if _state.default_app..."
+  },
+  {
+    "case_id": "easy_007",
+    "difficulty": "easy",
+    "category": "re_export",
+    "failure_type": "Type C",
+    "question": "顶层符号 `celery.Task` 最终映射到哪个真实类？",
+    "entry_symbol": "",
+    "entry_file": "celery/__init__.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.task.Task"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 42531,
+    "model_output": "The user is asking about the top-level symbol `celery.Task` and which real class it ultimately maps to.\n\nLooking at the context provided:\n\n1. From [Retrieved 1], I can see `celery.app.task.Task` is defined in `celery/app/task.py:183-1237`. This is the main Task class definition.\n\n2. From [Retrieved 2], I can see `celery.app.base.Celery.Task` is mentioned as a function that returns a base task class.\n\n3. The question is about `celery.Task` - the top-level symbol in the celery package.\n\nLooking at the code structure:\n- `celery.Task` is typically an alias or reference to `celery.app.task.Task`\n- The context shows `celery.app.task.Task` is the main Task class definition\n\nFrom the code in [Retrieved 1], I can see the Task class is defined in `celery.app.task.Task` with the full path being `celery.app.task.Task`.\n\nThe top-level `celery.Task` would typically be an alias to `celery.app.task.Task`.\n\nBased on the context provided, the direct dependency would be `celery.app.task.Task`.\n\nLet me construct the JSON response:\n- direct_deps: [\"celery.app.task.Task\"]\n- indirect_deps: []\n- implicit_deps: []\n\nThis is the most accurate answer based on the provided context.\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\"celery.app.task.Task\"],\n    \"indirect_deps\": [],\n    \"implicit_deps\": []\n  }\n}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.task.Task"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 1.0,
+    "context_preview": "[Retrieved 1] celery.app.task.Task (celery/app/task.py:183-1237) | source=graph, semantic\n@abstract.CallableTask.register\nclass Task:\n    \"\"\"Task base class.\n\n    Note:\n        When called tasks apply..."
+  },
+  {
+    "case_id": "easy_005",
+    "difficulty": "easy",
+    "category": "re_export_proxy",
+    "failure_type": "Type B",
+    "question": "在顶层懒加载 API 中，`celery.current_app` 这个 Proxy 在取值时会直接调用哪个函数来获得 app 对象？",
+    "entry_symbol": "",
+    "entry_file": "celery/__init__.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state.get_current_app"
+      ],
+      "indirect_deps": [
+        "celery._state._get_current_app"
+      ],
+      "implicit_deps": [
+        "celery.local.Proxy",
+        "celery._state.default_app",
+        "celery.app.base.Celery"
+      ]
+    },
+    "rag_context_length": 5387,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about the Celery library's top-level lazy loading API, specifically asking which function `celery.current_app` calls to get the app object when accessed.\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context: Provided snippets from `celery/__init__.py` and related files.\n\n2.  **Analyze the Context:**\n    *   The question asks about `celery.current_app`.\n    *   The context shows `celery/__init__.py`.\n    *   In `celery/__init__.py`, there is a section labeled `# -eof meta-` followed by `__all__`.\n    *   There is a section `# This is never executed, but tricks static analyzers...` which imports `current_app` from `celery._state` under `STATICA_HACK`.\n    *   However, the main lazy loading mechanism is shown in the `local.recreate_module` call.\n    *   The `by_module` dictionary in `local.recreate_module` maps `'celery._state': ['current_app', 'current_task']`.\n    *   This means `celery.current_app` is actually a proxy object created by `local.recreate_module` that lazily imports from `celery._state`.\n    *   The question asks: \"In the top-level lazy loading API, when `celery.current_app` this Proxy gets the value, which function does it call directly to obtain the app object?\"\n    *   Looking at the code structure: `celery.current_app` is a proxy. When accessed, it triggers the lazy loading mechanism defined in `celery/local.py` (implied by `from . import local` and `local.recreate_module`).\n    *   However, the question specifically asks about the *function* called to obtain the app object.\n    *   Usually, in Celery's lazy loading, `current_app` is a proxy that wraps the actual getter.\n    *   Let's look at the imports in `celery/__init__.py` under `STATICA",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery (celery/__init__.py:1-180) | source=graph\n\"\"\"Distributed Task Queue.\"\"\"\n# :copyright: (c) 2017-2026 Asif Saif Uddin, celery core and individual\n#                 contributors, All..."
+  },
+  {
+    "case_id": "easy_006",
+    "difficulty": "easy",
+    "category": "re_export_proxy",
+    "failure_type": "Type B",
+    "question": "在顶层懒加载 API 中，`celery.current_task` 在取值时直接调用哪个函数，并最终从哪个状态槽位读取当前任务？",
+    "entry_symbol": "",
+    "entry_file": "celery/__init__.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state.get_current_task"
+      ],
+      "indirect_deps": [
+        "celery._state._task_stack.top"
+      ],
+      "implicit_deps": [
+        "celery.local.Proxy",
+        "celery.utils.threads.LocalStack"
+      ]
+    },
+    "rag_context_length": 1406,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's top-level lazy loading API, specifically asking which function `celery.current_task` calls directly when accessed, and which state slot it reads from.\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context: Provided snippets from `celery/__init__.py` and `celery/app/base.py`.\n\n2.  **Analyze the Question:**\n    *   Question: \"在顶层懒加载 API 中，`celery.current_task` 在取值时直接调用哪个函数，并最终从哪个状态槽位读取当前任务？\" (In the top-level lazy loading API, which function does `celery.current_task` call directly when getting the value, and finally from which state slot does it read the current task?)\n    *   Key Entity: `celery.current_task`.\n    *   Target Information:\n        1.  Direct function called when accessing the property.\n        2.  State slot read from.\n\n3.  **Analyze the Context:**\n    *   [Retrieved 1] `celery.app.base.Celery.current_task`:\n        ```python\n        @property\n        def current_task(self):\n            \"\"\"Instance of task being executed, or :const:`None`.\"\"\"\n            return _task_stack.top\n        ```\n        This is the `Celery` class property. However, the question asks about `celery.current_task` (top-level API).\n    *   [Retrieved 2] `celery` module (`celery/__init__.py`):\n        *   Imports: `celery._state`, `celery._state.current_app`, `celery._state.current_task`.\n        *   This suggests `celery.current_task` is likely an alias or property defined in `celery/__init__.py` that points to `celery._state.current_task`.\n    *   The question specifically mentions \"顶层懒加载 API\" (top-level lazy loading API). This usually refers to the module-level attributes like `celery.current_task`, `celery.current",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery.current_task (celery/app/base.py:1417-1420) | source=bm25, graph\n    @property\n    def current_task(self):\n        \"\"\"Instance of task being executed, or :const:`N..."
+  },
+  {
+    "case_id": "easy_008",
+    "difficulty": "easy",
+    "category": "re_export",
+    "failure_type": "Type C",
+    "question": "从源码\"类定义\"角度看，顶层符号 `celery.group` 对应的真实类定义 FQN 是什么？",
+    "entry_symbol": "",
+    "entry_file": "celery/__init__.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.group"
+      ],
+      "indirect_deps": [
+        "celery.canvas.Signature"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 21796,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about the Fully Qualified Name (FQN) of the class definition for the top-level symbol `celery.group` from the perspective of the source code \"class definition\".\n    *   Entry File: `celery/__init__.py`.\n    *   Context: Provided code snippets from `celery/canvas.py` (specifically the `group` class definition) and some other irrelevant snippets.\n    *   Constraint: Output ONLY a valid JSON object. No markdown, no explanations.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`.\n\n2.  **Analyze the Question:**\n    *   Question: \"从源码\"类定义\"角度看，顶层符号 `celery.group` 对应的真实类定义 FQN 是什么？\" (From the perspective of the source code \"class definition\", what is the real class definition FQN corresponding to the top-level symbol `celery.group`?)\n    *   Key Concept: FQN (Fully Qualified Name) of the class.\n    *   Symbol: `celery.group`.\n    *   Context Clue: The provided context snippet `[Retrieved 1]` explicitly shows:\n        ```python\n        @Signature.register_type()\n        class group(Signature):\n        ...\n        ```\n        And the docstring says `Returns: ~celery.group: signature that when called...`.\n        However, the class definition itself is inside `celery/canvas.py`.\n        The snippet header says: `celery.canvas.group (celery/canvas.py:1480-1949)`.\n        This indicates the class `group` is defined in the module `celery.canvas`.\n        Therefore, the FQN of the class is `celery.canvas.group`.\n\n3.  **Verify with Entry File (`celery/__init__.py`):**\n    *   The question asks about the top-level symbol `celery.group`.\n    *   Usually, `celery/__init__.py` imports things from submodules.\n    *   Looking at the context provided: `[Retrieved 1] celery.canvas.group (celery/canvas.py:1480-1949)",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.canvas.group (celery/canvas.py:1480-1949) | source=graph, semantic\n@Signature.register_type()\nclass group(Signature):\n    \"\"\"Creates a group of tasks to be executed in parallel.\n\n..."
+  },
+  {
+    "case_id": "medium_005",
+    "difficulty": "medium",
+    "category": "loader_default_resolution",
+    "failure_type": "Type E",
+    "question": "在未设置 `CELERY_LOADER` 且未显式传入 loader 参数时，`Celery.loader` 属性最终实例化哪个 Loader 类？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.app.AppLoader"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery._get_default_loader",
+        "celery.loaders.get_loader_cls"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "rag_context_length": 2121,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's default loader class when `CELERY_LOADER` is not set and no loader parameter is passed explicitly.\n    *   Context: Provided snippets from `celery/app/base.py` (specifically `_get_default_loader` method and class definition).\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n\n2.  **Analyze the Question:**\n    *   Question: \"在未设置 `CELERY_LOADER` 且未显式传入 loader 参数时，`Celery.loader` 属性最终实例化哪个 Loader 类？\" (When `CELERY_LOADER` is not set and no loader parameter is passed explicitly, which Loader class does the `Celery.loader` property ultimately instantiate?)\n    *   Key information needed: The default loader class path.\n\n3.  **Analyze the Context:**\n    *   Snippet 1 (`celery/app.base.Celery._get_default_loader`):\n        ```python\n        def _get_default_loader(self):\n            # the --loader command-line argument sets the environment variable.\n            return (\n                os.environ.get('CELERY_LOADER') or\n                self.loader_cls or\n                'celery.loaders.app:AppLoader'\n            )\n        ```\n    *   This snippet shows the fallback logic.\n        1.  Check `os.environ.get('CELERY_LOADER')`.\n        2.  Check `self.loader_cls`.\n        3.  Default to `'celery.loaders.app:AppLoader'`.\n    *   The question asks what happens when `CELERY_LOADER` is *not* set and no loader parameter (which usually sets `loader_cls`) is passed.\n    *   Therefore, the default value `'celery.loaders.app:AppLoader'` is used.\n\n4.  **Determine the Output:**\n    *   The question asks for the specific Loader class path.\n    *   Based on the code snippet, the string is `'celery.loaders.app:AppLoader'`.\n    *   The",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery._get_default_loader (celery/app/base.py:433-439) | source=bm25, graph\n    def _get_default_loader(self):\n        # the --loader command-line argument sets the envi..."
+  },
+  {
+    "case_id": "medium_006",
+    "difficulty": "medium",
+    "category": "backend_url_alias",
+    "failure_type": "Type E",
+    "question": "在 `Celery._get_backend` 调用路径里，当 `result_backend='rpc://...'` 时，哪个 backend 类会被解析并由该方法实例化？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._get_backend",
+        "celery.backends.rpc.RPCBackend"
+      ],
+      "indirect_deps": [
+        "celery.app.backends.by_url",
+        "celery.app.backends.by_name"
+      ],
+      "implicit_deps": [
+        "celery.app.backends.BACKEND_ALIASES",
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "rag_context_length": 1540,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's `_get_backend` method, specifically asking which backend class is instantiated when `result_backend='rpc://...'`.\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context Provided: Snippets from `celery/app/base.py` showing `_get_backend`, `backend`, `Celery` class, etc.\n    *   Task: Identify the backend class associated with the `rpc://` scheme in Celery's backend resolution logic.\n\n2.  **Analyze the Question:**\n    *   Question: In `Celery._get_backend` call path, when `result_backend='rpc://...'`, which backend class is parsed and instantiated by this method?\n    *   Key information needed: The mapping between the URL scheme `rpc://` and the specific backend class in Celery.\n\n3.  **Analyze the Context:**\n    *   The provided context snippets show `_get_backend` calling `backends.by_url`.\n    *   Snippet 1: `def _get_backend(self): backend, url = backends.by_url(self.backend_cls or self.conf.result_backend, self.loader); return backend(app=self, url=url)`\n    *   Snippet 2: `def backend(self): ...`\n    *   Snippet 3: `class Celery: ...`\n    *   Snippet 4: `def oid(self): ...`\n    *   Snippet 5: `def __init__(self, ...): ...`\n    *   *Crucial Observation:* The provided context snippets *do not* explicitly list the backend classes or the `backends.by_url` implementation details that map `rpc://` to a specific class. They only show the *mechanism* (`backends.by_url`).\n    *   However, the question asks for specific knowledge about Celery's architecture regarding `rpc://`.\n    *   In Celery, `rpc://` is typically associated with the `rpc` backend.\n    *   Let's recall/search internal knowledge about Celery backends.\n    *   Common",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery._get_backend (celery/app/base.py:1139-1143) | source=bm25, graph\n    def _get_backend(self):\n        backend, url = backends.by_url(\n            self.backend_cls o..."
+  },
+  {
+    "case_id": "medium_007",
+    "difficulty": "medium",
+    "category": "fallback_loader_alias",
+    "failure_type": "Type E",
+    "question": "当线程中没有 current app 且未设置 `CELERY_LOADER` 时，首次访问 `celery.current_app.loader` 最终会实例化哪个 Loader 类？",
+    "entry_symbol": "",
+    "entry_file": "celery/_state.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [
+        "celery._state._get_current_app",
+        "celery.app.base.Celery.loader",
+        "celery.loaders.get_loader_cls"
+      ],
+      "implicit_deps": [
+        "celery.local.Proxy",
+        "celery.loaders.LOADER_ALIASES",
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "rag_context_length": 1561,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's behavior when accessing `celery.current_app.loader` in a thread without a current app and without `CELERY_LOADER` set.\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context: Provided code snippets from `celery/_state.py` and `celery/app/base.py`.\n\n2.  **Analyze the Question:**\n    *   Condition: Thread has no `current app`.\n    *   Condition: `CELERY_LOADER` environment variable is not set.\n    *   Action: First access `celery.current_app.loader`.\n    *   Target: Which Loader class is instantiated?\n\n3.  **Trace the Code (based on provided context):**\n    *   Accessing `celery.current_app` triggers `_get_current_app()` (from `celery/_state.py`).\n    *   `_get_current_app()` checks `default_app`. If `None`, it creates a global fallback app instance.\n    *   Creation code: `Celery('default', fixups=[], set_as_current=False, loader=os.environ.get('CELERY_LOADER') or 'default')`.\n    *   Since `CELERY_LOADER` is not set, `os.environ.get('CELERY_LOADER')` returns `None`.\n    *   Expression `None or 'default'` evaluates to `'default'`.\n    *   So, the `Celery` instance is created with `loader='default'`.\n    *   Next, accessing `.loader` on the `Celery` instance.\n    *   `celery/app/base.py` line 1501-1504 shows `def loader(self):`.\n    *   It references `get_loader_cls`.\n    *   `celery/app/base.py` line 433-439 shows `_get_default_loader(self)`.\n    *   `_get_default_loader` references `self.loader_cls`.\n    *   Where does `loader_cls` come from? Usually, in Celery's `Celery` class initialization, if",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery._state._get_current_app (celery/_state.py:92-100) | source=bm25, graph\ndef _get_current_app():\n    if default_app is None:\n        #: creates the global fallback app instance.\n   ..."
+  },
+  {
+    "case_id": "medium_008",
+    "difficulty": "medium",
+    "category": "strategy_string_resolution",
+    "failure_type": "Type E",
+    "question": "`Task.start_strategy` 调用时，`Task.Strategy` 字符串最终会被解析为哪个可调用对象？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/task.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.strategy.default"
+      ],
+      "indirect_deps": [
+        "celery.app.task.Task.start_strategy",
+        "celery.utils.imports.instantiate"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "rag_context_length": 1132,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's `Task.start_strategy` method, specifically asking what callable object the `Task.Strategy` string is parsed into when `Task.start_strategy` is called.\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context: Provided snippets from `celery/app/task.py` showing `start_strategy`, `add_to_chord`, `map`, `__call__`, and `Context.get`.\n    *   Task: Identify the dependency/module path that resolves the `Task.Strategy` string to a callable object based on the provided context and general Celery knowledge (since the context snippets are limited but point to the core logic).\n\n2.  **Analyze the Question:**\n    *   Question: `Task.start_strategy` 调用时，`Task.Strategy` 字符串最终会被解析为哪个可调用对象？ (When `Task.start_strategy` is called, what callable object is `Task.Strategy` string ultimately parsed into?)\n    *   Code Snippet 1:\n        ```python\n        def start_strategy(self, app, consumer, **kwargs):\n            return instantiate(self.Strategy, self, app, consumer, **kwargs)\n        ```\n    *   The question asks about `Task.Strategy`. In Celery, `Task` is a class. `Strategy` is an attribute of the `Task` class.\n    *   The function `instantiate` is called with `self.Strategy`.\n    *   The question asks what `Task.Strategy` *is* or *resolves to*.\n    *   Looking at Celery's source code (general knowledge + context):\n        *   `Task` class has a class attribute `Strategy`.\n        *   By default, `Task.Strategy` is usually `Task` itself or a specific strategy class.\n        *   However, the question asks what it is *parsed into* or *resolved to* as a callable object.\n        *   Wait, the question phrasing \"Task.Strategy 字符串\" (Task.Strategy string) is slightly odd. `Task",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.task.Task.start_strategy (celery/app/task.py:492-493) | source=bm25, graph\n    def start_strategy(self, app, consumer, **kwargs):\n        return instantiate(self.Strategy, sel..."
+  },
+  {
+    "case_id": "celery_medium_020",
+    "difficulty": "medium",
+    "category": "default_app_loader_alias_chain",
+    "failure_type": "Type E",
+    "question": "`_state._get_current_app` 懒创建 fallback app 后，首次访问 `app.loader` 时，最终实例化到哪个具体 Loader 类？",
+    "entry_symbol": "",
+    "entry_file": "celery/_state.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery.loader",
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [
+        "celery._state._get_current_app",
+        "celery.loaders.get_loader_cls"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.symbol_by_name",
+        "celery.utils.imports.import_from_cwd"
+      ]
+    },
+    "rag_context_length": 1288,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's `_state._get_current_app` lazy creation of a fallback app and specifically which Loader class is instantiated when `app.loader` is first accessed.\n    *   Constraints: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context Provided: Snippets from `celery/_state.py`, `celery/app/base.py`, etc.\n\n2.  **Analyze the Question:**\n    *   Question: `_state._get_current_app` 懒创建 fallback app 后，首次访问 `app.loader` 时，最终实例化到哪个具体 Loader 类？ (After `_state._get_current_app` lazily creates a fallback app, when accessing `app.loader` for the first time, which specific Loader class is ultimately instantiated?)\n    *   Key Code Snippet 1 (`celery/_state.py`):\n        ```python\n        def _get_current_app():\n            if default_app is None:\n                from celery.app.base import Celery\n                set_default_app(Celery(\n                    'default', fixups=[], set_as_current=False,\n                    loader=os.environ.get('CELERY_LOADER') or 'default',\n                ))\n            return _tls.current_app or default_app\n        ```\n        This shows that when `default_app` is None, a `Celery` instance is created. The `loader` argument passed to `Celery` constructor is `'default'` (unless `CELERY_LOADER` env var is set).\n    *   Key Code Snippet 2 (`celery/app/base.py`):\n        ```python\n        def loader(self):\n            Docstring: \"Current loader instance.\"\n            References: cached_property, get_loader_cls, self, self.loader_cls\n        ```\n        This indicates `loader` is a property (likely `cached_property` based on references). It calls `get_loader_cls`.\n    *   Missing Context: The actual implementation of `get_loader_cls` and the default loader class mapping in Celery.\n    *   Knowledge Retrieval (Internal): In Celery, the default loader",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery._state._get_current_app (celery/_state.py:92-100) | source=bm25, graph\ndef _get_current_app():\n    if default_app is None:\n        #: creates the global fallback app instance.\n   ..."
+  },
+  {
+    "case_id": "celery_hard_019",
+    "difficulty": "hard",
+    "category": "loader_smart_import_fallback",
+    "failure_type": "Type E",
+    "question": "When BaseLoader.config_from_object receives a string like pkg.mod.CONF that cannot be imported directly as a module, which function ultimately resolves the symbol?",
+    "entry_symbol": "",
+    "entry_file": "celery/loaders/base.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [
+        "celery.loaders.base.BaseLoader.config_from_object",
+        "celery.loaders.base.BaseLoader._smart_import"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.import_from_cwd"
+      ]
+    },
+    "rag_context_length": 8670,
+    "model_output": "The user is asking about the Celery codebase, specifically about the `config_from_object` method in `BaseLoader` class. They want to know which function ultimately resolves a symbol when a string like `pkg.mod.CONF` cannot be imported directly as a module.\n\nLooking at the code in `config_from_object`:\n\n```python\ndef config_from_object(self, obj, silent=False):\n    if isinstance(obj, str):\n        try:\n            obj = self._smart_import(obj, imp=self.import_from_cwd)\n        except (ImportError, AttributeError):\n            if silent:\n                return False\n            raise\n    self._conf = force_mapping(obj)\n    ...\n```\n\nAnd `_smart_import`:\n\n```python\ndef _smart_import(self, path, imp=None):\n    imp = self.import_module if imp is None else imp\n    if ':' in path:\n        # Path includes attribute so can just jump\n        # here (e.g., ``os.path:abspath``).\n        return symbol_by_name(path, imp=imp)\n\n    # Not sure if path is just a module name or if it includes an\n    # attribute name (e.g., ``os.path``, vs, ``os.path.abspath``).\n    try:\n        return imp(path)\n    except ImportError:\n        # Not a module name, so try module + attribute.\n        return symbol_by_name(path, imp=imp)\n```\n\nSo when a string like `pkg.mod.CONF` is passed:\n1. `config_from_object` calls `_smart_import`\n2. `_smart_import` tries `imp(path)` which is `import_from_cwd(path)`\n3. If that fails with `ImportError`, it calls `symbol_by_name(path, imp=imp)`\n\nThe function that ultimately resolves the symbol when direct import fails is `symbol_by_name`.\n\nHowever, the question asks about the function that \"ultimately resolves the symbol\" when the string cannot be imported directly as a module. \n\nBased on the code flow, `symbol_by_name` is the function that handles this case. But I need to check what `symbol_by_name` actually is - it's not shown in the provided context. Looking at the imports in the module, I can see `celery.exceptions.reraise` is imported, but `symbol_by_name` isn't explicitly listed.",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.loaders.base.BaseLoader (celery/loaders/base.py:33-236) | source=bm25, graph\nclass BaseLoader:\n    \"\"\"Base class for loaders.\n\n    Loaders handles,\n\n        * Reading celery clien..."
+  },
+  {
+    "case_id": "celery_hard_121",
+    "difficulty": "hard",
+    "category": "autodiscovery_import_error_gate",
+    "failure_type": "Type A",
+    "question": "在 `app.autodiscover_tasks(packages, force=False)` 的延迟执行链中，真正负责判定 `ModuleNotFoundError` 是\"候选 tasks 模块缺失可忽略\"还是\"嵌套导入错误需重抛\"的函数是哪个？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.base.find_related_module"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.autodiscover_tasks",
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.loaders.base.BaseLoader.import_default_modules",
+        "celery.loaders.base.BaseLoader.autodiscover_tasks",
+        "celery.loaders.base.autodiscover_tasks"
+      ],
+      "implicit_deps": [
+        "celery.signals.import_modules"
+      ]
+    },
+    "rag_context_length": 3586,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's `autodiscover_tasks` method, specifically asking which function in the lazy execution chain determines whether a `ModuleNotFoundError` means \"candidate tasks module missing (ignoreable)\" or \"nested import error (re-raise)\".\n    *   Constraint: Output *ONLY* a valid JSON object. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context: Provided snippets from `celery/app/base.py` (Retrieved 1-5).\n\n2.  **Analyze the Question:**\n    *   The question asks about the logic inside `app.autodiscover_tasks(packages, force=False)`.\n    *   Specifically, it asks about the *lazy execution chain* (since `force=False` is the default).\n    *   It asks which function is responsible for distinguishing between:\n        1.  \"Candidate tasks module missing (ignoreable)\" (i.e., `ModuleNotFoundError` when trying to import `package.tasks`).\n        2.  \"Nested import error (re-raise)\" (i.e., `ModuleNotFoundError` or other errors happening *inside* the import of the tasks module).\n    *   The provided context shows `autodiscover_tasks` (lines 779-823).\n    *   If `force` is False, it connects a signal `import_modules` with `starpromise(self._autodiscover_tasks, ...)`.\n    *   The actual execution happens later when the signal is fired.\n    *   The core logic for importing tasks is in `_autodiscover_tasks`.\n    *   I need to find the specific function that handles the `ModuleNotFoundError` logic regarding missing `tasks.py` vs errors inside the module.\n\n3.  **Search/Knowledge Retrieval (Internal Knowledge):**\n    *   The provided context snippets are limited. Snippet 1 shows `autodiscover_tasks` calling `_autodiscover_tasks` if `force=True`, or connecting a signal if `force=False`.\n    *   Snippet 4 shows `_finalize_pending_conf` referencing `ModuleNotFoundError`.\n    *  ",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery.autodiscover_tasks (celery/app/base.py:779-823) | source=bm25, graph\n    def autodiscover_tasks(self, packages=None,\n                           related_name='tasks..."
+  },
+  {
+    "case_id": "celery_hard_122",
+    "difficulty": "hard",
+    "category": "bootstep_lifecycle_instantiation_gate",
+    "failure_type": "Type A",
+    "question": "在 worker 启动链中，当某个 `StartStopStep.include_if()` 最终为 `False` 时，仍会先执行 step 实例化（触发 `Step.__init__`）的生命周期断点方法是哪个？",
+    "entry_symbol": "",
+    "entry_file": "celery/worker/worker.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.bootsteps.Blueprint.apply"
+      ],
+      "indirect_deps": [
+        "celery.worker.worker.WorkController.__init__",
+        "celery.bootsteps.StartStopStep.include",
+        "celery.bootsteps.Step._should_include"
+      ],
+      "implicit_deps": [
+        "celery.bootsteps.Step.include_if"
+      ]
+    },
+    "rag_context_length": 1730,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Task: Identify the lifecycle breakpoint method triggered when a `StartStopStep.include_if()` returns `False` during the worker startup chain, specifically before the step instance is instantiated (triggering `Step.__init__`).\n    *   Constraint: Output ONLY valid JSON. No markdown, no explanations.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context: Provided code snippets from `celery/worker/worker.py`, `celery/worker/consumer/control.py`, `celery/worker/heartbeat.py`, `celery/worker/worker.py` (WorkController), `celery/worker/consumer/events.py`.\n    *   Entry File: `celery/worker/worker.py`.\n\n2.  **Analyze the Question:**\n    *   The question asks about the `StartStopStep` mechanism in Celery's worker startup chain.\n    *   Specifically, it asks: When `StartStopStep.include_if()` returns `False`, which lifecycle breakpoint method is executed *before* the step instance is instantiated (i.e., before `Step.__init__`)?\n    *   Wait, the phrasing is \"仍会先执行 step 实例化（触发 `Step.__init__`）的生命周期断点方法是哪个？\" (Which lifecycle breakpoint method is executed *before* step instantiation (triggering `Step.__init__`) even when `include_if()` is False?).\n    *   Actually, usually, if `include_if()` is False, the step is skipped entirely. However, the question implies there is a specific method called *before* instantiation regardless, or perhaps it's asking about the specific method associated with the `StartStopStep` class that handles this logic.\n    *   Let's recall Celery's `StartStopStep` implementation. It's typically found in `celery/worker/components.py` or similar, but the context provided mentions `celery/worker/worker.py`.\n    *   The `StartStopStep` class usually has methods like `start`, `stop`, `include_if`.\n    *   The question asks for the \"lifecycle breakpoint method\" (生命周期断点方法). In Celery's context, this often refers to methods like `",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.worker.consumer.control.Control.__init__ (celery/worker/consumer/control.py:23-29) | source=graph\n    def __init__(self, c, **kwargs):\n        self.is_green = c.pool is not None a..."
+  },
+  {
+    "case_id": "celery_hard_024",
+    "difficulty": "hard",
+    "category": "persistent_scheduler_startup_reset",
+    "failure_type": "Type A",
+    "question": "`PersistentScheduler` 启动阶段若持久化 store 缺失 `utc_enabled` 元数据字段，直接触发 reset（`self._store.clear()`）的方法是哪一个？",
+    "entry_symbol": "",
+    "entry_file": "celery/beat.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.beat.PersistentScheduler._create_schedule"
+      ],
+      "indirect_deps": [
+        "celery.beat.PersistentScheduler.setup_schedule"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 2078,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about the `PersistentScheduler` class in Celery, specifically asking which method triggers a reset (`self._store.clear()`) if the persistent store lacks the `utc_enabled` metadata field during the startup phase.\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context: Provided code snippets from `celery/beat.py`.\n\n2.  **Analyze the Context:**\n    *   Look at `[Retrieved 1] celery.beat.PersistentScheduler._create_schedule`.\n    *   Code snippet:\n        ```python\n        def _create_schedule(self):\n            for _ in (1, 2):\n                try:\n                    self._store['entries']\n                except (KeyError, UnicodeDecodeError, TypeError, UnpicklingError):\n                    # new schedule db\n                    try:\n                        self._store['entries'] = {}\n                    except (KeyError, UnicodeDecodeError, TypeError, UnpicklingError) + dbm.error as exc:\n                        self._store = self._destroy_open_corrupted_schedule(exc)\n                        continue\n                else:\n                    if '__version__' not in self._store:\n                        warning('DB Reset: Account for new __version__ field')\n                        self._store.clear()   # remove schedule at 2.2.2 upgrade.\n                    elif 'tz' not in self._store:\n                        warning('DB Reset: Account for new tz field')\n                        self._store.clear()   # remove schedule at 3.0.8 upgrade\n                    elif 'utc_enabled' not in self._store:\n                        warning('DB Reset: Account for new utc_enabled field')\n                        self._store.clear()   # remove schedule at 3.0.9 upgrade\n            break\n        ```\n    *   The question asks for the method name where this logic resides.\n    *   The method name is `_create_schedule`.\n    *   The class is `PersistentScheduler`.\n    *   The file is `celery/beat.py`.\n\n3.  **Determine the Output Format",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.beat.PersistentScheduler._create_schedule (celery/beat.py:569-590) | source=bm25, graph\n    def _create_schedule(self):\n        for _ in (1, 2):\n            try:\n                s..."
+  },
+  {
+    "case_id": "celery_hard_025",
+    "difficulty": "hard",
+    "category": "disable_prefetch_runtime_can_consume_patch",
+    "failure_type": "Type A",
+    "question": "在 `worker_disable_prefetch=True` 且 broker 为 Redis 的前提下，运行时真正改写 `channel_qos.can_consume` 的方法是哪一个？",
+    "entry_symbol": "",
+    "entry_file": "celery/worker/consumer/tasks.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.consumer.tasks.Tasks.start"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 3229,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's `worker_disable_prefetch=True` setting with a Redis broker, specifically asking which method is actually rewritten to modify `channel_qos.can_consume`.\n    *   Context: Provided code snippets from `celery/worker/consumer/tasks.py` (Retrieved 1, 2, 3, 4, 5).\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Output Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n\n2.  **Analyze the Question:**\n    *   Question: \"在 `worker_disable_prefetch=True` 且 broker 为 Redis 的前提下，运行时真正改写 `channel_qos.can_consume` 的方法是哪一个？\" (Under `worker_disable_prefetch=True` and Redis broker, which method is actually rewritten to modify `channel_qos.can_consume` at runtime?)\n    *   Target: Identify the specific method definition or the code block responsible for the rewrite.\n    *   Context Clue: The provided code snippet (Retrieved 1) shows the `Tasks.start` method. Inside `Tasks.start`, there is a specific block handling `if c.app.conf.worker_disable_prefetch:`.\n    *   Code Analysis (Retrieved 1):\n        ```python\n        if c.app.conf.worker_disable_prefetch:\n            # Only apply disable-prefetch for Redis brokers\n            is_redis_broker = c.connection.transport.driver_type == 'redis'\n            if not is_redis_broker:\n                logger.warning(...)\n                return\n\n            from types import MethodType\n\n            from celery.worker import state\n            channel_qos = c.task_consumer.channel.qos\n            original_can_consume = channel_qos.can_consume\n\n            def can_consume(self):\n                # Prefer autoscaler's max_concurrency if set; otherwise fall back to pool size\n                limit = getattr(c.controller, \"max_concurrency\", None) or c.pool.num_processes\n                if len(state.reserved_requests) >= limit:\n                    return False\n                return original_can_consume()\n\n            channel_qos.can_consume = MethodType(can_consume, channel_qos)\n        ```\n    *   The",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.worker.consumer.tasks.Tasks.start (celery/worker/consumer/tasks.py:29-78) | source=bm25, graph\n    def start(self, c):\n        \"\"\"Start task consumer.\"\"\"\n        c.update_strategi..."
+  },
+  {
+    "case_id": "celery_type_d_001",
+    "difficulty": "hard",
+    "category": "parameter_shadowing_module_function",
+    "failure_type": "Type D",
+    "question": "在 `celery/app/routes.py` 中，调用 `expand_router_string('my.router.module:RouterClass')` 时，负责把字符串参数 `router` 解析成真实符号的函数是哪个？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/routes.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1482,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's `celery/app/routes.py`, specifically asking which function is responsible for parsing the string parameter `router` into a real symbol when calling `expand_router_string('my.router.module:RouterClass')`.\n    *   Constraint: Output MUST be ONLY valid JSON. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context: Provided snippets from `celery/app/routes.py` (Retrieved 1-5).\n\n2.  **Analyze the Context:**\n    *   Retrieved 2 shows `celery.app.routes.expand_router_string` (lines 114-119).\n    *   It mentions `References: hasattr, router, symbol_by_name`.\n    *   The question asks for the function responsible for parsing the string `router` into a real symbol.\n    *   Looking at the reference `symbol_by_name` in the context of `expand_router_string`.\n    *   Usually, in Celery (and similar Python frameworks), resolving a string like `'my.router.module:RouterClass'` to a class involves a function like `symbol_by_name` (often from `celery.utils.functional` or similar).\n    *   However, the question asks for the *function* responsible. The context snippet for `expand_router_string` explicitly lists `symbol_by_name` as a reference.\n    *   Let's check the code logic implied. `expand_router_string` takes a string. It likely uses `symbol_by_name` to resolve it.\n    *   The question asks: \"负责把字符串参数 `router` 解析成真实符号的函数是哪个？\" (Which function is responsible for parsing the string parameter `router` into a real symbol?)\n    *   Based on the context snippet [Retrieved 2]: `def expand_router_string(router):` ... `References: ... symbol_by_name`.\n    *   The function `symbol_by_name` is the standard Celery utility for this.\n    *   However, the output format requires `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], ...}}`.\n    *   Wait, the example format is `{\"ground",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.routes.Router.lookup_route (celery/app/routes.py:98-104) | source=bm25, graph\n    def lookup_route(self, name,\n                     args=None, kwargs=None, options=None, task_..."
+  },
+  {
+    "case_id": "celery_type_d_002",
+    "difficulty": "hard",
+    "category": "class_hierarchy_with_same_logical_name",
+    "failure_type": "Type D",
+    "question": "在 `celery/canvas.py` 中，`celery.canvas._chain`（内部类，被 `@Signature.register_type(name='chain')` 注册）和 `celery.canvas.chain`（公开类，继承 `_chain`）是两个不同的类。当通过 `signature({'subtask_type': 'chain', ...})` 反序列化时，返回的实例属于哪个类？",
+    "entry_symbol": "",
+    "entry_file": "celery/canvas.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas._chain"
+      ],
+      "indirect_deps": [
+        "celery.canvas.Signature.TYPES",
+        "celery.canvas.Signature.from_dict"
+      ],
+      "implicit_deps": [
+        "celery.canvas.chain"
+      ]
+    },
+    "rag_context_length": 1771,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's `celery.canvas` module, specifically regarding the deserialization of a signature with `subtask_type: 'chain'`.\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Task: Identify the class returned when deserializing `signature({'subtask_type': 'chain', ...})`.\n\n2.  **Analyze the Context & Code:**\n    *   The user provides snippets from `celery/canvas.py`.\n    *   Snippet 4 mentions `class _chain(Signature):` and `String targets: celery.chain, kwargs.tasks`.\n    *   Snippet 4 also mentions `Signature.register_type`.\n    *   The question asks: When deserializing via `signature({'subtask_type': 'chain', ...})`, which class instance is returned?\n    *   In Celery's signature system, `Signature` is the base class. There are registered types like `chain`, `group`, `chord`.\n    *   `celery.canvas._chain` is the internal class.\n    *   `celery.canvas.chain` is the public class (usually an alias or wrapper).\n    *   Looking at standard Celery implementation (based on general knowledge of Celery's architecture and the provided snippets):\n        *   `Signature.register_type(name='chain')` registers the type.\n        *   Usually, when deserializing a signature with `subtask_type='chain'`, the `Signature.from_dict` method (or similar deserialization logic) looks up the registered type.\n        *   The registered type for 'chain' typically maps to the internal class `_chain` or the public class `chain`.\n        *   Let's check the relationship. `chain` is often defined as `chain = _chain` or `chain = Signature.register_type(...)`.\n        *   Snippet 4 says `class _chain(Signature):` and `String targets: celery.chain`. This suggests `celery.chain` is the public name for `_chain`.\n        *   However, the question states:",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.canvas._chord.__or__ (celery/canvas.py:2059-2074) | source=bm25, graph\n    def __or__(self, other):\n        if (not isinstance(other, (group, _chain)) and\n                isinstan..."
+  },
+  {
+    "case_id": "celery_type_d_003",
+    "difficulty": "medium",
+    "category": "alias_re_export_confusion",
+    "failure_type": "Type D",
+    "question": "在 `celery/canvas.py` 模块级别，`subtask = signature` 和 `maybe_subtask = maybe_signature` 分别是兼容性别名。如果代码中出现引用 'celery.canvas.subtask' 的错误信息，应该追踪到哪个实际执行函数？",
+    "entry_symbol": "",
+    "entry_file": "celery/canvas.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.signature"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.canvas.maybe_signature"
+      ]
+    },
+    "rag_context_length": 1370,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about `celery/canvas.py`, specifically regarding `subtask = signature` and `maybe_subtask = maybe_signature` compatibility aliases at the module level. The question asks: If code encounters an error referencing 'celery.canvas.subtask', which actual execution function should be traced to?\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context: Provided snippets from `celery/canvas.py` showing usage of `maybe_signature` in `_chain.clone`, `_chord.clone`, `group.from_dict`, `group.link_error`, and `Signature.stamp_links`.\n\n2.  **Analyze the Question:**\n    *   The question asks about `subtask` and `maybe_subtask` aliases at the module level in `celery/canvas.py`.\n    *   It asks: If there's an error referencing 'celery.canvas.subtask', which actual execution function should be traced to?\n    *   This implies I need to identify the underlying function that `subtask` points to.\n    *   In Celery's `canvas.py`, `subtask` is typically an alias for `signature`.\n    *   Looking at the context provided:\n        *   `[Retrieved 1]` shows `to_signature = maybe_signature` inside `_chain.clone`.\n        *   `[Retrieved 5]` shows `maybe_signature` usage in `group.link_error`.\n    *   However, the question specifically asks about `subtask`.\n    *   Standard Celery knowledge (and implied by the question text \"subtask = signature\"): `subtask` is an alias for `signature`.\n    *   The question asks for the \"actual execution function\" (实际执行函数) to trace to.\n    *   If `subtask` is an alias for `signature`, the actual function is `signature`.\n    *   The path would be `celery.canvas.signature`.\n    *   Wait, the question asks for the format `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], ...}}`.\n    *   Usually, in these types of",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.canvas._chain.clone (celery/canvas.py:1008-1015) | source=bm25, graph\n    def clone(self, *args, **kwargs):\n        to_signature = maybe_signature\n        signature = super().clon..."
+  },
+  {
+    "case_id": "celery_type_d_004",
+    "difficulty": "medium",
+    "category": "local_inline_import",
+    "failure_type": "Type D",
+    "question": "在 `celery/utils/nodenames.py` 中，`current_process_index` 并非在文件顶部 import，而是通过 `from .log import current_process_index` 内联在 `_fmt_process_index` 函数体内引入。如果要追踪 `celery.utils.nodenames._fmt_process_index` 调用的 `current_process_index` 的定义来源，应该查看哪个文件的哪个函数？",
+    "entry_symbol": "",
+    "entry_file": "celery/utils/nodenames.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.log.current_process_index"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1541,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about tracing the definition source of `current_process_index` used in `celery.utils.nodenames._fmt_process_index`.\n    *   Constraint: Output MUST be valid JSON only, no markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context: Provided snippets from `celery/utils/nodenames.py` and `celery/utils/log.py`.\n\n2.  **Analyze the Question:**\n    *   Target function: `celery.utils.nodenames._fmt_process_index`.\n    *   Variable/Function in question: `current_process_index`.\n    *   Observation: The question states `current_process_index` is imported *inside* `_fmt_process_index` via `from .log import current_process_index`.\n    *   Task: Identify which file and function defines `current_process_index`.\n\n3.  **Analyze the Context:**\n    *   [Retrieved 1] shows `_fmt_process_index` in `celery/utils/nodenames.py` doing `from .log import current_process_index`.\n    *   [Retrieved 4] shows `celery.utils.log.current_process_index` defined in `celery/utils/log.py` (lines 293-295).\n    *   The import statement `from .log import current_process_index` inside `nodenames.py` refers to `celery.utils.log.current_process_index`.\n\n4.  **Determine the Answer:**\n    *   The definition source is `celery.utils.log.current_process_index`.\n    *   The file is `celery/utils/log.py`.\n    *   The function is `current_process_index`.\n    *   The question asks: \"should check which file's which function?\" (应该查看哪个文件的哪个函数？).\n    *   The expected JSON format requires `direct_deps`. In the context of dependency tracing for a specific symbol, the \"direct dependency\" is the module where the symbol is defined.\n    *   So, `direct_deps` should contain the path to the definition.\n    *   Path: `celery.utils.log`.\n    *   Wait, the format example shows `[\"",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.utils.nodenames._fmt_process_index (celery/utils/nodenames.py:89-93) | source=bm25, graph\ndef _fmt_process_index(prefix: str = '', default: str = '0') -> str:\n    from .log import..."
+  },
+  {
+    "case_id": "celery_type_d_005",
+    "difficulty": "hard",
+    "category": "parameter_shadows_module_function",
+    "failure_type": "Type D",
+    "question": "在 `celery/app/routes.py` 的 `Router.query_router(self, router, ...)` 方法中，参数名 `router` 与方法外的 `celery.app.routes.Router` 类同名。当方法体内访问 `router` 时，它指向什么？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/routes.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [],
+      "indirect_deps": [
+        "celery.app.routes.Router"
+      ],
+      "implicit_deps": [
+        "celery.utils.functional.maybe_evaluate"
+      ]
+    },
+    "rag_context_length": 1260,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Python code (`celery/app/routes.py`), specifically about parameter shadowing in the `Router.query_router` method.\n    *   Constraint: Output MUST be ONLY valid JSON. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Task: The user is asking a specific technical question about variable scope/shadowing in the provided code context. However, the required output format is a JSON object with keys `ground_truth`, `direct_deps`, `indirect_deps`, `implicit_deps`. This looks like a format typically used for dependency analysis or knowledge graph extraction, not a direct answer to the question \"what does `router` point to?\".\n    *   Conflict: The user asks a question (\"When accessing `router` inside the method, what does it point to?\"), but the system instruction forces a specific JSON format that looks like dependency information (`direct_deps`, etc.), not an answer to the question.\n    *   Interpretation: I need to follow the system instruction regarding the output format strictly. The prompt says \"You are a JSON-only response bot. You must ONLY output valid JSON objects...\". The example shows `{\"ground_truth\": {\"direct_deps\": [...], ...}}`.\n    *   Wait, looking closely at the prompt structure:\n        *   System Instruction: \"You are a JSON-only response bot... Format: {\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}\"\n        *   User Input: A question about code behavior + Context (code snippets).\n        *   The user is asking a question, but the system instruction dictates the output format. Usually, in these scenarios, if the system instruction mandates a specific JSON schema for *all* responses, I must adhere to it, even if it doesn't directly answer the natural language question in the body. However, often these prompts are designed to test if the model can extract relevant information *into* that schema or if it should just answer the question.\n        *   Re-reading the System Instruction: \"You are a JSON-only response bot. You must ONLY output valid JSON objects... Format: {\"ground_truth\": {\"",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.routes.Router.query_router (celery/app/routes.py:106-111) | source=bm25, graph\n    def query_router(self, router, task, args, kwargs, options, task_type):\n        router = may..."
+  },
+  {
+    "case_id": "celery_type_d_006",
+    "difficulty": "medium",
+    "category": "env_var_dynamic_alias_override",
+    "failure_type": "Type D",
+    "question": "在 `celery/concurrency/__init__.py` 中，若在首次导入前设置 `CELERY_CUSTOM_WORKER_POOL='celery.concurrency.thread:TaskPool'`，那么 `get_implementation('custom')` 最终返回哪个 Celery 类？",
+    "entry_symbol": "",
+    "entry_file": "celery/concurrency/__init__.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.thread.TaskPool"
+      ],
+      "indirect_deps": [
+        "celery.concurrency.get_implementation"
+      ],
+      "implicit_deps": [
+        "celery.concurrency.ALIASES"
+      ]
+    },
+    "rag_context_length": 2526,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's concurrency module, specifically regarding the `CELERY_CUSTOM_WORKER_POOL` environment variable and the `get_implementation('custom')` function.\n    *   Constraint: Output *ONLY* a valid JSON object. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Task: Determine the Celery class returned by `get_implementation('custom')` when `CELERY_CUSTOM_WORKER_POOL='celery.concurrency.thread:TaskPool'` is set before import.\n\n2.  **Analyze the Context:**\n    *   `celery/concurrency/__init__.py` (Retrieved 1):\n        *   Defines `ALIASES` dictionary.\n        *   Contains logic to read `CELERY_CUSTOM_WORKER_POOL` environment variable.\n        *   If set, it adds an entry to `ALIASES['custom']` with the value from the environment variable.\n        *   `get_implementation` function (Retrieved 3) uses `ALIASES` and `symbol_by_name` to resolve the class.\n        *   Specifically, `get_implementation('custom')` will look up `ALIASES['custom']`.\n        *   If `CELERY_CUSTOM_WORKER_POOL='celery.concurrency.thread:TaskPool'`, then `ALIASES['custom']` becomes `'celery.concurrency.thread:TaskPool'`.\n        *   `symbol_by_name` resolves this string to the actual class object.\n        *   The class is `celery.concurrency.thread.TaskPool`.\n\n3.  **Determine the Answer:**\n    *   The question asks: \"最终返回哪个 Celery 类？\" (Which Celery class does it finally return?)\n    *   Based on the code logic:\n        1.  `CELERY_CUSTOM_WORKER_POOL` is set to `'celery.concurrency.thread:TaskPool'`.\n        2.  This value is stored in `ALIASES['custom']`.\n        3.  `get_implementation('custom')` retrieves this string.\n        4.  `",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.concurrency (celery/concurrency/__init__.py:1-48) | source=bm25, graph\n\"\"\"Pool implementation abstract factory, and alias definitions.\"\"\"\nimport os\n\n# Import from kombu directly a..."
+  },
+  {
+    "case_id": "celery_type_a_001",
+    "difficulty": "hard",
+    "category": "bootstep_lifecycle_conditional",
+    "failure_type": "Type A",
+    "question": "在 `celery/bootsteps.py` 中，`Step._should_include(parent)` 返回 `(False, None)` 时（即 `include_if` 返回 False），Step 的 `__init__` 和 `create` 方法还会被调用吗？`parent.steps` 列表中会包含该 Step 吗？",
+    "entry_symbol": "",
+    "entry_file": "celery/bootsteps.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.bootsteps.Step._should_include",
+        "celery.bootsteps.Step.include",
+        "celery.bootsteps.StartStopStep.include"
+      ],
+      "indirect_deps": [
+        "celery.bootsteps.Step.__init__",
+        "celery.bootsteps.Step.create",
+        "celery.bootsteps.Blueprint.apply"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 2809,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's `celery/bootsteps.py`, specifically regarding the `Step._should_include(parent)` method returning `(False, None)`.\n    *   Question: When `Step._should_include(parent)` returns `(False, None)` (meaning `include_if` returns False), are `Step.__init__` and `create` methods called? Is the Step added to `parent.steps`?\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Wait, the format example provided in the prompt (`{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`) seems to be for dependency tracking, but the user's question is a specific logic question about Celery's bootstep mechanism. The prompt instruction says \"Return ONLY a valid JSON object... Format: ...\". However, the question asks for a Yes/No or explanation about behavior, not necessarily a dependency list.\n    *   Looking closely at the \"IMPORTANT\" section: \"Return ONLY a valid JSON object, no other text. Format: {\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}\".\n    *   This format looks like it expects dependency information, but the user's question is about logic flow (`__init__`, `create`, `parent.steps`).\n    *   Usually, when the system prompt asks for a specific JSON format like `{\"ground_truth\": ...}`, it expects the answer to fit that schema. However, the question is \"Will `__init__` and `create` be called? Will it be in `parent.steps`?\".\n    *   If I strictly follow the format `{\"ground_truth\": {\"direct_deps\": ...}}`, I cannot answer the question directly with text.\n    *   However, often in these RAG/QA tasks, the \"Format\" instruction might be a template for dependency extraction, but the user is asking a specific question.\n    *   Let's re-read the system instruction: \"You are a JSON-only response bot. You must ONLY output valid",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.bootsteps.Step (celery/bootsteps.py:288-352) | source=bm25, graph, semantic\nclass Step(metaclass=StepType):\n    \"\"\"A Bootstep.\n\n    The :meth:`__init__` method is called when the ..."
+  },
+  {
+    "case_id": "celery_type_a_002",
+    "difficulty": "hard",
+    "category": "acks_late_failure_matrix",
+    "failure_type": "Type A",
+    "question": "在 `celery/worker/request.py` 中，当 `acks_late=True` 时，以下情况分别走 `ack`、`reject(requeue=True)`、`reject(requeue=False)` 中的哪条路径：(1) 普通 `Exception`；(2) `TimeLimitExceeded` 且 `acks_on_timeout=False`；(3) `WorkerLostError` 且 `reject_on_worker_lost=False`；(4) `celery.exceptions.Reject` 异常；(5) `celery.exceptions.Ignore` 异常。",
+    "entry_symbol": "",
+    "entry_file": "celery/worker/request.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.request.Request.on_failure",
+        "celery.worker.request.Request.on_timeout"
+      ],
+      "indirect_deps": [
+        "celery.worker.request.Request.reject",
+        "celery.worker.request.Request.acknowledge"
+      ],
+      "implicit_deps": [
+        "celery.worker.state.should_terminate"
+      ]
+    },
+    "rag_context_length": 4885,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's `celery/worker/request.py`, specifically regarding the `on_failure` method when `acks_late=True`.\n    *   Question: Determine which path (`ack`, `reject(requeue=True)`, `reject(requeue=False)`) is taken for five specific scenarios:\n        1.  Ordinary `Exception`.\n        2.  `TimeLimitExceeded` with `acks_on_timeout=False`.\n        3.  `WorkerLostError` with `reject_on_worker_lost=False`.\n        4.  `celery.exceptions.Reject` exception.\n        5.  `celery.exceptions.Ignore` exception.\n    *   Constraint: Output MUST be ONLY valid JSON. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Wait, the provided format example in the prompt seems to be for dependency analysis (`direct_deps`, `indirect_deps`, `implicit_deps`), but the user's question is about logic paths in code.\n    *   However, the system instruction says: \"You are a JSON-only response bot. You must ONLY output valid JSON objects, no explanations, no markdown, no extra text.\"\n    *   The user prompt ends with: `IMPORTANT: Return ONLY a valid JSON object, no other text. Format: {\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   This format instruction seems contradictory to the actual question asked (which asks for logic paths, not dependencies). The prompt looks like a template for a dependency analysis task, but the user question is about code logic.\n    *   If I strictly follow the `Format` instruction provided at the end of the prompt, I must output that specific JSON structure. However, that structure doesn't fit the answer to the question (which is about `ack`, `reject`, etc.).\n    *   Usually, when there's a conflict between the user's specific question and a rigid format template provided in the \"IMPORTANT\" section, the \"IMPORTANT\" section often dictates the output schema for the *response*, even if the content inside needs to be adapted or",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.worker.request.Request.on_failure (celery/worker/request.py:579-664) | source=bm25, graph\n    def on_failure(self, exc_info, send_failed_event=True, return_ok=False):\n        \"\"\"H..."
+  },
+  {
+    "case_id": "celery_type_a_003",
+    "difficulty": "hard",
+    "category": "autodiscover_signal_lazy_chain",
+    "failure_type": "Type A",
+    "question": "在 `celery/app/base.py` 的 `autodiscover_tasks(..., force=False)` 懒路径下，哪个信号（signal）触发 `import_modules` 事件？该事件的哪个接收者（receiver）最终执行 `_autodiscover_tasks`？从信号发送到实际执行之间有几层间接调用？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.signals.import_modules"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.loaders.base.BaseLoader.import_default_modules",
+        "celery.utils.dispatch.signal.Signal.send"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 3336,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Target: `celery/app/base.py`, specifically the `autodiscover_tasks(..., force=False)` lazy path.\n    *   Questions to answer (implicitly, to form the JSON):\n        1.  Which signal triggers the `import_modules` event?\n        2.  Which receiver (receiver) of that signal eventually executes `_autodiscover_tasks`?\n        3.  How many layers of indirect calls are there between signal sending and actual execution?\n    *   Output Format: JSON only, specifically `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`.\n    *   Constraint: The user provided a specific JSON format example `{\"ground_truth\": {\"direct_deps\": [\"celery.app.base.Celery\"], \"indirect_deps\": [], \"implicit_deps\": []}}`. However, the questions asked in the prompt are about signals, receivers, and call layers, not dependencies.\n    *   Wait, looking closely at the prompt's instruction: \"Return ONLY a valid JSON object, no other text. Format: {\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}\".\n    *   This format seems to be a template for dependency analysis, but the question asks about signals and execution flow.\n    *   Usually, when the prompt asks specific technical questions but provides a specific JSON schema that doesn't match the questions (e.g., asking about signals but the schema asks for deps), I need to interpret what the user actually wants.\n    *   However, the instruction says \"You are a JSON-only response bot. You must ONLY output valid JSON objects...\".\n    *   The prompt asks specific questions: \"Which signal...\", \"Which receiver...\", \"How many layers...\".\n    *   The provided format example `{\"ground_truth\": {\"direct_deps\": ...}}` seems to be a constraint on the *structure* of the output, but the *content* should answer the questions.\n    *   Actually, looking at the \"Format\" section: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`. This looks like a schema for dependency tracking, not signal tracking.\n    *  ",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery.autodiscover_tasks (celery/app/base.py:779-823) | source=bm25, graph\n    def autodiscover_tasks(self, packages=None,\n                           related_name='tasks..."
+  },
+  {
+    "case_id": "celery_medium_019",
+    "difficulty": "medium",
+    "category": "symbol_by_name_resolution_chain",
+    "failure_type": "Type E",
+    "question": "在 `celery/utils/imports.py` 中，`instantiate('celery.concurrency.prefork:TaskPool')` 这条链路最终解析到哪个真实 Celery 符号？中间依赖哪个导入解析函数？",
+    "entry_symbol": "",
+    "entry_file": "celery/utils/imports.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.prefork.TaskPool"
+      ],
+      "indirect_deps": [
+        "celery.utils.imports.instantiate",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1452,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about the Celery codebase, specifically regarding the `instantiate` function in `celery/utils/imports.py` and how it resolves `celery.concurrency.prefork:TaskPool`.\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Task: Identify the final resolved Celery symbol and the intermediate import resolution function used.\n\n2.  **Analyze the Context:**\n    *   `celery/utils/imports.py` contains the `instantiate` function.\n    *   `instantiate(name, *args, **kwargs)` calls `symbol_by_name(name)(*args, **kwargs)`.\n    *   The question asks about `instantiate('celery.concurrency.prefork:TaskPool')`.\n    *   The question asks for the \"real Celery symbol\" it resolves to and the \"intermediate import resolution function\" it depends on.\n    *   Looking at `instantiate`: It calls `symbol_by_name`.\n    *   Looking at `symbol_by_name` (not explicitly provided in the snippets, but implied by the docstring \"See Also: :func:`symbol_by_name`\" and standard Celery import logic).\n    *   However, the question asks for the *final* resolved symbol and the *import resolution function*.\n    *   The input snippets show `instantiate` calls `symbol_by_name`.\n    *   The input snippets show `celery.concurrency.prefork.TaskPool` is a class.\n    *   The question asks: \"最终解析到哪个真实 Celery 符号？\" (Which real Celery symbol does it finally resolve to?) and \"中间依赖哪个导入解析函数？\" (Which import resolution function does it depend on in between?).\n    *   The `instantiate` function itself is the entry point. It calls `symbol_by_name`.\n    *   `symbol_by_name` is the core function that resolves the string `'celery.concurrency.prefork:TaskPool'` into the actual class object `celery.concurrency.prefork.TaskPool`.\n    *   The \"real",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.utils.imports.instantiate (celery/utils/imports.py:38-44) | source=bm25, graph\ndef instantiate(name, *args, **kwargs):\n    \"\"\"Instantiate class by name.\n\n    See Also:\n        :fu..."
+  },
+  {
+    "case_id": "celery_medium_021",
+    "difficulty": "medium",
+    "category": "lpmerge_left_precedent_merge",
+    "failure_type": "Type C",
+    "question": "在 `celery/utils/collections.py` 中，`lpmerge(L, R)` 函数的合并策略是什么？当 R 字典中某个键的值是 `None` 时会发生什么？当 R 字典中某个键的值是非 `None` 时会发生什么？",
+    "entry_symbol": "",
+    "entry_file": "celery/utils/collections.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.collections.lpmerge"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 986,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about the `lpmerge(L, R)` function in `celery/utils/collections.py`.\n    *   Specific questions:\n        1.  What is the merge strategy?\n        2.  What happens when a key in `R` has a value of `None`?\n        3.  What happens when a key in `R` has a non-`None` value?\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Wait, the provided format example in the prompt (`{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`) seems to be for dependency analysis, but the user's question is about code logic (`lpmerge`).\n    *   However, the system instruction says: \"You are a JSON-only response bot. You must ONLY output valid JSON objects, no explanations, no markdown, no extra text.\"\n    *   The user prompt includes a specific format example: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`.\n    *   BUT, the user's question is *not* asking for dependencies. It's asking for code logic explanation.\n    *   There is a conflict between the system instruction (JSON-only), the user's specific question (code logic), and the provided format example (dependency list).\n    *   Usually, when a user asks a specific question about code logic, I should answer that question. However, the system instruction says \"You are a JSON-only response bot.\" and provides a specific JSON schema in the \"IMPORTANT\" section.\n    *   Looking closely at the \"IMPORTANT\" section: `Format: {\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`. This looks like a template for a specific task (dependency extraction).\n    *   However, the user's question is clearly about the `lpmerge` function logic.\n    *   If I strictly follow the \"IMPORTANT\" format, I cannot answer",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.utils.collections.ChainMap.clear (celery/utils/collections.py:265-267) | source=bm25, graph\n    def clear(self):\n        # type: () -> None\n        self.changes.clear()\n\n[Retrieve..."
+  },
+  {
+    "case_id": "celery_medium_022",
+    "difficulty": "medium",
+    "category": "signature_polymorphic_from_dict",
+    "failure_type": "Type D",
+    "question": "在 `celery/canvas.py` 中，`Signature.from_dict(d, app=app)` 如何根据字典的 `subtask_type` 字段决定返回哪个子类的实例？`cls.TYPES` 的注册来源是什么？",
+    "entry_symbol": "",
+    "entry_file": "celery/canvas.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.Signature.TYPES",
+        "celery.canvas.Signature.from_dict"
+      ],
+      "indirect_deps": [
+        "celery.canvas._chain.from_dict",
+        "celery.canvas.group.from_dict",
+        "celery.canvas._chord.from_dict"
+      ],
+      "implicit_deps": [
+        "celery.canvas.Signature.register_type"
+      ]
+    },
+    "rag_context_length": 1617,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about `celery/canvas.py`, specifically how `Signature.from_dict` decides which subclass to return based on `subtask_type`, and where `cls.TYPES` comes from.\n    *   Constraint: Output ONLY valid JSON. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context: Provided snippets from `celery/canvas.py` showing `from_dict`, `register_type`, and some subclass `from_dict` methods.\n\n2.  **Analyze the Question:**\n    *   Question 1: How does `Signature.from_dict(d, app=app)` decide which subclass instance to return based on `subtask_type`?\n    *   Question 2: What is the source of `cls.TYPES` registration?\n\n3.  **Analyze the Context Snippets:**\n    *   Snippet 1 (`from_dict`): Shows logic `typ = d.get('subtask_type')`, `target_cls = cls.TYPES[typ]`. If `target_cls` is not `cls`, it calls `target_cls.from_dict(...)`. Otherwise, returns `Signature(d, app=app)`.\n    *   Snippet 2 (`register_type`): Shows a function `register_type(cls, name=None)`. It references `cls.TYPES`. This implies `TYPES` is a class attribute on `Signature` (or its subclasses) used for mapping type names to classes.\n    *   Snippet 3, 4, 5: Show subclasses (`_chord`, `group`) overriding `from_dict`.\n\n4.  **Synthesize the Answer (Internal Knowledge + Context):**\n    *   *Mechanism:* `from_dict` looks up the `subtask_type` key in the dictionary. It uses this key to index into the class attribute `TYPES` (a dictionary mapping type names to class objects). If the found class is not the base `Signature` class, it delegates to that subclass's `from_dict`.\n    *   *Registration Source:* `cls.TYPES` is populated via the `register_type` classmethod. Subclasses of `Signature` (like `Group`, `Ch",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.canvas.Signature.from_dict (celery/canvas.py:310-321) | source=bm25, graph\n    @classmethod\n    def from_dict(cls, d, app=None):\n        \"\"\"Create a new signature from a dict.\n   ..."
+  },
+  {
+    "case_id": "celery_medium_023",
+    "difficulty": "medium",
+    "category": "signature_head_from_fun_generation",
+    "failure_type": "Type E",
+    "question": "在 `celery/utils/functional.py` 中，`head_from_fun` 生成的函数签名源码存放在哪个命名空间变量中？该函数通过 `exec(definition, namespace)` 执行后，从哪个 key 获取生成的函数对象？",
+    "entry_symbol": "",
+    "entry_file": "celery/utils/functional.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.functional.head_from_fun"
+      ],
+      "indirect_deps": [
+        "celery.utils.functional._argsfromspec",
+        "celery.utils.functional.FUNHEAD_TEMPLATE"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 2272,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about the `celery/utils/functional.py` file, specifically the `head_from_fun` function.\n    *   Question details:\n        1.  Where is the function signature source code stored in the namespace variable generated by `head_from_fun`? (Which key?)\n        2.  From which key is the generated function object retrieved after `exec(definition, namespace)`?\n    *   Constraint: Output ONLY valid JSON. No markdown, no explanations.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Wait, the format example provided in the prompt (`{\"ground_truth\": {\"direct_deps\": [\"celery.app.base.Celery\"], \"indirect_deps\": [], \"implicit_deps\": []}}`) seems to be for dependency analysis, but the question asks about specific variable names/keys within the code logic.\n    *   However, looking closely at the prompt's instruction: \"IMPORTANT: Return ONLY a valid JSON object, no other text. Format: {\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}\"\n    *   This format looks like it expects dependency information, but the question is asking about code logic (variable names).\n    *   Let's re-read the prompt carefully. \"Question: ... Entry File: ... Context: ... IMPORTANT: Return ONLY a valid JSON object... Format: {\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}\"\n    *   There is a mismatch between the question content (asking about variable names/keys in `head_from_fun`) and the required output format (which looks like dependency tracking).\n    *   Usually, in these types of tasks, if the format is strictly specified, I must follow it. However, the content of the JSON values needs to answer the question or fit the schema.\n    *   If I strictly follow the format `{\"ground_truth\": {\"direct_deps\": [...], \"indirect_deps\": [...], \"implicit_deps\": [...]}}`, I cannot put the answer to the question (e.g., \"name\") inside `direct_deps` meaningfully unless I interpret the question as asking for dependencies",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.utils.functional.head_from_fun (celery/utils/functional.py:354-384) | source=bm25, graph\ndef head_from_fun(fun: Callable[..., Any], bound: bool = False) -> str:\n    \"\"\"Generate si..."
+  },
+  {
+    "case_id": "celery_medium_024",
+    "difficulty": "medium",
+    "category": "fake_task_request_context",
+    "failure_type": "Type B",
+    "question": "在 `celery/backends/base.py` 中，`_create_fake_task_request` 函数创建的任务上下文（Context）中，`delivery_info` 字段的默认值是什么？这个空字典在 errback 执行链中会导致什么问题？",
+    "entry_symbol": "",
+    "entry_file": "celery/backends/base.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.backends.base._create_fake_task_request"
+      ],
+      "indirect_deps": [
+        "celery.app.task.Context"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1731,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about Celery's `celery/backends/base.py`, specifically the `_create_fake_task_request` function.\n    *   Question parts:\n        1.  What is the default value of the `delivery_info` field in the Context created by `_create_fake_task_request`?\n        2.  What problem does this empty dictionary cause in the errback execution chain?\n    *   Constraint: Output ONLY a valid JSON object. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Wait, the provided format example in the prompt instructions (`{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`) seems to be for dependency analysis, but the user's actual question is about code behavior (default value and problem).\n    *   However, the system instruction says: \"You are a JSON-only response bot. You must ONLY output valid JSON objects, no explanations, no markdown, no extra text.\"\n    *   The prompt also provides a specific format example: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`.\n    *   But the user's question is *not* asking for dependencies. It's asking for specific code knowledge.\n    *   Usually, when a prompt asks a question and provides a specific JSON format example, I should try to fit the answer into that structure or adapt it if the structure doesn't make sense for the question.\n    *   Looking closely at the prompt structure:\n        *   \"Question: ...\"\n        *   \"Entry File: ...\"\n        *   \"Context: ...\" (with retrieved snippets)\n        *   \"IMPORTANT: Return ONLY a valid JSON object, no other text.\"\n        *   \"Format: {\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}\"\n    *   This looks like a template for a dependency analysis task, but the user is asking a specific question about the code behavior.\n    *   If I strictly follow the \"Format\" instruction, I might have to",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.backends.base._create_fake_task_request (celery/backends/base.py:80-92) | source=bm25, graph\ndef _create_fake_task_request(task_id, errbacks=None, task_name='unknown', **extra) ->..."
+  },
+  {
+    "case_id": "celery_easy_018",
+    "difficulty": "easy",
+    "category": "gen_task_name_cross_module",
+    "failure_type": "Type C",
+    "question": "`celery.app.base.Celery.gen_task_name` 方法将任务名生成委托给哪个工具函数？该工具函数在哪个文件中定义？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1269,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about the Celery library (`celery.app.base.Celery.gen_task_name` method), specifically asking which tool function it delegates to and where that function is defined.\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Context Provided: Several retrieved snippets from `celery/app/base.py`.\n\n2.  **Analyze the Context:**\n    *   [Retrieved 1] shows:\n        ```python\n        def gen_task_name(self, name, module):\n            return gen_task_name(self, name, module)\n        ```\n        This indicates that the method `Celery.gen_task_name` calls a function named `gen_task_name` (without the `self` prefix in the call, implying it's a module-level function or imported function).\n    *   The question asks: \"Which tool function does it delegate to?\" and \"In which file is that tool function defined?\"\n    *   Looking at [Retrieved 1], the call is `return gen_task_name(self, name, module)`. This suggests there is a standalone function `gen_task_name` in the same module (`celery/app/base.py`) or imported from somewhere else.\n    *   Usually, in Celery's source code structure, utility functions like `gen_task_name` are defined in the same file (`celery/app/base.py`) or a closely related utility file.\n    *   However, based *strictly* on the provided context snippets:\n        *   Snippet 1 explicitly shows `def gen_task_name(self, name, module): return gen_task_name(self, name, module)`.\n        *   This implies the method `Celery.gen_task_name` delegates to a function named `gen_task_name`.\n        *   Since the snippet is from `celery/app/base.py`, and the function is called directly without a module prefix (like `celery.utils.gen_task_name`), it is highly likely defined in the same file `celery/app/base.py`.\n    *   Let's check if there's any other info. The snippets don't explicitly show the",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery.gen_task_name (celery/app/base.py:651-652) | source=bm25, graph\n    def gen_task_name(self, name, module):\n        return gen_task_name(self, name, module)\n\n[Retri..."
+  },
+  {
+    "case_id": "celery_easy_019",
+    "difficulty": "easy",
+    "category": "cwd_import_scope",
+    "failure_type": "Type C",
+    "question": "`celery.utils.imports.import_from_cwd` 与普通的 `import_module` 相比，额外做了什么操作？该操作通过哪个上下文管理器实现？",
+    "entry_symbol": "",
+    "entry_file": "celery/utils/imports.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.cwd_in_path",
+        "celery.utils.imports.import_from_cwd"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1661,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about `celery.utils.imports.import_from_cwd` vs `import_module`, specifically asking what extra operation it performs and which context manager implements it.\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Wait, the provided format example seems to be for dependency extraction, but the question is about code functionality analysis. However, the system instruction says \"You are a JSON-only response bot. You must ONLY output valid JSON objects... Format: {\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}\".\n    *   This is a conflict. The user prompt asks a specific question (\"What extra operation... which context manager...\"), but the system instruction forces a specific JSON format that looks like dependency analysis (`direct_deps`, `indirect_deps`, `implicit_deps`).\n    *   Usually, when there's a conflict between a specific user question format and a system instruction format, I need to follow the system instruction's format constraint strictly if it's a \"system\" instruction, but often these prompts are testing the ability to answer the question *within* the constraint or adapt the constraint to the answer.\n    *   Looking closely at the system instruction: \"IMPORTANT: Return ONLY a valid JSON object, no other text. Format: {\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}\"\n    *   Looking at the user prompt: It asks a question. It provides context (code snippets).\n    *   If I strictly follow the format `{\"ground_truth\": {\"direct_deps\": ...}}`, I cannot answer the question \"What extra operation... which context manager...\" directly in the values provided by the format example (which are about dependencies).\n    *   However, often in these RAG/Code QA tasks, the \"Format\" instruction is a template for the *answer structure* expected by the evaluation script, even if the question is different. But here the format explicitly asks for `direct_deps`, `indirect_deps`, `implicit_deps`.\n    *   Wait, looking at the",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.utils.imports.import_from_cwd (celery/utils/imports.py:96-105) | source=bm25, graph\ndef import_from_cwd(module, imp=None, package=None):\n    \"\"\"Import module, temporarily includin..."
+  },
+  {
+    "case_id": "celery_easy_020",
+    "difficulty": "easy",
+    "category": "extension_class_entry_point",
+    "failure_type": "Type E",
+    "question": "`celery.utils.imports.load_extension_classes(namespace)` 这条扩展加载链里，哪个 Celery 函数先枚举 entry point 的 `(name, value)`，哪个 Celery 函数再把 `value` 字符串解析成真实类？",
+    "entry_symbol": "",
+    "entry_file": "celery/utils/imports.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.load_extension_class_names",
+        "celery.utils.imports.load_extension_classes"
+      ],
+      "indirect_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1637,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about the Celery codebase, specifically regarding the `celery.utils.imports.load_extension_classes` function.\n    *   Question: Which Celery function first enumerates the entry point's `(name, value)`, and which Celery function parses the `value` string into a real class?\n    *   Constraint: Output MUST be ONLY valid JSON. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Wait, the format example provided in the prompt (`{\"ground_truth\": {\"direct_deps\": [\"celery.app.base.Celery\"], ...}}`) seems to be for dependency analysis, but the question asks for specific function names. However, the instruction says \"Return ONLY a valid JSON object... Format: {\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}\".\n    *   This is a conflict. The question asks for function names, but the required output format asks for dependency paths.\n    *   Looking closely at the prompt structure: It seems like a standard \"Code Understanding\" task where the user expects the answer to the question, but the system instruction forces a specific JSON schema that looks like dependency analysis.\n    *   However, usually, when a user asks a specific question like \"Which function...\", the expected answer should address that question. But the system instruction says \"You are a JSON-only response bot. You must ONLY output valid JSON objects... Format: {\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}\".\n    *   If I strictly follow the format, I cannot answer the question directly in the JSON values unless I interpret \"direct_deps\" as the answer to the question. But the format implies dependencies.\n    *   Let's re-read the system instruction: \"You are a JSON-only response bot. You must ONLY output valid JSON objects, no explanations, no markdown, no extra text.\"\n    *   The user prompt includes a \"Format\" section at the end of the instruction block: `Format: {\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.utils.imports.load_extension_classes (celery/utils/imports.py:156-164) | source=bm25, graph\ndef load_extension_classes(namespace):\n    for name, class_name in load_extension_class..."
+  },
+  {
+    "case_id": "celery_medium_025",
+    "difficulty": "medium",
+    "category": "task_string_class_reference",
+    "failure_type": "Type D",
+    "question": "celery.app.task.Task.Request 是字符串 celery.worker.request:Request，celery.app.task.Task.Strategy 是字符串 celery.worker.strategy:default。这两个字符串在 worker 进程中被解析为哪些真实的类？",
+    "entry_symbol": "Task.Request",
+    "entry_file": "celery/app/task.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.request.Request",
+        "celery.worker.strategy.default"
+      ],
+      "indirect_deps": [
+        "celery.worker.request",
+        "celery.worker.strategy"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 42796,
+    "model_output": "The user is asking about what real classes the strings 'celery.worker.request:Request' and 'celery.worker.strategy:default' resolve to in the worker process.\n\nLooking at the context provided:\n\n1. From celery/app/task.py, I can see:\n   - `Request = 'celery.worker.request:Request'` - This is a class attribute that stores a qualified name string\n   - `Strategy = 'celery.worker.strategy:default'` - This is also a class attribute storing a qualified name string\n\n2. From celery/worker/strategy.py (Retrieved 2), I can see:\n   - `def default(task, app, consumer,` - This is the default strategy function\n\n3. The question asks what these strings resolve to in the worker process.\n\nBased on Celery's architecture:\n- `celery.worker.request:Request` resolves to the `Request` class in `celery.worker.request` module\n- `celery.worker.strategy:default` resolves to the `default` function in `celery.worker.strategy` module\n\nThese are qualified names (module.path:Class/Function) that Celery uses for lazy loading and dynamic resolution.\n\nLet me check the format required:\n```json\n{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}\n```\n\nThe question is asking about what classes these strings resolve to. The answer should be the actual class/function names.\n\nFor `celery.worker.request:Request`:\n- This resolves to the `Request` class from `celery.worker.request` module\n\nFor `celery.worker.strategy:default`:\n- This resolves to the `default` function from `celery.worker.strategy` module\n\nHowever, the format seems to expect module paths as dependencies. Let me reconsider what the question is asking.\n\nThe question asks: \"这两个字符串在 worker 进程中被解析为哪些真实的类？\" (What real classes are these two strings parsed into in the worker process?)\n\n\nThe answer should be the actual class/function names that these qualified names resolve to.\n\nLooking at the format example: `{\"ground_truth\": {\"direct_deps\": [\"celery.app.base.Celery\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n\nThis format seems to expect module paths. But the question is asking about what classes these resolve to.\n\nI think the",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.task.Task (celery/app/task.py:183-1237) | source=bm25, graph, semantic\n@abstract.CallableTask.register\nclass Task:\n    \"\"\"Task base class.\n\n    Note:\n        When called tasks..."
+  },
+  {
+    "case_id": "celery_easy_021",
+    "difficulty": "easy",
+    "category": "signature_class_definition",
+    "failure_type": "Type D",
+    "question": "celery.canvas.Signature 是什么类型的对象？它继承自哪个标准库类？",
+    "entry_symbol": "Signature",
+    "entry_file": "celery/canvas.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.Signature"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1158,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about `celery.canvas.Signature` (what type of object is it, what standard library class does it inherit from?), along with some retrieved context snippets.\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Wait, the format example provided in the prompt is `{\"ground_truth\": {\"direct_deps\": [\"celery.app.base.Celery\"], \"indirect_deps\": [], \"implicit_deps\": []}}`. However, the question asks \"What type of object is it? It inherits from which standard library class?\". The format provided in the `IMPORTANT` section seems to be for dependency tracking (`direct_deps`, `indirect_deps`, `implicit_deps`), which doesn't directly answer the question about inheritance.\n    *   Let's look closely at the `IMPORTANT` section: `Format: {\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`.\n    *   This format looks like it's designed for a different task (dependency analysis), but the user is asking a specific question about inheritance.\n    *   However, I must follow the instruction: \"Return ONLY a valid JSON object... Format: ...\".\n    *   If I answer the question inside the JSON, how should I structure it? The example shows `direct_deps`. Usually, in these types of constrained generation tasks, if the format is strictly defined, I should try to map the answer to that structure or provide the answer in a way that fits the schema if possible, or perhaps the schema is a template for the *type* of answer expected (e.g., identifying the class hierarchy).\n    *   Actually, looking at the prompt structure, it seems like a specific evaluation task where the `ground_truth` field is expected to contain the answer. But the keys `direct_deps`, `indirect_deps`, `implicit_deps` suggest a dependency graph context.\n    *   Let's re-read the question: \"celery.canvas.Signature 是什么类型的对象？它继承自哪个标准库类？\" (What type of object is celery.canvas.Signature? Which standard",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.canvas.Signature.AsyncResult (celery/canvas.py:851-856) | source=graph\n    @cached_property\n    def AsyncResult(self):\n        try:\n            return self.type.AsyncResult\n      ..."
+  },
+  {
+    "case_id": "celery_easy_022",
+    "difficulty": "easy",
+    "category": "cross_package_re-export",
+    "failure_type": "Type C",
+    "question": "celery.utils.uuid 实际上是从哪个外部包的哪个模块的哪个函数重新导出的？",
+    "entry_symbol": "uuid",
+    "entry_file": "celery/utils/__init__.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "kombu.utils.uuid.uuid"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1867,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about where `celery.utils.uuid` is re-exported from (specifically module, function), along with some context snippets (code/graph data).\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Task: Identify the source of the `uuid` symbol in `celery.utils`.\n\n2.  **Analyze the Context:**\n    *   `[Retrieved 1] celery.utils (celery/utils/__init__.py:1-36)`:\n        *   This file is `celery/utils/__init__.py`.\n        *   Line 10: `from kombu.utils.uuid import uuid`\n        *   Line 33: `uuid` is in `__all__`.\n        *   Line 30: `gen_unique_id = uuid`\n    *   The question asks: \"celery.utils.uuid 实际上是从哪个外部包的哪个模块的哪个函数重新导出的？\" (Where is `celery.utils.uuid` actually re-exported from? Which external package, which module, which function?)\n    *   Looking at line 10: `from kombu.utils.uuid import uuid`.\n    *   Source Package: `kombu`\n    *   Source Module: `kombu.utils.uuid`\n    *   Source Function/Name: `uuid` (It's imported directly, not necessarily a function call, but the symbol is `uuid`). The question asks for \"which function\" (哪个函数), but in this context, it's importing the symbol `uuid` from `kombu.utils.uuid`. Often `uuid` is a function or a class in that module. The import statement is `from kombu.utils.uuid import uuid`.\n    *   The JSON format requires `direct_deps`. The dependency is the source module.\n    *   The question asks for \"external package's module's function\".\n    *   Based on `from kombu.utils.uuid import uuid`:\n        *   External Package: `kombu`\n        *   Module: `kombu.utils.uuid`\n        *   Symbol:",
+    "extracted_prediction": {
+      "direct_deps": [
+        "module.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.utils (celery/utils/__init__.py:1-36) | source=bm25, graph\n\"\"\"Utility functions.\n\nDon't import from here directly anymore, as these are only\nhere for backwards compatibility.\n\"\"\"\n..."
+  },
+  {
+    "case_id": "celery_easy_023",
+    "difficulty": "easy",
+    "category": "nodename_function_definition",
+    "failure_type": "Type C",
+    "question": "celery.utils.nodename 是在 celery.utils.nodenames 模块中定义的函数，它的完整 FQN 是什么？",
+    "entry_symbol": "nodename",
+    "entry_file": "celery/utils/__init__.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.nodenames.nodename"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 2317,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about the Fully Qualified Name (FQN) of a function `celery.utils.nodename`.\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Task: Identify the correct FQN based on the provided context.\n\n2.  **Analyze the Context:**\n    *   [Retrieved 1] `celery/utils/__init__.py`: Shows `from .nodenames import nodename, nodesplit, worker_direct`. This confirms `nodename` is imported from `celery.utils.nodenames` into `celery.utils`.\n    *   [Retrieved 2] `celery/utils/nodenames.py`: Shows `def nodename(name: str, hostname: str) -> str:`. This confirms the function definition exists in `celery/utils/nodenames.py`.\n    *   [Retrieved 3] `celery/utils/nodenames`: Module docstring confirms `module celery.utils.nodenames`.\n    *   Question: \"celery.utils.nodename 是在 celery.utils.nodenames 模块中定义的函数，它的完整 FQN 是什么？\" (celery.utils.nodename is a function defined in the celery.utils.nodenames module, what is its complete FQN?)\n\n3.  **Determine the FQN:**\n    *   The function is defined in `celery/utils/nodenames.py`.\n    *   The module path is `celery.utils.nodenames`.\n    *   The function name is `nodename`.\n    *   Therefore, the FQN is `celery.utils.nodenames.nodename`.\n    *   Note: The question asks for the FQN of `celery.utils.nodename` (which is the import alias in `celery.utils`), but explicitly states it is defined in `celery.utils.nodenames`. The FQN usually refers to the definition location.\n    *   Looking at the provided format example: `{\"ground_truth\": {\"direct_deps\": [\"celery.app.base.Celery\"], ...}}`.\n    *   The question",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.utils (celery/utils/__init__.py:1-36) | source=bm25, graph, semantic\n\"\"\"Utility functions.\n\nDon't import from here directly anymore, as these are only\nhere for backwards compatibi..."
+  },
+  {
+    "case_id": "celery_easy_024",
+    "difficulty": "easy",
+    "category": "worker_direct_re-export",
+    "failure_type": "Type C",
+    "question": "celery.utils.worker_direct 是在 celery.utils.nodenames 模块中定义的函数，它的完整 FQN 是什么？",
+    "entry_symbol": "worker_direct",
+    "entry_file": "celery/utils/__init__.py",
+    "mode": "rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.nodenames.worker_direct"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 2370,
+    "model_output": "Thinking Process:\n\n1.  **Analyze the Request:**\n    *   Input: A question about the Fully Qualified Name (FQN) of a function `worker_direct` defined in `celery.utils.nodenames`, along with some context snippets (retrieved code/documentation).\n    *   Constraint: Output MUST be valid JSON only. No markdown, no explanations, no extra text.\n    *   Format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`\n    *   Task: Identify the FQN of `worker_direct` based on the provided context.\n\n2.  **Analyze the Context:**\n    *   [Retrieved 1] `celery/utils/__init__.py`: Shows `from .nodenames import nodename, nodesplit, worker_direct`. This confirms `worker_direct` is imported from `celery.utils.nodenames` into `celery.utils`.\n    *   [Retrieved 2] `celery.utils.nodenames.worker_direct`: Shows the function definition `def worker_direct(hostname: str | Queue) -> Queue:`. The path is `celery/utils/nodenames.py`.\n    *   [Retrieved 3] `celery.utils.nodenames`: Module docstring confirms it's `celery.utils.nodenames`.\n\n3.  **Determine the FQN:**\n    *   The function is `worker_direct`.\n    *   It is defined in the module `celery.utils.nodenames`.\n    *   Therefore, the FQN is `celery.utils.nodenames.worker_direct`.\n\n4.  **Format the Output:**\n    *   The user wants a specific JSON format: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`.\n    *   Wait, the example shows `direct_deps` as a list containing the FQN.\n    *   The question asks: \"它的完整 FQN 是什么？\" (What is its complete FQN?).\n    *   The expected output format in the prompt instructions says: `{\"ground_truth\": {\"direct_deps\": [\"module.path\"], \"indirect_deps\": [], \"implicit_deps\": []}}`.\n    *   So I need to put the FQN string inside `direct_deps`.\n\n5. ",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.utils (celery/utils/__init__.py:1-36) | source=bm25, graph, semantic\n\"\"\"Utility functions.\n\nDon't import from here directly anymore, as these are only\nhere for backwards compatibi..."
+  }
+]

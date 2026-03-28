@@ -1,0 +1,1497 @@
+[
+  {
+    "case_id": "easy_001",
+    "difficulty": "easy",
+    "category": "re_export",
+    "failure_type": "Type C",
+    "question": "Which real class does `celery.Celery` resolve to in the top-level lazy API?",
+    "entry_symbol": "",
+    "entry_file": "celery/__init__.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 5913,
+    "model_output": "The user is asking about what real class `celery.Celery` resolves to in the top-level lazy API.\n\nLooking at the context provided:\n\n1. From `celery/__init__.py`, I can see that `Celery` is listed in `__all__` and there's a `STATICA_HACK` section that shows:\n   ```python\n   from celery.app.base import Celery\n   ```\n\n2. The lazy loading mechanism uses `local.recreate_module` to create a new module that imports stuff on first attribute access.\n\n3. The `by_module` dictionary shows:\n   ```python\n   'celery.app': ['Celery', 'bugreport', 'shared_task'],\n   ```\n\n4. This means when accessing `celery.Celery` at the top level, it will be lazily loaded from `celery.app.base.Celery`.\n\n5. The `STATICA_HACK` section shows the actual import path: `from celery.app.base import Celery`\n\nSo the real class that `celery.Celery` resolves to is `celery.app.base.Celery`.\n\nLet me trace the dependency chain:\n- Direct: `celery.app.base.Celery` - this is the actual class\n- Indirect: The lazy loading mechanism involves `celery.local.recreate_module` and the `by_module` configuration\n- Implicit: The `STATICA_HACK` and lazy loading infrastructure\n\nBased on the few-shot examples, I should structure this as:\n- direct_deps: The actual class being resolved\n- indirect_deps: The mechanisms that enable the resolution\n- implicit_deps: The configuration/state that makes it work\n\nLet me refine this based on the pattern from the examples:\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery\"\n    ],\n    \"indirect_deps\": [\n      \"celery.local.recreate_module\"\n    ],\n    \"implicit_deps\": [\n      \"celery._state\",\n      \"celery.app\"\n    ]\n  }\n}\n```\n\nActually, looking more carefully at the context, the lazy loading creates a new module that imports on first access. The `by_module` configuration maps `'celery.app': ['Celery', ...]` which means `celery.C",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery"
+      ],
+      "indirect_deps": [
+        "celery.local.recreate_module"
+      ],
+      "implicit_deps": [
+        "celery._state",
+        "celery.app"
+      ]
+    },
+    "f1": 0.4,
+    "context_preview": "[Retrieved 1] celery (celery/__init__.py:1-180) | source=bm25, graph\n\"\"\"Distributed Task Queue.\"\"\"\n# :copyright: (c) 2017-2026 Asif Saif Uddin, celery core and individual\n#                 contributor..."
+  },
+  {
+    "case_id": "easy_002",
+    "difficulty": "easy",
+    "category": "re_export",
+    "failure_type": "Type C",
+    "question": "Which real function does the top-level `celery.shared_task` symbol resolve to?",
+    "entry_symbol": "",
+    "entry_file": "celery/__init__.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.shared_task"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 5570,
+    "model_output": "The user is asking about what real function the top-level `celery.shared_task` symbol resolves to.\n\nLooking at the context:\n\n1. From `celery/__init__.py`, I can see that `shared_task` is listed in `__all__` and there's a STATICA_HACK section that imports it:\n```python\nfrom celery.app import shared_task\n```\n\n2. From `celery/app/__init__.py` (Retrieved 2), I can see the `shared_task` function definition:\n```python\ndef shared_task(*args, **kwargs):\nDocstring: \"Create shared task (decorator).\"\n```\n\n3. The function is defined in `celery.app.shared_task` module.\n\nSo the top-level `celery.shared_task` symbol resolves to the function defined in `celery.app.shared_task`.\n\nLet me trace the dependency chain:\n- Direct: `celery.app.shared_task` (the function itself)\n- Indirect: The function references various internal state and proxy mechanisms\n- Implicit: Various state management dependencies\n\nLooking at the docstring references: \"Proxy, __inner, _state, _state._get_active_apps, _state.connect_on_app_finalize, _state.get_current_app\"\n\nThese are the internal dependencies that the function uses.\n\nLet me structure this properly:\n\nDirect deps: The actual function definition location\n- `celery.app.shared_task`\n\nIndirect deps: What the function internally uses\n- `celery._state` (for _get_active_apps, connect_on_app_finalize, get_current_app)\n- `celery.app.base.Celery` (for the inner decorator logic)\n\nImplicit deps: State management and proxy mechanisms\n- `celery.local.Proxy`\n- `celery._state.current_app`\n- `celery._state._get_active_apps`\n\n\n- `celery._state.connect_on_app_finalize`\n\nThe function is a decorator that creates shared tasks, so it needs access to the app state and proxy mechanisms to properly register tasks.\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.shared_task\"\n    ],\n    \"indirect_deps\": [\n      \"celery._state._get_active_apps\",\n      \"celery._state.connect_on_app_finalize\",\n      \"celery._state.get_current_app",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery (celery/__init__.py:1-180) | source=bm25, graph\n\"\"\"Distributed Task Queue.\"\"\"\n# :copyright: (c) 2017-2026 Asif Saif Uddin, celery core and individual\n#                 contributor..."
+  },
+  {
+    "case_id": "easy_003",
+    "difficulty": "easy",
+    "category": "loader_alias",
+    "failure_type": "Type E",
+    "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('default')` resolve to?",
+    "entry_symbol": "",
+    "entry_file": "celery/loaders/__init__.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1404,
+    "model_output": "The user is asking about what `get_loader_cls('default')` resolves to in the Celery codebase.\n\nLooking at the context provided:\n\n1. From `celery/loaders/__init__.py`:\n   - `LOADER_ALIASES = {'app': 'celery.loaders.app:AppLoader', 'default': 'celery.loaders.default:Loader'}`\n   - `get_loader_cls` function is defined here\n\n2. The function `get_loader_cls(loader)` is documented as \"Get loader class by name/alias.\"\n\n3. Based on the alias mapping, `'default'` maps to `'celery.loaders.default:Loader'`\n\n4. The `symbol_by_name` import from `celery.utils.imports` is used to resolve the string to the actual class\n\nSo the resolution chain is:\n- `get_loader_cls('default')` looks up `'default'` in `LOADER_ALIASES`\n- Gets `'celery.loaders.default:Loader'`\n- Uses `symbol_by_name` to resolve this to the actual class `celery.loaders.default.Loader`\n\nDirect dependencies:\n- `celery.loaders.default.Loader` - the final resolved class\n\nIndirect dependencies:\n- `celery.loaders.get_loader_cls` - the function being called\n- `celery.utils.imports.symbol_by_name` - used to resolve the string to class\n\nImplicit dependencies:\n- `celery.loaders.LOADER_ALIASES` - the alias dictionary\n\nLet me structure this properly:\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.default.Loader\"\n    ],\n    \"indirect_deps\": [\n      \"celery.loaders.get_loader_cls\",\n      \"celery.utils.imports.symbol_by_name\"\n    ],\n    \"implicit_deps\": [\n      \"celery.loaders.LOADER_ALIASES\"\n    ]\n  }\n}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [
+        "celery.loaders.get_loader_cls",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": [
+        "celery.loaders.LOADER_ALIASES"
+      ]
+    },
+    "f1": 0.4,
+    "context_preview": "[Retrieved 1] celery.loaders (celery/loaders/__init__.py:1-18) | source=bm25, graph\n\"\"\"Get loader by name.\n\nLoaders define how configuration is read, what happens\nwhen workers start, when tasks are ex..."
+  },
+  {
+    "case_id": "easy_004",
+    "difficulty": "easy",
+    "category": "alias_resolution",
+    "failure_type": "Type D",
+    "question": "What pool implementation does `celery.concurrency.get_implementation('processes')` resolve to?",
+    "entry_symbol": "",
+    "entry_file": "celery/concurrency/__init__.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.prefork.TaskPool"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1525,
+    "model_output": "The user is asking about what pool implementation `celery.concurrency.get_implementation('processes')` resolves to.\n\nLet me trace through the code:\n\n1. `get_implementation('processes')` calls `symbol_by_name('processes', ALIASES)`\n2. `symbol_by_name` looks up 'processes' in the ALIASES dictionary\n3. The ALIASES dictionary is populated in `celery/concurrency/__init__.py`\n\nLooking at the context:\n- Retrieved 2 shows the module has string targets including `celery.concurrency.prefork.TaskPool`\n- Retrieved 1 shows `get_implementation` uses `symbol_by_name(cls, ALIASES)`\n\nThe key question is: what is the default alias for 'processes'?\n\nFrom Celery's standard implementation, the 'processes' pool type maps to the prefork pool implementation. The ALIASES dictionary typically contains:\n- 'solo' -> 'celery.concurrency.solo.TaskPool'\n- 'thread' -> 'celery.concurrency.thread.TaskPool'\n- 'prefork' -> 'celery.concurrency.prefork.TaskPool'\n- 'processes' -> 'celery.concurrency.prefork.TaskPool' (this is the alias)\n\nSo `get_implementation('processes')` would resolve to `celery.concurrency.prefork.TaskPool`.\n\nLet me verify the dependency structure:\n- direct_deps: The final resolved class is `celery.concurrency.prefork.TaskPool`\n- indirect_deps: The function that does the resolution is `celery.concurrency.get_implementation`, and `symbol_by_name` is used\n- implicit_deps: The ALIASES dictionary is used as a lookup table\n\nLet me construct the answer:\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.concurrency.prefork.TaskPool\"\n    ],\n    \"indirect_deps\": [\n      \"celery.concurrency.get_implementation\",\n      \"celery.utils.imports.symbol_by_name\"\n    ],\n    \"implicit_deps\": [\n      \"celery.concurrency.ALIASES\"\n    ]\n  }\n}\n```\n\nThis matches the pattern from the few-shot examples where:\n- direct_deps contains the final resolved class\n- indirect_deps contains the",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.concurrency.prefork.TaskPool"
+      ],
+      "indirect_deps": [
+        "celery.concurrency.get_implementation",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": [
+        "celery.concurrency.ALIASES"
+      ]
+    },
+    "f1": 0.4,
+    "context_preview": "[Retrieved 1] celery.concurrency.get_implementation (celery/concurrency/__init__.py:41-43) | source=bm25, graph\ndef get_implementation(cls):\n    \"\"\"Return pool implementation by name.\"\"\"\n    return sy..."
+  },
+  {
+    "case_id": "medium_001",
+    "difficulty": "medium",
+    "category": "backend_alias",
+    "failure_type": "Type E",
+    "question": "Which backend class does `celery.app.backends.by_name('redis')` resolve to?",
+    "entry_symbol": "",
+    "entry_file": "celery/app/backends.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.backends.redis.RedisBackend"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 2149,
+    "model_output": "The user is asking about what backend class `celery.app.backends.by_name('redis')` resolves to.\n\nLooking at the context provided:\n\n1. From `celery.app.backends.by_name` (Retrieved 3): This function gets a backend class by name/alias. It references `BACKEND_ALIASES`.\n\n2. From `celery.app.backends` module docstring (Retrieved 2): It shows string targets including `celery.backends.redis.RedisBackend`.\n\n3. From `celery.backends.redis.RedisBackend` (Retrieved 4): This is the actual Redis backend class.\n\nThe key question is: what does `by_name('redis')` resolve to?\n\nBased on Celery's backend system:\n- `by_name` looks up backend names in `BACKEND_ALIASES` dictionary\n- The default alias for 'redis' points to `celery.backends.redis.RedisBackend`\n\nSo the direct dependency is `celery.backends.redis.RedisBackend`.\n\nFor indirect dependencies:\n- `celery.app.backends.by_name` is the function being called\n- `celery.utils.imports.symbol_by_name` is likely used internally to resolve the string to the actual class\n\nFor implicit dependencies:\n- `celery.app.backends.BACKEND_ALIASES` is the dictionary that contains the mapping from 'redis' to the backend class\n\nLet me construct the JSON response based on this analysis.\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.backends.redis.RedisBackend\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.backends.by_name\",\n      \"celery.utils.imports.symbol_by_name\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.backends.BACKEND_ALIASES\"\n    ]\n  }\n}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.backends.redis.RedisBackend"
+      ],
+      "indirect_deps": [
+        "celery.app.backends.by_name",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": [
+        "celery.app.backends.BACKEND_ALIASES"
+      ]
+    },
+    "f1": 0.4,
+    "context_preview": "[Retrieved 1] celery.app.backends.by_url (celery/app/backends.py:59-69) | source=bm25, graph\ndef by_url(backend=None, loader=None):\n    \"\"\"Get backend class by URL.\"\"\"\n    url = None\n    if backend an..."
+  },
+  {
+    "case_id": "medium_002",
+    "difficulty": "medium",
+    "category": "loader_alias",
+    "failure_type": "Type E",
+    "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('app')` resolve to?",
+    "entry_symbol": "",
+    "entry_file": "celery/loaders/__init__.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.app.AppLoader"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1404,
+    "model_output": "The user is asking about what `get_loader_cls('app')` resolves to in the Celery codebase.\n\nLooking at the context provided:\n\n1. From `celery/loaders/__init__.py`:\n   - `LOADER_ALIASES = {'app': 'celery.loaders.app:AppLoader', 'default': 'celery.loaders.default:Loader'}`\n   - `get_loader_cls` function is defined here\n\n2. The function `get_loader_cls(loader)` takes a loader name/alias and should resolve it to a class.\n\n3. Based on the `LOADER_ALIASES` dictionary, when `get_loader_cls('app')` is called:\n   - It should look up 'app' in `LOADER_ALIASES`\n   - This returns the string `'celery.loaders.app:AppLoader'`\n   - Then `symbol_by_name` is used to resolve this string to the actual class\n\nSo the direct dependency is `celery.loaders.app.AppLoader` (the resolved class).\n\nThe indirect dependencies would include:\n- `celery.loaders.get_loader_cls` (the function itself)\n- `celery.utils.imports.symbol_by_name` (used to resolve the string)\n\nThe implicit dependencies would include:\n- `celery.loaders.LOADER_ALIASES` (the dictionary containing the mapping)\n\nLet me structure this properly:\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.app.AppLoader\"\n    ],\n    \"indirect_deps\": [\n      \"celery.loaders.get_loader_cls\",\n      \"celery.utils.imports.symbol_by_name\"\n    ],\n    \"implicit_deps\": [\n      \"celery.loaders.LOADER_ALIASES\"\n    ]\n  }\n}\n```\n\nThis matches the pattern from the few-shot examples where we identify the final resolved class as direct_deps, the functions used to get there as indirect_deps, and the configuration/data structures as implicit_deps.\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.app.AppLoader\"\n    ],\n    \"indirect_deps\": [\n      \"celery.loaders.get_loader_cls\",\n      \"celery.utils.imports.symbol_by",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.loaders.app.AppLoader"
+      ],
+      "indirect_deps": [
+        "celery.loaders.get_loader_cls",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": [
+        "celery.loaders.LOADER_ALIASES"
+      ]
+    },
+    "f1": 0.4,
+    "context_preview": "[Retrieved 1] celery.loaders (celery/loaders/__init__.py:1-18) | source=bm25, graph\n\"\"\"Get loader by name.\n\nLoaders define how configuration is read, what happens\nwhen workers start, when tasks are ex..."
+  },
+  {
+    "case_id": "medium_003",
+    "difficulty": "medium",
+    "category": "alias_resolution",
+    "failure_type": "Type D",
+    "question": "What pool implementation does `celery.concurrency.get_implementation('threads')` resolve to?",
+    "entry_symbol": "",
+    "entry_file": "celery/concurrency/__init__.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.thread.TaskPool"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1499,
+    "model_output": "The user is asking about what pool implementation `celery.concurrency.get_implementation('threads')` resolves to.\n\nLooking at the context:\n1. `get_implementation` is defined in `celery/concurrency/__init__.py` at lines 41-43\n2. It calls `symbol_by_name(cls, ALIASES)` where `cls` is the argument passed in\n3. The function takes a class name string and resolves it through the ALIASES dictionary\n\nThe question asks about `get_implementation('threads')` - note that the argument is 'threads', not 'thread'.\n\nLooking at the string targets in Retrieved 2:\n- celery.concurrency.eventlet.TaskPool\n- celery.concurrency.gevent.TaskPool\n- celery.concurrency.prefork.TaskPool\n- celery.concurrency.solo.TaskPool\n- celery.concurrency.thread.TaskPool\n\nThe standard alias for 'threads' in Celery is typically 'prefork' or 'thread'. Let me think about this more carefully.\n\nIn Celery's concurrency module, the common pool implementations are:\n- 'prefork' - maps to celery.concurrency.prefork.TaskPool\n- 'threads' - maps to celery.concurrency.thread.TaskPool\n- 'solo' - maps to celery.concurrency.solo.TaskPool\n- 'eventlet' - maps to celery.concurrency.eventlet.TaskPool\n- 'gevent' - maps to celery.concurrency.gevent.TaskPool\n\nSo `get_implementation('threads')` should resolve to `celery.concurrency.thread.TaskPool`.\n\nThe reasoning:\n1. `get_implementation('threads')` calls `symbol_by_name('threads', ALIASES)`\n2. `ALIASES` contains the mapping from pool name strings to their full module paths\n\n\n3. The 'threads' alias maps to 'celery.concurrency.thread:TaskPool'\n4. `symbol_by_name` then imports and returns the actual class\n\nFor the dependency structure:\n- direct_deps: The final resolved class `celery.concurrency.thread.TaskPool`\n- indirect_deps: The function `celery.concurrency.get_implementation` and the utility `symbol_by_name`\n- implicit_deps: The `ALIASES` dictionary that provides the mapping\n\nI need to verify the exact structure of the ALIASES dictionary to confirm the mapping is correct.\n</think>\n\n{\n",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.concurrency.get_implementation (celery/concurrency/__init__.py:41-43) | source=bm25, graph\ndef get_implementation(cls):\n    \"\"\"Return pool implementation by name.\"\"\"\n    return sy..."
+  },
+  {
+    "case_id": "medium_004",
+    "difficulty": "medium",
+    "category": "name_generation",
+    "failure_type": "Type C",
+    "question": "Which helper function does `Celery.gen_task_name` delegate to?",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1951,
+    "model_output": "The user is asking about which helper function `Celery.gen_task_name` delegates to. Looking at the context provided, I need to find where `gen_task_name` is defined and what it delegates to.\n\nFrom the context snippets:\n- Retrieved 1 shows `Celery.register_task` which calls `self.gen_task_name(task_cls.__name__, task_cls.__module__)`\n- Retrieved 4 shows `Celery._task_from_fun` which also references `gen_task_name`\n\nHowever, none of the snippets show the actual implementation of `gen_task_name`. Based on the few-shot examples and the pattern I've seen, `gen_task_name` typically delegates to `celery.utils.imports.gen_task_name`.\n\nLooking at the few-shot examples:\n- Few-shot D02 shows that `Celery.gen_task_name` delegates to `celery.utils.imports.gen_task_name`\n- This is a consistent pattern in Celery's codebase\n\nSo the answer should be:\n- direct_deps: The function that `gen_task_name` directly calls/delegates to\n- indirect_deps: The Celery method that contains `gen_task_name`\n- implicit_deps: Any state or configuration that `gen_task_name` relies on\n\nBased on the pattern from Few-shot D02 and Celery's architecture:\n- `Celery.gen_task_name` delegates to `celery.utils.imports.gen_task_name`\n- This is a direct dependency\n- The implicit dependency would be the task name generation logic itself\n\nLet me construct the JSON response:\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.imports.gen_task_name\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.gen_task_name\"\n    ],\n    \"implicit_deps\": [\n      \"celery.utils.imports\"\n    ]\n  }\n}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.gen_task_name"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports"
+      ]
+    },
+    "f1": 0.5,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery.register_task (celery/app/base.py:632-649) | source=bm25, graph\n    def register_task(self, task, **options):\n        \"\"\"Utility for registering a task-based class..."
+  },
+  {
+    "case_id": "hard_001",
+    "difficulty": "hard",
+    "category": "shared_task_registration",
+    "failure_type": "Type B",
+    "question": "When `@shared_task` decorates a function, which real app method ultimately creates the task instance?",
+    "entry_symbol": "",
+    "entry_file": "celery/app/__init__.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 3251,
+    "model_output": "The user is asking about the `@shared_task` decorator and which real app method ultimately creates the task instance.\n\nLooking at the code in `celery/app/__init__.py` for `shared_task`:\n\n1. When `@shared_task` decorates a function, it creates a `Proxy` object\n2. The `Proxy` wraps `task_by_cons()` function\n3. `task_by_cons()` gets the current app and returns `app.tasks[name or app.gen_task_name(...)]`\n\nHowever, the question asks about the \"real app method\" that creates the task instance. Looking at the code:\n\n1. In `shared_task`, there's a callback registered via `connect_on_app_finalize` that calls `app._task_from_fun(fun, **options)`\n2. For finalized apps, it also calls `app._task_from_fun(fun, **options)` directly\n3. The `Proxy` returned by `shared_task` doesn't create the task itself - it just retrieves it from the app's task registry\n\nSo the actual task creation happens in `app._task_from_fun`, which is a method on the `Celery` class (in `celery/app/base.py`).\n\nLet me trace the dependency chain:\n\n**Direct deps:**\n- `celery.app.base.Celery._task_from_fun` - This is the method that actually creates the task instance\n\n**Indirect deps:**\n- `celery.app.base.Celery.tasks` - The task registry where tasks are stored\n- `celery.app.base.Celery.gen_task_name` - Used to generate task names\n- `celery._state.connect_on_app_finalize` - Used to register finalize callbacks\n- `celery._state.get_current_app` - Used to get the current app\n- `celery.local.Proxy` - The proxy wrapper returned by shared_task\n\n\n- `celery._state._get_active_apps` - Used to iterate over active apps\n\n**Implicit deps:**\n- `celery._state.app_or_default` - May be involved in app resolution\n- `celery.app.shared_task` - The decorator itself\n\nThe key insight is that `@shared_task` doesn't directly create tasks - it registers callbacks and returns a proxy. The actual task creation happens when `app._task_from_fun` is called, either through the finalize callback or directly for already-finalized apps.\n</think>\n\n{\n ",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.shared_task (celery/app/__init__.py:24-76) | source=graph\ndef shared_task(*args, **kwargs):\n    \"\"\"Create shared task (decorator).\n\n    This can be used by library authors to ..."
+  },
+  {
+    "case_id": "hard_002",
+    "difficulty": "hard",
+    "category": "app_task_registration",
+    "failure_type": "Type B",
+    "question": "Inside the `@app.task` decorator flow, which real method ultimately constructs and registers the task?",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 3356,
+    "model_output": "The user is asking about the `@app.task` decorator flow and which real method ultimately constructs and registers the task.\n\nLooking at the context provided:\n1. `celery.app.base.Celery.task` (Retrieved 2) - This is the decorator method\n2. `celery.app.base.Celery` (Retrieved 3) - The main Celery class\n3. `celery.app.base.Celery.__init__` (Retrieved 4) - Initialization\n4. `celery.app.base.Celery.autodiscover_tasks` (Retrieved 1) - Auto-discovery\n5. `celery.app.base.Celery.send_task` (Retrieved 5) - Sending tasks\n\nFrom the few-shot examples, I can see the pattern for analyzing dependency chains. The question asks about the `@app.task` decorator flow specifically.\n\nFrom the reasoning in Few-shot B05, I know that:\n- `Celery.task` is the entry point\n- It can forward to `shared_task` in certain conditions (USING_EXECV)\n- The actual task creation happens through `_task_from_fun`\n\nLooking at the context:\n- `Celery.task` (Retrieved 2) shows it imports `celery.app.shared_task`\n- The docstring says \"Decorator to create a task class out of any callable\"\n\nThe key method that ultimately constructs and registers the task is `_task_from_fun` (as shown in Few-shot D02 reasoning).\n\nLet me trace the flow:\n1. `@app.task` calls `Celery.task()`\n2. Depending on conditions (lazy, USING_EXECV, etc.), it may forward to `shared_task` or call `_task_from_fun` directly\n3. `_task_from_fun` is the method that actually creates and registers the task\n\nSo the direct dependency should be the method that does the actual work: `_task_from_fun`\n\n\nThe indirect dependencies include the decorator entry point and any forwarding mechanisms like `shared_task`. Implicit dependencies would be the task registry and configuration state that `_task_from_fun` relies on.\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery._task_from_fun\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.task\",",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery.autodiscover_tasks (celery/app/base.py:779-823) | source=bm25, graph\n    def autodiscover_tasks(self, packages=None,\n                           related_name='tasks..."
+  },
+  {
+    "case_id": "hard_003",
+    "difficulty": "hard",
+    "category": "finalize_callback",
+    "failure_type": "Type B",
+    "question": "Which function is responsible for firing all shared-task and built-in finalize callbacks?",
+    "entry_symbol": "",
+    "entry_file": "celery/_state.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state._announce_app_finalized"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 3093,
+    "model_output": "The user is asking about which function is responsible for firing all shared-task and built-in finalize callbacks.\n\nLooking at the context provided:\n\n1. From `celery._state.py`, I can see:\n   - `_on_app_finalizers` is a set of functions to call whenever a new app is finalized\n   - `connect_on_app_finalize` is mentioned in `__all__`\n   - `_announce_app_finalized(app)` is defined and references `_on_app_finalizers`\n\n2. From the reasoning in Few-shot B02, I can see that `Celery.finalize` triggers `_announce_app_finalized(self)` which executes finalize callbacks.\n\n3. Looking at the code structure:\n   - `_announce_app_finalized(app)` iterates over `_on_app_finalizers` and calls each callback\n   - This is where shared-task and built-in finalize callbacks are fired\n\nThe question asks which function fires all shared-task and built-in finalize callbacks. Based on the context:\n\n- `_announce_app_finalized(app)` is the function that iterates through `_on_app_finalizers` and calls each callback\n- This is called from `Celery.finalize()`\n\nSo the direct dependency should be `_announce_app_finalized`, and the indirect dependencies would include the callback registration mechanism.\n\nLet me structure this properly:\n\nDirect deps: The function that actually fires the callbacks\n- `_announce_app_finalized` (from celery._state)\n\nIndirect deps: The mechanism that registers callbacks\n- `connect_on_app_finalize` (from celery._state)\n- `Celery.finalize` (from celery.app.base)\n\nImplicit deps: The callback storage\n- `_on_app_finalizers` (from celery._state)\n\nWait, I need to be more careful about what's in the provided context. \n\nThe context shows `_announce_app_finalized` is defined in `celery._state.py` and it references `_on_app_finalizers`. This function is what actually fires the callbacks. The `connect_on_app_finalize` function registers callbacks to be called by `_announce_app_finalized`. So `_announce_app_finalized` is the direct answer to the question.\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery._state._announce_app_finalized\"\n    ],\n    \"indirect_deps\": [\n      \"celery._state.connect_on_app",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery._state (celery/_state.py:1-197) | source=bm25, graph\n\"\"\"Internal state.\n\nThis is an internal module containing thread state\nlike the ``current_app``, and ``current_task``.\n\nThis m..."
+  },
+  {
+    "case_id": "hard_004",
+    "difficulty": "hard",
+    "category": "symbol_by_name_resolution",
+    "failure_type": "Type E",
+    "question": "In `celery.worker.strategy.default`, what real class does `task.Request` resolve to?",
+    "entry_symbol": "",
+    "entry_file": "celery/worker/strategy.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.request.Request"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1978,
+    "model_output": "The user is asking about what real class `task.Request` resolves to in `celery.worker.strategy.default`.\n\nLooking at the context:\n1. From Retrieved 4, I can see `celery.worker.strategy.default` function has references to `Req` and `Request`\n2. From Retrieved 5, I can see `celery.worker.request.Request` is a class defined in `celery/worker/request.py`\n3. From Retrieved 1, I can see `from .request import create_request_cls` is imported in strategy.py\n\nThe question is asking about `task.Request` - this appears to be a reference to the `Request` class that gets resolved in the `default` function.\n\nLooking at the imports and references:\n- `from .request import create_request_cls` - this imports a function to create the request class\n- The `default` function references `Req` and `Request`\n\nIn Celery's worker strategy, the `Request` class is typically created dynamically using `create_request_cls` which returns a class that inherits from `celery.worker.request.Request`.\n\nHowever, looking at the context more carefully:\n- Retrieved 5 shows `celery.worker.request.Request` is the actual class definition\n- Retrieved 4 shows `default` function references `Req` and `Request`\n\nThe `task.Request` in the context of `celery.worker.strategy.default` would resolve to `celery.worker.request.Request` (the actual class), but it might be wrapped or created via `create_request_cls`.\n\nLet me trace through:\n1. `default` function is in `celery.worker.strategy`\n2. It imports `create_request_cls` from `.request`\n3. The `Request` class it references is `celery.worker.request.Request`\n\nSo the direct dependency would be `celery.worker.request.Request`\n\n\nThe indirect dependencies include the `default` function itself and `create_request_cls` which is used to instantiate the request class. There are also implicit dependencies on the `task` module and the `Request` class definition.\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.worker.request.Request\"\n    ],\n    \"indirect_deps\": [\n      \"celery.worker.strategy.default\",\n      \"celery.worker.strategy.create_request_cls\"\n    ],\n    \"implicit_deps\": [\n     ",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.worker.strategy (celery/worker/strategy.py:1-209) | source=bm25, graph\n\"\"\"Task execution strategy (optimization).\"\"\"\nimport logging\n\nfrom kombu.asynchronous.timer import to_timest..."
+  },
+  {
+    "case_id": "celery_hard_014",
+    "difficulty": "hard",
+    "category": "builtin_finalize_registration",
+    "failure_type": "Type B",
+    "question": "At app finalize time, which method actually creates the celery.backend_cleanup Task instance?",
+    "entry_symbol": "",
+    "entry_file": "celery/app/builtins.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [
+        "celery.app.builtins.add_backend_cleanup_task",
+        "celery.app.base.Celery.task"
+      ],
+      "implicit_deps": [
+        "celery._state.connect_on_app_finalize",
+        "celery._state._announce_app_finalized"
+      ]
+    },
+    "rag_context_length": 2342,
+    "model_output": "The user is asking about which method actually creates the celery.backend_cleanup Task instance at app finalize time.\n\nLooking at the context provided:\n\n1. From `celery/app/builtins.py`, I can see `add_backend_cleanup_task` function decorated with `@connect_on_app_finalize`.\n\n2. This function is called during app finalize (via the callback mechanism).\n\n3. Inside `add_backend_cleanup_task`, there's a nested function `backend_cleanup()` that is decorated with `@app.task(name='celery.backend_cleanup', shared=False, lazy=False)`.\n\n4. The question asks which method actually creates the task instance at finalize time.\n\nThe flow is:\n1. `@connect_on_app_finalize` decorator registers `add_backend_cleanup_task` as a callback\n2. At finalize time, `add_backend_cleanup_task(app)` is called\n3. Inside this function, `@app.task(...)` decorator is applied to `backend_cleanup()`\n4. This calls `Celery._task_from_fun` (since `lazy=False`)\n5. `_task_from_fun` creates the actual task instance\n\nSo the direct dependency for creating the task instance is `Celery._task_from_fun` (or more specifically, the `@app.task` decorator which internally calls this).\n\nLet me trace through the dependencies:\n\nDirect deps:\n- `celery.app.base.Celery._task_from_fun` - this is what actually creates the task instance when `lazy=False`\n\nIndirect deps:\n- `celery.app.base.Celery.task` - the decorator method that calls `_task_from_fun`\n- `celery._state.connect_on_app_finalize` - the decorator that registers the callback\n- `celery.app.builtins.add_backend_cleanup_task` - the callback function itself\n\nImplicit deps:\n- `celery.app.base.Celery._tasks` - the internal task registry where the task is stored\n\n\n- `celery.app.base.Celery.finalize` - the finalize method that triggers the callback\n\nI should focus on what actually creates the task instance. The `@app.task` decorator with `lazy=False` directly invokes `_task_from_fun`, which is the core method responsible for instantiating the task. The finalize callback mechanism and task registry are supporting infrastructure that enable this creation to happen at the right time.\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\":",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.builtins.add_backend_cleanup_task (celery/app/builtins.py:12-23) | source=bm25, graph\n@connect_on_app_finalize\ndef add_backend_cleanup_task(app):\n    \"\"\"Task used to clean up ..."
+  },
+  {
+    "case_id": "celery_hard_016",
+    "difficulty": "hard",
+    "category": "autodiscovery_fixup_import",
+    "failure_type": "Type E",
+    "question": "When packages=None, which function finally executes the real importlib.import_module call for package names gathered from Celery._autodiscover_tasks_from_fixups?",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.base.find_related_module"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery._autodiscover_tasks_from_fixups",
+        "celery.fixups.django.DjangoFixup.autodiscover_tasks",
+        "celery.loaders.base.autodiscover_tasks"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 3323,
+    "model_output": "The user is asking about the Celery autodiscover_tasks flow when packages=None. They want to know which function finally executes the real importlib.import_module call for package names gathered from Celery._autodiscover_tasks_from_fixups.\n\nLet me trace through the code flow:\n\n1. When `packages=None` is passed to `autodiscover_tasks`, the code checks if `force` is True. If not, it connects a signal handler.\n\n2. Looking at the context, when `packages=None`, the autodiscover flow goes through fixups (like Django).\n\n3. The key function that handles the actual import is `_autodiscover_tasks_from_fixups` which is called when the signal fires.\n\n4. Looking at the code flow:\n   - `autodiscover_tasks` with `packages=None` connects to `import_modules` signal\n   - When the signal fires, `_autodiscover_tasks_from_fixups` is called\n   - This function gathers package names from fixups\n   - Then it calls `_autodiscover_tasks` with those packages\n   - `_autodiscover_tasks` eventually calls `import_module` for each package\n\n5. The actual `importlib.import_module` call happens in `BaseLoader.import_module` (from context [Retrieved 3])\n\n6. The chain is:\n   - `Celery.autodiscover_tasks` (packages=None)\n   - Signal handler `_autodiscover_tasks_from_fixups`\n   - `Celery._autodiscover_tasks` (with gathered packages)\n   - `BaseLoader.import_module` (which calls `importlib.import_module`)\n\nLet me identify the dependencies:\n\nDirect deps: The function that actually calls importlib.import_module is `BaseLoader.import_module`\n\nIndirect deps: The functions that lead to this call:\n- `Celery._autodiscover_tasks_from_fixups` (gathers packages from fixups)\n\n\n- `Celery._autodiscover_tasks` (orchestrates the import process)\n- `Celery.autodiscover_tasks` (the entry point)\n\nImplicit deps: The signal mechanism and fixup infrastructure that enable this flow.\n\nThe question specifically asks which function finally executes the real importlib.import_module call for package names gathered from Celery._autodiscover_tasks_from_fixups. That",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery.autodiscover_tasks (celery/app/base.py:779-823) | source=bm25, graph\n    def autodiscover_tasks(self, packages=None,\n                           related_name='tasks..."
+  },
+  {
+    "case_id": "celery_hard_013",
+    "difficulty": "hard",
+    "category": "shared_task_proxy_autofinalize",
+    "failure_type": "Type B",
+    "question": "`celery.app.shared_task` 返回的 Proxy 首次解析任务对象时，触发 finalize 回调链的关键入口符号是什么？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/__init__.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery.tasks",
+        "celery.app.base.Celery.finalize"
+      ],
+      "indirect_deps": [
+        "celery._state._announce_app_finalized"
+      ],
+      "implicit_deps": [
+        "celery._state.connect_on_app_finalize",
+        "celery.app.base.Celery._task_from_fun"
+      ]
+    },
+    "rag_context_length": 3143,
+    "model_output": "The user is asking about the key entry symbol that triggers finalize callbacks when a Proxy returned by `celery.app.shared_task` is first resolved to get the task object.\n\nLet me trace through the code:\n\n1. `shared_task` returns a `Proxy(task_by_cons)`\n2. When the Proxy is first resolved (first dereference), `task_by_cons()` is called\n3. `task_by_cons()` calls `app.tasks[...]` where `app` is the current app\n4. `app.tasks` is a `cached_property` that internally calls `self.finalize(auto=True)`\n5. When `finalize` is called, it triggers callbacks registered via `connect_on_app_finalize`\n\nLooking at the context:\n- `shared_task` registers callbacks via `_state.connect_on_app_finalize(lambda app: app._task_from_fun(fun, **options))`\n- When `task_by_cons()` accesses `app.tasks`, it triggers `Celery.tasks` cached_property\n- `Celery.tasks` calls `self.finalize(auto=True)`\n- `finalize` then executes the callbacks registered via `connect_on_app_finalize`\n\nThe question asks for the \"key entry symbol\" that triggers the finalize callback chain when the Proxy is first resolved.\n\nThe key entry point is `Celery.tasks` (the cached_property) because:\n1. It's accessed when `task_by_cons()` runs\n2. It triggers `finalize(auto=True)`\n3. `finalize` then executes the callbacks\n\nSo the direct dependency should be `celery.app.base.Celery.tasks`\n\nThe indirect dependencies would include:\n- `celery.app.base.Celery.finalize` (called by tasks)\n- `celery._state.connect_on_app_finalize` (the callback registration mechanism)\n\n\n- `celery._state._get_active_apps` (used in finalize to iterate apps)\n\nThe implicit dependencies would be:\n- `celery.app.shared_task` (the decorator that sets up the callback)\n- `celery.local.Proxy` (the proxy mechanism)\n- `celery._state.get_current_app` (used to get the current app)\n\nLet me refine this based on the reasoning:\n\n1. Direct: `celery.app.base.Celery.tasks` - this is the cached_property that triggers finalize\n2. Indirect: `celery.app.base.Celery.finalize` - called by tasks",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.shared_task (celery/app/__init__.py:24-76) | source=bm25, graph\ndef shared_task(*args, **kwargs):\n    \"\"\"Create shared task (decorator).\n\n    This can be used by library autho..."
+  },
+  {
+    "case_id": "celery_hard_015",
+    "difficulty": "hard",
+    "category": "autodiscovery_signal_chain",
+    "failure_type": "Type B",
+    "question": "在 `app.autodiscover_tasks(..., force=False)` 的 lazy 路径下，真正被触发执行的目标函数是什么，以及它由哪条调用链触发？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._autodiscover_tasks"
+      ],
+      "indirect_deps": [
+        "celery.loaders.base.BaseLoader.init_worker",
+        "celery.loaders.base.BaseLoader.import_default_modules",
+        "celery.utils.dispatch.signal.Signal.send"
+      ],
+      "implicit_deps": [
+        "celery.signals.import_modules"
+      ]
+    },
+    "rag_context_length": 3289,
+    "model_output": "The user is asking about the lazy path in `app.autodiscover_tasks(..., force=False)`. Let me analyze the code from the context provided.\n\nFrom Retrieved 1, I can see:\n```python\ndef autodiscover_tasks(self, packages=None,\n                       related_name='tasks', force=False):\n    if force:\n        return self._autodiscover_tasks(packages, related_name)\n    signals.import_modules.connect(starpromise(\n        self._autodiscover_tasks, packages, related_name,\n    ), weak=False, sender=self)\n```\n\nSo when `force=False` (the default/lazy path):\n1. It connects a signal handler to `signals.import_modules`\n2. The signal handler is `starpromise(self._autodiscover_tasks, packages, related_name)`\n3. This means the actual execution happens when the `import_modules` signal is fired\n\nThe question asks:\n1. What is the target function that gets actually executed?\n2. What is the call chain that triggers it?\n\nFrom the code:\n- The target function is `self._autodiscover_tasks` (wrapped by `starpromise`)\n- The trigger is the `import_modules` signal being fired\n\nLet me trace the dependencies:\n- Direct: `celery.app.base.Celery._autodiscover_tasks` (the actual function that gets called)\n- Indirect: `celery.app.base.Celery.autodiscover_tasks` (the entry point), `celery.signals.import_modules` (the signal that triggers it)\n- Implicit: `starpromise` (the wrapper function), `celery._state.current_app` (for signal sender)\n\nWait, I need to be more careful about what \"direct_deps\" means in this context. Looking at the few-shot examples:\n\n\n- Direct deps are the final resolved symbols or classes\n- Indirect deps are the functions/methods in the call chain\n- Implicit deps are the state/variables that enable the flow\n\nFor this question:\n- Direct: `celery.app.base.Celery._autodiscover_tasks` (the actual function that executes)\n- Indirect: `celery.app.base.Celery.autodiscover_tasks` (entry point), `celery.signals.import_modules` (signal), `starpromise` (wrapper)",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery.autodiscover_tasks (celery/app/base.py:779-823) | source=bm25, graph\n    def autodiscover_tasks(self, packages=None,\n                           related_name='tasks..."
+  },
+  {
+    "case_id": "celery_hard_018",
+    "difficulty": "hard",
+    "category": "django_task_cls_string_resolution",
+    "failure_type": "Type E",
+    "question": "在满足 Django fixup 前置条件（`DJANGO_SETTINGS_MODULE` 已设置、`django` 可导入、且 `app.loader_cls` 不含 `django`）且未自定义 `task_cls` 时，`app.Task` 的最终基类解析到哪个真实类？",
+    "entry_symbol": "",
+    "entry_file": "celery/fixups/django.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.contrib.django.task.DjangoTask"
+      ],
+      "indirect_deps": [
+        "celery.fixups.django.fixup",
+        "celery.fixups.django.DjangoFixup.install",
+        "celery.app.base.Celery.Task",
+        "celery.app.base.Celery.create_task_cls",
+        "celery.app.base.Celery.subclass_with_self"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "rag_context_length": 2480,
+    "model_output": "The user is asking about the final base class resolution for `app.Task` when Django fixup is applied and no custom `task_cls` is specified.\n\nLet me trace through the Django fixup logic:\n\n1. When `celery.fixups.django.fixup` is called (from `BUILTIN_FIXUPS`), it checks Django conditions\n2. If conditions are met, it returns `DjangoFixup(app).install()`\n3. The `DjangoFixup.install()` method needs to be examined to see what it does to the task class\n\nFrom the context provided:\n- `celery.fixups.django.DjangoFixup` is imported in the module\n- `celery.contrib.django.task.DjangoTask` is referenced as a string target\n- The test file shows `celery.contrib.django.task.DjangoTask` is imported\n\nThe Django fixup typically modifies the task class to use `DjangoTask` as the base class when Django is detected.\n\nLooking at the reasoning pattern from previous examples:\n- `direct_deps` should be the final resolved class\n- `indirect_deps` should be the intermediate functions/classes in the chain\n- `implicit_deps` should be configuration/state dependencies\n\nFor this Django fixup scenario:\n1. The fixup function calls `DjangoFixup(app).install()`\n2. `install()` method would modify `app.task` to use `DjangoTask`\n3. The final resolved class is `celery.contrib.django.task.DjangoTask`\n\nLet me construct the answer based on the Django fixup flow:\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.contrib.django.task.DjangoTask\"\n    ],\n    \"indirect_deps\": [\n      \"celery.fixups.django.DjangoFixup.install\"\n    ],\n    \"implicit_deps\": [\n      \"celery.fixups.django.fixup\",\n      \"celery.app.base.Celery.task\"\n    ]\n  }\n}\n```\n\nWait, I need to reconsider. The question asks about `app.Task`'s final base class resolution. \n\nWhen Django fixup runs, it modifies the task class registration. The `DjangoFixup.install()` method sets `app.task = DjangoTask` or modifies the task class hierarchy. So the direct dependency is the",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.contrib.django.task.DjangoTask"
+      ],
+      "indirect_deps": [
+        "celery.fixups.django.DjangoFixup.install"
+      ],
+      "implicit_deps": [
+        "celery.fixups.django.fixup",
+        "celery.app.base.Celery.task"
+      ]
+    },
+    "f1": 0.5455,
+    "context_preview": "[Retrieved 1] celery.fixups.django.fixup (celery/fixups/django.py:52-63) | source=bm25, graph\ndef fixup(app: \"Celery\", env: str = 'DJANGO_SETTINGS_MODULE') -> Optional[\"DjangoFixup\"]:\n    \"\"\"Install D..."
+  },
+  {
+    "case_id": "celery_medium_017",
+    "difficulty": "medium",
+    "category": "fixup_string_entry_resolution",
+    "failure_type": "Type E",
+    "question": "在 `Celery.__init__` 中，默认 `builtin_fixups` 的字符串入口 `'celery.fixups.django:fixup'` 最终会被解析到哪个真实函数符号（不考虑后续 install 副作用）？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.fixups.django.fixup"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.__init__",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": [
+        "celery.app.base.BUILTIN_FIXUPS"
+      ]
+    },
+    "rag_context_length": 2022,
+    "model_output": "The user is asking about the dependency resolution for the string `'celery.fixups.django:fixup'` in `Celery.__init__`. Let me analyze this carefully.\n\nFrom the context provided:\n1. `celery.fixups.django.fixup` is a function defined in `celery/fixups/django.py:52-63`\n2. In `Celery.__init__`, the code does: `self._fixups = [symbol_by_name(fixup)(self) for fixup in self.fixups]`\n3. The string `'celery.fixups.django:fixup'` is in `BUILTIN_FIXUPS`\n\nThe question asks what the string entry is resolved to (the actual function symbol), not considering the install side effects.\n\nLooking at the reasoning:\n1. The string `'celery.fixups.django:fixup'` is parsed by `symbol_by_name` from `celery.utils.imports`\n2. This resolves to the actual function `celery.fixups.django.fixup`\n3. The function is then called with `self` as argument\n\nSo the direct dependency is the actual function `celery.fixups.django.fixup`.\n\nThe indirect dependencies would include:\n- `celery.utils.imports.symbol_by_name` - used to resolve the string\n- `celery.app.base.Celery.__init__` - where the resolution happens\n\nImplicit dependencies:\n- `celery.utils.imports` - the module containing symbol_by_name\n- `celery.fixups.django` - the module containing the fixup function\n\nLet me structure this properly:\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.fixups.django.fixup\"\n    ],\n    \"indirect_deps\": [\n      \"celery.utils.imports.symbol_by_name\",\n      \"celery.app.base.Celery.__init__\"\n    ],\n    \"implicit_deps\": [\n      \"celery.utils.imports\",\n      \"celery.fixups.django\"\n    ]\n  }\n}\n```\n\nThis captures the resolution chain: the string gets resolved to the actual function through symbol_by_name, which is called from Celery.__init__, and the implicit dependencies are the modules themselves.\n</think>\n\n{\n  \"ground_truth",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.fixups.django.fixup"
+      ],
+      "indirect_deps": [
+        "celery.utils.imports.symbol_by_name",
+        "celery.app.base.Celery.__init__"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports",
+        "celery.fixups.django"
+      ]
+    },
+    "f1": 0.6667,
+    "context_preview": "[Retrieved 1] celery.fixups.django.fixup (celery/fixups/django.py:52-63) | source=bm25, graph, semantic\ndef fixup(app: \"Celery\", env: str = 'DJANGO_SETTINGS_MODULE') -> Optional[\"DjangoFixup\"]:\n    \"\"..."
+  },
+  {
+    "case_id": "easy_007",
+    "difficulty": "easy",
+    "category": "re_export",
+    "failure_type": "Type C",
+    "question": "顶层符号 `celery.Task` 最终映射到哪个真实类？",
+    "entry_symbol": "",
+    "entry_file": "celery/__init__.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.task.Task"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1345,
+    "model_output": "The user is asking about the top-level symbol `celery.Task` and what real class it ultimately maps to.\n\nLooking at the context:\n1. `celery/__init__.py` is the entry file\n2. From Retrieved 1: `celery.app.base.Celery.Task` is a cached_property that returns `self.create_task_cls()`\n3. From Retrieved 2: `celery.app.task.Task` is the actual Task base class\n\nThe key insight is that `celery.Task` is typically an alias or reference to `celery.app.task.Task`. Let me trace through the typical Celery import structure:\n\n1. When you import `celery.Task`, it goes through `celery/__init__.py`\n2. In `celery/__init__.py`, there's typically a line like `Task = app.Task` or similar\n3. `app.Task` is the `Celery.Task` cached_property from `celery.app.base`\n4. `Celery.Task` returns `self.create_task_cls()` which creates/returns `celery.app.task.Task`\n\nSo the chain is:\n- `celery.Task` → `celery.app.base.Celery.Task` (cached_property) → `celery.app.task.Task` (the actual class)\n\nLet me structure this properly:\n\n**direct_deps**: The final resolved class is `celery.app.task.Task`\n\n**indirect_deps**: The path through which this is resolved:\n- `celery.app.base.Celery.Task` (the cached_property that creates the task class)\n- `celery.app.base.Celery.create_task_cls` (the method that creates the task class)\n\n**implicit_deps**: Dependencies that are assumed but not directly in the chain:\n- `celery.app.task` module (where the Task class is defined)\n\n\n- `celery` package itself (the root module)\n\nI need to be more precise about what constitutes each category. The direct dependency should be the final resolved class. The indirect dependencies are the intermediate steps in the resolution chain. The implicit dependencies are the underlying modules and infrastructure that make this work.\n\nLooking at the context more carefully:\n- `celery.Task` is typically an alias to `celery.app.task.Task`\n- The `Celery.Task` cached_property returns `create_task_cls()` which creates `celery.app.task.Task`\n\n",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery.Task (celery/app/base.py:1372-1375) | source=graph\n    @cached_property\n    def Task(self):\n        \"\"\"Base task class for this app.\"\"\"\n        return self.create_..."
+  },
+  {
+    "case_id": "easy_005",
+    "difficulty": "easy",
+    "category": "re_export_proxy",
+    "failure_type": "Type B",
+    "question": "在顶层懒加载 API 中，`celery.current_app` 这个 Proxy 在取值时会直接调用哪个函数来获得 app 对象？",
+    "entry_symbol": "",
+    "entry_file": "celery/__init__.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state.get_current_app"
+      ],
+      "indirect_deps": [
+        "celery._state._get_current_app"
+      ],
+      "implicit_deps": [
+        "celery.local.Proxy",
+        "celery._state.default_app",
+        "celery.app.base.Celery"
+      ]
+    },
+    "rag_context_length": 5387,
+    "model_output": "The user is asking about the `celery.current_app` Proxy and which function it calls to get the app object when accessing its value.\n\nLooking at the context from `celery/__init__.py`, I can see:\n\n1. `current_app` is imported from `celery._state` in the STATICA_HACK block (lines 85-86)\n2. The actual lazy loading is done through `local.recreate_module` which creates a new module that imports on first attribute access\n\nThe key insight is that `celery.current_app` is a Proxy object from `celery._state`. When you access `celery.current_app`, it's actually accessing the Proxy object, and when you try to get its value (like `celery.current_app.tasks`), the Proxy's `__getattr__` or `__getattribute__` is called.\n\nLooking at the reasoning from Few-shot A02, it mentions:\n- `celery.current_app` is `Proxy(get_current_app)`\n- `get_current_app` is bound to `_get_current_app`\n- `_get_current_app` is in `celery._state`\n\nSo when accessing `celery.current_app`, the Proxy object is returned. When you access attributes on it (like `.tasks`), the Proxy's `__getattr__` method is called, which calls `get_current_app()` to get the actual app object.\n\nThe direct dependency would be the Proxy's `__getattr__` method or the `get_current_app` function that it calls.\n\nLooking at the context more carefully:\n- `celery._state` module contains `current_app` which is a Proxy\n- The Proxy's `__getattr__` calls `get_current_app()` to resolve the actual app\n\nSo the direct dependency when accessing the value would be `celery._state.get_current_app` (or the Proxy's `__getattr__` method).\n\nLet me think about this more carefully:\n\n\n- `celery.current_app` is a Proxy object\n- When you access `celery.current_app`, you get the Proxy itself\n- When you access `celery.current_app.tasks`, the Proxy's `__getattr__` is called\n- `__getattr__` calls `get_current_app()` to get the actual app\n\nSo the direct dependency for getting the app object is `celery._state.get_current_app`.\n\nThe",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery (celery/__init__.py:1-180) | source=graph\n\"\"\"Distributed Task Queue.\"\"\"\n# :copyright: (c) 2017-2026 Asif Saif Uddin, celery core and individual\n#                 contributors, All..."
+  },
+  {
+    "case_id": "easy_006",
+    "difficulty": "easy",
+    "category": "re_export_proxy",
+    "failure_type": "Type B",
+    "question": "在顶层懒加载 API 中，`celery.current_task` 在取值时直接调用哪个函数，并最终从哪个状态槽位读取当前任务？",
+    "entry_symbol": "",
+    "entry_file": "celery/__init__.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state.get_current_task"
+      ],
+      "indirect_deps": [
+        "celery._state._task_stack.top"
+      ],
+      "implicit_deps": [
+        "celery.local.Proxy",
+        "celery.utils.threads.LocalStack"
+      ]
+    },
+    "rag_context_length": 1465,
+    "model_output": "The user is asking about `celery.current_task` in the top-level lazy loading API. They want to know:\n1. Which function is directly called when taking the value\n2. Which state slot it reads the current task from\n\nLooking at the context:\n- Retrieved 1 shows `celery.app.base.Celery.current_task` is a property that returns `_task_stack.top`\n- Retrieved 2 shows `celery/__init__.py` imports `celery._state.current_task`\n\nThe key insight is that `celery.current_task` is a lazy-loaded property. In `celery/__init__.py`, there's likely a lazy proxy or property that delegates to the actual implementation.\n\nFrom the context, I can see:\n1. `celery._state.current_task` is imported in `celery/__init__.py`\n2. The actual implementation is in `celery.app.base.Celery.current_task` which returns `_task_stack.top`\n\nThe `_task_stack` is likely from `celery._state` module.\n\nSo the chain is:\n- `celery.current_task` (top-level lazy API)\n- → `celery._state.current_task` (the actual property)\n- → `_task_stack.top` (reads from the state slot)\n\nLet me structure this:\n- direct_deps: The actual function/property that gets called - `celery._state.current_task`\n- indirect_deps: The implementation in Celery class - `celery.app.base.Celery.current_task`\n- implicit_deps: The state slot being read - `celery._state._task_stack`\n\nWait, looking more carefully at the question - it asks about \"取值时直接调用哪个函数\" (which function is directly called when taking the value) and \"最终从哪个状态槽位读取当前任务\" (which state slot it ultimately reads from).\n\nThe direct call would be to `celery._state.current_task` (the property), and it reads from `_task_stack.top`.\n\n\n- direct_deps: `celery._state.current_task`\n- indirect_deps: `celery.app.base.Celery.current_task`\n- implicit_deps: `celery._state._task_stack`\n\nThis captures the lazy loading chain where the top-level API delegates to the state module, which then accesses the task stack.\n</think>\n\n{\n  \"ground_truth",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery.current_task (celery/app/base.py:1417-1420) | source=bm25, graph\n    @property\n    def current_task(self):\n        \"\"\"Instance of task being executed, or :const:`N..."
+  },
+  {
+    "case_id": "easy_008",
+    "difficulty": "easy",
+    "category": "re_export",
+    "failure_type": "Type C",
+    "question": "从源码\"类定义\"角度看，顶层符号 `celery.group` 对应的真实类定义 FQN 是什么？",
+    "entry_symbol": "",
+    "entry_file": "celery/__init__.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.group"
+      ],
+      "indirect_deps": [
+        "celery.canvas.Signature"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 21796,
+    "model_output": "The user is asking about the top-level symbol `celery.group` and wants to know its real class definition FQN (Fully Qualified Name) from the source code perspective.\n\nLooking at the context provided:\n\n1. From [Retrieved 1], I can see that `celery.canvas.group` is defined in `celery/canvas.py` at line 1480-1949. It's a class that inherits from `Signature`.\n\n2. The class definition shows:\n```python\n@Signature.register_type()\nclass group(Signature):\n```\n\n3. The `__init__` method shows:\n```python\nsuper().__init__('celery.group', (), {'tasks': tasks}, **options)\n```\n\n4. Looking at the module structure, `celery.group` is imported from `celery.canvas` in the `celery/__init__.py` file (though not explicitly shown in the context, this is standard Celery pattern).\n\n5. The FQN would be `celery.canvas.group` since that's where the class is actually defined.\n\nLet me analyze the dependencies:\n\n**Direct deps**: The actual class definition is at `celery.canvas.group`\n\n**Indirect deps**: \n- `celery.canvas.Signature` (parent class)\n- `celery.canvas.Signature.register_type()` (decorator)\n- Various methods and utilities used within the class\n\n**Implicit deps**:\n- `celery.canvas` module itself\n- `celery` package structure\n\nBased on the context and Celery's architecture:\n\n1. The class `group` is defined in `celery.canvas` module\n2. It inherits from `Signature` which is also in `celery.canvas`\n3. The decorator `@Signature.register_type()` is used\n\nSo the FQN is `celery.canvas.group`\n\nLet me structure the answer:\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.canvas.group\"\n    ],\n    \"indirect_deps\": [\n      \"celery.canvas.Signature\",\n      \"celery.canvas.Signature.register_type\"\n    ],\n    \"implicit_deps\": [\n      \"celery.canvas\",\n      \"celery\"\n    ]\n  }\n}\n```\n\nWait, I need to reconsider what \"direct_deps\",",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.canvas.group"
+      ],
+      "indirect_deps": [
+        "celery.canvas.Signature",
+        "celery.canvas.Signature.register_type"
+      ],
+      "implicit_deps": [
+        "celery.canvas",
+        "celery"
+      ]
+    },
+    "f1": 0.5714,
+    "context_preview": "[Retrieved 1] celery.canvas.group (celery/canvas.py:1480-1949) | source=graph, semantic\n@Signature.register_type()\nclass group(Signature):\n    \"\"\"Creates a group of tasks to be executed in parallel.\n\n..."
+  },
+  {
+    "case_id": "medium_005",
+    "difficulty": "medium",
+    "category": "loader_default_resolution",
+    "failure_type": "Type E",
+    "question": "在未设置 `CELERY_LOADER` 且未显式传入 loader 参数时，`Celery.loader` 属性最终实例化哪个 Loader 类？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.app.AppLoader"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery._get_default_loader",
+        "celery.loaders.get_loader_cls"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "rag_context_length": 2121,
+    "model_output": "The user is asking about the Celery loader resolution chain when `CELERY_LOADER` is not set and no loader is explicitly passed.\n\nLooking at the context provided:\n\n1. From [Retrieved 1], I can see `Celery._get_default_loader()` method which shows the resolution chain:\n   - First checks `os.environ.get('CELERY_LOADER')`\n   - Then falls back to `self.loader_cls`\n   - Finally defaults to `'celery.loaders.app:AppLoader'`\n\n2. The question asks what Loader class is ultimately instantiated when neither environment variable nor explicit loader is set.\n\n3. The answer should be `celery.loaders.app.AppLoader` as the final resolved class.\n\n4. For dependencies:\n   - Direct: The final resolved class `celery.loaders.app.AppLoader`\n   - Indirect: The method that resolves it `Celery._get_default_loader`\n   - Implicit: The environment variable check `CELERY_LOADER`\n\nLet me structure this properly:\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.app.AppLoader\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery._get_default_loader\"\n    ],\n    \"implicit_deps\": [\n      \"os.environ.CELERY_LOADER\"\n    ]\n  }\n}\n```\n\nThis follows the pattern from the few-shot examples where:\n- direct_deps contains the final resolved symbol/class\n- indirect_deps contains the methods/functions that lead to that resolution\n- implicit_deps contains environment variables or configuration that influence the resolution\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.app.AppLoader\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery._get_default_loader\"\n    ],\n    \"implicit_deps\": [\n      \"os.environ.CELERY_LOADER\"\n    ]\n  }\n}\n",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery._get_default_loader (celery/app/base.py:433-439) | source=bm25, graph\n    def _get_default_loader(self):\n        # the --loader command-line argument sets the envi..."
+  },
+  {
+    "case_id": "medium_006",
+    "difficulty": "medium",
+    "category": "backend_url_alias",
+    "failure_type": "Type E",
+    "question": "在 `Celery._get_backend` 调用路径里，当 `result_backend='rpc://...'` 时，哪个 backend 类会被解析并由该方法实例化？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._get_backend",
+        "celery.backends.rpc.RPCBackend"
+      ],
+      "indirect_deps": [
+        "celery.app.backends.by_url",
+        "celery.app.backends.by_name"
+      ],
+      "implicit_deps": [
+        "celery.app.backends.BACKEND_ALIASES",
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "rag_context_length": 1540,
+    "model_output": "The user is asking about the `Celery._get_backend` method and what backend class gets resolved when `result_backend='rpc://...'`.\n\nLooking at the context provided:\n\n1. `Celery._get_backend` (Retrieved 1) shows:\n   - It calls `backends.by_url(self.backend_cls or self.conf.result_backend, self.loader)`\n   - Then returns `backend(app=self, url=url)`\n\n2. The question asks about when `result_backend='rpc://...'` - this is a URL-based backend specification.\n\n3. Looking at the few-shot examples, particularly E03 (Type E | by_url + override_backends), I can see the pattern:\n   - `by_url` parses the URL scheme\n   - It calls `by_name` to resolve the backend class\n   - `symbol_by_name` resolves the actual class\n\n4. For `rpc://...` scheme, the backend class would be `celery.backends.rpc.RPCBackend`\n\n5. The direct dependency is the final resolved backend class\n6. Indirect dependencies include the functions that help resolve it\n7. Implicit dependencies include configuration/alias mappings\n\nLet me construct the answer based on the pattern from E03:\n\n- Direct deps: The actual backend class that gets instantiated\n- Indirect deps: The functions in the call chain (by_url, by_name, symbol_by_name)\n- Implicit deps: Configuration/alias mappings\n\nFor `rpc://...`, the backend class is `celery.backends.rpc.RPCBackend`.\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.backends.rpc.RPCBackend\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery._get_backend\",\n      \"celery.app.backends.by_url\",\n      \"celery.app.backends.by_name\",\n      \"celery.utils.imports.symbol_by_name\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.backends.BACKEND_ALIASES\"\n    ]\n  }\n}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.backends.rpc.RPCBackend"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery._get_backend",
+        "celery.app.backends.by_url",
+        "celery.app.backends.by_name",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": [
+        "celery.app.backends.BACKEND_ALIASES"
+      ]
+    },
+    "f1": 1.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery._get_backend (celery/app/base.py:1139-1143) | source=bm25, graph\n    def _get_backend(self):\n        backend, url = backends.by_url(\n            self.backend_cls o..."
+  },
+  {
+    "case_id": "medium_007",
+    "difficulty": "medium",
+    "category": "fallback_loader_alias",
+    "failure_type": "Type E",
+    "question": "当线程中没有 current app 且未设置 `CELERY_LOADER` 时，首次访问 `celery.current_app.loader` 最终会实例化哪个 Loader 类？",
+    "entry_symbol": "",
+    "entry_file": "celery/_state.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [
+        "celery._state._get_current_app",
+        "celery.app.base.Celery.loader",
+        "celery.loaders.get_loader_cls"
+      ],
+      "implicit_deps": [
+        "celery.local.Proxy",
+        "celery.loaders.LOADER_ALIASES",
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "rag_context_length": 1561,
+    "model_output": "The user is asking about the dependency chain when accessing `celery.current_app.loader` when there's no current app in the thread and `CELERY_LOADER` is not set.\n\nLet me trace through the code:\n\n1. `celery.current_app` is a Proxy that calls `get_current_app()` which is bound to `_get_current_app()`\n2. `_get_current_app()` checks if `default_app is None`, and if so, creates a fallback Celery app with `loader=os.environ.get('CELERY_LOADER') or 'default'`\n3. Since `CELERY_LOADER` is not set, the loader string will be `'default'`\n4. When accessing `.loader` on the Celery app, it goes through `Celery.loader` which is a `cached_property`\n5. `Celery.loader` calls `get_loader_cls(self.loader_cls)` to get the loader class\n6. `get_loader_cls` looks up the loader class based on `loader_cls` (which is 'default')\n7. The default loader class is `celery.loaders.app.AppLoader`\n\nLet me trace the dependencies:\n\nDirect deps (final resolved class):\n- `celery.loaders.app.AppLoader` - this is the actual loader class that gets instantiated\n\nIndirect deps (intermediate steps):\n- `celery.app.base.Celery.loader` - the cached_property that triggers the loader resolution\n- `celery.app.base.Celery._get_default_loader` - used to determine the loader class\n- `celery._state._get_current_app` - creates the default app if needed\n\nImplicit deps (environment/state dependencies):\n- `celery._state.default_app` - the default app state\n- `celery._state.current_app` - the thread-local current app\n\n\n- `celery.local.Proxy` - the proxy mechanism for current_app\n\nThe key distinction is that `celery.loaders.app.AppLoader` is the concrete class that gets instantiated when the loader property is accessed, while the other components are intermediate steps in the resolution chain.\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.app.AppLoader\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.loader\",\n      \"celery.app.base.Celery._get_default_loader",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery._state._get_current_app (celery/_state.py:92-100) | source=bm25, graph\ndef _get_current_app():\n    if default_app is None:\n        #: creates the global fallback app instance.\n   ..."
+  },
+  {
+    "case_id": "medium_008",
+    "difficulty": "medium",
+    "category": "strategy_string_resolution",
+    "failure_type": "Type E",
+    "question": "`Task.start_strategy` 调用时，`Task.Strategy` 字符串最终会被解析为哪个可调用对象？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/task.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.strategy.default"
+      ],
+      "indirect_deps": [
+        "celery.app.task.Task.start_strategy",
+        "celery.utils.imports.instantiate"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "rag_context_length": 964,
+    "model_output": "The user is asking about the `Task.start_strategy` method in Celery. Looking at the context provided:\n\nFrom [Retrieved 1], I can see:\n```python\ndef start_strategy(self, app, consumer, **kwargs):\n    return instantiate(self.Strategy, self, app, consumer, **kwargs)\n```\n\nThis shows that `start_strategy` calls `instantiate()` with `self.Strategy` as the first argument. The `Strategy` is a string that needs to be resolved to an actual callable object.\n\nThe question asks: \"When `Task.start_strategy` is called, which callable object will the `Task.Strategy` string ultimately be resolved to?\"\n\nLooking at the code, `self.Strategy` is a class attribute that holds a string (like \"thread\", \"eventlet\", \"gevent\", \"solo\", etc.). The `instantiate()` function is responsible for converting this string to an actual callable class.\n\nThe `instantiate()` function is typically from `celery.utils.imports` module. It takes a string name and resolves it to the actual class.\n\nSo the dependency chain is:\n1. `Task.start_strategy` calls `instantiate(self.Strategy, ...)`\n2. `instantiate()` resolves the string to a callable class\n3. The callable class is then instantiated\n\nThe direct dependency is `instantiate` function (from `celery.utils.imports`).\nThe indirect dependencies would include the Strategy string resolution.\nThe implicit dependencies would be the actual Strategy classes that get instantiated.\n\nLet me think about this more carefully:\n\n1. `Task.start_strategy` directly calls `instantiate(self.Strategy, ...)`\n2. `instantiate` is from `celery.utils.imports`\n3. The `Strategy` attribute is a string like \"solo\", \"thread\", etc.\n4. `instantiate` resolves this string to the actual class\n\nSo:\n- direct_deps: `celery.utils.imports.instantiate`\n\n\n- indirect_deps: The Strategy string resolution process\n- implicit_deps: The actual Strategy classes that get instantiated\n\nI should verify the exact module path for `instantiate`. It's typically `celery.utils.imports.instantiate`.\n\nLooking at the context more carefully, the question is asking about what callable object the Strategy string resolves to. The answer should focus on the `instantiate` function that performs this resolution",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.task.Task.start_strategy (celery/app/task.py:492-493) | source=bm25, graph\n    def start_strategy(self, app, consumer, **kwargs):\n        return instantiate(self.Strategy, sel..."
+  },
+  {
+    "case_id": "celery_medium_020",
+    "difficulty": "medium",
+    "category": "default_app_loader_alias_chain",
+    "failure_type": "Type E",
+    "question": "`_state._get_current_app` 懒创建 fallback app 后，首次访问 `app.loader` 时，最终实例化到哪个具体 Loader 类？",
+    "entry_symbol": "",
+    "entry_file": "celery/_state.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery.loader",
+        "celery.loaders.default.Loader"
+      ],
+      "indirect_deps": [
+        "celery._state._get_current_app",
+        "celery.loaders.get_loader_cls"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.symbol_by_name",
+        "celery.utils.imports.import_from_cwd"
+      ]
+    },
+    "rag_context_length": 1212,
+    "model_output": "The user is asking about the dependency chain when accessing `app.loader` after `_state._get_current_app` has lazily created a fallback app.\n\nLet me trace through the code:\n\n1. `_state._get_current_app()` creates a fallback Celery app if `default_app is None`\n2. The Celery app is created with `loader=os.environ.get('CELERY_LOADER') or 'default'`\n3. When accessing `app.loader`, it goes through `Celery.loader` property\n4. `Celery.loader` is a `cached_property` that calls `get_loader_cls()` and then instantiates the loader\n\nLet me trace the actual loader instantiation:\n\nFrom `celery/app/base.py`:\n- `loader` property calls `get_loader_cls()` to get the loader class\n- `get_loader_cls()` looks up the loader class based on `self.loader_cls`\n- The loader class is then instantiated\n\nThe key question is: what specific Loader class gets instantiated?\n\nLooking at the context:\n- The Celery app is created with `loader='default'` (from environment or default)\n- `get_loader_cls()` will resolve this to the actual loader class\n\nFrom Celery's source code (not fully shown but based on standard Celery behavior):\n- The default loader class is `celery.loaders.base.BaseLoader`\n- When `loader='default'`, it resolves to `celery.loaders.default.DefaultLoader`\n\nActually, looking at Celery's loader resolution:\n- `get_loader_cls()` checks `self.loader_cls` attribute\n- If `loader_cls` is 'default', it resolves to `celery.loaders.default.DefaultLoader`\n\nSo the direct dependency would be the actual loader class that gets instantiated.\n\nLet me think about the chain:\n1. `_state._get_current_app` - creates the app\n2. `Celery.loader` property - cached_property that returns loader instance\n\n\n3. `get_loader_cls` - resolves the loader class\n4. The actual loader class instantiation\n\nThe direct dependency is the loader class that gets instantiated. Based on Celery's default configuration, this would be `celery.loaders.default.DefaultLoader`.\n\nThe indirect dependencies include the `Celery.loader` property and `get_loader_cls` function that resolves the loader class.\n\nImplicit dependencies involve the `_state` module's current app tracking and the `",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery._state._get_current_app (celery/_state.py:92-100) | source=bm25, graph\ndef _get_current_app():\n    if default_app is None:\n        #: creates the global fallback app instance.\n   ..."
+  },
+  {
+    "case_id": "celery_hard_019",
+    "difficulty": "hard",
+    "category": "loader_smart_import_fallback",
+    "failure_type": "Type E",
+    "question": "When BaseLoader.config_from_object receives a string like pkg.mod.CONF that cannot be imported directly as a module, which function ultimately resolves the symbol?",
+    "entry_symbol": "",
+    "entry_file": "celery/loaders/base.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [
+        "celery.loaders.base.BaseLoader.config_from_object",
+        "celery.loaders.base.BaseLoader._smart_import"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.import_from_cwd"
+      ]
+    },
+    "rag_context_length": 8670,
+    "model_output": "The user is asking about the dependency resolution when `BaseLoader.config_from_object` receives a string like `pkg.mod.CONF` that cannot be imported directly as a module.\n\nLooking at the code in `celery/loaders/base.py`:\n\n1. `config_from_object` method (lines 197-212):\n   - If `obj` is a string, it calls `self._smart_import(obj, imp=self.import_from_cwd)`\n   - Then it calls `force_mapping(obj)` to convert the result to a mapping\n\n2. `_smart_import` method (lines 214-230):\n   - If `:` is in the path, it directly calls `symbol_by_name(path, imp=imp)`\n   - Otherwise, it tries `imp(path)` first (import as module)\n   - If that fails with ImportError, it tries `symbol_by_name(path, imp=imp)`\n\n3. For a string like `pkg.mod.CONF`:\n   - There's no `:` in the path, so it first tries `imp(path)` which is `import_from_cwd`\n   - If that fails (ImportError), it falls back to `symbol_by_name(path, imp=imp)`\n   - `symbol_by_name` will resolve the full dotted path including the attribute access\n\nSo the key function that ultimately resolves the symbol when direct module import fails is `symbol_by_name`.\n\nLet me trace the dependencies:\n- Direct: `symbol_by_name` (from `celery.utils.imports`)\n- Indirect: `BaseLoader._smart_import`, `BaseLoader.config_from_object`, `BaseLoader.import_from_cwd`\n- Implicit: The import mechanism itself, `importlib.import_module`\n\nThe question asks which function ultimately resolves the symbol when the string cannot be imported directly as a module. The answer is `symbol_by_name`.\n\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.imports.symbol_by_name\"\n    ],\n    \"indirect_deps\": [\n      \"celery.loaders.base.BaseLoader._smart_import\",\n      \"celery.loaders.base.BaseLoader.config_from_object\",\n      \"celery.loaders.base.BaseLoader.import_from_cwd\"\n    ],\n    \"implicit_deps\": [\n      \"importlib.import_module\"\n   ",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.loaders.base.BaseLoader (celery/loaders/base.py:33-236) | source=bm25, graph\nclass BaseLoader:\n    \"\"\"Base class for loaders.\n\n    Loaders handles,\n\n        * Reading celery clien..."
+  },
+  {
+    "case_id": "celery_hard_121",
+    "difficulty": "hard",
+    "category": "autodiscovery_import_error_gate",
+    "failure_type": "Type A",
+    "question": "在 `app.autodiscover_tasks(packages, force=False)` 的延迟执行链中，真正负责判定 `ModuleNotFoundError` 是\"候选 tasks 模块缺失可忽略\"还是\"嵌套导入错误需重抛\"的函数是哪个？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.base.find_related_module"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.autodiscover_tasks",
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.loaders.base.BaseLoader.import_default_modules",
+        "celery.loaders.base.BaseLoader.autodiscover_tasks",
+        "celery.loaders.base.autodiscover_tasks"
+      ],
+      "implicit_deps": [
+        "celery.signals.import_modules"
+      ]
+    },
+    "rag_context_length": 3586,
+    "model_output": "The user is asking about the `app.autodiscover_tasks(packages, force=False)` method in Celery, specifically about which function is responsible for distinguishing between:\n1. \"Candidate tasks module missing - can be ignored\" (ModuleNotFoundError for missing tasks module)\n2. \"Nested import error - should be re-raised\" (ModuleNotFoundError for other import issues)\n\nLooking at the context provided:\n- Retrieved 1 shows `autodiscover_tasks` method which has two branches:\n  - If `force=True`: calls `self._autodiscover_tasks(packages, related_name)` immediately\n  - If `force=False`: connects a signal handler that will call `_autodiscover_tasks` later\n\nThe key function that handles the actual discovery logic is `_autodiscover_tasks`. This is where the ModuleNotFoundError handling would occur.\n\nFrom the Celery source code (which I know from general knowledge), `_autodiscover_tasks` is the function that:\n1. Iterates through packages\n2. Tries to import `package.tasks` or `package.related_name`\n3. Catches `ModuleNotFoundError` for missing tasks modules (ignores them)\n4. Re-raises other `ModuleNotFoundError` or import errors\n\nSo the answer should point to `celery.app.base.Celery._autodiscover_tasks` as the function that handles this distinction.\n\nLet me structure the answer:\n- direct_deps: The main function that handles the ModuleNotFoundError distinction\n- indirect_deps: Related functions that are called in the chain\n- implicit_deps: Dependencies that are implicitly used\n\nBased on the Celery source code structure:\n- `_autodiscover_tasks` is the main function\n- It may call `import_module` or similar\n- It may reference `ModuleNotFoundError` directly\n\nLet me construct the JSON response.\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery._autodiscover_tasks\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.autodiscover_tasks\",\n      \"celery.utils.imports.import_module\"\n    ],\n    \"implicit_deps\": [\n      \"celery.signals.import_modules\",\n      \"celery._state._register_app\"\n    ]\n  }\n}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery._autodiscover_tasks"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.autodiscover_tasks",
+        "celery.utils.imports.import_module"
+      ],
+      "implicit_deps": [
+        "celery.signals.import_modules",
+        "celery._state._register_app"
+      ]
+    },
+    "f1": 0.5,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery.autodiscover_tasks (celery/app/base.py:779-823) | source=bm25, graph\n    def autodiscover_tasks(self, packages=None,\n                           related_name='tasks..."
+  },
+  {
+    "case_id": "celery_hard_122",
+    "difficulty": "hard",
+    "category": "bootstep_lifecycle_instantiation_gate",
+    "failure_type": "Type A",
+    "question": "在 worker 启动链中，当某个 `StartStopStep.include_if()` 最终为 `False` 时，仍会先执行 step 实例化（触发 `Step.__init__`）的生命周期断点方法是哪个？",
+    "entry_symbol": "",
+    "entry_file": "celery/worker/worker.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.bootsteps.Blueprint.apply"
+      ],
+      "indirect_deps": [
+        "celery.worker.worker.WorkController.__init__",
+        "celery.bootsteps.StartStopStep.include",
+        "celery.bootsteps.Step._should_include"
+      ],
+      "implicit_deps": [
+        "celery.bootsteps.Step.include_if"
+      ]
+    },
+    "rag_context_length": 1739,
+    "model_output": "The user is asking about a specific scenario in Celery's worker startup chain. They want to know which lifecycle breakpoint method is triggered when a `StartStopStep.include_if()` returns `False`, but the step instance is still instantiated first.\n\nLooking at the context provided:\n- Entry file is `celery/worker/worker.py`\n- The question is about `StartStopStep.include_if()` returning `False` but still executing `Step.__init__`\n\nFrom the reasoning pattern in previous examples, I need to identify:\n1. The direct dependency - the final method/class that handles this scenario\n2. Indirect dependencies - the chain leading to it\n3. Implicit dependencies - configuration/state that affects the flow\n\nBased on Celery's worker architecture:\n- `WorkController` is the main class in `celery/worker/worker.py`\n- `StartStopStep` is used for managing startup/shutdown steps\n- When `include_if()` returns `False`, the step is still instantiated but not executed\n\nThe key method that handles step instantiation and the `include_if()` check would be in `WorkController.__init__` or a related method that processes startup steps.\n\nLooking at the context snippets:\n- `WorkController` class is defined in `celery/worker/worker.py`\n- The `__init__` method would be where steps are instantiated and checked\n\nThe lifecycle breakpoint method that gets triggered when a step is instantiated (even if `include_if()` returns `False`) would be `Step.__init__` itself, but the question asks for the method in the worker startup chain that handles this.\n\nActually, re-reading the question more carefully: \"仍会先执行 step 实例化（触发 `Step.__init__`）的生命周期断点方法是哪个？\"\n\nThis is asking which method in the worker startup chain is the lifecycle breakpoint that gets triggered when step instantiation happens (even if `include_if()` returns `False`).\n\n\n \nThe answer should be `WorkController.__init__` since that's where the startup steps are processed and instantiated. The direct dependency would be `celery.worker.worker.WorkController.__init__`, with indirect dependencies including the step classes and the `include_if()` check mechanism.\n\nI need to identify the specific method that serves as the lifecycle breakpoint when step instantiation occurs, regardless of the `include_if()` return value.\n</think>\n\n{\n ",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.worker.consumer.control.Control.__init__ (celery/worker/consumer/control.py:23-29) | source=graph\n    def __init__(self, c, **kwargs):\n        self.is_green = c.pool is not None a..."
+  },
+  {
+    "case_id": "celery_hard_024",
+    "difficulty": "hard",
+    "category": "persistent_scheduler_startup_reset",
+    "failure_type": "Type A",
+    "question": "`PersistentScheduler` 启动阶段若持久化 store 缺失 `utc_enabled` 元数据字段，直接触发 reset（`self._store.clear()`）的方法是哪一个？",
+    "entry_symbol": "",
+    "entry_file": "celery/beat.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.beat.PersistentScheduler._create_schedule"
+      ],
+      "indirect_deps": [
+        "celery.beat.PersistentScheduler.setup_schedule"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 2622,
+    "model_output": "The user is asking about a specific code path in Celery's `PersistentScheduler` class. They want to know which method triggers a reset when the persistent store is missing the `utc_enabled` metadata field.\n\nLooking at the context provided:\n\n1. From `Retrieved 1` - `celery.beat.PersistentScheduler.setup_schedule`:\n   - This method checks `stored_utc = self._store.get('utc_enabled')`\n   - If `stored_utc is not None and stored_utc != utc`, it calls `self._store.clear()`\n   - This is the reset mechanism when UTC setting changes\n\n2. The question asks about when the store is MISSING the `utc_enabled` field (not when it has a different value)\n\nLooking at the code:\n```python\nutc = self.app.conf.enable_utc\nstored_utc = self._store.get('utc_enabled')\nif stored_utc is not None and stored_utc != utc:\n    choices = {True: 'enabled', False: 'disabled'}\n    warning('Reset: UTC changed from %s to %s',\n            choices[stored_utc], choices[utc])\n    self._store.clear()   # UTC setting changed, reset db!\n```\n\nThis code only triggers reset when `stored_utc is not None` AND the values differ. If `utc_enabled` is missing from the store, `stored_utc` would be `None`, and the condition `stored_utc is not None` would be False, so no reset would occur.\n\nHowever, the question specifically asks about when the store is MISSING the `utc_enabled` field and triggers reset. Looking at the code more carefully:\n\n- If `utc_enabled` is NOT in the store, `stored_utc = self._store.get('utc_enabled')` returns `None`\n- The condition `stored_utc is not None and stored_utc != utc` would be False (because `stored_utc is None`)\n\n\n- So no reset would happen in this case\n\nBut wait, the question says \"若持久化 store 缺失 `utc_enabled` 元数据字段，直接触发 reset（`self._store.clear()`）的方法是哪一个？\"\n\nThis seems to be asking about the method that contains this reset logic. The method is `setup_schedule`.\n\nActually, re-reading the question more carefully - it's asking which method triggers the reset when `utc_enabled` is missing. But based on the",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.beat.PersistentScheduler.setup_schedule (celery/beat.py:531-567) | source=bm25, graph\n    def setup_schedule(self):\n        try:\n            self._store = self._open_schedule()\n  ..."
+  },
+  {
+    "case_id": "celery_hard_025",
+    "difficulty": "hard",
+    "category": "disable_prefetch_runtime_can_consume_patch",
+    "failure_type": "Type A",
+    "question": "在 `worker_disable_prefetch=True` 且 broker 为 Redis 的前提下，运行时真正改写 `channel_qos.can_consume` 的方法是哪一个？",
+    "entry_symbol": "",
+    "entry_file": "celery/worker/consumer/tasks.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.consumer.tasks.Tasks.start"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 3197,
+    "model_output": "The user is asking about a specific code path in Celery's worker consumer tasks. Let me analyze the question:\n\n1. The question asks about `worker_disable_prefetch=True` with Redis broker\n2. It asks which method actually rewrites `channel_qos.can_consume` at runtime\n\nLooking at the context from Retrieved 1:\n- In `Tasks.start()` method, there's a check for `c.app.conf.worker_disable_prefetch`\n- If it's True AND the broker is Redis, it does:\n  ```python\n  from types import MethodType\n  from celery.worker import state\n  channel_qos = c.task_consumer.channel.qos\n  original_can_consume = channel_qos.can_consume\n\n  def can_consume(self):\n      # Prefer autoscaler's max_concurrency if set; otherwise fall back to pool size\n      limit = getattr(c.controller, \"max_concurrency\", None) or c.pool.num_processes\n      if len(state.reserved_requests) >= limit:\n          return False\n      return original_can_consume()\n\n  channel_qos.can_consume = MethodType(can_consume, channel_qos)\n  ```\n\nSo the method being defined and assigned is the inner `can_consume` function defined within `Tasks.start()`.\n\nLet me trace the dependencies:\n- Direct: The actual method being assigned is the inner `can_consume` function defined in `celery.worker.consumer.tasks.Tasks.start`\n- Indirect: This involves `celery.worker.consumer.tasks.Tasks.start` itself\n- Implicit: `celery.worker.state` (for `state.reserved_requests`), `types.MethodType`\n\nThe question asks \"which method\" - the answer is the inner `can_consume` function defined within `Tasks.start()`.\n\nLooking at the structure:\n- Direct deps: The actual method being assigned (`can_consume` defined in `Tasks.start`)\n\n\n- Indirect deps: The parent method `Tasks.start` that defines it\n- Implicit deps: `celery.worker.state` (for `state.reserved_requests`), `types.MethodType`\n\nI need to format this as a JSON object with the dependency structure.\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.worker.consumer.tasks.Tasks.start\"\n    ],\n    \"indirect_deps\": [\n      \"celery.worker.state\",\n     ",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.worker.consumer.tasks.Tasks.start (celery/worker/consumer/tasks.py:29-78) | source=bm25, graph\n    def start(self, c):\n        \"\"\"Start task consumer.\"\"\"\n        c.update_strategi..."
+  },
+  {
+    "case_id": "celery_type_d_001",
+    "difficulty": "hard",
+    "category": "parameter_shadowing_module_function",
+    "failure_type": "Type D",
+    "question": "在 `celery/app/routes.py` 中，调用 `expand_router_string('my.router.module:RouterClass')` 时，负责把字符串参数 `router` 解析成真实符号的函数是哪个？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/routes.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1381,
+    "model_output": "The user is asking about the function that parses the string parameter `router` into a real symbol when calling `expand_router_string('my.router.module:RouterClass')`.\n\nLooking at the context provided:\n\nFrom [Retrieved 1] - `celery.app.routes.expand_router_string`:\n```python\ndef expand_router_string(router):\n    router = symbol_by_name(router)\n    if hasattr(router, 'route_for_task'):\n        # need to instantiate pre 4.0 router classes\n        router = router()\n    return router\n```\n\nThe function `expand_router_string` calls `symbol_by_name(router)` to parse the string into a real symbol.\n\nThe `symbol_by_name` function is imported from `celery.utils.imports` (as shown in [Retrieved 4] module imports).\n\nSo the direct dependency is `symbol_by_name` from `celery.utils.imports`.\n\nLet me structure the answer:\n\n1. **direct_deps**: The function that directly parses the string is `symbol_by_name` from `celery.utils.imports`\n\n2. **indirect_deps**: The `expand_router_string` function itself is the entry point, but the question asks about what function is responsible for parsing. The parsing is done by `symbol_by_name`.\n\n3. **implicit_deps**: There might be implicit dependencies on the Router class structure, but the core parsing is done by `symbol_by_name`.\n\nActually, looking more carefully at the question - it asks \"负责把字符串参数 `router` 解析成真实符号的函数是哪个？\" (which function is responsible for parsing the string parameter `router` into a real symbol?)\n\nThe answer is `symbol_by_name` from `celery.utils.imports`.\n\nLet me structure this properly:\n\n- direct_deps: `celery.utils.imports.symbol_by_name` - this is the function that actually does the parsing\n\n\n- indirect_deps: `celery.app.routes.expand_router_string` - this is the entry point that calls symbol_by_name\n- implicit_deps: `celery.app.routes.Router` - the Router class that gets instantiated after parsing\n\nI should reconsider what constitutes direct vs indirect here. The direct dependency should be the function that performs the actual parsing work, which is `symbol_by_name`. The `expand_router_string` function is the caller, not a dependency in the traditional sense. For implicit dependencies, the Router class is referenced after",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.routes.expand_router_string (celery/app/routes.py:114-119) | source=bm25, graph\ndef expand_router_string(router):\n    router = symbol_by_name(router)\n    if hasattr(router, 'r..."
+  },
+  {
+    "case_id": "celery_type_d_002",
+    "difficulty": "hard",
+    "category": "class_hierarchy_with_same_logical_name",
+    "failure_type": "Type D",
+    "question": "在 `celery/canvas.py` 中，`celery.canvas._chain`（内部类，被 `@Signature.register_type(name='chain')` 注册）和 `celery.canvas.chain`（公开类，继承 `_chain`）是两个不同的类。当通过 `signature({'subtask_type': 'chain', ...})` 反序列化时，返回的实例属于哪个类？",
+    "entry_symbol": "",
+    "entry_file": "celery/canvas.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas._chain"
+      ],
+      "indirect_deps": [
+        "celery.canvas.Signature.TYPES",
+        "celery.canvas.Signature.from_dict"
+      ],
+      "implicit_deps": [
+        "celery.canvas.chain"
+      ]
+    },
+    "rag_context_length": 1521,
+    "model_output": "The user is asking about the Celery canvas module, specifically about the difference between `_chain` (internal class) and `chain` (public class), and which one is returned when deserializing with `signature({'subtask_type': 'chain', ...})`.\n\nLet me analyze the context provided:\n\n1. From Retrieved 1: `_chain.__init__` shows it calls `super().__init__('celery.chain', (), {'tasks': tasks}, **options)` - this is the internal class constructor.\n\n2. From Retrieved 2: `_chain` class definition shows it's a `Signature` subclass with string targets including `celery.chain`.\n\n3. From Retrieved 4: `Signature` class is the base class.\n\n4. From Retrieved 5: `_chord` is another internal class.\n\nThe key question is: when deserializing with `signature({'subtask_type': 'chain', ...})`, which class is returned?\n\nLooking at the Celery codebase pattern:\n- `_chain` is the internal implementation class\n- `chain` is typically a public alias or wrapper that inherits from `_chain`\n\nWhen deserializing via `Signature.from_dict()` or similar methods, the `subtask_type` field determines which class to instantiate. The `subtask_type` is set to `'chain'` in `_chain.__init__`.\n\nIn Celery's deserialization logic:\n1. `Signature.from_dict()` looks at the `subtask_type` field\n2. It uses `Signature.register_type()` to map subtask types to classes\n3. The registration happens with `@Signature.register_type(name='chain')`\n\nThe question states that `_chain` is registered with `@Signature.register_type(name='chain')`. This means when deserializing with `subtask_type='chain'`, it should return an instance of `_chain`, not `chain`.\n\nHowever, I need to verify the actual behavior. In Celery's typical pattern:\n\n\n- `_chain` is the internal class that gets registered\n- `chain` is a public alias that points to `_chain` (or inherits from it)\n\nWhen deserializing, the `Signature.from_dict()` method will use the registered type name to instantiate the correct class. Since `_chain` is registered with `name='chain'`, the deserialized object will be an instance of `_chain`.\n\nThe direct dependency is `",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.canvas._chain.__init__ (celery/canvas.py:947-954) | source=bm25, graph\n    def __init__(self, *tasks, **options):\n        tasks = (regen(tasks[0]) if len(tasks) == 1 and is_list(t..."
+  },
+  {
+    "case_id": "celery_type_d_003",
+    "difficulty": "medium",
+    "category": "alias_re_export_confusion",
+    "failure_type": "Type D",
+    "question": "在 `celery/canvas.py` 模块级别，`subtask = signature` 和 `maybe_subtask = maybe_signature` 分别是兼容性别名。如果代码中出现引用 'celery.canvas.subtask' 的错误信息，应该追踪到哪个实际执行函数？",
+    "entry_symbol": "",
+    "entry_file": "celery/canvas.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.signature"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.canvas.maybe_signature"
+      ]
+    },
+    "rag_context_length": 1370,
+    "model_output": "The user is asking about the alias chain in `celery/canvas.py` where `subtask = signature` and `maybe_subtask = maybe_signature` are compatibility aliases. They want to know which actual function should be traced when there's an error reference to 'celery.canvas.subtask'.\n\nLooking at the context provided:\n1. From Few-shot C03, we know that `celery.subtask` at the top level maps to `celery.canvas.signature` through a re-export chain.\n2. In `celery/canvas.py`, the aliases are `subtask = signature` and `maybe_subtask = maybe_signature`.\n\nSo when code references 'celery.canvas.subtask', it should be traced to the actual function `celery.canvas.signature`.\n\nLet me analyze the dependency structure:\n- Direct deps: The actual function being called - `celery.canvas.signature`\n- Indirect deps: The alias itself - `celery.canvas.subtask` (since it's just an alias pointing to signature)\n- Implicit deps: None, as this is a direct alias relationship\n\nWait, I need to reconsider. The question asks about what happens when there's an error reference to 'celery.canvas.subtask'. The actual execution function is `signature`.\n\nLooking at the context snippets:\n- Retrieved 1 shows `maybe_signature` being used in `_chain.clone`\n- Retrieved 4 shows `maybe_signature` being used in `group.from_dict`\n- Retrieved 5 shows `maybe_signature` being used in `group.link_error`\n\nSo `maybe_signature` is also an alias for `maybe_signature` (which is the actual function).\n\nFor `subtask = signature`:\n- Direct: `celery.canvas.signature` (the actual function)\n- Indirect: `celery.canvas.subtask` (the alias)\n\n\n- Implicit: None\n\nFor `maybe_subtask = maybe_signature`:\n- Direct: `celery.canvas.maybe_signature` (the actual function)\n- Indirect: `celery.canvas.maybe_subtask` (the alias)\n- Implicit: None\n\nSince the question specifically asks about 'celery.canvas.subtask' error reference, I should focus on that alias chain. The direct dependency is the actual `signature` function, while `subtask` itself is just an alias pointing to it.\n</think>\n\n{\n  \"ground_truth\": {\n",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.canvas._chain.clone (celery/canvas.py:1008-1015) | source=bm25, graph\n    def clone(self, *args, **kwargs):\n        to_signature = maybe_signature\n        signature = super().clon..."
+  },
+  {
+    "case_id": "celery_type_d_004",
+    "difficulty": "medium",
+    "category": "local_inline_import",
+    "failure_type": "Type D",
+    "question": "在 `celery/utils/nodenames.py` 中，`current_process_index` 并非在文件顶部 import，而是通过 `from .log import current_process_index` 内联在 `_fmt_process_index` 函数体内引入。如果要追踪 `celery.utils.nodenames._fmt_process_index` 调用的 `current_process_index` 的定义来源，应该查看哪个文件的哪个函数？",
+    "entry_symbol": "",
+    "entry_file": "celery/utils/nodenames.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.log.current_process_index"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1541,
+    "model_output": "The user is asking about tracing the dependency chain for `current_process_index` in `celery/utils/nodenames.py`. Let me analyze the context provided:\n\n1. In `celery/utils/nodenames.py`, the function `_fmt_process_index` (lines 89-93) has an inline import: `from .log import current_process_index`\n\n2. The context shows that `current_process_index` is defined in `celery/utils/log.py` at lines 293-295\n\n3. The question asks: to trace the definition source of `current_process_index` used in `_fmt_process_index`, which file and function should be checked?\n\nLooking at the reasoning:\n- The inline import `from .log import current_process_index` brings in `current_process_index` from `celery.utils.log`\n- The actual definition is in `celery.utils.log.current_process_index`\n\nSo the dependency chain is:\n- Direct: `celery.utils.log.current_process_index` (the actual function being imported)\n- Indirect: `celery.utils.nodenames._fmt_process_index` (the function that uses it)\n- Implicit: The import mechanism itself\n\nLet me structure this properly:\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.log.current_process_index\"\n    ],\n    \"indirect_deps\": [\n      \"celery.utils.nodenames._fmt_process_index\"\n    ],\n    \"implicit_deps\": [\n      \"celery.utils.log\"\n    ]\n  }\n}\n```\n\nWait, let me reconsider. The question is asking about tracing the definition source. The direct dependency should be the actual definition location, which is `celery.utils.log.current_process_index`. The indirect dependency would be the function that calls/uses it, which is `celery.utils.nodenames._fmt_process_index`. \n\nImplicit dependencies include the module itself (`celery.utils.log`) and the import mechanism.\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.log.current_process_index\"\n    ],\n    \"indirect_deps\": [\n      \"celery.utils.nodenames._fmt_process_index\"\n    ],\n    \"implicit_deps\": [\n      \"celery.utils.log\"\n    ]\n  }",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.utils.nodenames._fmt_process_index (celery/utils/nodenames.py:89-93) | source=bm25, graph\ndef _fmt_process_index(prefix: str = '', default: str = '0') -> str:\n    from .log import..."
+  },
+  {
+    "case_id": "celery_type_d_005",
+    "difficulty": "hard",
+    "category": "parameter_shadows_module_function",
+    "failure_type": "Type D",
+    "question": "在 `celery/app/routes.py` 的 `Router.query_router(self, router, ...)` 方法中，参数名 `router` 与方法外的 `celery.app.routes.Router` 类同名。当方法体内访问 `router` 时，它指向什么？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/routes.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [],
+      "indirect_deps": [
+        "celery.app.routes.Router"
+      ],
+      "implicit_deps": [
+        "celery.utils.functional.maybe_evaluate"
+      ]
+    },
+    "rag_context_length": 1292,
+    "model_output": "The user is asking about a Python static analysis question regarding the `Router.query_router` method in `celery/app/routes.py`. The question is about name resolution - when the method parameter `router` is accessed within the method body, what does it refer to?\n\nThis is a classic Python scoping question. In Python, method parameters shadow class attributes with the same name. So when `query_router` accesses `router` within its method body, it refers to the method parameter, not the class itself.\n\nLet me analyze the context:\n\n1. `Router` is a class defined in `celery/app/routes.py`\n2. `query_router` is a method of `Router` class\n3. The method has a parameter named `router`\n4. When the method body accesses `router`, it refers to the parameter, not the class\n\nThis is a direct dependency on the method parameter itself - there's no actual external dependency here. The question is about understanding Python's name resolution rules.\n\nLooking at the few-shot examples, they all deal with actual code dependencies (imports, method calls, etc.). This question is more about understanding the scoping rules.\n\nFor the answer:\n- `direct_deps`: The method parameter `router` itself - but this isn't really a \"dependency\" in the traditional sense. However, since the question asks what `router` points to, the answer is the method parameter.\n- `indirect_deps`: None really, since this is just parameter scoping\n- `implicit_deps`: None\n\nActually, looking at the pattern of the few-shot examples, they're about code dependencies and execution paths. This question is about understanding that the parameter shadows the class name.\n\nLet me think about what makes sense for the JSON structure:\n\nThe question is asking what `router` refers to when accessed within the method body. The answer is: it refers to the method parameter, not the class.\n\nFor the ground_truth structure:\n- `direct_deps`: Could include the method parameter itself or indicate this is a local variable\n- `indirect_deps`: None\n- `implicit_deps`: None\n\nActually, I need to reconsider. \n\nThe question is really about understanding Python's name resolution - the parameter `router` shadows the class `Router`. This isn't really about code dependencies in the traditional sense. Looking at the few-shot examples, they all have actual code paths and dependencies. For this",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.routes.Router.lookup_route (celery/app/routes.py:98-104) | source=bm25, graph\n    def lookup_route(self, name,\n                     args=None, kwargs=None, options=None, task_..."
+  },
+  {
+    "case_id": "celery_type_d_006",
+    "difficulty": "medium",
+    "category": "env_var_dynamic_alias_override",
+    "failure_type": "Type D",
+    "question": "在 `celery/concurrency/__init__.py` 中，若在首次导入前设置 `CELERY_CUSTOM_WORKER_POOL='celery.concurrency.thread:TaskPool'`，那么 `get_implementation('custom')` 最终返回哪个 Celery 类？",
+    "entry_symbol": "",
+    "entry_file": "celery/concurrency/__init__.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.thread.TaskPool"
+      ],
+      "indirect_deps": [
+        "celery.concurrency.get_implementation"
+      ],
+      "implicit_deps": [
+        "celery.concurrency.ALIASES"
+      ]
+    },
+    "rag_context_length": 2526,
+    "model_output": "The user is asking about the dependency resolution for `get_implementation('custom')` in `celery/concurrency/__init__.py` when `CELERY_CUSTOM_WORKER_POOL` is set before import.\n\nLet me trace through the code:\n\n1. In `celery/concurrency/__init__.py`, there's a try-except block that reads `CELERY_CUSTOM_WORKER_POOL` environment variable during module import\n2. If set, it adds `ALIASES['custom'] = custom` where `custom` is the string value from the environment variable\n3. `get_implementation(cls)` function uses `symbol_by_name` to resolve the alias string to an actual class\n\nFrom the context:\n- `get_implementation` is defined at lines 41-43 (Retrieved 3)\n- It references `ALIASES` and `symbol_by_name`\n- `symbol_by_name` comes from `kombu.utils.imports` (Retrieved 1)\n\nWhen `get_implementation('custom')` is called:\n1. It looks up `ALIASES['custom']` which contains the string `'celery.concurrency.thread:TaskPool'` (from the environment variable)\n2. It calls `symbol_by_name` to resolve this string to the actual class\n3. Returns `celery.concurrency.thread.TaskPool`\n\nSo the dependency structure:\n- **direct_deps**: The final resolved class - `celery.concurrency.thread.TaskPool`\n- **indirect_deps**: The functions used to get there - `get_implementation`, `symbol_by_name`\n- **implicit_deps**: The data structure used - `ALIASES`\n\nLet me verify this matches the pattern from the few-shot examples:\n\nLooking at Few-shot E04 (which is very similar):\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.concurrency.thread.TaskPool\"\n    ],\n    \"indirect_deps\": [\n      \"celery.concurrency.get_implementation\"\n    ],\n    \"implicit_deps\": [\n      \"celery.concurrency.ALIASES\"\n    ]\n  }\n}\n```\n\nThis matches my analysis. The direct dependency is the final class, indirect is the function that resolves it, and implicit is the alias dictionary that stores the mapping.\n</think>\n\n{",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.concurrency.thread.TaskPool"
+      ],
+      "indirect_deps": [
+        "celery.concurrency.get_implementation"
+      ],
+      "implicit_deps": [
+        "celery.concurrency.ALIASES"
+      ]
+    },
+    "f1": 1.0,
+    "context_preview": "[Retrieved 1] celery.concurrency (celery/concurrency/__init__.py:1-48) | source=bm25, graph\n\"\"\"Pool implementation abstract factory, and alias definitions.\"\"\"\nimport os\n\n# Import from kombu directly a..."
+  },
+  {
+    "case_id": "celery_type_a_001",
+    "difficulty": "hard",
+    "category": "bootstep_lifecycle_conditional",
+    "failure_type": "Type A",
+    "question": "在 `celery/bootsteps.py` 中，`Step._should_include(parent)` 返回 `(False, None)` 时（即 `include_if` 返回 False），Step 的 `__init__` 和 `create` 方法还会被调用吗？`parent.steps` 列表中会包含该 Step 吗？",
+    "entry_symbol": "",
+    "entry_file": "celery/bootsteps.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.bootsteps.Step._should_include",
+        "celery.bootsteps.Step.include",
+        "celery.bootsteps.StartStopStep.include"
+      ],
+      "indirect_deps": [
+        "celery.bootsteps.Step.__init__",
+        "celery.bootsteps.Step.create",
+        "celery.bootsteps.Blueprint.apply"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 2741,
+    "model_output": "The user is asking about the behavior of `Step._should_include(parent)` in `celery/bootsteps.py` when it returns `(False, None)`. Specifically:\n1. Will `__init__` and `create` methods still be called?\n2. Will the Step be added to `parent.steps` list?\n\nLooking at the context provided:\n\nFrom Retrieved 1 (Step class definition):\n```python\ndef _should_include(self, parent):\n    if self.include_if(parent):\n        return True, self.create(parent)\n    return False, None\n```\n\nThis shows that when `include_if(parent)` returns False, `_should_include` returns `(False, None)` without calling `self.create(parent)`.\n\nFrom Retrieved 3 (StartStopStep.include):\n```python\ndef include(self, parent):\n    return self._should_include(parent)[0]\n```\n\nThis shows that `include()` only returns the boolean result from `_should_include`, not the created object.\n\nLooking at the code flow:\n1. `Step.__init__` is called when the step is bound to a parent object (as per the docstring)\n2. `Step._should_include` is called to check if the step should be included\n3. If `include_if` returns False, `create` is NOT called (it only returns `False, None`)\n4. The `parent.steps` list is typically populated by the parent's `include` method, which only adds steps that pass the `_should_include` check\n\nBased on the code:\n- `__init__` is called during Step instantiation (before `_should_include` is called)\n- `create` is NOT called when `_should_include` returns False\n- The Step is NOT added to `parent.steps` when `_should_include` returns False (because the parent's include logic only adds steps that return True)\n\n\n- `__init__` executes during Step instantiation, independent of the `_should_include` check\n- `create` is skipped when `_should_include` returns False\n- The Step won't be added to `parent.steps` since the parent's include logic filters based on the boolean result\n\nI need to clarify the dependency structure here. The question focuses on what happens when `_should_include` returns False, so I should identify which methods and attributes are actually involved in this scenario.\n\nLooking at the code flow:",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.bootsteps.Step (celery/bootsteps.py:288-352) | source=bm25, graph, semantic\nclass Step(metaclass=StepType):\n    \"\"\"A Bootstep.\n\n    The :meth:`__init__` method is called when the ..."
+  },
+  {
+    "case_id": "celery_type_a_002",
+    "difficulty": "hard",
+    "category": "acks_late_failure_matrix",
+    "failure_type": "Type A",
+    "question": "在 `celery/worker/request.py` 中，当 `acks_late=True` 时，以下情况分别走 `ack`、`reject(requeue=True)`、`reject(requeue=False)` 中的哪条路径：(1) 普通 `Exception`；(2) `TimeLimitExceeded` 且 `acks_on_timeout=False`；(3) `WorkerLostError` 且 `reject_on_worker_lost=False`；(4) `celery.exceptions.Reject` 异常；(5) `celery.exceptions.Ignore` 异常。",
+    "entry_symbol": "",
+    "entry_file": "celery/worker/request.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.request.Request.on_failure",
+        "celery.worker.request.Request.on_timeout"
+      ],
+      "indirect_deps": [
+        "celery.worker.request.Request.reject",
+        "celery.worker.request.Request.acknowledge"
+      ],
+      "implicit_deps": [
+        "celery.worker.state.should_terminate"
+      ]
+    },
+    "rag_context_length": 4885,
+    "model_output": "The user is asking me to analyze the `celery/worker/request.py` file, specifically the `on_failure` method, to determine which path is taken for different exception types when `acks_late=True`.\n\nLet me trace through the code logic:\n\n1. First, the code checks for specific exception types in order:\n   - `ExceptionWithTraceback` - extracts the underlying exception\n   - `Terminated` - handles termination case\n   - `MemoryError` - raises MemoryError\n   - `Reject` - calls `self.reject(requeue=exc.requeue)`\n   - `Ignore` - calls `self.acknowledge()`\n   - `Retry` - calls `self.on_retry(exc_info)`\n\n2. Then, if `acks_late=True`:\n   - For `TimeLimitExceeded`: checks `acks_on_timeout` flag\n   - For `WorkerLostError`: checks `reject_on_worker_lost` flag\n   - Other exceptions: checks `acks_on_failure` flag\n\n3. The logic for `acks_late=True`:\n   ```python\n   if self.task.acks_late:\n       is_timeout = isinstance(exc, TimeLimitExceeded)\n       ack_flag = self.task.acks_on_timeout if is_timeout else self.task.acks_on_failure\n       reject = (\n           (self.task.reject_on_worker_lost and is_worker_lost)\n           or (is_timeout and not ack_flag)\n       )\n       if reject:\n           requeue = True\n           self.reject(requeue=requeue)\n           send_failed_event = False\n       elif ack_flag:\n           self.acknowledge()\n       else:\n           self.reject(requeue=False)\n   ```\n\nNow let me map each scenario:\n\n(1) **普通 Exception** (普通 Exception):\n   - Not `Reject`, not `Ignore`, not `Retry`, not `TimeLimitExceeded`, not `WorkerLostError`\n   - Falls through to `acks_late` logic\n   - `is_timeout = False`\n   - `ack_flag = self.task.acks_on_failure`\n   - `reject = (self.task.reject_on_worker_lost and False) or (False and not ack_flag) = False`\n   - Since `reject = False`, we check `ack_flag`\n   - If `acks_on_failure=True`: `self.acknowledge()`\n  ",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.worker.request.Request.on_failure (celery/worker/request.py:579-664) | source=bm25, graph\n    def on_failure(self, exc_info, send_failed_event=True, return_ok=False):\n        \"\"\"H..."
+  },
+  {
+    "case_id": "celery_type_a_003",
+    "difficulty": "hard",
+    "category": "autodiscover_signal_lazy_chain",
+    "failure_type": "Type A",
+    "question": "在 `celery/app/base.py` 的 `autodiscover_tasks(..., force=False)` 懒路径下，哪个信号（signal）触发 `import_modules` 事件？该事件的哪个接收者（receiver）最终执行 `_autodiscover_tasks`？从信号发送到实际执行之间有几层间接调用？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.signals.import_modules"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.loaders.base.BaseLoader.import_default_modules",
+        "celery.utils.dispatch.signal.Signal.send"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 3336,
+    "model_output": "The user is asking about the signal mechanism in `celery/app/base.py` for `autodiscover_tasks` when `force=False`.\n\nLet me analyze the code from the context:\n\nFrom Retrieved 1, I can see:\n```python\ndef autodiscover_tasks(self, packages=None,\n                       related_name='tasks', force=False):\n    ...\n    if force:\n        return self._autodiscover_tasks(packages, related_name)\n    signals.import_modules.connect(starpromise(\n        self._autodiscover_tasks, packages, related_name,\n    ), weak=False, sender=self)\n```\n\nSo when `force=False`:\n1. The signal `signals.import_modules` is connected\n2. The receiver is `starpromise(self._autodiscover_tasks, packages, related_name)`\n3. The sender is `self` (the Celery app instance)\n\nNow I need to identify:\n1. Which signal triggers the `import_modules` event? → `signals.import_modules`\n2. Which receiver executes `_autodiscover_tasks`? → `starpromise(self._autodiscover_tasks, packages, related_name)`\n3. How many layers of indirect calls between signal send and actual execution?\n\nThe `starpromise` is a wrapper that creates a lazy promise object. When the signal is sent, it will call the promise which then calls `_autodiscover_tasks`.\n\nLet me trace the dependency chain:\n- Direct: `signals.import_modules` (the signal itself)\n- Direct: `starpromise` (the receiver wrapper)\n- Direct: `self._autodiscover_tasks` (the actual method)\n- Indirect: `signals` (the signal registry)\n- Indirect: `starpromise` implementation (likely in `celery.utils`)\n\n\n- Implicit: `self` (the Celery app instance)\n\nThe question asks about the signal that triggers the `import_modules` event and the receiver that executes `_autodiscover_tasks`. The signal is `signals.import_modules`, and the receiver is `starpromise(self._autodiscover_tasks, packages, related_name)`.\n\nFor the indirect call layers:\n1. Signal is sent\n2. Signal handler (starpromise) is invoked\n3. starpromise unwraps and calls `_autodiscover",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery.autodiscover_tasks (celery/app/base.py:779-823) | source=bm25, graph\n    def autodiscover_tasks(self, packages=None,\n                           related_name='tasks..."
+  },
+  {
+    "case_id": "celery_medium_019",
+    "difficulty": "medium",
+    "category": "symbol_by_name_resolution_chain",
+    "failure_type": "Type E",
+    "question": "在 `celery/utils/imports.py` 中，`instantiate('celery.concurrency.prefork:TaskPool')` 这条链路最终解析到哪个真实 Celery 符号？中间依赖哪个导入解析函数？",
+    "entry_symbol": "",
+    "entry_file": "celery/utils/imports.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.prefork.TaskPool"
+      ],
+      "indirect_deps": [
+        "celery.utils.imports.instantiate",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1476,
+    "model_output": "The user is asking about the `instantiate` function in `celery/utils/imports.py` and what it resolves to when called with `'celery.concurrency.prefork:TaskPool'`.\n\nLooking at the context:\n1. `instantiate(name, *args, **kwargs)` calls `symbol_by_name(name)(*args, **kwargs)`\n2. `symbol_by_name` is the function that resolves string paths to actual Python symbols/classes\n3. The string `'celery.concurrency.prefork:TaskPool'` would be resolved to the `TaskPool` class from `celery.concurrency.prefork`\n\nFrom the reasoning in previous examples, I need to identify:\n- direct_deps: The final resolved symbol/class\n- indirect_deps: The functions/modules in the call chain\n- implicit_deps: Any implicit dependencies like environment variables, state, etc.\n\nFor this question:\n- direct_deps: `celery.concurrency.prefork.TaskPool` (the actual class being instantiated)\n- indirect_deps: `celery.utils.imports.symbol_by_name` (the function that does the resolution), and `instantiate` itself\n- implicit_deps: None really, as this is a straightforward import resolution\n\nLet me structure this properly based on the pattern from previous examples.\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.concurrency.prefork.TaskPool\"\n    ],\n    \"indirect_deps\": [\n      \"celery.utils.imports.instantiate\",\n      \"celery.utils.imports.symbol_by_name\"\n    ],\n    \"implicit_deps\": []\n  }\n}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.concurrency.prefork.TaskPool"
+      ],
+      "indirect_deps": [
+        "celery.utils.imports.instantiate",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": []
+    },
+    "f1": 1.0,
+    "context_preview": "[Retrieved 1] celery.utils.imports.instantiate (celery/utils/imports.py:38-44) | source=bm25, graph\ndef instantiate(name, *args, **kwargs):\n    \"\"\"Instantiate class by name.\n\n    See Also:\n        :fu..."
+  },
+  {
+    "case_id": "celery_medium_021",
+    "difficulty": "medium",
+    "category": "lpmerge_left_precedent_merge",
+    "failure_type": "Type C",
+    "question": "在 `celery/utils/collections.py` 中，`lpmerge(L, R)` 函数的合并策略是什么？当 R 字典中某个键的值是 `None` 时会发生什么？当 R 字典中某个键的值是非 `None` 时会发生什么？",
+    "entry_symbol": "",
+    "entry_file": "celery/utils/collections.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.collections.lpmerge"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1116,
+    "model_output": "The user is asking about the `lpmerge(L, R)` function in `celery/utils/collections.py`. They want to know:\n1. What is the merge strategy?\n2. What happens when R has a key with value `None`?\n3. What happens when R has a key with value non-`None`?\n\nLooking at the provided context, I don't see any information about `lpmerge` function. The context shows various other functions in `celery/utils/collections.py` like `DictAttribute.setdefault`, `ChainMap.clear`, `LimitedSet._maybe_refresh_heap`, `ConfigurationView.get`, and `ConfigurationView.clear`.\n\nSince I don't have the actual source code for `lpmerge` in the context, I need to rely on my knowledge of Celery's `lpmerge` function.\n\nFrom my knowledge of Celery's `lpmerge` function:\n\n1. `lpmerge` is a function that merges two dictionaries (L and R)\n2. The merge strategy is:\n   - It iterates through keys in R\n   - For each key in R:\n     - If the key exists in L and the value in L is not None, it keeps the L value\n     - If the key exists in L but the value in L is None, it replaces with R's value\n     - If the key doesn't exist in L, it adds it from R\n   - Actually, the standard behavior is: R values override L values, but if R's value is None, it doesn't override (keeps L's value)\n\nWait, let me reconsider. The typical `lpmerge` behavior in Celery is:\n- It merges R into L\n- If R[key] is None, it doesn't override L[key] (keeps L's value)\n- If R[key] is not None, it overrides L[key] with R's value\n\n\n- This is a \"left-preserve\" merge strategy where None values in R are treated as \"no change\"\n\nSo the merge strategy is: R overrides L, but None values in R don't override.\n\nFor the dependencies:\n- direct_deps: The function itself `celery.utils.collections.lpmerge`\n- indirect_deps: Any functions it calls internally\n- implicit_deps: Any state or context it relies on\n\nSince I don't have the actual source code in the context, I",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.utils.collections.DictAttribute.setdefault (celery/utils/collections.py:153-156) | source=bm25, graph\n    def setdefault(self, key, default=None):\n        # type: (Any, Any) -> No..."
+  },
+  {
+    "case_id": "celery_medium_022",
+    "difficulty": "medium",
+    "category": "signature_polymorphic_from_dict",
+    "failure_type": "Type D",
+    "question": "在 `celery/canvas.py` 中，`Signature.from_dict(d, app=app)` 如何根据字典的 `subtask_type` 字段决定返回哪个子类的实例？`cls.TYPES` 的注册来源是什么？",
+    "entry_symbol": "",
+    "entry_file": "celery/canvas.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.Signature.TYPES",
+        "celery.canvas.Signature.from_dict"
+      ],
+      "indirect_deps": [
+        "celery.canvas._chain.from_dict",
+        "celery.canvas.group.from_dict",
+        "celery.canvas._chord.from_dict"
+      ],
+      "implicit_deps": [
+        "celery.canvas.Signature.register_type"
+      ]
+    },
+    "rag_context_length": 1617,
+    "model_output": "The user is asking about how `Signature.from_dict()` in `celery/canvas.py` determines which subclass to return based on the `subtask_type` field in the dictionary, and where `cls.TYPES` gets registered from.\n\nLooking at the context provided:\n\n1. From `Retrieved 1` - `Signature.from_dict`:\n   - It gets `typ = d.get('subtask_type')`\n   - If `typ` exists, it looks up `target_cls = cls.TYPES[typ]`\n   - If `target_cls is not cls`, it returns `target_cls.from_dict(d, app=app)`\n   - Otherwise returns `Signature(d, app=app)`\n\n2. From `Retrieved 2` - `Signature.register_type`:\n   - This is a classmethod that registers new types\n   - It references `cls.TYPES` and `name`\n   - This is where the TYPES dictionary gets populated\n\n3. From `Retrieved 3` - `group.from_dict`:\n   - Shows that subclasses can override `from_dict`\n   - This confirms the inheritance pattern\n\n4. From `Retrieved 4` - `_chord.from_dict`:\n   - Another subclass that overrides `from_dict`\n\n5. From `Retrieved 5` - `Signature` class definition:\n   - Shows the base class\n\nThe key insight is:\n- `cls.TYPES` is a class attribute that maps subtask_type strings to actual class objects\n- `register_type` is the method that populates this dictionary\n- Subclasses can override `from_dict` to handle their own type-specific logic\n\nFor the dependency structure:\n- **direct_deps**: The actual class that gets returned based on the subtask_type lookup - this would be the registered types like `celery.canvas.Group`, `celery.canvas.Chord`, etc. But since the question asks about the mechanism, the direct dependency is the `TYPES` mapping itself and the `register_type` mechanism\n\n\n- **indirect_deps**: The registration mechanism (`register_type`) and the base `Signature` class\n- **implicit_deps**: The class attribute `TYPES` that stores the mapping\n\nI need to identify what the question is really asking about - the mechanism of type resolution and where the TYPES dictionary gets populated.\n\nThe direct dependency is the `TYPES` class attribute that maps subtask_type strings",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.canvas.Signature.from_dict (celery/canvas.py:310-321) | source=bm25, graph\n    @classmethod\n    def from_dict(cls, d, app=None):\n        \"\"\"Create a new signature from a dict.\n   ..."
+  },
+  {
+    "case_id": "celery_medium_023",
+    "difficulty": "medium",
+    "category": "signature_head_from_fun_generation",
+    "failure_type": "Type E",
+    "question": "在 `celery/utils/functional.py` 中，`head_from_fun` 生成的函数签名源码存放在哪个命名空间变量中？该函数通过 `exec(definition, namespace)` 执行后，从哪个 key 获取生成的函数对象？",
+    "entry_symbol": "",
+    "entry_file": "celery/utils/functional.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.functional.head_from_fun"
+      ],
+      "indirect_deps": [
+        "celery.utils.functional._argsfromspec",
+        "celery.utils.functional.FUNHEAD_TEMPLATE"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 2314,
+    "model_output": "The user is asking about the `head_from_fun` function in `celery/utils/functional.py`. They want to know:\n1. Which namespace variable stores the generated function signature source code\n2. From which key the generated function object is retrieved after `exec(definition, namespace)`\n\nLooking at the code from Retrieved 1:\n\n```python\ndef head_from_fun(fun: Callable[..., Any], bound: bool = False) -> str:\n    ...\n    definition = FUNHEAD_TEMPLATE.format(\n        fun_name=name,\n        fun_args=_argsfromspec(_getfullargspec(fun)),\n        fun_value=1,\n    )\n    logger.debug(definition)\n    namespace = {'__name__': fun.__module__}\n    # pylint: disable=exec-used\n    # Tasks are rarely, if ever, created at runtime - exec here is fine.\n    exec(definition, namespace)\n    result = namespace[name]\n    result._source = definition\n    if bound:\n        return partial(result, object())\n    return result\n```\n\nKey observations:\n1. The `namespace` dictionary is created with `{'__name__': fun.__module__}`\n2. After `exec(definition, namespace)`, the function object is retrieved from `namespace[name]` where `name` is the function's `__name__`\n3. The `definition` string is stored in `result._source` after retrieval\n\nSo the answers are:\n1. The namespace variable is `namespace` (a local variable in the function)\n2. The function object is retrieved from `namespace[name]` where `name` is `fun.__name__`\n\nFor the dependency structure:\n- Direct deps: The namespace variable itself is a local variable, not a module-level dependency. The actual dependency is the `name` key which comes from `fun.__name__`\n\n\n- Indirect deps: `FUNHEAD_TEMPLATE` is used to format the definition string, and `exec` is the built-in Python function\n- Implicit deps: The `name` variable is derived from `fun.__name__`\n\nI need to reconsider what constitutes a \"dependency\" here. The question asks about the namespace variable and the key used to retrieve the function. The namespace is a local variable created within the function, so it's not really a dependency in the traditional sense. The key",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.utils.functional.head_from_fun (celery/utils/functional.py:354-384) | source=bm25, graph\ndef head_from_fun(fun: Callable[..., Any], bound: bool = False) -> str:\n    \"\"\"Generate si..."
+  },
+  {
+    "case_id": "celery_medium_024",
+    "difficulty": "medium",
+    "category": "fake_task_request_context",
+    "failure_type": "Type B",
+    "question": "在 `celery/backends/base.py` 中，`_create_fake_task_request` 函数创建的任务上下文（Context）中，`delivery_info` 字段的默认值是什么？这个空字典在 errback 执行链中会导致什么问题？",
+    "entry_symbol": "",
+    "entry_file": "celery/backends/base.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.backends.base._create_fake_task_request"
+      ],
+      "indirect_deps": [
+        "celery.app.task.Context"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1612,
+    "model_output": "The user is asking about the `_create_fake_task_request` function in `celery/backends/base.py` and specifically about:\n1. What is the default value of `delivery_info` field in the Context it creates?\n2. What problem does this empty dict cause in the errback execution chain?\n\nLooking at the context provided:\n\nFrom [Retrieved 1], I can see the function definition:\n```python\ndef _create_fake_task_request(task_id, errbacks=None, task_name='unknown', **extra) -> Context:\n    return Context({\n        \"id\": task_id,\n        \"errbacks\": errbacks or [],\n        \"delivery_info\": dict(),\n        \"task\": task_name,\n        **extra\n    })\n```\n\nSo the `delivery_info` field is set to `dict()` which is an empty dictionary `{}`.\n\nNow I need to determine the dependency structure for this question. This is asking about:\n1. The direct function being analyzed: `_create_fake_task_request`\n2. Indirect dependencies: What does this function call or depend on?\n3. Implicit dependencies: What's assumed or used without explicit calls?\n\nLooking at the context:\n- The function returns a `Context` object\n- It's used in error callback handling (mentioned in docstring)\n- From [Retrieved 2], `_call_task_errbacks` is mentioned which uses the request context\n\nFor the dependency analysis:\n- Direct: `celery.backends.base._create_fake_task_request` (the function itself)\n- Indirect: `celery.backends.base.Context` (the class being instantiated), `celery.backends.base.Backend._call_task_errbacks` (where this is used)\n- Implicit: The `Context` class structure and how `delivery_info` is used in errback execution\n\nLet me think about what the question is really asking - it's about understanding the code behavior, not about finding dependencies in the traditional sense. But following the few-shot pattern, I need to map this to the dependency structure format.\n\n\n- Direct deps should be the function itself\n- Indirect deps should include the Context class and the errback calling mechanism\n- Implicit deps should include the Context class structure and how delivery_info is consumed\n\nThe key insight is that `delivery_info` being empty means errbacks won't have access to routing information, which could cause issues",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.backends.base._create_fake_task_request (celery/backends/base.py:80-92) | source=bm25, graph\ndef _create_fake_task_request(task_id, errbacks=None, task_name='unknown', **extra) ->..."
+  },
+  {
+    "case_id": "celery_easy_018",
+    "difficulty": "easy",
+    "category": "gen_task_name_cross_module",
+    "failure_type": "Type C",
+    "question": "`celery.app.base.Celery.gen_task_name` 方法将任务名生成委托给哪个工具函数？该工具函数在哪个文件中定义？",
+    "entry_symbol": "",
+    "entry_file": "celery/app/base.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 2763,
+    "model_output": "The user is asking about the `celery.app.base.Celery.gen_task_name` method and wants to know:\n1. Which utility function it delegates to for task name generation\n2. Which file that utility function is defined in\n\nLooking at the context provided:\n\nFrom [Retrieved 1], I can see that in `_task_from_fun`:\n```python\nname = name or self.gen_task_name(fun.__name__, fun.__module__)\n```\n\nFrom [Retrieved 2], I can see:\n```python\ndef gen_task_name(self, name, module):\nReferences: gen_task_name, module, name, self\n```\n\nThe `gen_task_name` method in `Celery` class appears to delegate to `celery.utils.imports.gen_task_name` based on the reasoning in the few-shot examples (specifically Few-shot D02 which mentions this exact pattern).\n\nLooking at the few-shot examples, particularly Few-shot D02:\n```\n\"indirect_deps\": [\n  \"celery.app.base.Celery.gen_task_name\",\n  \"celery.utils.imports.gen_task_name\"\n]\n```\n\nThis shows that `Celery.gen_task_name` delegates to `celery.utils.imports.gen_task_name`.\n\nSo for this question:\n- Direct dependency: The method itself `celery.app.base.Celery.gen_task_name`\n- Indirect dependency: The utility function it calls `celery.utils.imports.gen_task_name`\n- Implicit dependencies: The module parameter handling\n\nLet me structure this properly based on the pattern from the few-shot examples.\n\nThe question asks about:\n1. Which utility function `gen_task_name` delegates to\n2. Which file that utility function is defined in\n\nBased on the few-shot examples and Celery's architecture:\n\n\n- `Celery.gen_task_name` calls `celery.utils.imports.gen_task_name`\n- This utility function is defined in `celery/utils/imports.py`\n\nSo the ground_truth should be:\n- direct_deps: `celery.app.base.Celery.gen_task_name` (the method itself)\n- indirect_deps: `celery.utils.imports.gen_task_name` (the utility function it delegates to)\n- implicit_deps: The module parameter handling (which is implicit in the delegation)\n\nActually, looking at the question more carefully, it's asking about the delegation",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.base.Celery._task_from_fun (celery/app/base.py:587-630) | source=bm25, graph\n    def _task_from_fun(\n        self,\n        fun,\n        name=None,\n        base=None,\n        b..."
+  },
+  {
+    "case_id": "celery_easy_019",
+    "difficulty": "easy",
+    "category": "cwd_import_scope",
+    "failure_type": "Type C",
+    "question": "`celery.utils.imports.import_from_cwd` 与普通的 `import_module` 相比，额外做了什么操作？该操作通过哪个上下文管理器实现？",
+    "entry_symbol": "",
+    "entry_file": "celery/utils/imports.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.cwd_in_path",
+        "celery.utils.imports.import_from_cwd"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1658,
+    "model_output": "The user is asking about `celery.utils.imports.import_from_cwd` and what extra operation it performs compared to `import_module`, and which context manager implements this operation.\n\nLooking at the context provided:\n\n1. From [Retrieved 1], I can see the `import_from_cwd` function:\n```python\ndef import_from_cwd(module, imp=None, package=None):\n    \"\"\"Import module, temporarily including modules in the current directory.\n\n    Modules located in the current directory has\n    precedence over modules located in `sys.path`.\n    \"\"\"\n    if imp is None:\n        imp = import_module\n    with cwd_in_path():\n        return imp(module, package=package)\n```\n\n2. The key difference is the `with cwd_in_path():` context manager that temporarily adds the current working directory to `sys.path`.\n\n3. From [Retrieved 2], I can see that `cwd_in_path` is referenced in the module.\n\n4. From [Retrieved 3], I can see `find_module` also references `cwd_in_path`.\n\n5. From [Retrieved 4], `reload_from_cwd` also references `cwd_in_path`.\n\nSo the extra operation is: temporarily adding the current working directory to `sys.path` to give it precedence over other paths.\n\nThe context manager is `cwd_in_path()`.\n\nNow I need to determine the dependency structure:\n\n- **direct_deps**: The actual operation being performed - adding current directory to path via `cwd_in_path` context manager\n- **indirect_deps**: The underlying import mechanism - `import_module` (or the `imp` parameter)\n- **implicit_deps**: The context manager implementation itself - `cwd_in_path`\n\nLet me structure this properly:\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.imports.cwd_in_path\"\n    ],\n    \"indirect_deps\": [\n      \"importlib.import_module\"\n    ],\n    \"implicit_deps\": [\n      \"celery.utils.imports.cwd_in_path\"\n    ]\n  }\n}\n```\n\nWait, I need to reconsider. The question asks about what extra operation is done and which context manager implements it.\n\nLooking at the code:\n- The extra operation is: temporarily adding current directory to `sys.path`",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.utils.imports.cwd_in_path"
+      ],
+      "indirect_deps": [
+        "importlib.import_module"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.cwd_in_path"
+      ]
+    },
+    "f1": 0.5,
+    "context_preview": "[Retrieved 1] celery.utils.imports.import_from_cwd (celery/utils/imports.py:96-105) | source=bm25, graph\ndef import_from_cwd(module, imp=None, package=None):\n    \"\"\"Import module, temporarily includin..."
+  },
+  {
+    "case_id": "celery_easy_020",
+    "difficulty": "easy",
+    "category": "extension_class_entry_point",
+    "failure_type": "Type E",
+    "question": "`celery.utils.imports.load_extension_classes(namespace)` 这条扩展加载链里，哪个 Celery 函数先枚举 entry point 的 `(name, value)`，哪个 Celery 函数再把 `value` 字符串解析成真实类？",
+    "entry_symbol": "",
+    "entry_file": "celery/utils/imports.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.load_extension_class_names",
+        "celery.utils.imports.load_extension_classes"
+      ],
+      "indirect_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1591,
+    "model_output": "The user is asking about the Celery extension loading chain in `celery.utils.imports.load_extension_classes(namespace)`. They want to know:\n1. Which Celery function first enumerates the entry point's `(name, value)` pairs\n2. Which Celery function then parses the `value` string into a real class\n\nLooking at the context:\n- `load_extension_classes` (lines 156-164) calls `load_extension_class_names(namespace)` to get the names\n- Then it calls `symbol_by_name(class_name)` to parse the class name string into a real class\n\nFrom Retrieved 2, `load_extension_class_names` references `_entry_points`, `entry_points`, `ep`, `ep.name`, `ep.value` - this suggests it's using `importlib.metadata.entry_points` to enumerate the entry points.\n\nSo the chain is:\n1. `load_extension_class_names` - enumerates entry points and yields `(name, class_name)` tuples\n2. `symbol_by_name` - parses the `class_name` string into a real class\n\nLet me structure this:\n- direct_deps: The final resolved class (what `symbol_by_name` returns)\n- indirect_deps: The functions in the chain that lead to the resolution\n- implicit_deps: The underlying mechanisms (like entry_points)\n\nLooking at the question more carefully, they're asking about the function names, not the final class. But the format requires class/function names as dependencies.\n\nLet me think about what makes sense:\n- direct_deps: The actual class that gets loaded (the value from entry points)\n- indirect_deps: The functions that participate in the chain\n- implicit_deps: The underlying mechanisms\n\nActually, looking at the few-shot examples, they seem to track:\n- direct_deps: The final resolved symbol/class\n- indirect_deps: The functions/modules that are called in the chain\n\n\n- implicit_deps: The underlying mechanisms or configurations\n\nFor this question:\n- direct_deps: The actual class that gets loaded (e.g., \"celery.concurrency.thread.TaskPool\" or similar)\n- indirect_deps: `load_extension_class_names`, `symbol_by_name`\n- implicit_deps: `importlib.metadata.entry_points`\n\nBut wait, the question is asking about which functions do what, not what the final result is. Let me re-read...\n\nThe question asks: \"哪个 Celery ",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.utils.imports.load_extension_classes (celery/utils/imports.py:156-164) | source=bm25, graph\ndef load_extension_classes(namespace):\n    for name, class_name in load_extension_class..."
+  },
+  {
+    "case_id": "celery_medium_025",
+    "difficulty": "medium",
+    "category": "task_string_class_reference",
+    "failure_type": "Type D",
+    "question": "celery.app.task.Task.Request 是字符串 celery.worker.request:Request，celery.app.task.Task.Strategy 是字符串 celery.worker.strategy:default。这两个字符串在 worker 进程中被解析为哪些真实的类？",
+    "entry_symbol": "Task.Request",
+    "entry_file": "celery/app/task.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.request.Request",
+        "celery.worker.strategy.default"
+      ],
+      "indirect_deps": [
+        "celery.worker.request",
+        "celery.worker.strategy"
+      ],
+      "implicit_deps": []
+    },
+    "rag_context_length": 42796,
+    "model_output": "The user is asking about the resolution of two string entries in the `celery.app.task.Task` class:\n1. `Request = 'celery.worker.request:Request'`\n2. `Strategy = 'celery.worker.strategy:default'`\n\nThey want to know what real classes these strings resolve to in the worker process.\n\nLooking at the context provided:\n- From `celery/app/task.py`, I can see that `Task.Request` and `Task.Strategy` are class attributes set to strings\n- From `celery/worker/strategy.py`, I can see there's a `default` function defined\n\nThe question is asking about the resolution process. In Celery, these string references are typically resolved using `symbol_by_name` from `celery.utils.imports` when they're actually used.\n\nLet me trace through the reasoning:\n\n1. `Task.Request = 'celery.worker.request:Request'` - This is a string that needs to be resolved to the actual `celery.worker.request.Request` class\n2. `Task.Strategy = 'celery.worker.strategy:default'` - This is a string that needs to be resolved to the actual `celery.worker.strategy.default` function\n\nThe resolution happens when these are actually instantiated or used. Looking at the code:\n- `start_strategy` method calls `instantiate(self.Strategy, self, app, consumer, **kwargs)`\n- The `instantiate` function would use `symbol_by_name` to resolve the string\n\nFor `Request`, it's used in the `push_request` method which creates a `Context` object, but the actual `Request` class is imported from `celery.worker.request`.\n\nLet me think about the dependency structure:\n\n**Direct deps:**\n- `celery.worker.request.Request` - the actual class that `Request` string resolves to\n- `celery.worker.strategy.default` - the actual function that `Strategy` string resolves to\n\n\n- `celery.utils.imports.symbol_by_name` - the utility function used to resolve these strings\n- `celery.utils.imports.instantiate` - used to instantiate the strategy\n\n**Indirect deps:**\n- `celery.worker.request.Context` - used in `push_request`\n- `celery.worker.strategy.default` - the actual strategy function\n\n**Implicit deps:**\n- `celery.utils.imports` module - contains the resolution utilities\n\n",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.app.task.Task (celery/app/task.py:183-1237) | source=bm25, graph, semantic\n@abstract.CallableTask.register\nclass Task:\n    \"\"\"Task base class.\n\n    Note:\n        When called tasks..."
+  },
+  {
+    "case_id": "celery_easy_021",
+    "difficulty": "easy",
+    "category": "signature_class_definition",
+    "failure_type": "Type D",
+    "question": "celery.canvas.Signature 是什么类型的对象？它继承自哪个标准库类？",
+    "entry_symbol": "Signature",
+    "entry_file": "celery/canvas.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.Signature"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 2302,
+    "model_output": "The user is asking about the `celery.canvas.Signature` class - specifically what type of object it is and which standard library class it inherits from.\n\nLooking at the context provided:\n1. Retrieved 1 shows `Signature` being used in isinstance checks\n2. Retrieved 2 shows `Signature.apply` method\n3. Retrieved 3 shows `Signature.app` property\n4. Retrieved 4 shows `_chain.__or__` referencing `Signature`\n5. Retrieved 5 shows `Signature.__reduce__`\n\nHowever, none of these snippets show the class definition or inheritance. I need to reason about what I know about Celery's Signature class.\n\nFrom Celery's architecture:\n- `Signature` is a core class in `celery.canvas`\n- It's designed to represent a task or chain of tasks that can be serialized\n- Looking at the code patterns, `Signature` typically inherits from `dict` in Celery to enable serialization\n\nLet me check the context more carefully:\n- Retrieved 5 shows `__reduce__` method which is commonly used for pickling/serialization\n- The class is used in isinstance checks with `dict` in Retrieved 1\n\nBased on Celery's source code structure, `Signature` inherits from `dict` to allow it to be serialized as a dictionary. This is a common pattern in Celery for task representation.\n\nSo the answer should be:\n- Type: dict subclass\n- Inherits from: `dict` (standard library)\n\nLet me structure this properly:\n\ndirect_deps: The actual class definition location\nindirect_deps: Related classes that are part of the inheritance chain\nimplicit_deps: Standard library dependencies\n\nFor Signature:\n- direct_deps: \"celery.canvas.Signature\" (the class itself)\n- indirect_deps: [] (no other Celery classes in inheritance)\n- implicit_deps: [\"dict\"] (the standard library class it inherits from)\n\nWait, I should be more careful. \n\nThe question asks what type of object it is and which standard library class it inherits from. The answer should be:\n- Type: dict subclass\n- Inherits from: dict\n\nSo in the JSON format:\n- direct_deps: [\"celery.canvas.Signature\"] - the class definition\n- indirect_deps: [] - nothing else in the inheritance chain\n- implicit_deps: [\"dict\"] - the standard library class\n\nActually, looking at the",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.canvas._chord._descend (celery/canvas.py:2172-2201) | source=graph\n    @classmethod\n    def _descend(cls, sig_obj):\n        \"\"\"Count the number of tasks in the given signature rec..."
+  },
+  {
+    "case_id": "celery_easy_022",
+    "difficulty": "easy",
+    "category": "cross_package_re-export",
+    "failure_type": "Type C",
+    "question": "celery.utils.uuid 实际上是从哪个外部包的哪个模块的哪个函数重新导出的？",
+    "entry_symbol": "uuid",
+    "entry_file": "celery/utils/__init__.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "kombu.utils.uuid.uuid"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 1867,
+    "model_output": "The user is asking about the `celery.utils.uuid` symbol and wants to know which external package's module and function it's re-exported from.\n\nLooking at the context provided:\n\nFrom [Retrieved 1] celery/utils/__init__.py:\n```python\nfrom kombu.utils.uuid import uuid\n```\n\nThis shows that `celery.utils.uuid` is directly imported from `kombu.utils.uuid`.\n\nSo the answer should be:\n- direct_deps: The final resolved symbol is `kombu.utils.uuid.uuid`\n- indirect_deps: The import path through `celery.utils.uuid`\n- implicit_deps: None (no hidden dependencies)\n\nLet me structure this properly:\n\n```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"kombu.utils.uuid.uuid\"\n    ],\n    \"indirect_deps\": [\n      \"celery.utils.uuid\"\n    ],\n    \"implicit_deps\": []\n  }\n}\n```\n\nThis matches the pattern from the few-shot examples, particularly the C05 example which had a similar cross-module re-export chain.\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"kombu.utils.uuid.uuid\"\n    ],\n    \"indirect_deps\": [\n      \"celery.utils.uuid\"\n    ],\n    \"implicit_deps\": []\n  }\n}\n",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.utils (celery/utils/__init__.py:1-36) | source=bm25, graph\n\"\"\"Utility functions.\n\nDon't import from here directly anymore, as these are only\nhere for backwards compatibility.\n\"\"\"\n..."
+  },
+  {
+    "case_id": "celery_easy_023",
+    "difficulty": "easy",
+    "category": "nodename_function_definition",
+    "failure_type": "Type C",
+    "question": "celery.utils.nodename 是在 celery.utils.nodenames 模块中定义的函数，它的完整 FQN 是什么？",
+    "entry_symbol": "nodename",
+    "entry_file": "celery/utils/__init__.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.nodenames.nodename"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 2317,
+    "model_output": "The user is asking about the full qualified name (FQN) of the `nodename` function defined in `celery.utils.nodenames` module.\n\nLooking at the context:\n1. `celery.utils/__init__.py` imports `nodename` from `.nodenames` (which is `celery.utils.nodenames`)\n2. `celery.utils.nodenames.nodename` is defined in `celery/utils/nodenames.py` at lines 56-58\n\nThe question asks for the complete FQN of `nodename`.\n\nFrom the context:\n- Entry File: `celery/utils/__init__.py`\n- Entry Symbol: `nodename`\n- Retrieved 2 shows: `celery.utils.nodenames.nodename`\n\nSo the FQN is `celery.utils.nodenames.nodename`\n\nNow I need to determine the dependency structure:\n- `direct_deps`: The actual function/class being resolved - `celery.utils.nodenames.nodename`\n- `indirect_deps`: The modules/functions that are called to resolve this - `celery.utils.__init__.py` (which re-exports it)\n- `implicit_deps`: Any implicit dependencies like the module itself - `celery.utils.nodenames`\n\nLet me think about this more carefully:\n\n1. The entry point is `celery.utils.nodename` (from `celery.utils.__init__.py`)\n2. This is re-exported from `celery.utils.nodenames.nodename`\n3. So the direct dependency is the actual function location: `celery.utils.nodenames.nodename`\n4. The indirect dependency is the re-export path: `celery.utils.__init__.py`\n5. The implicit dependency is the module: `celery.utils.nodenames`\n\nActually, looking at the pattern from previous examples:\n\n\n- `direct_deps` contains the final resolved symbol\n- `indirect_deps` contains the call chain to get there\n- `implicit_deps` contains implicit state/variables\n\nFor this question about FQN:\n- `direct_deps`: `celery.utils.nodenames.nodename` (the actual function)\n- `indirect_deps`: `celery.utils.__init__.py` (the re-export location)\n- `implicit_deps`: `celery.utils.nod",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.utils (celery/utils/__init__.py:1-36) | source=bm25, graph, semantic\n\"\"\"Utility functions.\n\nDon't import from here directly anymore, as these are only\nhere for backwards compatibi..."
+  },
+  {
+    "case_id": "celery_easy_024",
+    "difficulty": "easy",
+    "category": "worker_direct_re-export",
+    "failure_type": "Type C",
+    "question": "celery.utils.worker_direct 是在 celery.utils.nodenames 模块中定义的函数，它的完整 FQN 是什么？",
+    "entry_symbol": "worker_direct",
+    "entry_file": "celery/utils/__init__.py",
+    "mode": "pe_rag",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.nodenames.worker_direct"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "rag_context_length": 2370,
+    "model_output": "The user is asking about the full FQN (Fully Qualified Name) of the `worker_direct` function defined in `celery.utils.nodenames` module.\n\nLooking at the context:\n1. `celery.utils/__init__.py` imports `worker_direct` from `.nodenames`\n2. `celery.utils.nodenames.worker_direct` is defined in `celery/utils/nodenames.py` at lines 38-53\n\nThe FQN would be `celery.utils.nodenames.worker_direct`\n\nThis is a straightforward import/export relationship. The function is:\n- Defined in: `celery.utils.nodenames`\n- Re-exported from: `celery.utils`\n\nFor the dependency structure:\n- direct_deps: The actual function location `celery.utils.nodenames.worker_direct`\n- indirect_deps: The re-export path `celery.utils.worker_direct`\n- implicit_deps: Any module-level dependencies that are required for the function to work\n\nLooking at the imports in `celery.utils.nodenames`:\n- `celery.utils.functional`\n- `celery.utils.log`\n\nBut the question is specifically about the FQN of the function itself, not its internal dependencies.\n\nLet me structure this properly:\n- direct_deps: `celery.utils.nodenames.worker_direct` (where it's actually defined)\n- indirect_deps: `celery.utils.worker_direct` (the re-export location)\n- implicit_deps: The module dependencies needed for the function to work\n\nActually, looking at the few-shot examples, they seem to focus on the actual resolved symbol path. Let me follow that pattern.\n\nFor a simple function re-export case like this:\n- direct_deps should be the actual definition location\n- indirect_deps could include the re-export path\n- implicit_deps could include any module-level dependencies\n\n\n- The function signature shows it takes `hostname: str | Queue` and returns `Queue`, so it depends on `Queue` from kombu\n\nI should keep this focused on the FQN resolution itself rather than diving into the function's internal dependencies.\n</think>\n\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.nodenames.worker_direct\"\n    ],\n    \"indirect_deps\": [\n      \"celery.utils.worker_direct\"\n    ],\n    \"implicit_deps\": [\n      \"",
+    "extracted_prediction": null,
+    "f1": 0.0,
+    "context_preview": "[Retrieved 1] celery.utils (celery/utils/__init__.py:1-36) | source=bm25, graph, semantic\n\"\"\"Utility functions.\n\nDon't import from here directly anymore, as these are only\nhere for backwards compatibi..."
+  }
+]

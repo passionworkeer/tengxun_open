@@ -190,6 +190,9 @@ def main() -> int:
     parser.add_argument("--repo-root", type=Path, default=DEFAULT_REPO_ROOT)
     parser.add_argument("--output", type=Path, default=None)
     parser.add_argument("--max-cases", type=int, default=None)
+    parser.add_argument(
+        "--resume", action="store_true", help="Resume from existing output file"
+    )
     parser.add_argument("--rag-top-k", type=int, default=DEFAULT_RAG_TOP_K)
     parser.add_argument("--per-source", type=int, default=DEFAULT_PER_SOURCE)
     parser.add_argument("--rrf-k", type=int, default=DEFAULT_RRF_K)
@@ -219,7 +222,24 @@ def main() -> int:
     print(f"加载 {len(cases)} 条评测用例，模式={args.mode}\n")
 
     results: list[dict[str, Any]] = []
+    processed_case_ids: set[str] = set()
+
+    # 加载已有结果（断点续传）
+    if args.resume and args.output.exists():
+        try:
+            existing_results = json.loads(args.output.read_text(encoding="utf-8"))
+            results = existing_results
+            processed_case_ids = {r["case_id"] for r in results}
+            print(f"断点续传：已加载 {len(results)} 个已有结果")
+        except Exception as exc:
+            print(f"警告：无法加载已有结果文件：{exc}")
+
     for i, case in enumerate(cases):
+        # 跳过已处理的用例
+        if case.case_id in processed_case_ids:
+            print(f"[{i + 1}/{len(cases)}] {case.case_id} ... 已跳过（已完成）")
+            continue
+
         print(f"[{i + 1}/{len(cases)}] {case.case_id} ...", end=" ", flush=True)
 
         context = ""
@@ -253,7 +273,7 @@ def main() -> int:
                     messages=messages,
                     stream=False,
                     timeout=300,
-                    temperature=0.0,
+                    temperature=0.1,
                     max_tokens=MAX_NEW_TOKENS,
                 )
                 msg = response.choices[0].message

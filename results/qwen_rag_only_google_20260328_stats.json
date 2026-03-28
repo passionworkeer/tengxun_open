@@ -1,0 +1,42 @@
+{
+  "total_cases": 54,
+  "by_difficulty": {
+    "easy": {
+      "count": 15,
+      "avg_f1": 0.0667,
+      "min_f1": 0.0,
+      "max_f1": 1.0
+    },
+    "hard": {
+      "count": 20,
+      "avg_f1": 0.0,
+      "min_f1": 0.0,
+      "max_f1": 0.0
+    },
+    "medium": {
+      "count": 19,
+      "avg_f1": 0.0,
+      "min_f1": 0.0,
+      "max_f1": 0.0
+    }
+  },
+  "overall": {
+    "avg_f1": 0.0185,
+    "min_f1": 0.0,
+    "max_f1": 1.0
+  },
+  "strategy": "rag",
+  "model": "Qwen/Qwen3.5-9B",
+  "base_url": "http://localhost:8000/v1",
+  "rag": {
+    "repo_root": "external/celery",
+    "rag_top_k": 5,
+    "per_source": 12,
+    "rrf_k": 30,
+    "weights": {
+      "bm25": 0.25,
+      "semantic": 0.05,
+      "graph": 0.7
+    }
+  }
+}
