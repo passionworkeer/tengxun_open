@@ -109,16 +109,12 @@ curl http://localhost:8000/v1/models
 ## 依赖
 
 ```bash
-pip install \
-    transformers \
-    peft \
-    datasets \
-    accelerate \
-    bitsandbytes \
-    scipy \
-    numpy \
-    matplotlib
+pip install -r requirements-finetune.txt
 ```
+
+`requirements.txt` 只覆盖基线评测、RAG 检索、报告与测试依赖；
+训练相关的 GPU / LoRA 依赖单独放在 `requirements-finetune.txt`，
+避免在非 Linux、非 CUDA 环境里做冷启动验证时直接安装失败。
 
 ## 注意事项
 

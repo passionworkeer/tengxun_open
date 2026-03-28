@@ -1,5 +1,4 @@
 # Core analysis
-networkx>=3.3
 jedi>=0.19.2
 rank-bm25>=0.2.2
 
@@ -15,13 +14,6 @@ transformers>=4.40.0
 openai>=1.30.0
 anthropic>=0.25.0
 zhipuai>=2.0.0
-
-# Fine-tuning
-torch>=2.0.0
-peft>=0.10.0
-bitsandbytes>=0.43.0
-datasets>=2.19.0
-accelerate>=0.30.0
 
 # Reporting
 matplotlib>=3.9.2

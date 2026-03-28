@@ -91,6 +91,18 @@
 
 ## Quick Start
 
+### 0. 安装依赖
+
+```bash
+pip install -r requirements.txt
+```
+
+如果你要跑 LoRA / QLoRA 训练，再额外安装：
+
+```bash
+pip install -r requirements-finetune.txt
+```
+
 ### 1. 数据检查
 
 ```bash

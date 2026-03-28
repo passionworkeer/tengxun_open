@@ -1,0 +1,8 @@
+-r requirements.txt
+
+# Fine-tuning / GPU training
+torch>=2.0.0
+peft>=0.10.0
+datasets>=2.19.0
+accelerate>=0.30.0
+bitsandbytes>=0.43.0; platform_system == "Linux"

@@ -1,5 +1,10 @@
+ifeq ($(shell command -v uv >/dev/null 2>&1 && echo yes),yes)
 PYTHON ?= uv run python
 REPORT_PYTHON ?= uv run --with matplotlib python
+else
+PYTHON ?= python3
+REPORT_PYTHON ?= python3
+endif
 EVAL_CASES ?= data/eval_cases.json
 RAG_DRAFT_CASES ?= data/eval_cases_migrated_draft_round4.json
 FINETUNE_DATA ?= data/finetune_dataset_500.jsonl
