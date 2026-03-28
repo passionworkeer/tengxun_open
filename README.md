@@ -55,8 +55,10 @@
 - 导师一页式摘要：[`reports/executive_summary_20260329.md`](reports/executive_summary_20260329.md)
 - 答辩页提纲：[`reports/defense_slides_outline_20260329.md`](reports/defense_slides_outline_20260329.md)
 - PPT 逐页文案：[`reports/final_ppt_copy_20260329.md`](reports/final_ppt_copy_20260329.md)
+- 答辩风险台账：[`reports/defense_risk_register_20260329.md`](reports/defense_risk_register_20260329.md)
 - 提交前检查清单：[`reports/final_submission_checklist_20260329.md`](reports/final_submission_checklist_20260329.md)
 - 数字速查表：[`reports/final_numbers_cheatsheet_20260329.md`](reports/final_numbers_cheatsheet_20260329.md)
+- 答辩风险台账：[`reports/defense_risk_register_20260329.md`](reports/defense_risk_register_20260329.md)
 - strict 数据资产：
   - `data/fewshot_examples_20_strict.json`
   - `data/finetune_dataset_500_strict.jsonl`
