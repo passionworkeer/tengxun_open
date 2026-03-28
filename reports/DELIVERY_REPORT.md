@@ -9,7 +9,7 @@
 ### 1.1 三条最重要的结论
 
 1. **Prompt Engineering 是当前最强单项优化**  
-   在正式 `54-case` 口径上，GPT-5.4 从 `0.2745` 提升到 `0.6062`，绝对增益 `+0.3317`，相对增益 `+120.8%`。说明对于高质量商业模型，明确的 System Prompt、Few-shot 和后处理，比盲目上 RAG 更能稳定提升最终 FQN 输出质量。
+   在正式 `54-case` 口径上，GPT-5.4 从 `0.2745` 提升到 `0.6062`，绝对增益 `+0.3317`，相对增益 `+120.8%`。在 `2026-03-29` 的 strict PE 搜索增补里，最优路线进一步更新为 `postprocess_targeted`，达到 `union 0.6338 / macro 0.4757 / mislayer 0.1620`。这说明对于高质量商业模型，真正有效的不是更“狠”的规则，而是更针对 failure mode 的 few-shot 选例与分层保留后处理。
 
 2. **Qwen 的提升依赖“PE + FT”组合，而不是 FT 单独使用**  
    Qwen strict baseline 只有 `0.0370`，`FT only` 提升到 `0.0932`，但 `PE + FT` 直接达到 `0.4315`。这说明 LoRA 微调更多是在补“领域模式”，真正把模式转成稳定可评分输出的仍是 Prompt Engineering。
@@ -114,6 +114,37 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 - 在正式 `54-case` 结果上，`CoT` 是正收益，不再延续旧 `50-case` 草稿里的负收益结论。
 - `Few-shot` 是 PE 阶段第二大增益来源，尤其提升 medium / hard。
 - `Post-process` 是稳定兜底，主要修格式、去重和脏输出。
+
+### 5.4 strict 增补结论（2026-03-29）
+
+在补上 strict 评分、符号 canonicalization 和分层保留 postprocess 后，又额外做了一轮 GPT-5.4 的 PE 搜索，重点验证：
+
+- 更强的 layer guard system prompt 是否真的有用
+- assistant few-shot 形式是否更利于结构化输出
+- targeted few-shot selection 是否能更好命中 Type B / Type E / Type D 这类易错层级场景
+
+最终 strict 最优路线不是“更强规则”，而是：
+
+- `targeted few-shot selection + layer-preserving postprocess`
+
+对应最优结果：
+
+| Variant | Union | Macro | MisLayer | Exact Layer |
+|------|------:|------:|------:|------:|
+| `postprocess (layer-preserving)` | 0.6136 | 0.4372 | 0.2336 | 0.1111 |
+| `fewshot_targeted` | 0.6061 | 0.4373 | 0.1873 | 0.0741 |
+| `postprocess_targeted` | 0.6338 | 0.4757 | 0.1620 | 0.1296 |
+
+反向实验也给出了清晰结论：
+
+- `fewshot_layer_guard`、`postprocess_layer_guard` 会明显提高 `mislayer`
+- `assistant few-shot` 会让 strict 层级归位显著退化
+- 真正有效的是 few-shot 选例策略，而不是简单增强 prompt 规则强度
+
+对应文档与结果：
+
+- `reports/strict_pe_search_20260329.md`
+- `results/pe_targeted_full_20260329/pe_postprocess_targeted_strict.json`
 
 ## 6. RAG 增强管线
 
@@ -231,13 +262,13 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 
 ### 9.1 如果目标是“今天就给出最稳可复现实验”
 
-- 商业模型：`GPT-5.4 + PE`
+- 商业模型：`GPT-5.4 + postprocess_targeted`
 - 开源模型最高分：`Qwen PE + RAG + FT`
 - 开源模型高性价比默认路线：`Qwen PE + FT`
 
 原因：
 
-- `GPT-5.4 + PE` 已有完整正式结果且提升最大
+- `GPT-5.4 + postprocess_targeted` 现在是 strict 口径下的商业模型最优路线，且机制最可解释
 - `Qwen PE + RAG + FT` 在完整消融矩阵里给出当前最高分 `0.4435`
 - `Qwen PE + FT` 只比最高分低 `0.0120`，但工程复杂度更低
 

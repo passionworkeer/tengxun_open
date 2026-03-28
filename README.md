@@ -50,6 +50,8 @@
 - strict 数据审计：[`reports/strict_data_audit_20260329.md`](reports/strict_data_audit_20260329.md)
 - strict 评分审计：[`reports/strict_scoring_audit_20260329.md`](reports/strict_scoring_audit_20260329.md)
 - strict PE 搜索增补：[`reports/strict_pe_search_20260329.md`](reports/strict_pe_search_20260329.md)
+- 答辩主讲稿：[`reports/defense_script_20260329.md`](reports/defense_script_20260329.md)
+- 导师追问 Q&A：[`reports/defense_qa_20260329.md`](reports/defense_qa_20260329.md)
 - strict 数据资产：
   - `data/fewshot_examples_20_strict.json`
   - `data/finetune_dataset_500_strict.jsonl`
