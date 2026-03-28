@@ -66,7 +66,7 @@ GPT 端到端：
 - RAG 更适合长链调用、动态解析、跨文件隐式依赖
 - 不适合默认对所有 case 全量启用
 
-### 3. Qwen：FT 单独不够，真正有效的是 PE + FT
+### 3. Qwen：FT 单独不够，真正有效的是 PE + FT，但 FT 家族当前仍是历史正式线
 
 Qwen strict baseline：
 
@@ -74,15 +74,16 @@ Qwen strict baseline：
 
 关键组合：
 
-- `FT only = 0.0932`
-- `PE + FT = 0.4315`
-- `PE + RAG + FT = 0.4435`
+- 历史正式 `FT only = 0.0932`
+- 历史正式 `PE + FT = 0.4315`
+- 历史正式 `PE + RAG + FT = 0.4435`
 
 结论：
 
 - PE 是开源模型的核心增益源
 - FT 负责领域适配
 - RAG 只有在和 PE / FT 组合时才真正发挥价值
+- strict-clean 数据、配置和一键重跑脚本已经就绪，但这条线还需要外部 CUDA 环境重训后才能更新最终数字
 
 ## 最终推荐策略
 
@@ -98,8 +99,9 @@ Qwen strict baseline：
 
 ### 开源模型
 
-- 最高分：`Qwen PE + RAG + FT`
-- 默认路线：`Qwen PE + FT`
+- 历史正式最高分：`Qwen PE + RAG + FT`
+- 历史正式默认路线：`Qwen PE + FT`
+- 最严格口径下，应补充一句：strict-clean FT rerun 已准备，结果待外部 GPU 落盘
 
 ## 方法论上的核心结论
 
@@ -113,5 +115,9 @@ Qwen strict baseline：
   `results/pe_targeted_full_20260329/pe_postprocess_targeted_strict.json`
 - strict PE 搜索说明：
   `reports/strict_pe_search_20260329.md`
+- strict FT 执行状态：
+  `reports/strict_ft_execution_status_20260329.md`
+- 训练证据审计：
+  `reports/training_evidence_audit_20260329.md`
 - 总交付报告：
   `reports/DELIVERY_REPORT.md`

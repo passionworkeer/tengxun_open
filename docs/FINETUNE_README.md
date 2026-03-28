@@ -22,13 +22,14 @@
 |------|------|------|
 | strict 微调数据集 | `data/finetune_dataset_500_strict.jsonl` | 去除 exact GT / hard question overlap 的 500 条训练数据 |
 | strict 数据映射 | `dataset_info.json` | 数据集名 `fintune_qwen_dep_strict` |
-| strict 训练配置 | `configs/train_config_strict_20260329.yaml` | strict LoRA 配置 |
+| strict 重训配置 | `configs/train_config_strict_replay_20260329.yaml` | strict-clean LoRA 配置，含逐步 eval_loss/checkpoint |
 | strict 审计报告 | `reports/strict_data_audit_20260329.md` | 记录 exact GT 与题面级 overlap 清理结果 |
 | strict 评分报告 | `reports/strict_scoring_audit_20260329.md` | 分层 strict 指标与 mislayer 诊断 |
 
 历史说明：
 
 - 仓库中保留了若干早期辅助脚本，例如 `scripts/generate_finetune_data.py`、`scripts/train_lora.sh`。
+- `configs/train_config_strict_20260329.yaml` 保留为第一版 strict 草案；由于 `eval_steps=500` 大于整轮总步数，它不适合作为需要逐步 `eval_loss` 曲线的正式重训配置。
 - 这些脚本仍可用于 bootstrap 或本地实验，但**不是当前正式 500 条数据集与正式训练结果的唯一权威来源**。
 - 当前若要做严格答辩或去污染复验，请优先使用 strict 资产，而不是直接在历史正式资产上继续加实验。
 
@@ -53,6 +54,7 @@ strict 复验入口：
 
 ```bash
 export PYTHONPATH=.
+make train-strict-dry-run
 make train-strict
 ```
 
@@ -60,13 +62,27 @@ make train-strict
 
 ```bash
 python3 -m finetune.data_guard data/finetune_dataset_500_strict.jsonl
-python3 finetune/train_lora.py --config configs/train_config_strict_20260329.yaml
+python3 finetune/train_lora.py --config configs/train_config_strict_replay_20260329.yaml
 ```
 
 说明：
 
 - `make train` 实际调用 `finetune/train_lora.py`，再由它启动 `llamafactory-cli train ...`。
+- `make train-strict-dry-run` 会读取 strict 重训配置并输出数据集规模、估算总步数以及 `eval_steps/save_steps` 是否合理。
 - 当前正式配置依赖 `LLaMA-Factory` 训练环境；若 `llamafactory-cli` 不在 PATH 中，可通过 `LLAMAFACTORY_CLI` 指向可执行文件。
+- 如果你要先确认本机能不能承担 strict 训练，不要直接开跑，先执行：
+
+```bash
+make check-train-env-strict
+```
+
+如果你已经切到外部 CUDA 环境，并且想一次性完成 strict-clean 训练与三组评测，直接执行：
+
+```bash
+make qwen-strict-rerun
+```
+
+收口说明见：`reports/qwen_strict_closeout_20260329.md`
 
 ## 3. 正式评测入口
 
@@ -131,6 +147,19 @@ python3 run_pe_rag_ft_eval.py \
 
 当前没有逐步 `eval_loss` 曲线，因此判断不过拟合的证据强度是中等，不是最强形式。
 
+原因也已经明确：
+
+- 历史正式配置 `configs/train_config_20260327_143745.yaml` 中，`eval_steps=500`、`save_steps=500`
+- 而这份 500 条训练集在当前 batch 设置下整轮总步数约为 `339`
+- 因此训练过程中不会触发中间 eval，也不会产生逐步 `eval_loss`
+
+strict 重训配置 `configs/train_config_strict_replay_20260329.yaml` 已修复为：
+
+- `eval_steps=50`
+- `save_steps=50`
+- `load_best_model_at_end=true`
+- `metric_for_best_model=eval_loss`
+
 如果你在 strict 配置上重训，建议同时导出：
 
 - step-level train loss 曲线
@@ -153,15 +182,31 @@ python3 run_pe_rag_ft_eval.py \
 
 strict 配置默认写入：
 
-- `artifacts/lora/qwen3.5-9b/strict_20260329`
+- `artifacts/lora/qwen3.5-9b/strict_replay_20260329`
 
 这样可以把“历史正式结果”和“你本次复现结果”分开，避免覆盖。
+
+如果你已经在外部 CUDA 环境上准备补齐 strict-clean FT 线，优先直接使用：
+
+```bash
+make qwen-strict-rerun
+```
+
+它会串起训练、`FT only`、`PE + FT`，以及条件满足时的 `PE + RAG + FT`。
 
 ## 7. 什么时候该用正式资产，什么时候该用 strict 资产
 
 - 如果你是在复述历史正式交付结果，用正式资产。
 - 如果你是在回答“有没有训练/评测泄漏”的追问，用 strict 资产。
 - 如果你准备重训并更新最终答辩数字，优先走 strict 资产，然后重跑 `FT only / PE + FT / PE + RAG + FT`。
+
+补充：
+
+- 当前仓库已经落盘了本机 strict 训练前置检查：`results/strict_train_env_20260329.json`
+- 当前仓库已经落盘了训练证据结构化摘要：`results/training_log_summary_20260329.json`
+- 对应说明文档：
+  - `reports/strict_ft_execution_status_20260329.md`
+  - `reports/training_evidence_audit_20260329.md`
 
 ## 8. 历史辅助脚本
 

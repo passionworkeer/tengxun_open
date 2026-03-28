@@ -11,8 +11,8 @@
 1. **Prompt Engineering 是当前最强单项优化**  
    在正式 `54-case` 口径上，GPT-5.4 从 `0.2745` 提升到 `0.6062`，绝对增益 `+0.3317`，相对增益 `+120.8%`。在 `2026-03-29` 的 strict PE 搜索增补里，最优路线进一步更新为 `postprocess_targeted`，达到 `union 0.6338 / macro 0.4757 / mislayer 0.1620`。这说明对于高质量商业模型，真正有效的不是更“狠”的规则，而是更针对 failure mode 的 few-shot 选例与分层保留后处理。
 
-2. **Qwen 的提升依赖“PE + FT”组合，而不是 FT 单独使用**  
-   Qwen strict baseline 只有 `0.0370`，`FT only` 提升到 `0.0932`，但 `PE + FT` 直接达到 `0.4315`。这说明 LoRA 微调更多是在补“领域模式”，真正把模式转成稳定可评分输出的仍是 Prompt Engineering。
+2. **Qwen 的提升依赖“PE + FT”组合，而不是 FT 单独使用，但这条线当前仍应按历史正式结果汇报**  
+   Qwen strict baseline 只有 `0.0370`，历史正式 `FT only` 提升到 `0.0932`，历史正式 `PE + FT` 达到 `0.4315`。这说明 LoRA 微调更多是在补“领域模式”，真正把模式转成稳定可评分输出的仍是 Prompt Engineering；但如果要按最严格口径回答训练/评测泄漏问题，Qwen FT 家族还需要 strict-clean 重训后再更新最终数字。
 
 3. **RAG 更适合解决 hard / dynamic 场景，而不是追求整体平均分**  
    GPT-5.4 端到端 `No-RAG 0.2783 -> With-RAG 0.2940`，总体只提升 `+0.0157`；但 `Hard` 难度从 `0.1980 -> 0.3372`，提升 `+0.1392`。所以 RAG 的角色是“定向修复长链路和动态解析”，不是默认全量启用的通用加分器。
@@ -28,6 +28,7 @@
 | 微调数据集 ≥500 条 | 完成 | `data/finetune_dataset_500.jsonl` |
 | LoRA 微调与效果评估 | 完成 | `results/qwen_ft_*`、`results/qwen_pe_ft_*` |
 | 完整消融矩阵 | 完成 | `reports/ablation_study.md` |
+| strict-clean FT 执行包 | 完成 | `scripts/run_qwen_strict_full.sh`、`reports/strict_ft_execution_status_20260329.md` |
 
 ## 3. 数据集与评测设计
 
@@ -195,7 +196,7 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 - RAG 对 easy 和部分 Type B / Type C 反而会引入干扰。
 - 因此工程上不应默认对所有问题全量启用 RAG。
 
-## 7. 微调实验
+## 7. 微调实验（历史正式线）
 
 ### 7.1 数据与配置
 
@@ -223,6 +224,18 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 - 现有日志显示 loss 收敛平稳，没有出现明显的发散。
 - 当前仓库已经保留了基于正式训练日志导出的 step-level train loss 曲线（`img/final_delivery/07_training_curve_20260328.png`）以及最终 `eval_loss=0.4779`。
 - 但训练日志中没有逐步验证集曲线，因此“不过拟合”证据仍是中等强度，不是最强形式。
+- 更结构化的训练证据审计已补到：`reports/training_evidence_audit_20260329.md`
+
+### 7.4 strict-clean FT 当前状态
+
+- strict 数据、配置、评测入口、一键脚本都已补齐
+- 当前仓库没有 versioned strict adapter
+- 本机检查结果显示 `CUDA` 与 `llamafactory-cli` 都不满足，见 `results/strict_train_env_20260329.json`
+- 因此 Qwen `FT only / PE + FT / PE + RAG + FT` 目前仍属于**历史正式 FT 线**
+
+更具体的执行状态见：
+
+- `reports/strict_ft_execution_status_20260329.md`
 
 ## 8. 当前消融矩阵
 
@@ -235,21 +248,27 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 | Qwen3.5 Baseline | 0.0667 | 0.0526 | 0.0000 | 0.0370 | 完成 |
 | GPT-5.4 PE only | 0.6651 | 0.6165 | 0.5522 | 0.6062 | 完成 |
 | GPT-5.4 RAG only | 0.2722 | 0.2656 | 0.3372 | 0.2940 | 完成 |
-| Qwen FT only | 0.1556 | 0.0895 | 0.0500 | 0.0932 | 完成 |
-| Qwen PE + FT | 0.5233 | 0.5370 | 0.2624 | 0.4315 | 完成 |
+| Qwen FT only | 0.1556 | 0.0895 | 0.0500 | 0.0932 | 完成（历史正式） |
+| Qwen PE + FT | 0.5233 | 0.5370 | 0.2624 | 0.4315 | 完成（历史正式） |
 | Qwen PE only | 0.3167 | 0.2491 | 0.1323 | 0.2246 | 完成 |
 | Qwen RAG only | 0.0667 | 0.0000 | 0.0000 | 0.0185 | 完成 |
 | Qwen PE + RAG | 0.1514 | 0.2614 | 0.0523 | 0.1534 | 完成 |
-| Qwen PE + RAG + FT | 0.4985 | 0.4805 | 0.3672 | 0.4435 | 完成 |
+| Qwen PE + RAG + FT | 0.4985 | 0.4805 | 0.3672 | 0.4435 | 完成（历史正式） |
 
 ![Qwen 策略对比](../img/final_delivery/06_qwen_strategies_20260328.png)
 
 ### 8.2 复现入口
 
-当前没有必须补跑的 Qwen 空位。  
-如果需要在相同环境重现实验，执行命令已单独整理到：
+如果你要复述历史正式矩阵，现有结果已经闭环。  
+如果你要把 FT 线切到 strict-clean 口径，当前需要在外部 CUDA 环境执行：
+
+- `make check-train-env-strict`
+- `make qwen-strict-rerun`
+
+执行入口已单独整理到：
 
 - [`../docs/qwen_remaining_runs_20260328.md`](../docs/qwen_remaining_runs_20260328.md)
+- [`./strict_ft_execution_status_20260329.md`](./strict_ft_execution_status_20260329.md)
 
 ### 8.3 一个反直觉但重要的现象
 
@@ -263,27 +282,28 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 ### 9.1 如果目标是“今天就给出最稳可复现实验”
 
 - 商业模型：`GPT-5.4 + postprocess_targeted`
-- 开源模型最高分：`Qwen PE + RAG + FT`
-- 开源模型高性价比默认路线：`Qwen PE + FT`
+- 开源模型历史正式最高分：`Qwen PE + RAG + FT`
+- 开源模型历史正式高性价比默认路线：`Qwen PE + FT`
 
 原因：
 
 - `GPT-5.4 + postprocess_targeted` 现在是 strict 口径下的商业模型最优路线，且机制最可解释
-- `Qwen PE + RAG + FT` 在完整消融矩阵里给出当前最高分 `0.4435`
-- `Qwen PE + FT` 只比最高分低 `0.0120`，但工程复杂度更低
+- `Qwen PE + RAG + FT` 在历史正式消融矩阵里给出当前最高分 `0.4435`
+- `Qwen PE + FT` 只比历史正式最高分低 `0.0120`，但工程复杂度更低
+- strict-clean FT 执行包已经补齐，但结果尚待外部 CUDA 环境落盘
 
 ### 9.2 如果目标是“冲当前可见上限”
 
-- 目标策略：`Qwen PE + RAG + FT`
-- 当前 `0.4435` 已经是最新 Google embedding 口径的正式结果
-- 如果未来继续优化，优先方向不是“补跑缺项”，而是继续提升 hard case
+- 历史正式目标策略：`Qwen PE + RAG + FT`
+- 当前 `0.4435` 已经是最新 Google embedding 口径下的历史正式结果
+- 如果未来继续优化，第一优先级不是再堆新 prompt，而是先把 strict-clean FT 线重训落盘
 
 ## 10. 工程落地建议
 
 1. **默认策略**：对普通 case 先用 `PE`，成本最低、收益最高。
 2. **Hard / Type A / Type E` 场景**：启用 `RAG`，尤其是带 entry 信息的检索。
-3. **开源模型部署**：优先 `Qwen PE + FT`，因为它已经稳定、正式且不依赖旧缓存。
-4. **最终上线的“最强组合”**：如果追求最高分，选 `Qwen PE + RAG + FT`；如果追求实现复杂度与收益平衡，选 `Qwen PE + FT`。
+3. **开源模型部署**：当前更稳妥的说法是“历史正式默认路线优先 `Qwen PE + FT`”；如果要对外强调 strict-clean，请先补跑 `make qwen-strict-rerun`。
+4. **最终上线的“最强组合”**：按历史正式最高分，选 `Qwen PE + RAG + FT`；按严格答辩默认口径，先把商业模型 strict 最优和开源模型 strict-clean 待重训分开汇报。
 
 ## 11. 仓库入口
 
@@ -291,3 +311,5 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 - 仓库地图：[`../docs/repository_map_20260328.md`](../docs/repository_map_20260328.md)
 - 当前进度：[`./project_progress_20260328.md`](./project_progress_20260328.md)
 - Qwen 复现入口：[`../docs/qwen_remaining_runs_20260328.md`](../docs/qwen_remaining_runs_20260328.md)
+- strict FT 执行状态：[`./strict_ft_execution_status_20260329.md`](./strict_ft_execution_status_20260329.md)
+- 训练证据审计：[`./training_evidence_audit_20260329.md`](./training_evidence_audit_20260329.md)

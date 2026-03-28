@@ -168,23 +168,39 @@ python3 scripts/rescore_result_file.py \
 
 只有在你准备更新 FT 结论时才需要这一步。
 
-训练：
+先做预检：
 
 ```bash
 export PYTHONPATH=.
-make train-strict
+make check-train-env-strict
 ```
 
-或：
+注意：
+
+- 当前仓库正式 strict 配置是 `configs/train_config_strict_20260329.yaml`
+- 本机前置检查结果已落盘在 `results/strict_train_env_20260329.json`
+- 如果当前机器没有 `CUDA` 或没有 `llamafactory-cli`，不要硬跑；直接切到外部 NVIDIA GPU 环境
+
+最短执行路径：
+
+```bash
+make qwen-strict-rerun
+```
+
+它会自动串起：
+
+- `data_guard`
+- strict LoRA 训练
+- `FT only`
+- `PE + FT`
+- 条件满足时的 `PE + RAG + FT`
+
+如果你确实要手工分步执行，命令如下：
 
 ```bash
 python3 -m finetune.data_guard data/finetune_dataset_500_strict.jsonl
 python3 finetune/train_lora.py --config configs/train_config_strict_20260329.yaml
-```
 
-评测：
-
-```bash
 python3 run_ft_eval.py \
   --cases data/eval_cases.json \
   --adapter-path artifacts/lora/qwen3.5-9b/strict_20260329 \
@@ -227,4 +243,4 @@ make rescore-strict
 
 - GPT PE 的 `fewshot` 和 `postprocess` 已经完成 strict replay，可以直接用于答辩。
 - GLM baseline 已完成一次可复验重跑，但要记得固定 `--thinking-mode disabled`。
-- Qwen 如果时间紧，可以先不重跑，把 strict 训练入口和脚本准备好；只有在你准备更新 FT 主结论时再启动。
+- Qwen strict-clean 执行包已经准备好，但当前仓库还没有 strict adapter 落盘；只有在外部 CUDA 环境补跑后，才能更新 FT 主结论。

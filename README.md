@@ -16,13 +16,19 @@
 2. **strict 加固后的 GPT PE 最优路线已经更新为 `targeted few-shot + postprocess`**  
    在 `2026-03-29` 的 strict PE 搜索增补里，`postprocess_targeted` 达到 `union 0.6338 / macro 0.4757 / mislayer 0.1620`，同时优于此前 strict-best 的 `0.6136 / 0.4372 / 0.2336`。详见 [`reports/strict_pe_search_20260329.md`](reports/strict_pe_search_20260329.md)。
 
-3. **Qwen 的完整消融矩阵已经补齐，最佳开源组合是 `PE + RAG + FT`**  
-   Qwen strict baseline 仅 `0.0370`，`PE only` 到 `0.2246`，`FT only` 到 `0.0932`，`PE + FT` 到 `0.4315`，最终 `PE + RAG + FT` 到 `0.4435`。这说明 PE 是开源模型的核心增益源，FT 负责领域适配，RAG 只有在和 PE/FT 组合时才真正有价值。
+3. **Qwen 的完整消融矩阵已经补齐，但 FT 家族当前仍应按“历史正式线”汇报**  
+   当前仓库里的 Qwen `FT only / PE + FT / PE + RAG + FT` 分数仍对应历史正式 `54-case` 结果：`FT only 0.0932`、`PE + FT 0.4315`、`PE + RAG + FT 0.4435`。strict-clean 数据、训练配置和一键执行脚本已经补齐，但这条线还需要在外部 CUDA 环境上重训后，才能把 FT 结论完全切到 strict-clean 口径。
 
 4. **RAG 的价值是“定向修复 hard 场景”，不是无脑全局提分**  
    GPT-5.4 端到端 `No-RAG 0.2783 -> With-RAG 0.2940`，总体只提升 `+0.0157`；但 `Hard` 难度从 `0.1980 -> 0.3372`，提升 `+0.1392`。RAG 更像是针对 Type A / Type E 的补偿模块。
 
 ## 当前结果总览
+
+下面这张主表仍然是**历史正式主表**：
+
+- GPT / GLM / Qwen baseline、GPT PE、GPT RAG 为正式或 strict replay 已落盘结果
+- Qwen `FT only / PE + FT / PE + RAG + FT` 仍是**历史正式 FT 线**
+- 如果你要做最严格答辩，请把 GPT strict PE 和 Qwen strict-clean FT 视为两条不同层级的结论，不要混成同一个“最新最优表”
 
 | 策略 / 模型 | Easy | Medium | Hard | Avg | 说明 |
 |------|------:|------:|------:|------:|------|
@@ -34,9 +40,9 @@
 | Qwen PE only | 0.3167 | 0.2491 | 0.1323 | 0.2246 | 正式 54-case |
 | Qwen RAG only | 0.0667 | 0.0000 | 0.0000 | 0.0185 | 最新 Google embedding |
 | Qwen PE + RAG | 0.1514 | 0.2614 | 0.0523 | 0.1534 | 最新 Google embedding |
-| Qwen FT only | 0.1556 | 0.0895 | 0.0500 | 0.0932 | LoRA 后正式结果 |
-| Qwen PE + FT | 0.5233 | 0.5370 | 0.2624 | 0.4315 | 开源模型高性价比路线 |
-| Qwen PE + RAG + FT | 0.4985 | 0.4805 | 0.3672 | 0.4435 | 最新 Google embedding，当前开源最优 |
+| Qwen FT only | 0.1556 | 0.0895 | 0.0500 | 0.0932 | 历史正式 FT 结果 |
+| Qwen PE + FT | 0.5233 | 0.5370 | 0.2624 | 0.4315 | 历史正式 FT 结果，高性价比路线 |
+| Qwen PE + RAG + FT | 0.4985 | 0.4805 | 0.3672 | 0.4435 | 历史正式 FT 结果，最高分 |
 
 ## 正式评分口径
 
@@ -50,6 +56,9 @@
 - strict 数据审计：[`reports/strict_data_audit_20260329.md`](reports/strict_data_audit_20260329.md)
 - strict 评分审计：[`reports/strict_scoring_audit_20260329.md`](reports/strict_scoring_audit_20260329.md)
 - strict PE 搜索增补：[`reports/strict_pe_search_20260329.md`](reports/strict_pe_search_20260329.md)
+- strict FT 执行状态：[`reports/strict_ft_execution_status_20260329.md`](reports/strict_ft_execution_status_20260329.md)
+- Qwen strict-clean 收口说明：[`reports/qwen_strict_closeout_20260329.md`](reports/qwen_strict_closeout_20260329.md)
+- 训练证据审计：[`reports/training_evidence_audit_20260329.md`](reports/training_evidence_audit_20260329.md)
 - 答辩主讲稿：[`reports/defense_script_20260329.md`](reports/defense_script_20260329.md)
 - 导师追问 Q&A：[`reports/defense_qa_20260329.md`](reports/defense_qa_20260329.md)
 - 导师一页式摘要：[`reports/executive_summary_20260329.md`](reports/executive_summary_20260329.md)
@@ -69,6 +78,9 @@
 ```bash
 make audit-strict
 make rescore-strict
+make train-strict-dry-run
+make check-train-env-strict
+make audit-train-log
 
 FEWSHOT_DATA_PATH=data/fewshot_examples_20_strict.json \
 python3 scripts/run_pe_eval.py \
@@ -77,6 +89,7 @@ python3 scripts/run_pe_eval.py \
   --output-dir results/pe_eval_strict_replay
 
 make train-strict
+make qwen-strict-rerun
 ```
 
 ## 图表速览
@@ -103,16 +116,16 @@ make train-strict
 
 ### 如需复现 Qwen 完整矩阵
 
-- 现在没有必须补跑项。
-- 如果你想在同一环境重现这 4 组正式结果，仍然可以直接使用统一入口：
-  - `Qwen PE only`
-  - `Qwen RAG only`
-  - `Qwen PE + RAG`
-  - `Qwen PE + RAG + FT`
+- 如果你只是复述历史正式矩阵，可直接沿用现有结果文件。
+- 如果你要把 FT 线切到 strict-clean 口径，当前必须在外部 CUDA 环境上执行：
+  - `make check-train-env-strict`
+  - `make qwen-strict-rerun`
+- `Qwen PE only / RAG only / PE + RAG` 不依赖微调数据污染，现有正式结果仍然可以直接使用。
 
 复现命令见：
 
 - [`docs/qwen_remaining_runs_20260328.md`](docs/qwen_remaining_runs_20260328.md)
+- [`reports/strict_ft_execution_status_20260329.md`](reports/strict_ft_execution_status_20260329.md)
 
 ## Google embedding 说明
 
@@ -156,6 +169,7 @@ pip install -r requirements-finetune.txt
 export PYTHONPATH=.
 make lint-data
 make audit-strict
+make check-train-env-strict
 ```
 
 ### 2. 基线与 RAG 检索
@@ -184,6 +198,7 @@ export EMBEDDING_PROVIDER=google
 export GOOGLE_API_KEY=你的_google_key
 uv run --with openai python run_qwen_ablation_eval.py --mode rag --repo-root external/celery
 uv run --with openai python run_qwen_ablation_eval.py --mode pe_rag --repo-root external/celery
+make qwen-strict-rerun
 ```
 
 ## 仓库结构
@@ -294,5 +309,6 @@ celery-dep-analysis/
 ## 当前最稳的对外结论
 
 - 如果只看商业模型上界，`GPT-5.4` 仍明显领先。
-- 如果只看“可训练开源模型”的最高正式结果，当前最优是 `Qwen PE + RAG + FT = 0.4435`。
-- 如果考虑工程复杂度与性价比，`Qwen PE + FT = 0.4315` 仍然是很强的默认路线。
+- 如果只看“历史正式开源 FT 线”的最高分，当前最优是 `Qwen PE + RAG + FT = 0.4435`。
+- 如果考虑工程复杂度与性价比，历史正式默认路线仍是 `Qwen PE + FT = 0.4315`。
+- 如果按最严格导师口径汇报，需要补一句：`strict-clean FT rerun` 的执行包已经就绪，但结果尚待外部 CUDA 环境落盘。

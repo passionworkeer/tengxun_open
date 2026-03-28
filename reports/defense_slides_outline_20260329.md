@@ -146,8 +146,9 @@
 
 ### 开源模型
 
-- 最高分：`Qwen PE + RAG + FT`
-- 默认路线：`Qwen PE + FT`
+- 历史正式最高分：`Qwen PE + RAG + FT`
+- 历史正式默认路线：`Qwen PE + FT`
+- 最严格口径下补一句：strict-clean FT rerun pending
 
 最后一句：
 

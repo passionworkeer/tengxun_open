@@ -12,9 +12,10 @@ FEWSHOT_DATA ?= data/fewshot_examples_20.json
 CONFIG_DIR ?= configs
 RAG_REPORT_DIR ?= artifacts/rag
 TRAIN_CONFIG ?= $(CONFIG_DIR)/train_config_20260327_143745.yaml
+TRAIN_STRICT_CONFIG ?= $(CONFIG_DIR)/train_config_strict_replay_20260329.yaml
 RAG_FORMAL_REPORT ?= results/rag_google_eval_54cases_20260328.json
 
-.PHONY: help eval-baseline eval-pe eval-rag eval-rag-draft eval-ft eval-all train train-strict report report-final lint-data audit-strict rescore-strict
+.PHONY: help eval-baseline eval-pe eval-rag eval-rag-draft eval-ft eval-all train train-strict train-strict-dry-run qwen-strict-rerun report report-final lint-data audit-strict rescore-strict check-train-env check-train-env-strict audit-train-log
 
 help:
 	@echo "可用目标："
@@ -25,7 +26,12 @@ help:
 	@echo "  make eval-ft        - 预留给微调模型评测入口"
 	@echo "  make eval-all       - 一次性输出摘要、检索结果与提示词元数据"
 	@echo "  make train          - 启动正式 LoRA 训练入口（LLaMA-Factory）"
-	@echo "  make train-strict   - 启动 strict 去污染版 LoRA 训练入口"
+	@echo "  make train-strict   - 启动 strict-clean LoRA 重训入口（含逐步 eval_loss）"
+	@echo "  make train-strict-dry-run - 只做 strict 训练预检，不实际启动训练"
+	@echo "  make qwen-strict-rerun - 在 GPU 环境上一键完成 strict-clean 训练与评测"
+	@echo "  make check-train-env        - 检查正式训练环境是否就绪"
+	@echo "  make check-train-env-strict - 检查 strict 训练环境是否就绪"
+	@echo "  make audit-train-log        - 解析正式训练日志并导出结构化摘要"
 	@echo "  make report         - 生成最终图表与指标快照"
 	@echo "  make report-final   - 等同于 make report"
 	@echo "  make lint-data      - 用 data_guard.py 校验微调数据"
@@ -69,8 +75,26 @@ train-strict:
 	@echo "=== Strict 微调训练入口 ==="
 	@echo "训练后端: LLaMA-Factory"
 	@echo "数据集: data/finetune_dataset_500_strict.jsonl"
-	@echo "配置: configs/train_config_strict_20260329.yaml"
-	$(PYTHON) finetune/train_lora.py --config configs/train_config_strict_20260329.yaml
+	@echo "配置: $(TRAIN_STRICT_CONFIG)"
+	$(PYTHON) finetune/train_lora.py --config $(TRAIN_STRICT_CONFIG)
+
+train-strict-dry-run:
+	@echo "=== Strict 微调预检 ==="
+	$(PYTHON) finetune/train_lora.py --config $(TRAIN_STRICT_CONFIG) --dry-run
+
+check-train-env:
+	$(PYTHON) scripts/check_train_env.py --config $(TRAIN_CONFIG) --require-cuda
+
+check-train-env-strict:
+	$(PYTHON) scripts/check_train_env.py --config $(TRAIN_STRICT_CONFIG) --require-cuda
+
+audit-train-log:
+	$(PYTHON) scripts/analyze_training_log.py --log logs/train_20260327_143745.log --output results/training_log_summary_20260329.json
+
+qwen-strict-rerun:
+	@echo "=== Qwen strict-clean 一键复验 ==="
+	@echo "需要 CUDA GPU + llamafactory-cli"
+	./scripts/run_qwen_strict_full.sh
 
 report:
 	$(PYTHON) scripts/generate_project_progress_report.py

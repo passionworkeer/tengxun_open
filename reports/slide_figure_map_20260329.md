@@ -66,8 +66,8 @@
 
 统一使用：
 
-- `results/qwen_ft_eval_20260328_stats.json`
-- `results/qwen_pe_ft_20260328_stats.json`
+- `results/qwen_ft_20260327_160136_stats.json`
+- `results/qwen_pe_ft_20260327_162308_stats.json`
 - `results/qwen_pe_rag_ft_google_20260328_stats.json`
 
 关键数字：
@@ -75,10 +75,12 @@
 - FT only `0.0932`
 - PE + FT `0.4315`
 - PE + RAG + FT `0.4435`
+- 以上三项均属于历史正式 FT 线
 
 ## 最容易挂错的点
 
 1. `0.6062` 是 GPT 原始正式 PE union 结果，不是 strict 最优。
 2. strict GPT PE 最优必须写成 `0.6338 / 0.4757 / 0.1620`。
 3. `GLM thinking` 不是正式主实验结果，不能出现在主表里。
-4. `Qwen PE + FT` 是默认路线，`Qwen PE + RAG + FT` 才是开源最高分。
+4. `Qwen PE + FT` 是历史正式默认路线，`Qwen PE + RAG + FT` 才是历史正式开源最高分。
+5. 如果导师按最严格口径追问，必须补一句：strict-clean FT rerun 已准备，结果待外部 CUDA 环境。

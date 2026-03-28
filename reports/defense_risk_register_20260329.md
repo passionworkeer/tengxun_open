@@ -30,6 +30,7 @@
 - 我后来专门补做了 strict 数据审计
 - strict 资产用于去污染复验和答辩防守
 - 当前展示的 strict PE 最优路线基于 strict few-shot 资产
+- Qwen FT 家族我会明确标成“历史正式结果”，strict-clean 重训入口已经补齐但结果待外部 GPU 落盘
 
 防守文件：
 
@@ -115,7 +116,7 @@
 优先讲：
 
 1. 商业模型：`GPT-5.4 + postprocess_targeted`
-2. 开源模型默认路线：`Qwen PE + FT`
+2. 开源模型默认路线：历史正式 `Qwen PE + FT`
 3. Hard case 再按需开 RAG
 
 ### 如果导师追着问风险
@@ -125,3 +126,4 @@
 1. 数据审计已经补做
 2. strict 评分已经补做
 3. GLM thinking 已做 smoke 但因稳定性问题不纳入正式结果
+4. Qwen strict-clean FT 执行包已准备，当前只差外部 CUDA 环境落盘

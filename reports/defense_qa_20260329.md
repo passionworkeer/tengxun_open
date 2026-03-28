@@ -109,7 +109,12 @@ RAG 的价值主要在：
 这是我后来重点补强的地方。  
 我做了 strict 数据审计，把 exact GT overlap 和 hard question overlap 清到 0，再用 strict 数据做后续对比口径。
 
-也就是说，后面我展示的 strict PE 路线，不建立在“训练集见过评测答案”这个前提上。
+也就是说，后面我展示的 strict PE 路线，不建立在“训练集见过评测答案”这个前提上。  
+但如果导师继续追问 Qwen 的 FT 家族，我会明确补充：
+
+- 当前 `FT only / PE + FT / PE + RAG + FT` 仍是历史正式 FT 结果
+- strict-clean 数据、配置和一键执行脚本已经准备好
+- 这条线还需要外部 CUDA 环境重训后，才能把 FT 最终数字彻底切到 strict-clean 口径
 
 ## Q11. 为什么你说开源模型不是 FT 单独最有效，而是 PE+FT？
 
@@ -129,8 +134,9 @@ RAG 的价值主要在：
 
 如果是开源模型：
 
-- 最高分：`Qwen PE + RAG + FT`
-- 默认路线：`Qwen PE + FT`
+- 历史正式最高分：`Qwen PE + RAG + FT`
+- 历史正式默认路线：`Qwen PE + FT`
+- 最严格口径下要补一句：strict-clean FT rerun pending，但执行包已经准备好
 
 ## Q13. 你的项目最有说服力的地方是什么？
 

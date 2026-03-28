@@ -1,4 +1,4 @@
-# Qwen 正式实验复现说明（2026-03-28）
+# Qwen 历史正式实验复现说明（2026-03-28）
 
 ## 文档目的
 
@@ -14,7 +14,13 @@
 
 - [`reports/project_progress_20260328.md`](../reports/project_progress_20260328.md)
 
-这份文档是它的 Qwen 专项执行版。
+这份文档是它的 Qwen 历史正式矩阵专项执行版。  
+
+如果你要做 strict-clean FT replay，还需要看：
+
+- `reports/strict_ft_execution_status_20260329.md`
+- `reports/qwen_strict_closeout_20260329.md`
+- `scripts/run_qwen_strict_full.sh`
 
 ## 一句话结论
 
@@ -29,6 +35,12 @@
 - `PE + RAG + FT`
 
 也就是说，这份文档不再是待办清单，而是正式结果的复现手册。
+
+补充说明：
+
+- 这里记录的是**历史正式 Qwen 矩阵**
+- 如果你要按最严格口径回答训练/评测泄漏问题，请转看 `reports/strict_ft_execution_status_20260329.md`
+- strict-clean FT 家族的统一入口已经补成 `make qwen-strict-rerun`
 
 ## 正式数据集
 
