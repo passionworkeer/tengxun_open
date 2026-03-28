@@ -72,6 +72,7 @@
 
 - few-shot 增益在 strict 资产上仍然成立，不是靠污染撑出来的。
 - postprocess 的确更偏向“提 union、伤层级”，因为 strict macro 比 few-shot 更低，而 mislayer 更高。
+- GLM 官方端点在 `thinking-mode=enabled` 的单题 smoke 中能返回完整 JSON，但批量 replay 稳定性不足；当前可复验的 54-case 版本仍以 `thinking-mode=disabled` 为准。
 
 ## 3. 哪些结果必须重跑，哪些不用
 
@@ -157,6 +158,11 @@ python3 -m evaluation.run_glm_eval \
 python3 scripts/rescore_result_file.py \
   --path results/glm_eval_strict_replay.json
 ```
+
+说明：
+
+- `thinking-mode=enabled` 在官方端点上可以拿到 reasoning + final content，但批量 54-case 复验目前不稳定。
+- 因此当前仓库把 `thinking-mode=disabled` 版本作为稳定 lower-bound replay；如果你后续要继续攻 GLM，上限方向应该优先做官方流式批量采集。
 
 ### 5.3 Qwen strict 训练与重评
 

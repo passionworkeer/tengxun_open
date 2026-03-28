@@ -178,6 +178,81 @@ def _collect_http_response(
     )
 
 
+def _collect_http_stream_response(
+    *,
+    base_url: str,
+    api_key: str,
+    model: str,
+    prompt: str,
+    max_tokens: int,
+    timeout: int,
+    thinking_mode: str | None = None,
+) -> tuple[str, str, str | None, str | None, dict[str, Any]]:
+    import requests
+
+    payload = {
+        "model": model,
+        "messages": [{"role": "user", "content": prompt}],
+        "stream": True,
+        "max_tokens": max_tokens,
+        "temperature": 1.0,
+    }
+    if thinking_mode:
+        payload["thinking"] = {"type": thinking_mode}
+
+    reasoning_parts: list[str] = []
+    answer_parts: list[str] = []
+    response_model = None
+    finish_reason = None
+    chunk_count = 0
+
+    with requests.post(
+        _official_chat_url(base_url),
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+        },
+        json=payload,
+        stream=True,
+        timeout=timeout,
+    ) as response:
+        response.raise_for_status()
+        for raw_line in response.iter_lines(decode_unicode=True):
+            if not raw_line or not raw_line.startswith("data: "):
+                continue
+            payload_text = raw_line[6:]
+            if payload_text.strip() == "[DONE]":
+                break
+            body = json.loads(payload_text)
+            if response_model is None:
+                response_model = body.get("model")
+            choices = body.get("choices", [])
+            if not choices:
+                continue
+            choice = choices[0]
+            delta = choice.get("delta", {}) or {}
+            reasoning_chunk = delta.get("reasoning_content")
+            answer_chunk = delta.get("content")
+            if reasoning_chunk:
+                reasoning_parts.append(str(reasoning_chunk))
+            if answer_chunk:
+                if isinstance(answer_chunk, list):
+                    answer_parts.extend(str(item) for item in answer_chunk if item)
+                else:
+                    answer_parts.append(str(answer_chunk))
+            if choice.get("finish_reason"):
+                finish_reason = choice.get("finish_reason")
+            chunk_count += 1
+
+    return (
+        "".join(answer_parts).strip(),
+        "".join(reasoning_parts).strip(),
+        response_model,
+        finish_reason,
+        {"stream_chunk_count": chunk_count},
+    )
+
+
 def _is_fatal_quota_error(exc: Exception) -> bool:
     text = str(exc).lower()
     return (
@@ -198,6 +273,7 @@ def run_eval(
     save_raw_response: bool = False,
     output_path: Path | None = None,
     max_cases: int | None = None,
+    official_stream: bool = False,
 ) -> list[dict[str, Any]]:
     use_official_http_api = _use_official_http_api(base_url)
     client = None
@@ -234,25 +310,28 @@ def run_eval(
         for attempt in range(5):
             try:
                 if use_official_http_api:
+                    collector = (
+                        _collect_http_stream_response
+                        if official_stream
+                        else _collect_http_response
+                    )
                     (
                         raw_output,
                         reasoning_output,
                         response_model,
                         finish_reason,
                         raw_response,
-                    ) = (
-                        _collect_http_response(
-                            base_url=base_url,
-                            api_key=api_key,
-                            model=model,
-                            prompt=prompt,
-                            max_tokens=max_tokens,
-                            timeout=timeout,
-                            thinking_mode=thinking_mode,
-                        )
+                    ) = collector(
+                        base_url=base_url,
+                        api_key=api_key,
+                        model=model,
+                        prompt=prompt,
+                        max_tokens=max_tokens,
+                        timeout=timeout,
+                        thinking_mode=thinking_mode,
                     )
                     prediction = parse_response(raw_output) if raw_output else None
-                    if save_raw_response and raw_response is not None:
+                    if prediction:
                         break
                 else:
                     stream = client.chat.completions.create(
@@ -373,6 +452,11 @@ def main() -> int:
         help="Persist the provider's raw response body in each result record.",
     )
     parser.add_argument(
+        "--official-stream",
+        action="store_true",
+        help="Use streaming collection for the official open.bigmodel.cn endpoint.",
+    )
+    parser.add_argument(
         "--cases", type=Path, default=Path("data/eval_cases.json")
     )
     parser.add_argument(
@@ -398,6 +482,7 @@ def main() -> int:
         save_raw_response=args.save_raw_response,
         output_path=args.output,
         max_cases=args.max_cases,
+        official_stream=args.official_stream,
     )
     return 0
 
