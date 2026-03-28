@@ -594,6 +594,9 @@ class _EmbeddingIndex:
         self._chunk_texts: dict[str, str] = {
             c.chunk_id: f"{c.symbol} {c.signature} {c.content}" for c in chunks
         }
+        # Always keep a TF-IDF fallback so the query path is consistent even
+        # when all chunk embeddings are already cached.
+        self._fallback = _SemanticIndexTfidf(chunks)
         self._client = None
         self._config = resolve_embedding_config()
         self._embeddings: dict[str, list[float]] = {}
@@ -616,7 +619,6 @@ class _EmbeddingIndex:
             f"[EmbeddingIndex] Cache loaded: {cached}/{len(self.chunk_ids)} "
             f"from {self._config.cache_file} ({self._config.provider_label})"
         )
-        self._fallback = _SemanticIndexTfidf(chunks)
 
     def _truncate(self, text: str, max_chars: int = 2000) -> str:
         if len(text) <= max_chars:

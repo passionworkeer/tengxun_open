@@ -2,8 +2,8 @@
 """
 生成当前评测状态报告：
 - GPT-5.4 正式结果
-- GLM-5 当前阻塞状态
-- RAG 检索结果
+- GLM-5 官方正式结果
+- Google RAG 检索结果
 - 总览图
 """
 
@@ -17,6 +17,14 @@ from typing import Any
 
 def load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def count_cache_entries(cache_payload: Any) -> int:
+    if isinstance(cache_payload, dict) and isinstance(cache_payload.get("embeddings"), dict):
+        return len(cache_payload["embeddings"])
+    if isinstance(cache_payload, dict):
+        return len(cache_payload)
+    return 0
 
 
 def summarize_gpt(results: list[dict[str, Any]]) -> dict[str, Any]:
@@ -41,14 +49,43 @@ def summarize_gpt(results: list[dict[str, Any]]) -> dict[str, Any]:
 
 def summarize_glm(results: list[dict[str, Any]]) -> dict[str, Any]:
     if not results:
-        return {"count": 0, "response_models": []}
+        return {
+            "count": 0,
+            "avg_f1": 0.0,
+            "pass_rate": 0.0,
+            "zero_count": 0,
+            "requested_models": [],
+            "response_models": [],
+        }
+    f1s = [float(item.get("f1", 0.0)) for item in results]
     return {
         "count": len(results),
+        "avg_f1": sum(f1s) / len(f1s) if f1s else 0.0,
+        "pass_rate": sum(1 for x in f1s if x > 0) / len(f1s) if f1s else 0.0,
+        "zero_count": sum(1 for x in f1s if x == 0.0),
+        "requested_models": sorted(
+            {str(item.get("model")) for item in results if item.get("model")}
+        ),
         "response_models": sorted(
             {str(item.get("response_model")) for item in results if item.get("response_model")}
         ),
-        "sample_case_id": results[0].get("case_id"),
-        "sample_f1": float(results[0].get("f1", 0.0)),
+    }
+
+
+def summarize_glm_raw(results: list[dict[str, Any]]) -> dict[str, Any]:
+    if not results:
+        return {"count": 0, "finish_reason_counts": {}, "avg_reasoning_length": 0.0}
+    finish_reason_counts: dict[str, int] = {}
+    for item in results:
+        key = str(item.get("finish_reason") or "N/A")
+        finish_reason_counts[key] = finish_reason_counts.get(key, 0) + 1
+    reasoning_lengths = [len(item.get("reasoning_output") or "") for item in results]
+    return {
+        "count": len(results),
+        "finish_reason_counts": finish_reason_counts,
+        "avg_reasoning_length": sum(reasoning_lengths) / len(reasoning_lengths)
+        if reasoning_lengths
+        else 0.0,
     }
 
 
@@ -82,16 +119,18 @@ def write_report(
     output_path: Path,
     gpt_path: Path,
     glm_path: Path,
+    glm_raw_path: Path,
     rag_path: Path,
     cache_path: Path,
     gpt_summary: dict[str, Any],
     glm_summary: dict[str, Any],
+    glm_raw_summary: dict[str, Any],
     rag_summary: dict[str, Any],
     cache_count: int,
     total_chunks: int,
 ) -> None:
     lines = [
-        "# 评测状态报告",
+        "# 评测状态报告（2026-03-28）",
         "",
         "## GPT-5.4",
         "",
@@ -114,16 +153,22 @@ def write_report(
             "## GLM-5",
             "",
             f"- 结果文件：`{glm_path}`",
+            f"- 原始 thinking 文件：`{glm_raw_path}`",
             f"- 当前已落盘 case：`{glm_summary['count']}`",
+            f"- 平均 F1：`{glm_summary['avg_f1']:.4f}`",
+            f"- Pass Rate：`{glm_summary['pass_rate'] * 100:.1f}%`",
+            f"- F1=0 数量：`{glm_summary['zero_count']}`",
+            f"- 请求模型：`{', '.join(glm_summary['requested_models']) or 'N/A'}`",
             f"- 响应模型：`{', '.join(glm_summary['response_models']) or 'N/A'}`",
-            f"- 已验证 sample：`{glm_summary.get('sample_case_id', 'N/A')}` / F1=`{glm_summary.get('sample_f1', 0.0):.4f}`",
-            "- 状态：`2026-03-27` 当天 ModelScope 对 `ZhipuAI/GLM-5` 返回日配额耗尽，无法继续完成 54 条正式重跑。",
+            f"- 原始 thinking 平均长度：`{glm_raw_summary['avg_reasoning_length']:.1f}` 字符",
+            f"- 原始 finish_reason：`{glm_raw_summary['finish_reason_counts']}`",
             "",
             "## RAG",
             "",
             f"- 检索报告：`{rag_path}`",
             f"- Embedding 缓存：`{cache_path}`",
             f"- 缓存覆盖：`{cache_count}/{total_chunks}` (`{cache_count / total_chunks * 100:.1f}%`)",
+            "- Embedding Provider：`google / gemini-embedding-001`",
             f"- Query mode：`{rag_summary['query_mode']}`",
             f"- RRF k：`{rag_summary['rrf_k']}`",
             "",
@@ -156,7 +201,7 @@ def draw_chart(
     import matplotlib.pyplot as plt
 
     fig, axes = plt.subplots(2, 2, figsize=(16, 11))
-    fig.suptitle("Eval Status Snapshot (2026-03-27)", fontsize=16, fontweight="bold")
+    fig.suptitle("Eval Status Snapshot (2026-03-28)", fontsize=16, fontweight="bold")
 
     ax1 = axes[0, 0]
     diffs = ["easy", "medium", "hard"]
@@ -215,46 +260,57 @@ def main() -> int:
     parser.add_argument("--gpt-results", type=Path, default=Path("results/gpt5_eval_results.json"))
     parser.add_argument("--glm-results", type=Path, default=Path("results/glm_eval_results.json"))
     parser.add_argument(
+        "--glm-raw-results",
+        type=Path,
+        default=Path("results/glm_eval_raw_official_20260328.json"),
+    )
+    parser.add_argument(
         "--rag-report",
         type=Path,
-        default=Path("artifacts/rag/eval_v2_54cases_20260327.json"),
+        default=Path("artifacts/rag/eval_google_54cases_20260328.json"),
     )
     parser.add_argument(
         "--cache-path",
         type=Path,
-        default=Path("artifacts/rag/embeddings_cache.json"),
+        default=Path("artifacts/rag/embeddings_cache_google_gemini_embedding_001_3072.json"),
     )
     parser.add_argument(
         "--report-output",
         type=Path,
-        default=Path("reports/eval_status_20260327.md"),
+        default=Path("reports/eval_status_20260328.md"),
     )
     parser.add_argument(
         "--chart-output",
         type=Path,
-        default=Path("reports/eval_status_20260327.png"),
+        default=Path("reports/eval_status_20260328.png"),
     )
     args = parser.parse_args()
 
     gpt_results = load_json(args.gpt_results)
     glm_results = load_json(args.glm_results) if args.glm_results.exists() else []
+    glm_raw_results = (
+        load_json(args.glm_raw_results) if args.glm_raw_results.exists() else []
+    )
     rag_report = load_json(args.rag_report)
-    cache = load_json(args.cache_path)
+    cache_payload = load_json(args.cache_path)
 
     gpt_summary = summarize_gpt(gpt_results)
     glm_summary = summarize_glm(glm_results)
+    glm_raw_summary = summarize_glm_raw(glm_raw_results)
     rag_summary = summarize_rag(rag_report)
     total_chunks = int(rag_report["rag_index"]["num_chunks"])
-    cache_count = len(cache)
+    cache_count = count_cache_entries(cache_payload)
 
     write_report(
         output_path=args.report_output,
         gpt_path=args.gpt_results,
         glm_path=args.glm_results,
+        glm_raw_path=args.glm_raw_results,
         rag_path=args.rag_report,
         cache_path=args.cache_path,
         gpt_summary=gpt_summary,
         glm_summary=glm_summary,
+        glm_raw_summary=glm_raw_summary,
         rag_summary=rag_summary,
         cache_count=cache_count,
         total_chunks=total_chunks,

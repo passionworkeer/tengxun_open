@@ -1,0 +1,3917 @@
+{
+  "stable_results_path": "results/glm_eval_results.json",
+  "raw_results_path": "results/glm_eval_raw_official_20260328.json",
+  "cases_path": "data/eval_cases.json",
+  "summary": {
+    "total_cases": 54,
+    "avg_precision": 0.0691,
+    "avg_recall": 0.0895,
+    "avg_f1": 0.0666,
+    "pass_rate": 0.1296,
+    "exact_match_rate": 0.0185,
+    "zero_f1_count": 47,
+    "raw_finish_reason_counts": {
+      "length": 49,
+      "stop": 5
+    },
+    "avg_raw_reasoning_length": 7113.4074,
+    "difficulty_summary": [
+      {
+        "name": "easy",
+        "count": 15,
+        "avg_precision": 0.1,
+        "avg_recall": 0.1111,
+        "avg_f1": 0.1048,
+        "zero_f1_count": 13
+      },
+      {
+        "name": "medium",
+        "count": 19,
+        "avg_precision": 0.0544,
+        "avg_recall": 0.1009,
+        "avg_f1": 0.0681,
+        "zero_f1_count": 16
+      },
+      {
+        "name": "hard",
+        "count": 20,
+        "avg_precision": 0.06,
+        "avg_recall": 0.0625,
+        "avg_f1": 0.0367,
+        "zero_f1_count": 18
+      }
+    ],
+    "failure_type_summary": [
+      {
+        "name": "Type E",
+        "count": 16,
+        "avg_precision": 0.1583,
+        "avg_recall": 0.224,
+        "avg_f1": 0.1485,
+        "zero_f1_count": 11
+      },
+      {
+        "name": "Type C",
+        "count": 11,
+        "avg_precision": 0.0909,
+        "avg_recall": 0.0909,
+        "avg_f1": 0.0909,
+        "zero_f1_count": 10
+      },
+      {
+        "name": "Type D",
+        "count": 11,
+        "avg_precision": 0.0182,
+        "avg_recall": 0.0227,
+        "avg_f1": 0.0202,
+        "zero_f1_count": 10
+      },
+      {
+        "name": "Type A",
+        "count": 7,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 7
+      },
+      {
+        "name": "Type B",
+        "count": 9,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 9
+      }
+    ],
+    "category_summary": [
+      {
+        "name": "extension_class_entry_point",
+        "count": 1,
+        "avg_precision": 0.5,
+        "avg_recall": 0.6667,
+        "avg_f1": 0.5714,
+        "zero_f1_count": 0
+      },
+      {
+        "name": "symbol_by_name_resolution_chain",
+        "count": 1,
+        "avg_precision": 0.5,
+        "avg_recall": 0.6667,
+        "avg_f1": 0.5714,
+        "zero_f1_count": 0
+      },
+      {
+        "name": "loader_smart_import_fallback",
+        "count": 1,
+        "avg_precision": 1.0,
+        "avg_recall": 0.25,
+        "avg_f1": 0.4,
+        "zero_f1_count": 0
+      },
+      {
+        "name": "symbol_by_name_resolution",
+        "count": 1,
+        "avg_precision": 0.2,
+        "avg_recall": 1.0,
+        "avg_f1": 0.3333,
+        "zero_f1_count": 0
+      },
+      {
+        "name": "loader_alias",
+        "count": 2,
+        "avg_precision": 0.1666,
+        "avg_recall": 0.5,
+        "avg_f1": 0.25,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "re_export",
+        "count": 4,
+        "avg_precision": 0.25,
+        "avg_recall": 0.25,
+        "avg_f1": 0.25,
+        "zero_f1_count": 3
+      },
+      {
+        "name": "task_string_class_reference",
+        "count": 1,
+        "avg_precision": 0.2,
+        "avg_recall": 0.25,
+        "avg_f1": 0.2222,
+        "zero_f1_count": 0
+      },
+      {
+        "name": "acks_late_failure_matrix",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "alias_re_export_confusion",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "alias_resolution",
+        "count": 2,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 2
+      },
+      {
+        "name": "app_task_registration",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "autodiscover_signal_lazy_chain",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "autodiscovery_fixup_import",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "autodiscovery_import_error_gate",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "autodiscovery_signal_chain",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "backend_alias",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "backend_url_alias",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "bootstep_lifecycle_conditional",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "bootstep_lifecycle_instantiation_gate",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "builtin_finalize_registration",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "class_hierarchy_with_same_logical_name",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "cross_package_re-export",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "cwd_import_scope",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "default_app_loader_alias_chain",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "disable_prefetch_runtime_can_consume_patch",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "django_task_cls_string_resolution",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "env_var_dynamic_alias_override",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "fake_task_request_context",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "fallback_loader_alias",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "finalize_callback",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "fixup_string_entry_resolution",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "gen_task_name_cross_module",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "loader_default_resolution",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "local_inline_import",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "lpmerge_left_precedent_merge",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "name_generation",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "nodename_function_definition",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "parameter_shadowing_module_function",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "parameter_shadows_module_function",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "persistent_scheduler_startup_reset",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "re_export_proxy",
+        "count": 2,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 2
+      },
+      {
+        "name": "shared_task_proxy_autofinalize",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "shared_task_registration",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "signature_class_definition",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "signature_head_from_fun_generation",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "signature_polymorphic_from_dict",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "strategy_string_resolution",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      },
+      {
+        "name": "worker_direct_re-export",
+        "count": 1,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_f1": 0.0,
+        "zero_f1_count": 1
+      }
+    ],
+    "top_cases": [
+      {
+        "case_id": "easy_001",
+        "difficulty": "easy",
+        "category": "re_export",
+        "f1": 1.0,
+        "matched_count": 1,
+        "gold_count": 1
+      },
+      {
+        "case_id": "celery_easy_020",
+        "difficulty": "easy",
+        "category": "extension_class_entry_point",
+        "f1": 0.5714,
+        "matched_count": 2,
+        "gold_count": 3
+      },
+      {
+        "case_id": "celery_medium_019",
+        "difficulty": "medium",
+        "category": "symbol_by_name_resolution_chain",
+        "f1": 0.5714,
+        "matched_count": 2,
+        "gold_count": 3
+      },
+      {
+        "case_id": "medium_002",
+        "difficulty": "medium",
+        "category": "loader_alias",
+        "f1": 0.5,
+        "matched_count": 1,
+        "gold_count": 1
+      },
+      {
+        "case_id": "celery_hard_019",
+        "difficulty": "hard",
+        "category": "loader_smart_import_fallback",
+        "f1": 0.4,
+        "matched_count": 1,
+        "gold_count": 4
+      },
+      {
+        "case_id": "hard_004",
+        "difficulty": "hard",
+        "category": "symbol_by_name_resolution",
+        "f1": 0.3333,
+        "matched_count": 1,
+        "gold_count": 1
+      },
+      {
+        "case_id": "celery_medium_025",
+        "difficulty": "medium",
+        "category": "task_string_class_reference",
+        "f1": 0.2222,
+        "matched_count": 1,
+        "gold_count": 4
+      },
+      {
+        "case_id": "celery_easy_018",
+        "difficulty": "easy",
+        "category": "gen_task_name_cross_module",
+        "f1": 0.0,
+        "matched_count": 0,
+        "gold_count": 1
+      },
+      {
+        "case_id": "celery_easy_019",
+        "difficulty": "easy",
+        "category": "cwd_import_scope",
+        "f1": 0.0,
+        "matched_count": 0,
+        "gold_count": 2
+      },
+      {
+        "case_id": "celery_easy_021",
+        "difficulty": "easy",
+        "category": "signature_class_definition",
+        "f1": 0.0,
+        "matched_count": 0,
+        "gold_count": 1
+      }
+    ],
+    "bottom_cases": [
+      {
+        "case_id": "celery_easy_018",
+        "difficulty": "easy",
+        "category": "gen_task_name_cross_module",
+        "f1": 0.0,
+        "missing_fqns": [
+          "celery.utils.imports.gen_task_name"
+        ],
+        "extra_fqns": [
+          "celery/app/base.py",
+          "celery/utils/names.py"
+        ]
+      },
+      {
+        "case_id": "celery_easy_019",
+        "difficulty": "easy",
+        "category": "cwd_import_scope",
+        "f1": 0.0,
+        "missing_fqns": [
+          "celery.utils.imports.cwd_in_path",
+          "celery.utils.imports.import_from_cwd"
+        ],
+        "extra_fqns": [
+          "os",
+          "os.getcwd",
+          "contextlib.contextmanager",
+          "importlib.import_module"
+        ]
+      },
+      {
+        "case_id": "celery_easy_021",
+        "difficulty": "easy",
+        "category": "signature_class_definition",
+        "f1": 0.0,
+        "missing_fqns": [
+          "celery.canvas.Signature"
+        ],
+        "extra_fqns": [
+          "celery.app.task.Task",
+          "dict"
+        ]
+      },
+      {
+        "case_id": "celery_easy_022",
+        "difficulty": "easy",
+        "category": "cross_package_re-export",
+        "f1": 0.0,
+        "missing_fqns": [
+          "kombu.utils.uuid.uuid"
+        ],
+        "extra_fqns": []
+      },
+      {
+        "case_id": "celery_easy_023",
+        "difficulty": "easy",
+        "category": "nodename_function_definition",
+        "f1": 0.0,
+        "missing_fqns": [
+          "celery.utils.nodenames.nodename"
+        ],
+        "extra_fqns": [
+          "celery.utils.nodenames"
+        ]
+      },
+      {
+        "case_id": "celery_easy_024",
+        "difficulty": "easy",
+        "category": "worker_direct_re-export",
+        "f1": 0.0,
+        "missing_fqns": [
+          "celery.utils.nodenames.worker_direct"
+        ],
+        "extra_fqns": [
+          "celery.utils.nodenames"
+        ]
+      },
+      {
+        "case_id": "celery_hard_013",
+        "difficulty": "hard",
+        "category": "shared_task_proxy_autofinalize",
+        "f1": 0.0,
+        "missing_fqns": [
+          "celery.app.base.Celery.tasks",
+          "celery.app.base.Celery.finalize",
+          "celery._state._announce_app_finalized",
+          "celery._state.connect_on_app_finalize",
+          "celery.app.base.Celery._task_from_fun"
+        ],
+        "extra_fqns": [
+          "celery/app/task.py",
+          "celery/app/base.py",
+          "celery/local.py",
+          "celery/__init__.py",
+          "celery/app/__init__.py",
+          "celery/app/defaults.py",
+          "celery/_state.py"
+        ]
+      },
+      {
+        "case_id": "celery_hard_014",
+        "difficulty": "hard",
+        "category": "builtin_finalize_registration",
+        "f1": 0.0,
+        "missing_fqns": [
+          "celery.app.base.Celery._task_from_fun",
+          "celery.app.builtins.add_backend_cleanup_task",
+          "celery.app.base.Celery.task",
+          "celery._state.connect_on_app_finalize",
+          "celery._state._announce_app_finalized"
+        ],
+        "extra_fqns": [
+          "celery/app/builtins.py",
+          "celery/app/task.py"
+        ]
+      },
+      {
+        "case_id": "celery_hard_015",
+        "difficulty": "hard",
+        "category": "autodiscovery_signal_chain",
+        "f1": 0.0,
+        "missing_fqns": [
+          "celery.app.base.Celery._autodiscover_tasks",
+          "celery.loaders.base.BaseLoader.init_worker",
+          "celery.loaders.base.BaseLoader.import_default_modules",
+          "celery.utils.dispatch.signal.Signal.send",
+          "celery.signals.import_modules"
+        ],
+        "extra_fqns": [
+          "celery/app/autodiscover.py",
+          "celery/loaders/base.py",
+          "celery/utils/imports.py",
+          "celery/bin/celery.py",
+          "celery/app/amqp.py",
+          "celery/concurrency/base.py"
+        ]
+      },
+      {
+        "case_id": "celery_hard_016",
+        "difficulty": "hard",
+        "category": "autodiscovery_fixup_import",
+        "f1": 0.0,
+        "missing_fqns": [
+          "celery.loaders.base.find_related_module",
+          "celery.app.base.Celery._autodiscover_tasks_from_fixups",
+          "celery.fixups.django.DjangoFixup.autodiscover_tasks",
+          "celery.loaders.base.autodiscover_tasks"
+        ],
+        "extra_fqns": [
+          "celery/app/trace.py",
+          "celery/loaders/base.py",
+          "celery/fixups/__init__.py",
+          "celery/utils/imports.py",
+          "celery/bin/celery.py",
+          "celery/loaders/app.py"
+        ]
+      }
+    ]
+  },
+  "comparison_to_gpt": {
+    "glm_better": 5,
+    "gpt_better": 27,
+    "tied": 22,
+    "top_glm_wins": [
+      {
+        "case_id": "easy_001",
+        "difficulty": "easy",
+        "category": "re_export",
+        "gpt_f1": 0.3333,
+        "glm_f1": 1.0,
+        "delta": 0.6667
+      },
+      {
+        "case_id": "medium_002",
+        "difficulty": "medium",
+        "category": "loader_alias",
+        "gpt_f1": 0.0,
+        "glm_f1": 0.5,
+        "delta": 0.5
+      },
+      {
+        "case_id": "hard_004",
+        "difficulty": "hard",
+        "category": "symbol_by_name_resolution",
+        "gpt_f1": 0.0,
+        "glm_f1": 0.3333,
+        "delta": 0.3333
+      },
+      {
+        "case_id": "celery_easy_020",
+        "difficulty": "easy",
+        "category": "extension_class_entry_point",
+        "gpt_f1": 0.25,
+        "glm_f1": 0.5714,
+        "delta": 0.3214
+      },
+      {
+        "case_id": "celery_medium_019",
+        "difficulty": "medium",
+        "category": "symbol_by_name_resolution_chain",
+        "gpt_f1": 0.4444,
+        "glm_f1": 0.5714,
+        "delta": 0.127
+      },
+      {
+        "case_id": "medium_001",
+        "difficulty": "medium",
+        "category": "backend_alias",
+        "gpt_f1": 0.0,
+        "glm_f1": 0.0,
+        "delta": 0.0
+      },
+      {
+        "case_id": "medium_003",
+        "difficulty": "medium",
+        "category": "alias_resolution",
+        "gpt_f1": 0.0,
+        "glm_f1": 0.0,
+        "delta": 0.0
+      },
+      {
+        "case_id": "hard_002",
+        "difficulty": "hard",
+        "category": "app_task_registration",
+        "gpt_f1": 0.0,
+        "glm_f1": 0.0,
+        "delta": 0.0
+      },
+      {
+        "case_id": "hard_003",
+        "difficulty": "hard",
+        "category": "finalize_callback",
+        "gpt_f1": 0.0,
+        "glm_f1": 0.0,
+        "delta": 0.0
+      },
+      {
+        "case_id": "celery_hard_014",
+        "difficulty": "hard",
+        "category": "builtin_finalize_registration",
+        "gpt_f1": 0.0,
+        "glm_f1": 0.0,
+        "delta": 0.0
+      }
+    ],
+    "top_gpt_wins": [
+      {
+        "case_id": "easy_002",
+        "difficulty": "easy",
+        "category": "re_export",
+        "gpt_f1": 1.0,
+        "glm_f1": 0.0,
+        "delta": -1.0
+      },
+      {
+        "case_id": "medium_004",
+        "difficulty": "medium",
+        "category": "name_generation",
+        "gpt_f1": 1.0,
+        "glm_f1": 0.0,
+        "delta": -1.0
+      },
+      {
+        "case_id": "celery_type_d_001",
+        "difficulty": "hard",
+        "category": "parameter_shadowing_module_function",
+        "gpt_f1": 1.0,
+        "glm_f1": 0.0,
+        "delta": -1.0
+      },
+      {
+        "case_id": "celery_easy_023",
+        "difficulty": "easy",
+        "category": "nodename_function_definition",
+        "gpt_f1": 1.0,
+        "glm_f1": 0.0,
+        "delta": -1.0
+      },
+      {
+        "case_id": "celery_medium_017",
+        "difficulty": "medium",
+        "category": "fixup_string_entry_resolution",
+        "gpt_f1": 0.75,
+        "glm_f1": 0.0,
+        "delta": -0.75
+      },
+      {
+        "case_id": "celery_type_d_002",
+        "difficulty": "hard",
+        "category": "class_hierarchy_with_same_logical_name",
+        "gpt_f1": 0.7273,
+        "glm_f1": 0.0,
+        "delta": -0.7273
+      },
+      {
+        "case_id": "celery_easy_018",
+        "difficulty": "easy",
+        "category": "gen_task_name_cross_module",
+        "gpt_f1": 0.6667,
+        "glm_f1": 0.0,
+        "delta": -0.6667
+      },
+      {
+        "case_id": "celery_hard_121",
+        "difficulty": "hard",
+        "category": "autodiscovery_import_error_gate",
+        "gpt_f1": 0.6154,
+        "glm_f1": 0.0,
+        "delta": -0.6154
+      },
+      {
+        "case_id": "easy_005",
+        "difficulty": "easy",
+        "category": "re_export_proxy",
+        "gpt_f1": 0.5714,
+        "glm_f1": 0.0,
+        "delta": -0.5714
+      },
+      {
+        "case_id": "celery_hard_013",
+        "difficulty": "hard",
+        "category": "shared_task_proxy_autofinalize",
+        "gpt_f1": 0.5556,
+        "glm_f1": 0.0,
+        "delta": -0.5556
+      }
+    ]
+  },
+  "cases": [
+    {
+      "case_id": "easy_001",
+      "difficulty": "easy",
+      "category": "re_export",
+      "failure_type": "Type C",
+      "question": "Which real class does `celery.Celery` resolve to in the top-level lazy API?",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "gold_count": 1,
+      "predicted_count": 1,
+      "matched_count": 1,
+      "missing_count": 0,
+      "extra_count": 0,
+      "gold_fqns": [
+        "celery.app.base.Celery"
+      ],
+      "predicted_fqns": [
+        "celery.app.base.Celery"
+      ],
+      "matched_fqns": [
+        "celery.app.base.Celery"
+      ],
+      "missing_fqns": [],
+      "extra_fqns": [],
+      "raw_reasoning_length": 8116,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 66,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2114
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "easy_002",
+      "difficulty": "easy",
+      "category": "re_export",
+      "failure_type": "Type C",
+      "question": "Which real function does the top-level `celery.shared_task` symbol resolve to?",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 5,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 5,
+      "gold_fqns": [
+        "celery.app.shared_task"
+      ],
+      "predicted_fqns": [
+        "celery.__init__.py",
+        "celery/app/__init__.py",
+        "celery/app/base.py",
+        "celery/app/defaults.py",
+        "celery/app/registry.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.app.shared_task"
+      ],
+      "extra_fqns": [
+        "celery.__init__.py",
+        "celery/app/__init__.py",
+        "celery/app/base.py",
+        "celery/app/defaults.py",
+        "celery/app/registry.py"
+      ],
+      "raw_reasoning_length": 7841,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 63,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2111
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "easy_003",
+      "difficulty": "easy",
+      "category": "loader_alias",
+      "failure_type": "Type E",
+      "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('default')` resolve to?",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 2,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 2,
+      "gold_fqns": [
+        "celery.loaders.default.Loader"
+      ],
+      "predicted_fqns": [
+        "celery.loaders.default",
+        "celery.loaders.app"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.loaders.default.Loader"
+      ],
+      "extra_fqns": [
+        "celery.loaders.default",
+        "celery.loaders.app"
+      ],
+      "raw_reasoning_length": 8448,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 71,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2119
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "easy_004",
+      "difficulty": "easy",
+      "category": "alias_resolution",
+      "failure_type": "Type D",
+      "question": "What pool implementation does `celery.concurrency.get_implementation('processes')` resolve to?",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 8,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 8,
+      "gold_fqns": [
+        "celery.concurrency.prefork.TaskPool"
+      ],
+      "predicted_fqns": [
+        "celery.concurrency.processes",
+        "celery.concurrency.base",
+        "multiprocessing",
+        "multiprocessing.pool",
+        "billiard",
+        "billiard.pool",
+        "celery.utils.imports",
+        "celery._state"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.concurrency.prefork.TaskPool"
+      ],
+      "extra_fqns": [
+        "celery.concurrency.processes",
+        "celery.concurrency.base",
+        "multiprocessing",
+        "multiprocessing.pool",
+        "billiard",
+        "billiard.pool",
+        "celery.utils.imports",
+        "celery._state"
+      ],
+      "raw_reasoning_length": 9097,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 68,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2116
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "medium_001",
+      "difficulty": "medium",
+      "category": "backend_alias",
+      "failure_type": "Type E",
+      "question": "Which backend class does `celery.app.backends.by_name('redis')` resolve to?",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 4,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 4,
+      "gold_fqns": [
+        "celery.backends.redis.RedisBackend"
+      ],
+      "predicted_fqns": [
+        "kombu.utils.json",
+        "celery.backends.redis",
+        "celery.backends.cache",
+        "celery.app.backends"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.backends.redis.RedisBackend"
+      ],
+      "extra_fqns": [
+        "kombu.utils.json",
+        "celery.backends.redis",
+        "celery.backends.cache",
+        "celery.app.backends"
+      ],
+      "raw_reasoning_length": 8360,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 64,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2112
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "medium_002",
+      "difficulty": "medium",
+      "category": "loader_alias",
+      "failure_type": "Type E",
+      "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('app')` resolve to?",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.3333,
+      "recall": 1.0,
+      "f1": 0.5,
+      "gold_count": 1,
+      "predicted_count": 3,
+      "matched_count": 1,
+      "missing_count": 0,
+      "extra_count": 2,
+      "gold_fqns": [
+        "celery.loaders.app.AppLoader"
+      ],
+      "predicted_fqns": [
+        "celery.loaders.app.AppLoader",
+        "celery.app",
+        "celery.loaders.base"
+      ],
+      "matched_fqns": [
+        "celery.loaders.app.AppLoader"
+      ],
+      "missing_fqns": [],
+      "extra_fqns": [
+        "celery.app",
+        "celery.loaders.base"
+      ],
+      "raw_reasoning_length": 8300,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 71,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2119
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "medium_003",
+      "difficulty": "medium",
+      "category": "alias_resolution",
+      "failure_type": "Type D",
+      "question": "What pool implementation does `celery.concurrency.get_implementation('threads')` resolve to?",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 5,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 5,
+      "gold_fqns": [
+        "celery.concurrency.thread.TaskPool"
+      ],
+      "predicted_fqns": [
+        "celery.concurrency.base",
+        "celery.concurrency.threads",
+        "celery.utils.imports",
+        "threading",
+        "multiprocessing.pool"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.concurrency.thread.TaskPool"
+      ],
+      "extra_fqns": [
+        "celery.concurrency.base",
+        "celery.concurrency.threads",
+        "celery.utils.imports",
+        "threading",
+        "multiprocessing.pool"
+      ],
+      "raw_reasoning_length": 9711,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 67,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2115
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "medium_004",
+      "difficulty": "medium",
+      "category": "name_generation",
+      "failure_type": "Type C",
+      "question": "Which helper function does `Celery.gen_task_name` delegate to?",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 1,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 1,
+      "gold_fqns": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "predicted_fqns": [
+        "celery/app/task.py::gen_task_name"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "extra_fqns": [
+        "celery/app/task.py::gen_task_name"
+      ],
+      "raw_reasoning_length": 8512,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 59,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2107
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "hard_001",
+      "difficulty": "hard",
+      "category": "shared_task_registration",
+      "failure_type": "Type B",
+      "question": "When `@shared_task` decorates a function, which real app method ultimately creates the task instance?",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 3,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 3,
+      "gold_fqns": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "predicted_fqns": [
+        "celery/app/task.py",
+        "celery/app/base.py",
+        "celery/app/registry.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "extra_fqns": [
+        "celery/app/task.py",
+        "celery/app/base.py",
+        "celery/app/registry.py"
+      ],
+      "raw_reasoning_length": 8121,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 68,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2116
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "hard_002",
+      "difficulty": "hard",
+      "category": "app_task_registration",
+      "failure_type": "Type B",
+      "question": "Inside the `@app.task` decorator flow, which real method ultimately constructs and registers the task?",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 3,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 3,
+      "gold_fqns": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "predicted_fqns": [
+        "celery/app/task.py:Task.__new__",
+        "celery/app/registry.py:TaskRegistry.register",
+        "celery/app/base.py:Celery._task_from_fun"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "extra_fqns": [
+        "celery/app/task.py:Task.__new__",
+        "celery/app/registry.py:TaskRegistry.register",
+        "celery/app/base.py:Celery._task_from_fun"
+      ],
+      "raw_reasoning_length": 8786,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 65,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2113
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "hard_003",
+      "difficulty": "hard",
+      "category": "finalize_callback",
+      "failure_type": "Type B",
+      "question": "Which function is responsible for firing all shared-task and built-in finalize callbacks?",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 4,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 4,
+      "gold_fqns": [
+        "celery._state._announce_app_finalized"
+      ],
+      "predicted_fqns": [
+        "celery/app/task.py",
+        "celery/app/base.py",
+        "celery/canvas.py",
+        "celery/result.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery._state._announce_app_finalized"
+      ],
+      "extra_fqns": [
+        "celery/app/task.py",
+        "celery/app/base.py",
+        "celery/canvas.py",
+        "celery/result.py"
+      ],
+      "raw_reasoning_length": 8763,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 60,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2108
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "hard_004",
+      "difficulty": "hard",
+      "category": "symbol_by_name_resolution",
+      "failure_type": "Type E",
+      "question": "In `celery.worker.strategy.default`, what real class does `task.Request` resolve to?",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.2,
+      "recall": 1.0,
+      "f1": 0.3333,
+      "gold_count": 1,
+      "predicted_count": 5,
+      "matched_count": 1,
+      "missing_count": 0,
+      "extra_count": 4,
+      "gold_fqns": [
+        "celery.worker.request.Request"
+      ],
+      "predicted_fqns": [
+        "celery.app.task.Task.Request",
+        "celery.app.task.Context",
+        "celery.app.trace.TraceInfo",
+        "celery.app.task.Task",
+        "celery.worker.request.Request"
+      ],
+      "matched_fqns": [
+        "celery.worker.request.Request"
+      ],
+      "missing_fqns": [],
+      "extra_fqns": [
+        "celery.app.task.Task.Request",
+        "celery.app.task.Context",
+        "celery.app.trace.TraceInfo",
+        "celery.app.task.Task"
+      ],
+      "raw_reasoning_length": 8664,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 66,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2114
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_hard_014",
+      "difficulty": "hard",
+      "category": "builtin_finalize_registration",
+      "failure_type": "Type B",
+      "question": "At app finalize time, which method actually creates the celery.backend_cleanup Task instance?",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 5,
+      "predicted_count": 2,
+      "matched_count": 0,
+      "missing_count": 5,
+      "extra_count": 2,
+      "gold_fqns": [
+        "celery.app.base.Celery._task_from_fun",
+        "celery.app.builtins.add_backend_cleanup_task",
+        "celery.app.base.Celery.task",
+        "celery._state.connect_on_app_finalize",
+        "celery._state._announce_app_finalized"
+      ],
+      "predicted_fqns": [
+        "celery/app/builtins.py",
+        "celery/app/task.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.app.base.Celery._task_from_fun",
+        "celery.app.builtins.add_backend_cleanup_task",
+        "celery.app.base.Celery.task",
+        "celery._state.connect_on_app_finalize",
+        "celery._state._announce_app_finalized"
+      ],
+      "extra_fqns": [
+        "celery/app/builtins.py",
+        "celery/app/task.py"
+      ],
+      "raw_reasoning_length": 8988,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 63,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2111
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_hard_016",
+      "difficulty": "hard",
+      "category": "autodiscovery_fixup_import",
+      "failure_type": "Type E",
+      "question": "When packages=None, which function finally executes the real importlib.import_module call for package names gathered from Celery._autodiscover_tasks_from_fixups?",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 4,
+      "predicted_count": 6,
+      "matched_count": 0,
+      "missing_count": 4,
+      "extra_count": 6,
+      "gold_fqns": [
+        "celery.loaders.base.find_related_module",
+        "celery.app.base.Celery._autodiscover_tasks_from_fixups",
+        "celery.fixups.django.DjangoFixup.autodiscover_tasks",
+        "celery.loaders.base.autodiscover_tasks"
+      ],
+      "predicted_fqns": [
+        "celery/app/trace.py",
+        "celery/loaders/base.py",
+        "celery/fixups/__init__.py",
+        "celery/utils/imports.py",
+        "celery/bin/celery.py",
+        "celery/loaders/app.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.loaders.base.find_related_module",
+        "celery.app.base.Celery._autodiscover_tasks_from_fixups",
+        "celery.fixups.django.DjangoFixup.autodiscover_tasks",
+        "celery.loaders.base.autodiscover_tasks"
+      ],
+      "extra_fqns": [
+        "celery/app/trace.py",
+        "celery/loaders/base.py",
+        "celery/fixups/__init__.py",
+        "celery/utils/imports.py",
+        "celery/bin/celery.py",
+        "celery/loaders/app.py"
+      ],
+      "raw_reasoning_length": 8407,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 77,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2125
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_hard_013",
+      "difficulty": "hard",
+      "category": "shared_task_proxy_autofinalize",
+      "failure_type": "Type B",
+      "question": "`celery.app.shared_task` 返回的 Proxy 首次解析任务对象时，触发 finalize 回调链的关键入口符号是什么？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 5,
+      "predicted_count": 7,
+      "matched_count": 0,
+      "missing_count": 5,
+      "extra_count": 7,
+      "gold_fqns": [
+        "celery.app.base.Celery.tasks",
+        "celery.app.base.Celery.finalize",
+        "celery._state._announce_app_finalized",
+        "celery._state.connect_on_app_finalize",
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "predicted_fqns": [
+        "celery/app/task.py",
+        "celery/app/base.py",
+        "celery/local.py",
+        "celery/__init__.py",
+        "celery/app/__init__.py",
+        "celery/app/defaults.py",
+        "celery/_state.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.app.base.Celery.tasks",
+        "celery.app.base.Celery.finalize",
+        "celery._state._announce_app_finalized",
+        "celery._state.connect_on_app_finalize",
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "extra_fqns": [
+        "celery/app/task.py",
+        "celery/app/base.py",
+        "celery/local.py",
+        "celery/__init__.py",
+        "celery/app/__init__.py",
+        "celery/app/defaults.py",
+        "celery/_state.py"
+      ],
+      "raw_reasoning_length": 8228,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 77,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2125
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_hard_015",
+      "difficulty": "hard",
+      "category": "autodiscovery_signal_chain",
+      "failure_type": "Type B",
+      "question": "在 `app.autodiscover_tasks(..., force=False)` 的 lazy 路径下，真正被触发执行的目标函数是什么，以及它由哪条调用链触发？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 5,
+      "predicted_count": 6,
+      "matched_count": 0,
+      "missing_count": 5,
+      "extra_count": 6,
+      "gold_fqns": [
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.loaders.base.BaseLoader.init_worker",
+        "celery.loaders.base.BaseLoader.import_default_modules",
+        "celery.utils.dispatch.signal.Signal.send",
+        "celery.signals.import_modules"
+      ],
+      "predicted_fqns": [
+        "celery/app/autodiscover.py",
+        "celery/loaders/base.py",
+        "celery/utils/imports.py",
+        "celery/bin/celery.py",
+        "celery/app/amqp.py",
+        "celery/concurrency/base.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.loaders.base.BaseLoader.init_worker",
+        "celery.loaders.base.BaseLoader.import_default_modules",
+        "celery.utils.dispatch.signal.Signal.send",
+        "celery.signals.import_modules"
+      ],
+      "extra_fqns": [
+        "celery/app/autodiscover.py",
+        "celery/loaders/base.py",
+        "celery/utils/imports.py",
+        "celery/bin/celery.py",
+        "celery/app/amqp.py",
+        "celery/concurrency/base.py"
+      ],
+      "raw_reasoning_length": 6856,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2035
+        },
+        "prompt_tokens": 83,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2131
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_hard_018",
+      "difficulty": "hard",
+      "category": "django_task_cls_string_resolution",
+      "failure_type": "Type E",
+      "question": "在满足 Django fixup 前置条件（`DJANGO_SETTINGS_MODULE` 已设置、`django` 可导入、且 `app.loader_cls` 不含 `django`）且未自定义 `task_cls` 时，`app.Task` 的最终基类解析到哪个真实类？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 7,
+      "predicted_count": 7,
+      "matched_count": 0,
+      "missing_count": 7,
+      "extra_count": 7,
+      "gold_fqns": [
+        "celery.contrib.django.task.DjangoTask",
+        "celery.fixups.django.fixup",
+        "celery.fixups.django.DjangoFixup.install",
+        "celery.app.base.Celery.Task",
+        "celery.app.base.Celery.create_task_cls",
+        "celery.app.base.Celery.subclass_with_self",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "predicted_fqns": [
+        "celery/fixups/django.py",
+        "celery/app/base.py",
+        "celery/app/task.py",
+        "celery/app/trace.py",
+        "django/core/handlers/base.py",
+        "DJANGO_SETTINGS_MODULE environment variable",
+        "django.conf.settings"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.contrib.django.task.DjangoTask",
+        "celery.fixups.django.fixup",
+        "celery.fixups.django.DjangoFixup.install",
+        "celery.app.base.Celery.Task",
+        "celery.app.base.Celery.create_task_cls",
+        "celery.app.base.Celery.subclass_with_self",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "extra_fqns": [
+        "celery/fixups/django.py",
+        "celery/app/base.py",
+        "celery/app/task.py",
+        "celery/app/trace.py",
+        "django/core/handlers/base.py",
+        "DJANGO_SETTINGS_MODULE environment variable",
+        "django.conf.settings"
+      ],
+      "raw_reasoning_length": 8118,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 109,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2157
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_medium_017",
+      "difficulty": "medium",
+      "category": "fixup_string_entry_resolution",
+      "failure_type": "Type E",
+      "question": "在 `Celery.__init__` 中，默认 `builtin_fixups` 的字符串入口 `'celery.fixups.django:fixup'` 最终会被解析到哪个真实函数符号（不考虑后续 install 副作用）？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "stop",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 4,
+      "predicted_count": 3,
+      "matched_count": 0,
+      "missing_count": 4,
+      "extra_count": 3,
+      "gold_fqns": [
+        "celery.fixups.django.fixup",
+        "celery.app.base.Celery.__init__",
+        "celery.utils.imports.symbol_by_name",
+        "celery.app.base.BUILTIN_FIXUPS"
+      ],
+      "predicted_fqns": [
+        "celery.fixups.django",
+        "celery.fixups.base",
+        "celery.utils.imports"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.fixups.django.fixup",
+        "celery.app.base.Celery.__init__",
+        "celery.utils.imports.symbol_by_name",
+        "celery.app.base.BUILTIN_FIXUPS"
+      ],
+      "extra_fqns": [
+        "celery.fixups.django",
+        "celery.fixups.base",
+        "celery.utils.imports"
+      ],
+      "raw_reasoning_length": 4791,
+      "raw_answer_length": 248,
+      "raw_usage": {
+        "completion_tokens": 1559,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1480
+        },
+        "prompt_tokens": 94,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 1653
+      },
+      "raw_output_preview": "```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery/utils/imports.py\",\n      \"celery/fixups/django.py\"\n    ],\n    \"indirect_deps\": [\n      \"importlib\"\n    ],\n    \"implicit_deps\": [\n      \"Python module import mechanism\"\n    ]\n  }\n}\n```"
+    },
+    {
+      "case_id": "easy_007",
+      "difficulty": "easy",
+      "category": "re_export",
+      "failure_type": "Type C",
+      "question": "顶层符号 `celery.Task` 最终映射到哪个真实类？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 3,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 3,
+      "gold_fqns": [
+        "celery.app.task.Task"
+      ],
+      "predicted_fqns": [
+        "celery/__init__.py",
+        "celery/app/__init__.py",
+        "celery/app/task.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.app.task.Task"
+      ],
+      "extra_fqns": [
+        "celery/__init__.py",
+        "celery/app/__init__.py",
+        "celery/app/task.py"
+      ],
+      "raw_reasoning_length": 5555,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2040
+        },
+        "prompt_tokens": 61,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2109
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "easy_005",
+      "difficulty": "easy",
+      "category": "re_export_proxy",
+      "failure_type": "Type B",
+      "question": "在顶层懒加载 API 中，`celery.current_app` 这个 Proxy 在取值时会直接调用哪个函数来获得 app 对象？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 5,
+      "predicted_count": 4,
+      "matched_count": 0,
+      "missing_count": 5,
+      "extra_count": 4,
+      "gold_fqns": [
+        "celery._state.get_current_app",
+        "celery._state._get_current_app",
+        "celery.local.Proxy",
+        "celery._state.default_app",
+        "celery.app.base.Celery"
+      ],
+      "predicted_fqns": [
+        "celery/app/__init__.py",
+        "celery/local.py",
+        "celery/app/base.py",
+        "celery/_state.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery._state.get_current_app",
+        "celery._state._get_current_app",
+        "celery.local.Proxy",
+        "celery._state.default_app",
+        "celery.app.base.Celery"
+      ],
+      "extra_fqns": [
+        "celery/app/__init__.py",
+        "celery/local.py",
+        "celery/app/base.py",
+        "celery/_state.py"
+      ],
+      "raw_reasoning_length": 8182,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 75,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2123
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "easy_006",
+      "difficulty": "easy",
+      "category": "re_export_proxy",
+      "failure_type": "Type B",
+      "question": "在顶层懒加载 API 中，`celery.current_task` 在取值时直接调用哪个函数，并最终从哪个状态槽位读取当前任务？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 4,
+      "predicted_count": 4,
+      "matched_count": 0,
+      "missing_count": 4,
+      "extra_count": 4,
+      "gold_fqns": [
+        "celery._state.get_current_task",
+        "celery._state._task_stack.top",
+        "celery.local.Proxy",
+        "celery.utils.threads.LocalStack"
+      ],
+      "predicted_fqns": [
+        "celery/__init__.py",
+        "celery/local.py",
+        "celery/app/task.py",
+        "celery/app/trace.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery._state.get_current_task",
+        "celery._state._task_stack.top",
+        "celery.local.Proxy",
+        "celery.utils.threads.LocalStack"
+      ],
+      "extra_fqns": [
+        "celery/__init__.py",
+        "celery/local.py",
+        "celery/app/task.py",
+        "celery/app/trace.py"
+      ],
+      "raw_reasoning_length": 7652,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 79,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2127
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "easy_008",
+      "difficulty": "easy",
+      "category": "re_export",
+      "failure_type": "Type C",
+      "question": "从源码\"类定义\"角度看，顶层符号 `celery.group` 对应的真实类定义 FQN 是什么？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 2,
+      "predicted_count": 1,
+      "matched_count": 0,
+      "missing_count": 2,
+      "extra_count": 1,
+      "gold_fqns": [
+        "celery.canvas.group",
+        "celery.canvas.Signature"
+      ],
+      "predicted_fqns": [
+        "celery.app.base"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.canvas.group",
+        "celery.canvas.Signature"
+      ],
+      "extra_fqns": [
+        "celery.app.base"
+      ],
+      "raw_reasoning_length": 5069,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2042
+        },
+        "prompt_tokens": 72,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2120
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "medium_005",
+      "difficulty": "medium",
+      "category": "loader_default_resolution",
+      "failure_type": "Type E",
+      "question": "在未设置 `CELERY_LOADER` 且未显式传入 loader 参数时，`Celery.loader` 属性最终实例化哪个 Loader 类？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 4,
+      "predicted_count": 5,
+      "matched_count": 0,
+      "missing_count": 4,
+      "extra_count": 5,
+      "gold_fqns": [
+        "celery.loaders.app.AppLoader",
+        "celery.app.base.Celery._get_default_loader",
+        "celery.loaders.get_loader_cls",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "predicted_fqns": [
+        "celery/app/loaders.py",
+        "celery/loaders/default.py",
+        "celery/loaders/base.py",
+        "celery/__init__.py",
+        "os.environ"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.loaders.app.AppLoader",
+        "celery.app.base.Celery._get_default_loader",
+        "celery.loaders.get_loader_cls",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "extra_fqns": [
+        "celery/app/loaders.py",
+        "celery/loaders/default.py",
+        "celery/loaders/base.py",
+        "celery/__init__.py",
+        "os.environ"
+      ],
+      "raw_reasoning_length": 8669,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 77,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2125
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "medium_006",
+      "difficulty": "medium",
+      "category": "backend_url_alias",
+      "failure_type": "Type E",
+      "question": "在 `Celery._get_backend` 调用路径里，当 `result_backend='rpc://...'` 时，哪个 backend 类会被解析并由该方法实例化？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 6,
+      "predicted_count": 7,
+      "matched_count": 0,
+      "missing_count": 6,
+      "extra_count": 7,
+      "gold_fqns": [
+        "celery.app.base.Celery._get_backend",
+        "celery.backends.rpc.RPCBackend",
+        "celery.app.backends.by_url",
+        "celery.app.backends.by_name",
+        "celery.app.backends.BACKEND_ALIASES",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "predicted_fqns": [
+        "celery/app/base.py",
+        "celery/backends/__init__.py",
+        "celery/backends/rpc.py",
+        "celery/backends/base.py",
+        "kombu/connection.py",
+        "celery/utils/imports.py",
+        "celery/exceptions.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.app.base.Celery._get_backend",
+        "celery.backends.rpc.RPCBackend",
+        "celery.app.backends.by_url",
+        "celery.app.backends.by_name",
+        "celery.app.backends.BACKEND_ALIASES",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "extra_fqns": [
+        "celery/app/base.py",
+        "celery/backends/__init__.py",
+        "celery/backends/rpc.py",
+        "celery/backends/base.py",
+        "kombu/connection.py",
+        "celery/utils/imports.py",
+        "celery/exceptions.py"
+      ],
+      "raw_reasoning_length": 6012,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2035
+        },
+        "prompt_tokens": 81,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2129
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "medium_007",
+      "difficulty": "medium",
+      "category": "fallback_loader_alias",
+      "failure_type": "Type E",
+      "question": "当线程中没有 current app 且未设置 `CELERY_LOADER` 时，首次访问 `celery.current_app.loader` 最终会实例化哪个 Loader 类？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 7,
+      "predicted_count": 9,
+      "matched_count": 0,
+      "missing_count": 7,
+      "extra_count": 9,
+      "gold_fqns": [
+        "celery.loaders.default.Loader",
+        "celery._state._get_current_app",
+        "celery.app.base.Celery.loader",
+        "celery.loaders.get_loader_cls",
+        "celery.local.Proxy",
+        "celery.loaders.LOADER_ALIASES",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "predicted_fqns": [
+        "celery/_state.py",
+        "celery/__init__.py",
+        "celery/app/__init__.py",
+        "celery/app/base.py",
+        "celery/app/defaults.py",
+        "celery/loaders/__init__.py",
+        "celery/loaders/base.py",
+        "celery/loaders/default.py",
+        "os"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.loaders.default.Loader",
+        "celery._state._get_current_app",
+        "celery.app.base.Celery.loader",
+        "celery.loaders.get_loader_cls",
+        "celery.local.Proxy",
+        "celery.loaders.LOADER_ALIASES",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "extra_fqns": [
+        "celery/_state.py",
+        "celery/__init__.py",
+        "celery/app/__init__.py",
+        "celery/app/base.py",
+        "celery/app/defaults.py",
+        "celery/loaders/__init__.py",
+        "celery/loaders/base.py",
+        "celery/loaders/default.py",
+        "os"
+      ],
+      "raw_reasoning_length": 5412,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2039
+        },
+        "prompt_tokens": 78,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2126
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "medium_008",
+      "difficulty": "medium",
+      "category": "strategy_string_resolution",
+      "failure_type": "Type E",
+      "question": "`Task.start_strategy` 调用时，`Task.Strategy` 字符串最终会被解析为哪个可调用对象？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 4,
+      "predicted_count": 2,
+      "matched_count": 0,
+      "missing_count": 4,
+      "extra_count": 2,
+      "gold_fqns": [
+        "celery.worker.strategy.default",
+        "celery.app.task.Task.start_strategy",
+        "celery.utils.imports.instantiate",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "predicted_fqns": [
+        "celery/app/task.py",
+        "celery/app/strategies.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.worker.strategy.default",
+        "celery.app.task.Task.start_strategy",
+        "celery.utils.imports.instantiate",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "extra_fqns": [
+        "celery/app/task.py",
+        "celery/app/strategies.py"
+      ],
+      "raw_reasoning_length": 8919,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 72,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2120
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_medium_020",
+      "difficulty": "medium",
+      "category": "default_app_loader_alias_chain",
+      "failure_type": "Type E",
+      "question": "`_state._get_current_app` 懒创建 fallback app 后，首次访问 `app.loader` 时，最终实例化到哪个具体 Loader 类？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 6,
+      "predicted_count": 5,
+      "matched_count": 0,
+      "missing_count": 6,
+      "extra_count": 5,
+      "gold_fqns": [
+        "celery.app.base.Celery.loader",
+        "celery.loaders.default.Loader",
+        "celery._state._get_current_app",
+        "celery.loaders.get_loader_cls",
+        "celery.utils.imports.symbol_by_name",
+        "celery.utils.imports.import_from_cwd"
+      ],
+      "predicted_fqns": [
+        "celery/app/base.py",
+        "celery/loaders/__init__.py",
+        "celery/loaders/base.py",
+        "celery/loaders/app.py",
+        "celery/loaders/default.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.app.base.Celery.loader",
+        "celery.loaders.default.Loader",
+        "celery._state._get_current_app",
+        "celery.loaders.get_loader_cls",
+        "celery.utils.imports.symbol_by_name",
+        "celery.utils.imports.import_from_cwd"
+      ],
+      "extra_fqns": [
+        "celery/app/base.py",
+        "celery/loaders/__init__.py",
+        "celery/loaders/base.py",
+        "celery/loaders/app.py",
+        "celery/loaders/default.py"
+      ],
+      "raw_reasoning_length": 6243,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2038
+        },
+        "prompt_tokens": 77,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2125
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_hard_019",
+      "difficulty": "hard",
+      "category": "loader_smart_import_fallback",
+      "failure_type": "Type E",
+      "question": "When BaseLoader.config_from_object receives a string like pkg.mod.CONF that cannot be imported directly as a module, which function ultimately resolves the symbol?",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 1.0,
+      "recall": 0.25,
+      "f1": 0.4,
+      "gold_count": 4,
+      "predicted_count": 1,
+      "matched_count": 1,
+      "missing_count": 3,
+      "extra_count": 0,
+      "gold_fqns": [
+        "celery.utils.imports.symbol_by_name",
+        "celery.loaders.base.BaseLoader.config_from_object",
+        "celery.loaders.base.BaseLoader._smart_import",
+        "celery.utils.imports.import_from_cwd"
+      ],
+      "predicted_fqns": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "matched_fqns": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "missing_fqns": [
+        "celery.loaders.base.BaseLoader.config_from_object",
+        "celery.loaders.base.BaseLoader._smart_import",
+        "celery.utils.imports.import_from_cwd"
+      ],
+      "extra_fqns": [],
+      "raw_reasoning_length": 8830,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 76,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2124
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_hard_121",
+      "difficulty": "hard",
+      "category": "autodiscovery_import_error_gate",
+      "failure_type": "Type A",
+      "question": "在 `app.autodiscover_tasks(packages, force=False)` 的延迟执行链中，真正负责判定 `ModuleNotFoundError` 是\"候选 tasks 模块缺失可忽略\"还是\"嵌套导入错误需重抛\"的函数是哪个？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 7,
+      "predicted_count": 1,
+      "matched_count": 0,
+      "missing_count": 7,
+      "extra_count": 1,
+      "gold_fqns": [
+        "celery.loaders.base.find_related_module",
+        "celery.app.base.Celery.autodiscover_tasks",
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.loaders.base.BaseLoader.import_default_modules",
+        "celery.loaders.base.BaseLoader.autodiscover_tasks",
+        "celery.loaders.base.autodiscover_tasks",
+        "celery.signals.import_modules"
+      ],
+      "predicted_fqns": [
+        "celery/app/autodiscover.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.loaders.base.find_related_module",
+        "celery.app.base.Celery.autodiscover_tasks",
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.loaders.base.BaseLoader.import_default_modules",
+        "celery.loaders.base.BaseLoader.autodiscover_tasks",
+        "celery.loaders.base.autodiscover_tasks",
+        "celery.signals.import_modules"
+      ],
+      "extra_fqns": [
+        "celery/app/autodiscover.py"
+      ],
+      "raw_reasoning_length": 8065,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 98,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2146
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_hard_122",
+      "difficulty": "hard",
+      "category": "bootstep_lifecycle_instantiation_gate",
+      "failure_type": "Type A",
+      "question": "在 worker 启动链中，当某个 `StartStopStep.include_if()` 最终为 `False` 时，仍会先执行 step 实例化（触发 `Step.__init__`）的生命周期断点方法是哪个？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 5,
+      "predicted_count": 3,
+      "matched_count": 0,
+      "missing_count": 5,
+      "extra_count": 3,
+      "gold_fqns": [
+        "celery.bootsteps.Blueprint.apply",
+        "celery.worker.worker.WorkController.__init__",
+        "celery.bootsteps.StartStopStep.include",
+        "celery.bootsteps.Step._should_include",
+        "celery.bootsteps.Step.include_if"
+      ],
+      "predicted_fqns": [
+        "celery/worker/worker.py",
+        "celery/bootsteps.py",
+        "celery/utils/functional.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.bootsteps.Blueprint.apply",
+        "celery.worker.worker.WorkController.__init__",
+        "celery.bootsteps.StartStopStep.include",
+        "celery.bootsteps.Step._should_include",
+        "celery.bootsteps.Step.include_if"
+      ],
+      "extra_fqns": [
+        "celery/worker/worker.py",
+        "celery/bootsteps.py",
+        "celery/utils/functional.py"
+      ],
+      "raw_reasoning_length": 8503,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 96,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2144
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_hard_024",
+      "difficulty": "hard",
+      "category": "persistent_scheduler_startup_reset",
+      "failure_type": "Type A",
+      "question": "`PersistentScheduler` 启动阶段若持久化 store 缺失 `utc_enabled` 元数据字段，直接触发 reset（`self._store.clear()`）的方法是哪一个？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 2,
+      "predicted_count": 1,
+      "matched_count": 0,
+      "missing_count": 2,
+      "extra_count": 1,
+      "gold_fqns": [
+        "celery.beat.PersistentScheduler._create_schedule",
+        "celery.beat.PersistentScheduler.setup_schedule"
+      ],
+      "predicted_fqns": [
+        "celery/beat.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.beat.PersistentScheduler._create_schedule",
+        "celery.beat.PersistentScheduler.setup_schedule"
+      ],
+      "extra_fqns": [
+        "celery/beat.py"
+      ],
+      "raw_reasoning_length": 9431,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 83,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2131
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_hard_025",
+      "difficulty": "hard",
+      "category": "disable_prefetch_runtime_can_consume_patch",
+      "failure_type": "Type A",
+      "question": "在 `worker_disable_prefetch=True` 且 broker 为 Redis 的前提下，运行时真正改写 `channel_qos.can_consume` 的方法是哪一个？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 4,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 4,
+      "gold_fqns": [
+        "celery.worker.consumer.tasks.Tasks.start"
+      ],
+      "predicted_fqns": [
+        "celery/worker/consumer/tasks.py",
+        "kombu/common/qos.py",
+        "celery/app/amqp.py",
+        "kombu/transport/virtual/base.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.worker.consumer.tasks.Tasks.start"
+      ],
+      "extra_fqns": [
+        "celery/worker/consumer/tasks.py",
+        "kombu/common/qos.py",
+        "celery/app/amqp.py",
+        "kombu/transport/virtual/base.py"
+      ],
+      "raw_reasoning_length": 8594,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 79,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2127
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_type_d_001",
+      "difficulty": "hard",
+      "category": "parameter_shadowing_module_function",
+      "failure_type": "Type D",
+      "question": "在 `celery/app/routes.py` 中，调用 `expand_router_string('my.router.module:RouterClass')` 时，负责把字符串参数 `router` 解析成真实符号的函数是哪个？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 2,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 2,
+      "gold_fqns": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "predicted_fqns": [
+        "celery/utils/imports.py::import_from_cwd",
+        "celery/utils/imports.py::symbol_by_name"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "extra_fqns": [
+        "celery/utils/imports.py::import_from_cwd",
+        "celery/utils/imports.py::symbol_by_name"
+      ],
+      "raw_reasoning_length": 8859,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 88,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2136
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_type_d_002",
+      "difficulty": "hard",
+      "category": "class_hierarchy_with_same_logical_name",
+      "failure_type": "Type D",
+      "question": "在 `celery/canvas.py` 中，`celery.canvas._chain`（内部类，被 `@Signature.register_type(name='chain')` 注册）和 `celery.canvas.chain`（公开类，继承 `_chain`）是两个不同的类。当通过 `signature({'subtask_type': 'chain', ...})` 反序列化时，返回的实例属于哪个类？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 4,
+      "predicted_count": 5,
+      "matched_count": 0,
+      "missing_count": 4,
+      "extra_count": 5,
+      "gold_fqns": [
+        "celery.canvas._chain",
+        "celery.canvas.Signature.TYPES",
+        "celery.canvas.Signature.from_dict",
+        "celery.canvas.chain"
+      ],
+      "predicted_fqns": [
+        "celery/app/amqp.py",
+        "celery/app/task.py",
+        "celery/__init__.py",
+        "celery/utils/serialization.py",
+        "celery/utils/__init__.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.canvas._chain",
+        "celery.canvas.Signature.TYPES",
+        "celery.canvas.Signature.from_dict",
+        "celery.canvas.chain"
+      ],
+      "extra_fqns": [
+        "celery/app/amqp.py",
+        "celery/app/task.py",
+        "celery/__init__.py",
+        "celery/utils/serialization.py",
+        "celery/utils/__init__.py"
+      ],
+      "raw_reasoning_length": 8553,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 127,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2175
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_type_d_003",
+      "difficulty": "medium",
+      "category": "alias_re_export_confusion",
+      "failure_type": "Type D",
+      "question": "在 `celery/canvas.py` 模块级别，`subtask = signature` 和 `maybe_subtask = maybe_signature` 分别是兼容性别名。如果代码中出现引用 'celery.canvas.subtask' 的错误信息，应该追踪到哪个实际执行函数？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "stop",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 2,
+      "predicted_count": 1,
+      "matched_count": 0,
+      "missing_count": 2,
+      "extra_count": 1,
+      "gold_fqns": [
+        "celery.canvas.signature",
+        "celery.canvas.maybe_signature"
+      ],
+      "predicted_fqns": [
+        "signature"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.canvas.signature",
+        "celery.canvas.maybe_signature"
+      ],
+      "extra_fqns": [
+        "signature"
+      ],
+      "raw_reasoning_length": 5087,
+      "raw_answer_length": 134,
+      "raw_usage": {
+        "completion_tokens": 1989,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1944
+        },
+        "prompt_tokens": 102,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2091
+      },
+      "raw_output_preview": "```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"signature\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": []\n  }\n}\n```"
+    },
+    {
+      "case_id": "celery_type_d_004",
+      "difficulty": "medium",
+      "category": "local_inline_import",
+      "failure_type": "Type D",
+      "question": "在 `celery/utils/nodenames.py` 中，`current_process_index` 并非在文件顶部 import，而是通过 `from .log import current_process_index` 内联在 `_fmt_process_index` 函数体内引入。如果要追踪 `celery.utils.nodenames._fmt_process_index` 调用的 `current_process_index` 的定义来源，应该查看哪个文件的哪个函数？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 0,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 0,
+      "gold_fqns": [
+        "celery.utils.log.current_process_index"
+      ],
+      "predicted_fqns": [],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.utils.log.current_process_index"
+      ],
+      "extra_fqns": [],
+      "raw_reasoning_length": 6196,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2030
+        },
+        "prompt_tokens": 129,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2177
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_type_d_005",
+      "difficulty": "hard",
+      "category": "parameter_shadows_module_function",
+      "failure_type": "Type D",
+      "question": "在 `celery/app/routes.py` 的 `Router.query_router(self, router, ...)` 方法中，参数名 `router` 与方法外的 `celery.app.routes.Router` 类同名。当方法体内访问 `router` 时，它指向什么？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 2,
+      "predicted_count": 3,
+      "matched_count": 0,
+      "missing_count": 2,
+      "extra_count": 3,
+      "gold_fqns": [
+        "celery.app.routes.Router",
+        "celery.utils.functional.maybe_evaluate"
+      ],
+      "predicted_fqns": [
+        "python_variable_shadowing",
+        "python_local_scope",
+        "python_call_stack"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.app.routes.Router",
+        "celery.utils.functional.maybe_evaluate"
+      ],
+      "extra_fqns": [
+        "python_variable_shadowing",
+        "python_local_scope",
+        "python_call_stack"
+      ],
+      "raw_reasoning_length": 5140,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2036
+        },
+        "prompt_tokens": 98,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2146
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_type_d_006",
+      "difficulty": "medium",
+      "category": "env_var_dynamic_alias_override",
+      "failure_type": "Type D",
+      "question": "在 `celery/concurrency/__init__.py` 中，若在首次导入前设置 `CELERY_CUSTOM_WORKER_POOL='celery.concurrency.thread:TaskPool'`，那么 `get_implementation('custom')` 最终返回哪个 Celery 类？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 3,
+      "predicted_count": 3,
+      "matched_count": 0,
+      "missing_count": 3,
+      "extra_count": 3,
+      "gold_fqns": [
+        "celery.concurrency.thread.TaskPool",
+        "celery.concurrency.get_implementation",
+        "celery.concurrency.ALIASES"
+      ],
+      "predicted_fqns": [
+        "celery/concurrency/base.py",
+        "celery/concurrency/thread.py",
+        "os"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.concurrency.thread.TaskPool",
+        "celery.concurrency.get_implementation",
+        "celery.concurrency.ALIASES"
+      ],
+      "extra_fqns": [
+        "celery/concurrency/base.py",
+        "celery/concurrency/thread.py",
+        "os"
+      ],
+      "raw_reasoning_length": 6268,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2038
+        },
+        "prompt_tokens": 102,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2150
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_type_a_001",
+      "difficulty": "hard",
+      "category": "bootstep_lifecycle_conditional",
+      "failure_type": "Type A",
+      "question": "在 `celery/bootsteps.py` 中，`Step._should_include(parent)` 返回 `(False, None)` 时（即 `include_if` 返回 False），Step 的 `__init__` 和 `create` 方法还会被调用吗？`parent.steps` 列表中会包含该 Step 吗？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 6,
+      "predicted_count": 1,
+      "matched_count": 0,
+      "missing_count": 6,
+      "extra_count": 1,
+      "gold_fqns": [
+        "celery.bootsteps.Step._should_include",
+        "celery.bootsteps.Step.include",
+        "celery.bootsteps.StartStopStep.include",
+        "celery.bootsteps.Step.__init__",
+        "celery.bootsteps.Step.create",
+        "celery.bootsteps.Blueprint.apply"
+      ],
+      "predicted_fqns": [
+        "celery/bootsteps.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.bootsteps.Step._should_include",
+        "celery.bootsteps.Step.include",
+        "celery.bootsteps.StartStopStep.include",
+        "celery.bootsteps.Step.__init__",
+        "celery.bootsteps.Step.create",
+        "celery.bootsteps.Blueprint.apply"
+      ],
+      "extra_fqns": [
+        "celery/bootsteps.py"
+      ],
+      "raw_reasoning_length": 5757,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2031
+        },
+        "prompt_tokens": 111,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2159
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_type_a_002",
+      "difficulty": "hard",
+      "category": "acks_late_failure_matrix",
+      "failure_type": "Type A",
+      "question": "在 `celery/worker/request.py` 中，当 `acks_late=True` 时，以下情况分别走 `ack`、`reject(requeue=True)`、`reject(requeue=False)` 中的哪条路径：(1) 普通 `Exception`；(2) `TimeLimitExceeded` 且 `acks_on_timeout=False`；(3) `WorkerLostError` 且 `reject_on_worker_lost=False`；(4) `celery.exceptions.Reject` 异常；(5) `celery.exceptions.Ignore` 异常。",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "stop",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 5,
+      "predicted_count": 3,
+      "matched_count": 0,
+      "missing_count": 5,
+      "extra_count": 3,
+      "gold_fqns": [
+        "celery.worker.request.Request.on_failure",
+        "celery.worker.request.Request.on_timeout",
+        "celery.worker.request.Request.reject",
+        "celery.worker.request.Request.acknowledge",
+        "celery.worker.state.should_terminate"
+      ],
+      "predicted_fqns": [
+        "celery/worker/request.py",
+        "celery/app/task.py",
+        "celery/exceptions.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.worker.request.Request.on_failure",
+        "celery.worker.request.Request.on_timeout",
+        "celery.worker.request.Request.reject",
+        "celery.worker.request.Request.acknowledge",
+        "celery.worker.state.should_terminate"
+      ],
+      "extra_fqns": [
+        "celery/worker/request.py",
+        "celery/app/task.py",
+        "celery/exceptions.py"
+      ],
+      "raw_reasoning_length": 279,
+      "raw_answer_length": 279,
+      "raw_usage": {
+        "completion_tokens": 170,
+        "completion_tokens_details": {
+          "reasoning_tokens": 84
+        },
+        "prompt_tokens": 155,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 325
+      },
+      "raw_output_preview": "```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery/worker/request.py\"\n    ],\n    \"indirect_deps\": [\n      \"celery/exceptions.py\",\n      \"celery/app/task.py\"\n    ],\n    \"implicit_deps\": [\n      \"celery/worker/loops.py\",\n      \"celery/utils/timer2.py\"\n    ]\n  }\n}\n```"
+    },
+    {
+      "case_id": "celery_type_a_003",
+      "difficulty": "hard",
+      "category": "autodiscover_signal_lazy_chain",
+      "failure_type": "Type A",
+      "question": "在 `celery/app/base.py` 的 `autodiscover_tasks(..., force=False)` 懒路径下，哪个信号（signal）触发 `import_modules` 事件？该事件的哪个接收者（receiver）最终执行 `_autodiscover_tasks`？从信号发送到实际执行之间有几层间接调用？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 4,
+      "predicted_count": 5,
+      "matched_count": 0,
+      "missing_count": 4,
+      "extra_count": 5,
+      "gold_fqns": [
+        "celery.signals.import_modules",
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.loaders.base.BaseLoader.import_default_modules",
+        "celery.utils.dispatch.signal.Signal.send"
+      ],
+      "predicted_fqns": [
+        "celery/utils/dispatch/signal.py",
+        "celery/app/base.py",
+        "celery/bin/celery.py",
+        "celery/app/amqp.py",
+        "celery/app/task.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.signals.import_modules",
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.loaders.base.BaseLoader.import_default_modules",
+        "celery.utils.dispatch.signal.Signal.send"
+      ],
+      "extra_fqns": [
+        "celery/utils/dispatch/signal.py",
+        "celery/app/base.py",
+        "celery/bin/celery.py",
+        "celery/app/amqp.py",
+        "celery/app/task.py"
+      ],
+      "raw_reasoning_length": 6549,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2039
+        },
+        "prompt_tokens": 114,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2162
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_medium_019",
+      "difficulty": "medium",
+      "category": "symbol_by_name_resolution_chain",
+      "failure_type": "Type E",
+      "question": "在 `celery/utils/imports.py` 中，`instantiate('celery.concurrency.prefork:TaskPool')` 这条链路最终解析到哪个真实 Celery 符号？中间依赖哪个导入解析函数？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.5,
+      "recall": 0.6667,
+      "f1": 0.5714,
+      "gold_count": 3,
+      "predicted_count": 4,
+      "matched_count": 2,
+      "missing_count": 1,
+      "extra_count": 2,
+      "gold_fqns": [
+        "celery.concurrency.prefork.TaskPool",
+        "celery.utils.imports.instantiate",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "predicted_fqns": [
+        "celery.concurrency.prefork:TaskPool",
+        "celery.concurrency.prefork",
+        "celery.concurrency.prefork.TaskPool",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "matched_fqns": [
+        "celery.concurrency.prefork.TaskPool",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "missing_fqns": [
+        "celery.utils.imports.instantiate"
+      ],
+      "extra_fqns": [
+        "celery.concurrency.prefork:TaskPool",
+        "celery.concurrency.prefork"
+      ],
+      "raw_reasoning_length": 5390,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2035
+        },
+        "prompt_tokens": 94,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2142
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_medium_021",
+      "difficulty": "medium",
+      "category": "lpmerge_left_precedent_merge",
+      "failure_type": "Type C",
+      "question": "在 `celery/utils/collections.py` 中，`lpmerge(L, R)` 函数的合并策略是什么？当 R 字典中某个键的值是 `None` 时会发生什么？当 R 字典中某个键的值是非 `None` 时会发生什么？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 0,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 0,
+      "gold_fqns": [
+        "celery.utils.collections.lpmerge"
+      ],
+      "predicted_fqns": [],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.utils.collections.lpmerge"
+      ],
+      "extra_fqns": [],
+      "raw_reasoning_length": 8413,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 105,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2153
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_medium_022",
+      "difficulty": "medium",
+      "category": "signature_polymorphic_from_dict",
+      "failure_type": "Type D",
+      "question": "在 `celery/canvas.py` 中，`Signature.from_dict(d, app=app)` 如何根据字典的 `subtask_type` 字段决定返回哪个子类的实例？`cls.TYPES` 的注册来源是什么？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 6,
+      "predicted_count": 2,
+      "matched_count": 0,
+      "missing_count": 6,
+      "extra_count": 2,
+      "gold_fqns": [
+        "celery.canvas.Signature.TYPES",
+        "celery.canvas.Signature.from_dict",
+        "celery.canvas._chain.from_dict",
+        "celery.canvas.group.from_dict",
+        "celery.canvas._chord.from_dict",
+        "celery.canvas.Signature.register_type"
+      ],
+      "predicted_fqns": [
+        "celery/__init__.py",
+        "celery/app/task.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.canvas.Signature.TYPES",
+        "celery.canvas.Signature.from_dict",
+        "celery.canvas._chain.from_dict",
+        "celery.canvas.group.from_dict",
+        "celery.canvas._chord.from_dict",
+        "celery.canvas.Signature.register_type"
+      ],
+      "extra_fqns": [
+        "celery/__init__.py",
+        "celery/app/task.py"
+      ],
+      "raw_reasoning_length": 8156,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 93,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2141
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_medium_023",
+      "difficulty": "medium",
+      "category": "signature_head_from_fun_generation",
+      "failure_type": "Type E",
+      "question": "在 `celery/utils/functional.py` 中，`head_from_fun` 生成的函数签名源码存放在哪个命名空间变量中？该函数通过 `exec(definition, namespace)` 执行后，从哪个 key 获取生成的函数对象？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 3,
+      "predicted_count": 1,
+      "matched_count": 0,
+      "missing_count": 3,
+      "extra_count": 1,
+      "gold_fqns": [
+        "celery.utils.functional.head_from_fun",
+        "celery.utils.functional._argsfromspec",
+        "celery.utils.functional.FUNHEAD_TEMPLATE"
+      ],
+      "predicted_fqns": [
+        "celery/utils/functional.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.utils.functional.head_from_fun",
+        "celery.utils.functional._argsfromspec",
+        "celery.utils.functional.FUNHEAD_TEMPLATE"
+      ],
+      "extra_fqns": [
+        "celery/utils/functional.py"
+      ],
+      "raw_reasoning_length": 8766,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2046
+        },
+        "prompt_tokens": 99,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2147
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_medium_024",
+      "difficulty": "medium",
+      "category": "fake_task_request_context",
+      "failure_type": "Type B",
+      "question": "在 `celery/backends/base.py` 中，`_create_fake_task_request` 函数创建的任务上下文（Context）中，`delivery_info` 字段的默认值是什么？这个空字典在 errback 执行链中会导致什么问题？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "stop",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 2,
+      "predicted_count": 4,
+      "matched_count": 0,
+      "missing_count": 2,
+      "extra_count": 4,
+      "gold_fqns": [
+        "celery.backends.base._create_fake_task_request",
+        "celery.app.task.Context"
+      ],
+      "predicted_fqns": [
+        "celery/app/task.py",
+        "celery/app/trace.py",
+        "celery/utils/names.py",
+        "celery/exceptions.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.backends.base._create_fake_task_request",
+        "celery.app.task.Context"
+      ],
+      "extra_fqns": [
+        "celery/app/task.py",
+        "celery/app/trace.py",
+        "celery/utils/names.py",
+        "celery/exceptions.py"
+      ],
+      "raw_reasoning_length": 243,
+      "raw_answer_length": 243,
+      "raw_usage": {
+        "completion_tokens": 150,
+        "completion_tokens_details": {
+          "reasoning_tokens": 74
+        },
+        "prompt_tokens": 99,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 249
+      },
+      "raw_output_preview": "```json\n{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery/backends/base.py\"\n    ],\n    \"indirect_deps\": [\n      \"celery/app/task.py\",\n      \"celery/app/amqp.py\"\n    ],\n    \"implicit_deps\": [\n      \"celery/utils/names.py\"\n    ]\n  }\n}\n```"
+    },
+    {
+      "case_id": "celery_easy_018",
+      "difficulty": "easy",
+      "category": "gen_task_name_cross_module",
+      "failure_type": "Type C",
+      "question": "`celery.app.base.Celery.gen_task_name` 方法将任务名生成委托给哪个工具函数？该工具函数在哪个文件中定义？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "stop",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 2,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 2,
+      "gold_fqns": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "predicted_fqns": [
+        "celery/app/base.py",
+        "celery/utils/names.py"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "extra_fqns": [
+        "celery/app/base.py",
+        "celery/utils/names.py"
+      ],
+      "raw_reasoning_length": 5262,
+      "raw_answer_length": 112,
+      "raw_usage": {
+        "completion_tokens": 1301,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1268
+        },
+        "prompt_tokens": 77,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 1378
+      },
+      "raw_output_preview": "```json\n{\"ground_truth\": {\"direct_deps\": [\"celery/app/utils.py\"], \"indirect_deps\": [], \"implicit_deps\": []}}\n```"
+    },
+    {
+      "case_id": "celery_easy_019",
+      "difficulty": "easy",
+      "category": "cwd_import_scope",
+      "failure_type": "Type C",
+      "question": "`celery.utils.imports.import_from_cwd` 与普通的 `import_module` 相比，额外做了什么操作？该操作通过哪个上下文管理器实现？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 2,
+      "predicted_count": 4,
+      "matched_count": 0,
+      "missing_count": 2,
+      "extra_count": 4,
+      "gold_fqns": [
+        "celery.utils.imports.cwd_in_path",
+        "celery.utils.imports.import_from_cwd"
+      ],
+      "predicted_fqns": [
+        "os",
+        "os.getcwd",
+        "contextlib.contextmanager",
+        "importlib.import_module"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.utils.imports.cwd_in_path",
+        "celery.utils.imports.import_from_cwd"
+      ],
+      "extra_fqns": [
+        "os",
+        "os.getcwd",
+        "contextlib.contextmanager",
+        "importlib.import_module"
+      ],
+      "raw_reasoning_length": 8730,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "prompt_tokens": 81,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2129
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_easy_020",
+      "difficulty": "easy",
+      "category": "extension_class_entry_point",
+      "failure_type": "Type E",
+      "question": "`celery.utils.imports.load_extension_classes(namespace)` 这条扩展加载链里，哪个 Celery 函数先枚举 entry point 的 `(name, value)`，哪个 Celery 函数再把 `value` 字符串解析成真实类？",
+      "entry_symbol": null,
+      "entry_file": null,
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.5,
+      "recall": 0.6667,
+      "f1": 0.5714,
+      "gold_count": 3,
+      "predicted_count": 4,
+      "matched_count": 2,
+      "missing_count": 1,
+      "extra_count": 2,
+      "gold_fqns": [
+        "celery.utils.imports.load_extension_class_names",
+        "celery.utils.imports.load_extension_classes",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "predicted_fqns": [
+        "celery.utils.imports.load_extension_classes",
+        "pkg_resources.iter_entry_points",
+        "celery.utils.imports.symbol_by_name",
+        "importlib.import_module"
+      ],
+      "matched_fqns": [
+        "celery.utils.imports.load_extension_classes",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "missing_fqns": [
+        "celery.utils.imports.load_extension_class_names"
+      ],
+      "extra_fqns": [
+        "pkg_resources.iter_entry_points",
+        "importlib.import_module"
+      ],
+      "raw_reasoning_length": 6756,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2034
+        },
+        "prompt_tokens": 98,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2146
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_medium_025",
+      "difficulty": "medium",
+      "category": "task_string_class_reference",
+      "failure_type": "Type D",
+      "question": "celery.app.task.Task.Request 是字符串 celery.worker.request:Request，celery.app.task.Task.Strategy 是字符串 celery.worker.strategy:default。这两个字符串在 worker 进程中被解析为哪些真实的类？",
+      "entry_symbol": "Task.Request",
+      "entry_file": "celery/app/task.py",
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.2,
+      "recall": 0.25,
+      "f1": 0.2222,
+      "gold_count": 4,
+      "predicted_count": 5,
+      "matched_count": 1,
+      "missing_count": 3,
+      "extra_count": 4,
+      "gold_fqns": [
+        "celery.worker.request.Request",
+        "celery.worker.strategy.default",
+        "celery.worker.request",
+        "celery.worker.strategy"
+      ],
+      "predicted_fqns": [
+        "celery.worker.request:Request",
+        "celery.worker.request",
+        "celery.exceptions",
+        "celery.utils",
+        "celery.app.task"
+      ],
+      "matched_fqns": [
+        "celery.worker.request"
+      ],
+      "missing_fqns": [
+        "celery.worker.request.Request",
+        "celery.worker.strategy.default",
+        "celery.worker.strategy"
+      ],
+      "extra_fqns": [
+        "celery.worker.request:Request",
+        "celery.exceptions",
+        "celery.utils",
+        "celery.app.task"
+      ],
+      "raw_reasoning_length": 5768,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2041
+        },
+        "prompt_tokens": 92,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2140
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_easy_021",
+      "difficulty": "easy",
+      "category": "signature_class_definition",
+      "failure_type": "Type D",
+      "question": "celery.canvas.Signature 是什么类型的对象？它继承自哪个标准库类？",
+      "entry_symbol": "Signature",
+      "entry_file": "celery/canvas.py",
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 2,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 2,
+      "gold_fqns": [
+        "celery.canvas.Signature"
+      ],
+      "predicted_fqns": [
+        "celery.app.task.Task",
+        "dict"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.canvas.Signature"
+      ],
+      "extra_fqns": [
+        "celery.app.task.Task",
+        "dict"
+      ],
+      "raw_reasoning_length": 5036,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2039
+        },
+        "prompt_tokens": 67,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2115
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_easy_022",
+      "difficulty": "easy",
+      "category": "cross_package_re-export",
+      "failure_type": "Type C",
+      "question": "celery.utils.uuid 实际上是从哪个外部包的哪个模块的哪个函数重新导出的？",
+      "entry_symbol": "uuid",
+      "entry_file": "celery/utils/__init__.py",
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 0,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 0,
+      "gold_fqns": [
+        "kombu.utils.uuid.uuid"
+      ],
+      "predicted_fqns": [],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "kombu.utils.uuid.uuid"
+      ],
+      "extra_fqns": [],
+      "raw_reasoning_length": 5067,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2042
+        },
+        "prompt_tokens": 73,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2121
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_easy_023",
+      "difficulty": "easy",
+      "category": "nodename_function_definition",
+      "failure_type": "Type C",
+      "question": "celery.utils.nodename 是在 celery.utils.nodenames 模块中定义的函数，它的完整 FQN 是什么？",
+      "entry_symbol": "nodename",
+      "entry_file": "celery/utils/__init__.py",
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 1,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 1,
+      "gold_fqns": [
+        "celery.utils.nodenames.nodename"
+      ],
+      "predicted_fqns": [
+        "celery.utils.nodenames"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.utils.nodenames.nodename"
+      ],
+      "extra_fqns": [
+        "celery.utils.nodenames"
+      ],
+      "raw_reasoning_length": 4937,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2040
+        },
+        "prompt_tokens": 80,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2128
+      },
+      "raw_output_preview": ""
+    },
+    {
+      "case_id": "celery_easy_024",
+      "difficulty": "easy",
+      "category": "worker_direct_re-export",
+      "failure_type": "Type C",
+      "question": "celery.utils.worker_direct 是在 celery.utils.nodenames 模块中定义的函数，它的完整 FQN 是什么？",
+      "entry_symbol": "worker_direct",
+      "entry_file": "celery/utils/__init__.py",
+      "requested_model": "glm-5",
+      "response_model": "glm-5",
+      "stable_finish_reason": "stop",
+      "raw_finish_reason": "length",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "gold_count": 1,
+      "predicted_count": 1,
+      "matched_count": 0,
+      "missing_count": 1,
+      "extra_count": 1,
+      "gold_fqns": [
+        "celery.utils.nodenames.worker_direct"
+      ],
+      "predicted_fqns": [
+        "celery.utils.nodenames"
+      ],
+      "matched_fqns": [],
+      "missing_fqns": [
+        "celery.utils.nodenames.worker_direct"
+      ],
+      "extra_fqns": [
+        "celery.utils.nodenames"
+      ],
+      "raw_reasoning_length": 5669,
+      "raw_answer_length": 0,
+      "raw_usage": {
+        "completion_tokens": 2048,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2036
+        },
+        "prompt_tokens": 79,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 2127
+      },
+      "raw_output_preview": ""
+    }
+  ]
+}

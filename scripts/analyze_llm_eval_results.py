@@ -327,7 +327,7 @@ def main() -> int:
     parser.add_argument(
         "--glm-results",
         type=Path,
-        default=Path("results/glm5_cucloud_eval_results.json"),
+        default=Path("results/glm_eval_results.json"),
     )
     parser.add_argument(
         "--cases",
@@ -337,12 +337,12 @@ def main() -> int:
     parser.add_argument(
         "--report-output",
         type=Path,
-        default=Path("reports/llm_eval_comparison_20260327.md"),
+        default=Path("reports/llm_eval_comparison_20260328.md"),
     )
     parser.add_argument(
         "--chart-output",
         type=Path,
-        default=Path("reports/llm_eval_comparison_20260327.png"),
+        default=Path("reports/llm_eval_comparison_20260328.png"),
     )
     args = parser.parse_args()
 
