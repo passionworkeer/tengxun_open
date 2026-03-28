@@ -12,7 +12,7 @@
 
 ## 🧪 Qwen 消融补跑入口
 
-当前严格正式口径还缺 `Qwen PE only / RAG only / PE+RAG`。
+这组脚本用于复现 Qwen 的基线、PE、RAG、PE+RAG 与 PE+RAG+FT 评测。
 
 统一脚本：
 
@@ -43,14 +43,9 @@ uv run --with openai python run_qwen_ablation_eval.py --mode pe_rag --repo-root 
 ## 🚀 完整跑线
 
 ```bash
-# Step 1: 基线测试
-cd tengxun_open
+# 依次执行基线、训练、评测脚本
 bash scripts/step1_baseline.sh
-
-# Step 2: 启动微调（等Step1完成）
 bash scripts/step2_train.sh
-
-# Step 3-5: 评测
 bash scripts/step3_ft_eval.sh
 bash scripts/step4_pe_ft.sh
 bash scripts/step5_pe_rag_ft.sh
@@ -59,10 +54,10 @@ bash scripts/step5_pe_rag_ft.sh
 ## 📊 输出结果
 
 评测结果保存在 `results/`:
-- `qwen_baseline.json` - 基线结果
-- `qwen_ft_results.json` - FT结果
-- `qwen_pe_ft_results.json` - PE+FT结果
-- `qwen_pe_rag_ft_results.json` - 完整策略结果
+- `qwen_baseline_recovered_summary_20260328.json` - 基线恢复结果
+- `qwen_ft_20260327_160136_stats.json` - FT 结果
+- `qwen_pe_ft_20260327_162308_stats.json` - PE+FT 结果
+- `qwen_pe_rag_ft_google_20260328_stats.json` - 完整策略结果
 
 ## ⚡ 实时监控
 

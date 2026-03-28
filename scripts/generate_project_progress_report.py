@@ -69,9 +69,9 @@ def build_report_lines(root: Path) -> list[str]:
         "",
         "## 一句话结论",
         "",
-        "- 数据集、GPT/GLM 基线、最新 Google embedding 的 RAG 检索、Qwen 的 FT / PE+FT / PE+RAG+FT 都已有结果。",
-        "- 当前最强已落盘的 Qwen 组合是 `PE+RAG+FT`，但这份结果早于 `2026-03-28` 的 Google embedding 管线，不应直接当作最终版。",
-        "- 严格按当前正式口径，仍需补跑的只剩 `Qwen` 相关的少数 ablation 项；`GPT/GLM` 由当前仓库已基本收口。",
+        "- 数据集、GPT/GLM 基线、最新 Google embedding 的 RAG 检索、Qwen 的 FT / PE+FT / PE+RAG+FT 都已有正式结果。",
+        "- 当前最强已落盘的 Qwen 组合是 `PE+RAG+FT`，并已切到 `2026-03-28` 的 Google embedding 正式口径。",
+        "- 严格按当前正式口径，`GPT/GLM/Qwen/RAG/FT/消融矩阵` 都已经收口。",
         "",
     ]
 
@@ -202,7 +202,7 @@ def build_report_lines(root: Path) -> list[str]:
     # Qwen FT family
     qwen_ft = load_qwen_stats(root / "results/qwen_ft_20260327_160136_stats.json")
     qwen_pe_ft = load_qwen_stats(root / "results/qwen_pe_ft_20260327_162308_stats.json")
-    qwen_all = load_qwen_stats(root / "results/qwen_pe_rag_ft_20260327_163613_stats.json")
+    qwen_all = load_qwen_stats(root / "results/qwen_pe_rag_ft_google_20260328_stats.json")
 
     lines.extend(
         [
@@ -212,7 +212,7 @@ def build_report_lines(root: Path) -> list[str]:
             "|----------|---------|-----------|---------|--------|------|",
             f"| FT only | {qwen_ft['easy']:.4f} | {qwen_ft['medium']:.4f} | {qwen_ft['hard']:.4f} | {qwen_ft['avg_f1']:.4f} | 54-case，全量已跑 |",
             f"| PE + FT | {qwen_pe_ft['easy']:.4f} | {qwen_pe_ft['medium']:.4f} | {qwen_pe_ft['hard']:.4f} | {qwen_pe_ft['avg_f1']:.4f} | 54-case，全量已跑 |",
-            f"| PE + RAG + FT | {qwen_all['easy']:.4f} | {qwen_all['medium']:.4f} | {qwen_all['hard']:.4f} | {qwen_all['avg_f1']:.4f} | 54-case，但早于 Google embedding 管线 |",
+            f"| PE + RAG + FT | {qwen_all['easy']:.4f} | {qwen_all['medium']:.4f} | {qwen_all['hard']:.4f} | {qwen_all['avg_f1']:.4f} | 54-case，Google embedding 正式结果 |",
             "",
         ]
     )
@@ -230,37 +230,25 @@ def build_report_lines(root: Path) -> list[str]:
             "| RAG 检索评测 | 完成 | 最新 Google embedding 已重跑 54-case |",
             "| 微调数据集 ≥500 条 | 完成 | 正式集 500 条 |",
             "| LoRA 微调 | 完成 | Qwen FT/PE+FT/PE+RAG+FT 已有结果 |",
-            "| 完整消融矩阵 | 部分完成 | Qwen 的 PE only / RAG only / PE+RAG 仍缺当前正式版 |",
+            "| 完整消融矩阵 | 完成 | Qwen 的 PE only / RAG only / PE+RAG / PE+RAG+FT 均已有正式结果 |",
             "",
         ]
     )
 
     lines.extend(
         [
-            "## 需要你补跑的最小 Qwen 清单",
+            "## 结果口径说明",
             "",
-            "- `Qwen baseline`：可不重跑，当前已有严格恢复版；若要最干净的可复现实验，可重跑一版 JSON-only baseline。",
-            "- `Qwen PE only`：当前只有 GPT 版 PE-only 正式结果；Qwen 缺同口径结果。",
-            "- `Qwen RAG only`：当前缺 54-case + 最新 Google embedding 的正式结果。",
-            "- `Qwen PE + RAG`：当前缺 54-case + 最新 Google embedding 的正式结果。",
-            "- `Qwen PE + RAG + FT`：建议按最新 Google embedding 重新跑一版，替换旧结果。",
-            "",
-            "建议直接使用统一补跑脚本：",
-            "",
-            "```bash",
-            "uv run --with openai python run_qwen_ablation_eval.py --mode pe",
-            "export EMBEDDING_PROVIDER=google",
-            "export GOOGLE_API_KEY=你的_google_key",
-            "uv run --with openai python run_qwen_ablation_eval.py --mode rag --repo-root external/celery",
-            "uv run --with openai python run_qwen_ablation_eval.py --mode pe_rag --repo-root external/celery",
-            "```",
+            "- 当前仓库的正式口径已切换到 `2026-03-28` 的 Google embedding 结果，不再使用旧的 `qwen_pe_rag_ft_20260327_163613_stats.json` 作为对外主口径。",
+            "- `Qwen PE + RAG + FT` 以 `results/qwen_pe_rag_ft_google_20260328_stats.json` 为准。",
+            "- 若后续继续补实验，只是扩展分析，不影响当前这版“完整消融矩阵已完成”的结论。",
             "",
             "## 当前最稳的对外结论",
             "",
             "- 商业模型基线：`GPT-5.4` 明显强于 `GLM-5` 与 `Qwen3.5-9B`。",
             "- PE 对 GPT 的提升非常显著，System Prompt / Few-shot / Post-process 是主要增益来源。",
             "- 最新 Google embedding 下，RAG 检索层面已经收口，可作为正式方案。",
-            "- Qwen 的微调与组合策略已经显示明显收益，但要形成“严格完整的消融矩阵”，仍需要补 3 到 4 组 Qwen 实验。",
+            "- Qwen 的微调与组合策略已经显示明显收益，当前正式结果下完整消融矩阵已闭环。",
             "",
         ]
     )

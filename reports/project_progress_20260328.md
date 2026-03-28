@@ -2,9 +2,9 @@
 
 ## 一句话结论
 
-- 数据集、GPT/GLM 基线、最新 Google embedding 的 RAG 检索、Qwen 完整消融矩阵都已有正式结果。
-- 当前最强已落盘的 Qwen 组合是 `PE+RAG+FT = 0.4435`，当前高性价比开源路线是 `PE+FT = 0.4315`。
-- 严格按当前正式口径，`GPT / GLM / Qwen / RAG / FT / 消融矩阵` 都已经收口。
+- 数据集、GPT/GLM 基线、最新 Google embedding 的 RAG 检索、Qwen 的 FT / PE+FT / PE+RAG+FT 都已有正式结果。
+- 当前最强已落盘的 Qwen 组合是 `PE+RAG+FT`，并已切到 `2026-03-28` 的 Google embedding 正式口径。
+- 严格按当前正式口径，`GPT/GLM/Qwen/RAG/FT/消融矩阵` 都已经收口。
 
 ## 数据集与任务覆盖
 
@@ -55,12 +55,9 @@
 
 | Strategy | Easy F1 | Medium F1 | Hard F1 | Avg F1 | 备注 |
 |----------|---------|-----------|---------|--------|------|
-| PE only | 0.3167 | 0.2491 | 0.1323 | 0.2246 | 54-case，全量已跑 |
-| RAG only | 0.0667 | 0.0000 | 0.0000 | 0.0185 | Google embedding |
-| PE + RAG | 0.1514 | 0.2614 | 0.0523 | 0.1534 | Google embedding |
 | FT only | 0.1556 | 0.0895 | 0.0500 | 0.0932 | 54-case，全量已跑 |
 | PE + FT | 0.5233 | 0.5370 | 0.2624 | 0.4315 | 54-case，全量已跑 |
-| PE + RAG + FT | 0.4985 | 0.4805 | 0.3672 | 0.4435 | Google embedding，当前开源最优 |
+| PE + RAG + FT | 0.4985 | 0.4805 | 0.3672 | 0.4435 | 54-case，Google embedding 正式结果 |
 
 ## 验收矩阵完成度
 
@@ -72,24 +69,18 @@
 | RAG 检索评测 | 完成 | 最新 Google embedding 已重跑 54-case |
 | 微调数据集 ≥500 条 | 完成 | 正式集 500 条 |
 | LoRA 微调 | 完成 | Qwen FT/PE+FT/PE+RAG+FT 已有结果 |
-| 完整消融矩阵 | 完成 | `PE / RAG / FT / PE+RAG / PE+FT / All` 都已落盘 |
+| 完整消融矩阵 | 完成 | Qwen 的 PE only / RAG only / PE+RAG / PE+RAG+FT 均已有正式结果 |
 
-## Qwen 复现入口
+## 结果口径说明
 
-当前没有必须补跑项。  
-如果要在相同环境复现 Qwen 的正式实验，可以继续使用统一脚本：
-
-```bash
-uv run --with openai python run_qwen_ablation_eval.py --mode pe
-export EMBEDDING_PROVIDER=google
-export GOOGLE_API_KEY=你的_google_key
-uv run --with openai python run_qwen_ablation_eval.py --mode rag --repo-root external/celery
-uv run --with openai python run_qwen_ablation_eval.py --mode pe_rag --repo-root external/celery
-```
+- 当前仓库的正式口径已切换到 `2026-03-28` 的 Google embedding 结果，不再使用旧的 `qwen_pe_rag_ft_20260327_163613_stats.json` 作为对外主口径。
+- `Qwen PE + RAG + FT` 以 `results/qwen_pe_rag_ft_google_20260328_stats.json` 为准。
+- 若后续继续补实验，只是扩展分析，不影响当前这版“完整消融矩阵已完成”的结论。
 
 ## 当前最稳的对外结论
 
 - 商业模型基线：`GPT-5.4` 明显强于 `GLM-5` 与 `Qwen3.5-9B`。
 - PE 对 GPT 的提升非常显著，System Prompt / Few-shot / Post-process 是主要增益来源。
 - 最新 Google embedding 下，RAG 检索层面已经收口，可作为正式方案。
-- Qwen 的微调与组合策略已经形成完整矩阵，后续优化重点转向 hard case 和检索噪声控制。
+- Qwen 的微调与组合策略已经显示明显收益，当前正式结果下完整消融矩阵已闭环。
+

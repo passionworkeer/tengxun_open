@@ -22,6 +22,22 @@ from .embedding_provider import (
 
 
 _TOKEN_PATTERN = re.compile(r"[A-Za-z_][A-Za-z0-9_]+")
+_APPROX_CHARS_PER_TOKEN = 4
+
+
+def _estimate_tokens(text: str) -> int:
+    return max(1, math.ceil(len(text) / _APPROX_CHARS_PER_TOKEN)) if text else 0
+
+
+def _truncate_to_token_budget(text: str, remaining_tokens: int) -> str:
+    if remaining_tokens <= 0:
+        return ""
+    remaining_chars = max(0, remaining_tokens * _APPROX_CHARS_PER_TOKEN)
+    if len(text) <= remaining_chars:
+        return text
+    if remaining_chars <= 3:
+        return text[:remaining_chars]
+    return text[: remaining_chars - 3].rstrip() + "..."
 
 
 @dataclass(frozen=True)
@@ -279,6 +295,7 @@ class HybridRetriever:
         query_mode: str = "question_plus_entry",
         rrf_k: int = 30,
         weights: dict[str, float] | None = None,
+        max_context_tokens: int = 4096,
     ) -> str:
         trace = self.retrieve_with_trace(
             question=question,
@@ -290,13 +307,36 @@ class HybridRetriever:
             rrf_k=rrf_k,
             weights=weights,
         )
-        sections = []
+        sections: list[str] = []
+        used_tokens = 0
         for rank, hit in enumerate(trace.fused, start=1):
             location = f"{hit.repo_path}:{hit.start_line}-{hit.end_line}"
             source = ", ".join(hit.source) if hit.source else "fused"
-            sections.append(
-                f"[Retrieved {rank}] {hit.symbol} ({location}) | source={source}\n{hit.snippet}"
+            section = (
+                f"[Retrieved {rank}] {hit.symbol} ({location}) | source={source}\n"
+                f"{hit.snippet}"
             )
+            section_tokens = _estimate_tokens(section)
+            if used_tokens + section_tokens <= max_context_tokens:
+                sections.append(section)
+                used_tokens += section_tokens
+                continue
+
+            remaining_tokens = max_context_tokens - used_tokens
+            if remaining_tokens <= 0:
+                sections.append("[Context budget exhausted] Remaining retrieved chunks omitted.")
+                break
+
+            suffix = "\n[Truncated to fit context budget]"
+            suffix_tokens = _estimate_tokens(suffix)
+            body_budget = max(0, remaining_tokens - suffix_tokens)
+            truncated = _truncate_to_token_budget(section, body_budget)
+            if truncated:
+                sections.append(f"{truncated}{suffix}")
+            else:
+                sections.append("[Context budget exhausted] Remaining retrieved chunks omitted.")
+            break
+
         return "\n\n".join(sections)
 
     def expand_candidate_fqns(

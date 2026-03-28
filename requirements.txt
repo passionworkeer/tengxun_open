@@ -30,3 +30,6 @@ seaborn>=0.13.0
 
 # Notebook
 jupyter>=1.0.0
+
+# Testing
+pytest>=7.4.0
