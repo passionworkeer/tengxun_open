@@ -1,0 +1,3029 @@
+{
+  "source_path": "results/qwen_pe_rag_google_20260328.json",
+  "cases": [
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "easy_001",
+      "difficulty": "easy",
+      "failure_type": "Type C",
+      "union_f1": 0.4,
+      "macro_f1": 0.3333,
+      "direct_f1": 1.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.25,
+          "recall": 1.0,
+          "f1": 0.4
+        },
+        "direct": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.3333,
+        "macro_recall": 0.3333,
+        "macro_f1": 0.3333,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 4
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "easy_002",
+      "difficulty": "easy",
+      "failure_type": "Type C",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 1,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 1,
+        "active_layers": [
+          "direct_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "easy_003",
+      "difficulty": "easy",
+      "failure_type": "Type E",
+      "union_f1": 0.4,
+      "macro_f1": 0.3333,
+      "direct_f1": 1.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.25,
+          "recall": 1.0,
+          "f1": 0.4
+        },
+        "direct": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.3333,
+        "macro_recall": 0.3333,
+        "macro_f1": 0.3333,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 4
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "easy_004",
+      "difficulty": "easy",
+      "failure_type": "Type D",
+      "union_f1": 0.4,
+      "macro_f1": 0.3333,
+      "direct_f1": 1.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.25,
+          "recall": 1.0,
+          "f1": 0.4
+        },
+        "direct": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.3333,
+        "macro_recall": 0.3333,
+        "macro_f1": 0.3333,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 4
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "medium_001",
+      "difficulty": "medium",
+      "failure_type": "Type E",
+      "union_f1": 0.4,
+      "macro_f1": 0.3333,
+      "direct_f1": 1.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.25,
+          "recall": 1.0,
+          "f1": 0.4
+        },
+        "direct": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.3333,
+        "macro_recall": 0.3333,
+        "macro_f1": 0.3333,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 4
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "medium_002",
+      "difficulty": "medium",
+      "failure_type": "Type E",
+      "union_f1": 0.4,
+      "macro_f1": 0.3333,
+      "direct_f1": 1.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.25,
+          "recall": 1.0,
+          "f1": 0.4
+        },
+        "direct": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.3333,
+        "macro_recall": 0.3333,
+        "macro_f1": 0.3333,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 4
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "medium_003",
+      "difficulty": "medium",
+      "failure_type": "Type D",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 1,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 1,
+        "active_layers": [
+          "direct_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "medium_004",
+      "difficulty": "medium",
+      "failure_type": "Type C",
+      "union_f1": 0.5,
+      "macro_f1": 0.3333,
+      "direct_f1": 1.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.3333,
+          "recall": 1.0,
+          "f1": 0.5
+        },
+        "direct": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.3333,
+        "macro_recall": 0.3333,
+        "macro_f1": 0.3333,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 3
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "hard_001",
+      "difficulty": "hard",
+      "failure_type": "Type B",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 1,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 1,
+        "active_layers": [
+          "direct_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "hard_002",
+      "difficulty": "hard",
+      "failure_type": "Type B",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 1,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 1,
+        "active_layers": [
+          "direct_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "hard_003",
+      "difficulty": "hard",
+      "failure_type": "Type B",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 1,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 1,
+        "active_layers": [
+          "direct_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "hard_004",
+      "difficulty": "hard",
+      "failure_type": "Type E",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 1,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 1,
+        "active_layers": [
+          "direct_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_hard_014",
+      "difficulty": "hard",
+      "failure_type": "Type B",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 5,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_hard_016",
+      "difficulty": "hard",
+      "failure_type": "Type E",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 2,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 2,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 4,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_hard_013",
+      "difficulty": "hard",
+      "failure_type": "Type B",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 5,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_hard_015",
+      "difficulty": "hard",
+      "failure_type": "Type B",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 5,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_hard_018",
+      "difficulty": "hard",
+      "failure_type": "Type E",
+      "union_f1": 0.5455,
+      "macro_f1": 0.4444,
+      "direct_f1": 1.0,
+      "indirect_f1": 0.3333,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 3,
+      "mislayered_matches": 1,
+      "mislayer_rate": 0.3333,
+      "scoring": {
+        "union": {
+          "precision": 0.75,
+          "recall": 0.4286,
+          "f1": 0.5455
+        },
+        "direct": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "indirect": {
+          "precision": 1.0,
+          "recall": 0.2,
+          "f1": 0.3333
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.6667,
+        "macro_recall": 0.4,
+        "macro_f1": 0.4444,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 3,
+        "mislayered_matches": 1,
+        "mislayer_rate": 0.3333,
+        "gold_total": 7,
+        "predicted_total": 4
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_medium_017",
+      "difficulty": "medium",
+      "failure_type": "Type E",
+      "union_f1": 0.6667,
+      "macro_f1": 0.6667,
+      "direct_f1": 1.0,
+      "indirect_f1": 1.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 3,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.6,
+          "recall": 0.75,
+          "f1": 0.6667
+        },
+        "direct": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "indirect": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.6667,
+        "macro_recall": 0.6667,
+        "macro_f1": 0.6667,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 3,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 4,
+        "predicted_total": 5
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "easy_007",
+      "difficulty": "easy",
+      "failure_type": "Type C",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 1,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 1,
+        "active_layers": [
+          "direct_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "easy_005",
+      "difficulty": "easy",
+      "failure_type": "Type B",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 5,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "easy_006",
+      "difficulty": "easy",
+      "failure_type": "Type B",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 4,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "easy_008",
+      "difficulty": "easy",
+      "failure_type": "Type C",
+      "union_f1": 0.5714,
+      "macro_f1": 0.5556,
+      "direct_f1": 1.0,
+      "indirect_f1": 0.6667,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 2,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.4,
+          "recall": 1.0,
+          "f1": 0.5714
+        },
+        "direct": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "indirect": {
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6667
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.5,
+        "macro_recall": 0.6667,
+        "macro_f1": 0.5556,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 2,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 2,
+        "predicted_total": 5
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "medium_005",
+      "difficulty": "medium",
+      "failure_type": "Type E",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 4,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "medium_006",
+      "difficulty": "medium",
+      "failure_type": "Type E",
+      "union_f1": 1.0,
+      "macro_f1": 0.6667,
+      "direct_f1": 0.6667,
+      "indirect_f1": 0.6667,
+      "implicit_f1": 0.6667,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": true,
+      "matched_fqns": 6,
+      "mislayered_matches": 2,
+      "mislayer_rate": 0.3333,
+      "scoring": {
+        "union": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "direct": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6667
+        },
+        "indirect": {
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6667
+        },
+        "implicit": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6667
+        },
+        "macro_precision": 0.8333,
+        "macro_recall": 0.6667,
+        "macro_f1": 0.6667,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": true,
+        "matched_fqns": 6,
+        "mislayered_matches": 2,
+        "mislayer_rate": 0.3333,
+        "gold_total": 6,
+        "predicted_total": 6
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "medium_007",
+      "difficulty": "medium",
+      "failure_type": "Type E",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 7,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "medium_008",
+      "difficulty": "medium",
+      "failure_type": "Type E",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 4,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_medium_020",
+      "difficulty": "medium",
+      "failure_type": "Type E",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 6,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_hard_019",
+      "difficulty": "hard",
+      "failure_type": "Type E",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 4,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_hard_121",
+      "difficulty": "hard",
+      "failure_type": "Type A",
+      "union_f1": 0.5,
+      "macro_f1": 0.3175,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.2857,
+      "implicit_f1": 0.6667,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 3,
+      "mislayered_matches": 1,
+      "mislayer_rate": 0.3333,
+      "scoring": {
+        "union": {
+          "precision": 0.6,
+          "recall": 0.4286,
+          "f1": 0.5
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.5,
+          "recall": 0.2,
+          "f1": 0.2857
+        },
+        "implicit": {
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6667
+        },
+        "macro_precision": 0.3333,
+        "macro_recall": 0.4,
+        "macro_f1": 0.3175,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 3,
+        "mislayered_matches": 1,
+        "mislayer_rate": 0.3333,
+        "gold_total": 7,
+        "predicted_total": 5
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_hard_122",
+      "difficulty": "hard",
+      "failure_type": "Type A",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 5,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_hard_024",
+      "difficulty": "hard",
+      "failure_type": "Type A",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 2,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 2,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 2,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_hard_025",
+      "difficulty": "hard",
+      "failure_type": "Type A",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 1,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 1,
+        "active_layers": [
+          "direct_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_type_d_001",
+      "difficulty": "hard",
+      "failure_type": "Type D",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 1,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 1,
+        "active_layers": [
+          "direct_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_type_d_002",
+      "difficulty": "hard",
+      "failure_type": "Type D",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 4,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_type_d_003",
+      "difficulty": "medium",
+      "failure_type": "Type D",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 2,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 2,
+        "active_layers": [
+          "direct_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 2,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_type_d_004",
+      "difficulty": "medium",
+      "failure_type": "Type D",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 1,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 1,
+        "active_layers": [
+          "direct_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_type_d_005",
+      "difficulty": "hard",
+      "failure_type": "Type D",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 2,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 2,
+        "active_layers": [
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 2,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_type_d_006",
+      "difficulty": "medium",
+      "failure_type": "Type D",
+      "union_f1": 1.0,
+      "macro_f1": 1.0,
+      "direct_f1": 1.0,
+      "indirect_f1": 1.0,
+      "implicit_f1": 1.0,
+      "active_layer_count": 3,
+      "exact_layer_match": true,
+      "exact_union_match": true,
+      "matched_fqns": 3,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "direct": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "indirect": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "implicit": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "macro_precision": 1.0,
+        "macro_recall": 1.0,
+        "macro_f1": 1.0,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": true,
+        "exact_union_match": true,
+        "matched_fqns": 3,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 3,
+        "predicted_total": 3
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_type_a_001",
+      "difficulty": "hard",
+      "failure_type": "Type A",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 2,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 2,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 6,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_type_a_002",
+      "difficulty": "hard",
+      "failure_type": "Type A",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 5,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_type_a_003",
+      "difficulty": "hard",
+      "failure_type": "Type A",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 2,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 2,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 4,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_medium_019",
+      "difficulty": "medium",
+      "failure_type": "Type E",
+      "union_f1": 1.0,
+      "macro_f1": 1.0,
+      "direct_f1": 1.0,
+      "indirect_f1": 1.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 2,
+      "exact_layer_match": true,
+      "exact_union_match": true,
+      "matched_fqns": 3,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "direct": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "indirect": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 1.0,
+        "macro_recall": 1.0,
+        "macro_f1": 1.0,
+        "active_layer_count": 2,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps"
+        ],
+        "exact_layer_match": true,
+        "exact_union_match": true,
+        "matched_fqns": 3,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 3,
+        "predicted_total": 3
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_medium_021",
+      "difficulty": "medium",
+      "failure_type": "Type C",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 1,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 1,
+        "active_layers": [
+          "direct_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_medium_022",
+      "difficulty": "medium",
+      "failure_type": "Type D",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 6,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_medium_023",
+      "difficulty": "medium",
+      "failure_type": "Type E",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 2,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 2,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 3,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_medium_024",
+      "difficulty": "medium",
+      "failure_type": "Type B",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 2,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 2,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 2,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_easy_018",
+      "difficulty": "easy",
+      "failure_type": "Type C",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 1,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 1,
+        "active_layers": [
+          "direct_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_easy_019",
+      "difficulty": "easy",
+      "failure_type": "Type C",
+      "union_f1": 0.5,
+      "macro_f1": 0.2222,
+      "direct_f1": 0.6667,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 3,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 1,
+      "mislayer_rate": 1.0,
+      "scoring": {
+        "union": {
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1": 0.5
+        },
+        "direct": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6667
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.3333,
+        "macro_recall": 0.1667,
+        "macro_f1": 0.2222,
+        "active_layer_count": 3,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps",
+          "implicit_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 1,
+        "mislayer_rate": 1.0,
+        "gold_total": 2,
+        "predicted_total": 2
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_easy_020",
+      "difficulty": "easy",
+      "failure_type": "Type E",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 2,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 2,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 3,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_medium_025",
+      "difficulty": "medium",
+      "failure_type": "Type D",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 2,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 2,
+        "active_layers": [
+          "direct_deps",
+          "indirect_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 4,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_easy_021",
+      "difficulty": "easy",
+      "failure_type": "Type D",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 1,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 1,
+        "active_layers": [
+          "direct_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_easy_022",
+      "difficulty": "easy",
+      "failure_type": "Type C",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 1,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 1,
+        "active_layers": [
+          "direct_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_easy_023",
+      "difficulty": "easy",
+      "failure_type": "Type C",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 1,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 1,
+        "active_layers": [
+          "direct_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 0
+      }
+    },
+    {
+      "source": "qwen_pe_rag",
+      "case_id": "celery_easy_024",
+      "difficulty": "easy",
+      "failure_type": "Type C",
+      "union_f1": 0.0,
+      "macro_f1": 0.0,
+      "direct_f1": 0.0,
+      "indirect_f1": 0.0,
+      "implicit_f1": 0.0,
+      "active_layer_count": 1,
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "scoring": {
+        "union": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "direct": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "indirect": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "implicit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "macro_precision": 0.0,
+        "macro_recall": 0.0,
+        "macro_f1": 0.0,
+        "active_layer_count": 1,
+        "active_layers": [
+          "direct_deps"
+        ],
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "gold_total": 1,
+        "predicted_total": 0
+      }
+    }
+  ],
+  "summary": {
+    "overall": {
+      "count": 54,
+      "avg_union_f1": 0.1534,
+      "avg_macro_f1": 0.1273,
+      "avg_direct_f1": 0.2284,
+      "avg_indirect_f1": 0.0917,
+      "avg_implicit_f1": 0.0432,
+      "layer_penalty": 0.0261,
+      "avg_mislayer_rate": 0.037,
+      "exact_layer_match_rate": 0.037
+    },
+    "by_difficulty": {
+      "easy": {
+        "count": 15,
+        "avg_union_f1": 0.1514,
+        "avg_macro_f1": 0.1185,
+        "avg_direct_f1": 0.3111,
+        "avg_indirect_f1": 0.0444,
+        "avg_implicit_f1": 0.0,
+        "layer_penalty": 0.0329,
+        "avg_mislayer_rate": 0.0667
+      },
+      "hard": {
+        "count": 20,
+        "avg_union_f1": 0.0523,
+        "avg_macro_f1": 0.0381,
+        "avg_direct_f1": 0.05,
+        "avg_indirect_f1": 0.0309,
+        "avg_implicit_f1": 0.0333,
+        "layer_penalty": 0.0142,
+        "avg_mislayer_rate": 0.0333
+      },
+      "medium": {
+        "count": 19,
+        "avg_union_f1": 0.2614,
+        "avg_macro_f1": 0.2281,
+        "avg_direct_f1": 0.3509,
+        "avg_indirect_f1": 0.193,
+        "avg_implicit_f1": 0.0877,
+        "layer_penalty": 0.0333,
+        "avg_mislayer_rate": 0.0175
+      }
+    },
+    "by_failure_type": {
+      "Type A": {
+        "count": 7,
+        "avg_union_f1": 0.0714,
+        "avg_macro_f1": 0.0454,
+        "avg_direct_f1": 0.0,
+        "avg_indirect_f1": 0.0408,
+        "avg_implicit_f1": 0.0952,
+        "layer_penalty": 0.026,
+        "avg_mislayer_rate": 0.0476
+      },
+      "Type B": {
+        "count": 9,
+        "avg_union_f1": 0.0,
+        "avg_macro_f1": 0.0,
+        "avg_direct_f1": 0.0,
+        "avg_indirect_f1": 0.0,
+        "avg_implicit_f1": 0.0,
+        "layer_penalty": 0.0,
+        "avg_mislayer_rate": 0.0
+      },
+      "Type C": {
+        "count": 11,
+        "avg_union_f1": 0.1792,
+        "avg_macro_f1": 0.1313,
+        "avg_direct_f1": 0.3333,
+        "avg_indirect_f1": 0.0606,
+        "avg_implicit_f1": 0.0,
+        "layer_penalty": 0.0479,
+        "avg_mislayer_rate": 0.0909
+      },
+      "Type D": {
+        "count": 11,
+        "avg_union_f1": 0.1273,
+        "avg_macro_f1": 0.1212,
+        "avg_direct_f1": 0.1818,
+        "avg_indirect_f1": 0.0909,
+        "avg_implicit_f1": 0.0909,
+        "layer_penalty": 0.0061,
+        "avg_mislayer_rate": 0.0
+      },
+      "Type E": {
+        "count": 16,
+        "avg_union_f1": 0.2758,
+        "avg_macro_f1": 0.2361,
+        "avg_direct_f1": 0.4167,
+        "avg_indirect_f1": 0.1875,
+        "avg_implicit_f1": 0.0417,
+        "layer_penalty": 0.0397,
+        "avg_mislayer_rate": 0.0417
+      }
+    }
+  }
+}

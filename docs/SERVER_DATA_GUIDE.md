@@ -1,6 +1,7 @@
 # 项目数据说明文档
 
 > 当前正式口径：`data/eval_cases.json` 是唯一正式评测入口，共 `54` 条，全部手工标注。
+> 当前 strict 复验口径：在正式资产之外，额外提供 `fewshot_examples_20_strict.json`、`finetune_dataset_500_strict.jsonl`、`strict_scoring_audit_20260329.md`、`strict_data_audit_20260329.md` 用于答辩防守与去污染复验。
 > 其他 `50-case` / `draft` 文件仅用于历史追溯或辅助实验，不作为正式评测入口。
 
 ## 概述
@@ -11,7 +12,8 @@
 - `indirect_deps`
 - `implicit_deps`
 
-正式主评分指标对这三层并集后的 FQN 做精确匹配；三层标签本身仍保留在数据中，用于诊断与展示。
+正式主评分指标仍对这三层并集后的 FQN 做精确匹配；三层标签本身仍保留在数据中，用于诊断与展示。
+严格复验时，补充使用 `active-layer macro F1` 与 `mislayer rate` 两个分层指标。
 
 ---
 
@@ -22,6 +24,8 @@
 | `data/eval_cases.json` | 54 | 正式 | 正式评测集，全部手工标注 |
 | `data/fewshot_examples_20.json` | 20 | 正式 | Few-shot 示例池 |
 | `data/finetune_dataset_500.jsonl` | 500 | 正式 | LoRA 微调数据 |
+| `data/fewshot_examples_20_strict.json` | 20 | strict 复验 | 去除 exact GT / hard question overlap 的 few-shot 变体 |
+| `data/finetune_dataset_500_strict.jsonl` | 500 | strict 复验 | 去除 exact GT / hard question overlap 的微调变体 |
 | `data/hard_samples_expanded.jsonl` | 100 | 辅助 | hard 场景扩展样本 |
 | `data/pyan3_generated_samples.jsonl` | 50 | 辅助 | Pyan3 静态图生成样本 |
 | `data/audit_results.jsonl` | ~1000 | 辅助 | 审计原始结果 |
@@ -107,6 +111,12 @@
 - Type E：4 条
 - Type A：2 条
 
+补充说明：
+
+- `fewshot_examples_20.json` 是历史正式 few-shot 资产。
+- 若目标是严格答辩或去污染复验，使用 `fewshot_examples_20_strict.json`。
+- `pe/prompt_templates_v2.py` 支持通过 `FEWSHOT_DATA_PATH` 切换到 strict few-shot。
+
 ---
 
 ## 3. 微调训练数据 `finetune_dataset_500.jsonl`
@@ -135,6 +145,11 @@
 - `finetune/data_guard.py` 会对 **Celery 内部 FQN** 做源码存在性校验。
 - 对白名单中的外部依赖包（如 `kombu`、`vine`、`billiard`）做显式放行。
 - 因此它是“面向本任务的数据守卫”，不是对所有外部依赖都做源码级追踪。
+
+补充说明：
+
+- `finetune_dataset_500.jsonl` 是历史正式 500 条训练资产。
+- 若目标是严格答辩或去污染复验，使用 `finetune_dataset_500_strict.jsonl`，并配合 `configs/train_config_strict_20260329.yaml` / `make train-strict`。
 
 ---
 
@@ -178,12 +193,19 @@ python3 -m evaluation.run_qwen_eval \
     --base-url http://localhost:8000/v1 \
     --cases data/eval_cases.json \
     --output results/qwen3_eval_results.json
+
+# 对已有结果做 strict 重评分
+python3 scripts/rescore_result_file.py \
+    --path results/gpt5_eval_results.json
 ```
 
 ### 2. 校验正式微调数据
 
 ```bash
 python3 -m finetune.data_guard data/finetune_dataset_500.jsonl
+
+# strict 复验版
+python3 -m finetune.data_guard data/finetune_dataset_500_strict.jsonl
 ```
 
 ### 3. 重建正式 embedding cache
@@ -205,8 +227,10 @@ python3 scripts/precompute_embeddings.py
 | 文件 | 验证状态 | 说明 |
 |------|---------|------|
 | `eval_cases.json` | ✅ 已验证 | `54` 条全部人工审核 |
-| `fewshot_examples_20.json` | ✅ 已验证 | `20` 条正式 few-shot |
-| `finetune_dataset_500.jsonl` | ✅ 已验证 | `500` 条正式训练数据 |
+| `fewshot_examples_20.json` | ✅ 已验证 | `20` 条正式 few-shot，保留历史正式口径 |
+| `fewshot_examples_20_strict.json` | ✅ strict 已验证 | 去除 exact GT / hard question overlap 的复验版 |
+| `finetune_dataset_500.jsonl` | ✅ 已验证 | `500` 条正式训练数据，保留历史正式口径 |
+| `finetune_dataset_500_strict.jsonl` | ✅ strict 已验证 | 去除 exact GT / hard question overlap 的复验版 |
 | `hard_samples_expanded.jsonl` | ✅ 已整理 | 辅助样本，不是正式评测集 |
 | `pyan3_generated_samples.jsonl` | ⚠️ 辅助数据 | 不纳入正式交付口径 |
 
@@ -245,4 +269,4 @@ python3 scripts/precompute_embeddings.py
 
 1. **FQN 格式**：必须使用 `.` 分隔符，如 `celery.app.base.Celery`，而非 `celery/app/base.py:Celery`
 2. **UTF-8 BOM**：部分 JSON 文件带 BOM，读取时使用 `encoding='utf-8-sig'`
-3. **评测数据**：只用 `eval_cases_migrated_draft_round4.json`，其他是历史版本或训练数据
+3. **评测数据**：正式评测只用 `data/eval_cases.json`；`eval_cases_migrated_draft_round4.json` 是历史版本

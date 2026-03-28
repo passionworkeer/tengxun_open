@@ -39,7 +39,30 @@
 
 - 主评分指标：将 `direct_deps / indirect_deps / implicit_deps` 三层并集后做 FQN 精确匹配。
 - 三层标签仍完整保留在正式数据里，用于瓶颈诊断、few-shot 构造和 bad case 展示。
+- 严格复验时，补充看 `active-layer macro F1` 和 `mislayer rate`，见 [`reports/strict_scoring_audit_20260329.md`](reports/strict_scoring_audit_20260329.md)。
 - 正式资产边界与历史归档清单见：[`docs/official_asset_manifest.md`](docs/official_asset_manifest.md)
+
+## Strict 复验入口
+
+- strict 数据审计：[`reports/strict_data_audit_20260329.md`](reports/strict_data_audit_20260329.md)
+- strict 评分审计：[`reports/strict_scoring_audit_20260329.md`](reports/strict_scoring_audit_20260329.md)
+- strict 数据资产：
+  - `data/fewshot_examples_20_strict.json`
+  - `data/finetune_dataset_500_strict.jsonl`
+- strict 常用命令：
+
+```bash
+make audit-strict
+make rescore-strict
+
+FEWSHOT_DATA_PATH=data/fewshot_examples_20_strict.json \
+python3 scripts/run_pe_eval.py \
+  --api-key "<api-key>" \
+  --variants fewshot,postprocess \
+  --output-dir results/pe_eval_strict_replay
+
+make train-strict
+```
 
 ## 图表速览
 
@@ -117,6 +140,7 @@ pip install -r requirements-finetune.txt
 ```bash
 export PYTHONPATH=.
 make lint-data
+make audit-strict
 ```
 
 ### 2. 基线与 RAG 检索
@@ -248,6 +272,7 @@ celery-dep-analysis/
 - RAG 方案：[`reports/rag_pipeline.md`](reports/rag_pipeline.md)
 - 消融矩阵：[`reports/ablation_study.md`](reports/ablation_study.md)
 - 当前进度：[`reports/project_progress_20260328.md`](reports/project_progress_20260328.md)
+- strict 复验说明：[`reports/strict_replay_guide_20260329.md`](reports/strict_replay_guide_20260329.md)
 - Qwen 复现实验说明：[`docs/qwen_remaining_runs_20260328.md`](docs/qwen_remaining_runs_20260328.md)
 - 正式资产清单：[`docs/official_asset_manifest.md`](docs/official_asset_manifest.md)
 

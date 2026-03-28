@@ -8,7 +8,7 @@ from typing import Any
 from openai import OpenAI
 
 from evaluation.baseline import load_eval_cases, EvalCase
-from evaluation.metrics import compute_set_metrics
+from evaluation.metrics import compute_layered_dependency_metrics
 
 
 def build_prompt_v2(case: EvalCase, context: str = "") -> str:
@@ -48,18 +48,7 @@ def parse_response(text: str) -> dict[str, list[str]] | None:
 
 
 def compute_f1(pred: dict[str, list[str]], gt: dict[str, list[str]]) -> float:
-    all_pred = set(
-        pred.get("direct_deps", [])
-        + pred.get("indirect_deps", [])
-        + pred.get("implicit_deps", [])
-    )
-    all_gt = set(
-        gt.get("direct_deps", [])
-        + gt.get("indirect_deps", [])
-        + gt.get("implicit_deps", [])
-    )
-    metrics = compute_set_metrics(list(all_gt), list(all_pred))
-    return metrics.f1
+    return compute_layered_dependency_metrics(gt, pred).union.f1
 
 
 def run_gpt_eval(
@@ -116,7 +105,8 @@ def run_gpt_eval(
             else [],
         }
 
-        f1 = compute_f1(prediction or {}, gt_dict) if prediction else 0.0
+        scoring = compute_layered_dependency_metrics(gt_dict, prediction or {})
+        f1 = scoring.union.f1
 
         result = {
             "case_id": case.case_id,
@@ -128,6 +118,9 @@ def run_gpt_eval(
             "ground_truth": gt_dict,
             "raw_output": raw_output,
             "f1": round(f1, 4),
+            "macro_f1": round(scoring.macro_f1, 4),
+            "mislayer_rate": round(scoring.mislayer_rate, 4),
+            "strict_scoring": scoring.as_dict(),
         }
         results.append(result)
         print(f"  F1: {f1:.4f}", flush=True)

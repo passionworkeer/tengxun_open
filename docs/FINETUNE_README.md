@@ -16,10 +16,21 @@
 | PE + FT 结果 | `results/qwen_pe_ft_20260327_162308_stats.json` | 正式 54-case 结果 |
 | PE + RAG + FT 结果 | `results/qwen_pe_rag_ft_google_20260328_stats.json` | 正式 54-case 结果 |
 
+当前仓库中与微调相关的**strict 复验资产**如下：
+
+| 资产 | 路径 | 说明 |
+|------|------|------|
+| strict 微调数据集 | `data/finetune_dataset_500_strict.jsonl` | 去除 exact GT / hard question overlap 的 500 条训练数据 |
+| strict 数据映射 | `dataset_info.json` | 数据集名 `fintune_qwen_dep_strict` |
+| strict 训练配置 | `configs/train_config_strict_20260329.yaml` | strict LoRA 配置 |
+| strict 审计报告 | `reports/strict_data_audit_20260329.md` | 记录 exact GT 与题面级 overlap 清理结果 |
+| strict 评分报告 | `reports/strict_scoring_audit_20260329.md` | 分层 strict 指标与 mislayer 诊断 |
+
 历史说明：
 
 - 仓库中保留了若干早期辅助脚本，例如 `scripts/generate_finetune_data.py`、`scripts/train_lora.sh`。
 - 这些脚本仍可用于 bootstrap 或本地实验，但**不是当前正式 500 条数据集与正式训练结果的唯一权威来源**。
+- 当前若要做严格答辩或去污染复验，请优先使用 strict 资产，而不是直接在历史正式资产上继续加实验。
 
 ## 2. 正式训练入口
 
@@ -36,6 +47,20 @@ make train
 ```bash
 python3 -m finetune.data_guard data/finetune_dataset_500.jsonl
 python3 finetune/train_lora.py --config configs/train_config_20260327_143745.yaml
+```
+
+strict 复验入口：
+
+```bash
+export PYTHONPATH=.
+make train-strict
+```
+
+等价命令：
+
+```bash
+python3 -m finetune.data_guard data/finetune_dataset_500_strict.jsonl
+python3 finetune/train_lora.py --config configs/train_config_strict_20260329.yaml
 ```
 
 说明：
@@ -106,6 +131,12 @@ python3 run_pe_rag_ft_eval.py \
 
 当前没有逐步 `eval_loss` 曲线，因此判断不过拟合的证据强度是中等，不是最强形式。
 
+如果你在 strict 配置上重训，建议同时导出：
+
+- step-level train loss 曲线
+- step-level eval loss 曲线
+- strict adapter 对应的 `FT only / PE + FT / PE + RAG + FT` 三组结果
+
 ## 6. 资产管理建议
 
 若你在本仓库内重跑训练，建议统一使用以下目录约定：
@@ -120,9 +151,19 @@ python3 run_pe_rag_ft_eval.py \
 
 如果你不想覆盖这个正式目录，复制一份 YAML 配置并修改 `output_dir` 后再启动训练。
 
+strict 配置默认写入：
+
+- `artifacts/lora/qwen3.5-9b/strict_20260329`
+
 这样可以把“历史正式结果”和“你本次复现结果”分开，避免覆盖。
 
-## 7. 历史辅助脚本
+## 7. 什么时候该用正式资产，什么时候该用 strict 资产
+
+- 如果你是在复述历史正式交付结果，用正式资产。
+- 如果你是在回答“有没有训练/评测泄漏”的追问，用 strict 资产。
+- 如果你准备重训并更新最终答辩数字，优先走 strict 资产，然后重跑 `FT only / PE + FT / PE + RAG + FT`。
+
+## 8. 历史辅助脚本
 
 ### `scripts/generate_finetune_data.py`
 

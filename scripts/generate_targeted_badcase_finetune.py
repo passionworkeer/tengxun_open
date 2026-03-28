@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+"""
+历史实验脚本：从 eval bad cases 定向派生微调样本。
+
+注意：
+- 该脚本直接依赖 `eval_cases.json` 与评测结果，不应用于当前 strict 正式训练集构建。
+- 如果要做答辩级别的去污染复验，请改用 `data/finetune_dataset_500_strict.jsonl`。
+"""
+
 from __future__ import annotations
 
 import argparse

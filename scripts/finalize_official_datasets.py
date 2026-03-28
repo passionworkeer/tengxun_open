@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 """
-收敛三份正式数据集到严格可用状态。
+历史正式资产整理脚本。
 
 职责：
 1. 修正正式评测集的少量 gold / 题面口径问题
 2. 修正 few-shot 示例并补齐 difficulty
-3. 严格清洗官方微调集，并补足到 500 条
-4. 删除过渡数据文件，生成最终报告
+3. 清洗历史正式微调集，并补足到 500 条
+4. 删除过渡数据文件，生成历史正式报告
+
+注意：
+- 该脚本维护的是“历史正式资产”，不是 2026-03-29 之后的 strict 去污染资产。
+- 严格答辩或去污染复验请改用 `scripts/build_strict_datasets.py` 及 strict 相关配置。
 """
 
 from __future__ import annotations
@@ -1240,22 +1244,22 @@ def _write_report(
         "**Owner**: codex",
         "**日期**: 2026-03-27",
         f"**Celery 版本**: `{EXPECTED_COMMIT}`",
-        "**状态**: ✅ 三份正式数据已严格收敛",
+        "**状态**: ✅ 历史正式资产已整理完毕（strict 去污染复验请看 2026-03-29 资产）",
         "",
         "## 正式数据集清单",
         "",
         "| 文件 | 条目数 | 用途 | 状态 |",
         "|------|--------|------|------|",
-        f"| `data/eval_cases.json` | **54条** | 正式评测集 | ✅ 严格通过 |",
-        f"| `data/finetune_dataset_500.jsonl` | **{len(finetune_rows)}条** | 微调训练集 | ✅ 严格通过 |",
-        "| `data/fewshot_examples_20.json` | **20条** | Few-shot 示例 | ✅ 严格通过 |",
+        f"| `data/eval_cases.json` | **54条** | 正式评测集 | ✅ 历史正式口径 |",
+        f"| `data/finetune_dataset_500.jsonl` | **{len(finetune_rows)}条** | 微调训练集 | ✅ 历史正式口径 |",
+        "| `data/fewshot_examples_20.json` | **20条** | Few-shot 示例 | ✅ 历史正式口径 |",
         "",
         "## 微调数据集结果",
         "",
         f"- 最终有效记录：`{len(finetune_rows)}`",
         f"- 难度分布：`easy={counter['easy']}` / `medium={counter['medium']}` / `hard={counter['hard']}`",
         f"- hard_ratio：`{hard_ratio}`",
-        f"- 严格补充样本：`{len(supplement_notes)}` 条",
+        f"- 历史补充样本：`{len(supplement_notes)}` 条",
         "",
         "## 正式评测集修正",
         "",

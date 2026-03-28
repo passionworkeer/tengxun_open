@@ -16,6 +16,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from dataclasses import dataclass
 from functools import lru_cache
@@ -59,7 +60,12 @@ OUTPUT_INSTRUCTIONS = """Return only a JSON object with:
 }"""
 
 
-DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "fewshot_examples_20.json"
+DATA_PATH = Path(
+    os.environ.get(
+        "FEWSHOT_DATA_PATH",
+        Path(__file__).resolve().parent.parent / "data" / "fewshot_examples_20.json",
+    )
+)
 REQUIRED_FEW_SHOT_TARGET = 20
 _TOKEN_PATTERN = re.compile(r"[A-Za-z_][A-Za-z0-9_]+")
 

@@ -23,7 +23,7 @@ from typing import Any
 from openai import OpenAI
 
 from evaluation.baseline import EvalCase, load_eval_cases
-from evaluation.metrics import compute_set_metrics
+from evaluation.metrics import compute_layered_dependency_metrics
 from pe.post_processor import parse_model_output
 from pe.prompt_templates_v2 import (
     SYSTEM_PROMPT,
@@ -157,20 +157,31 @@ def parse_response_with_postprocess(
 
 
 def compute_case_f1(pred: dict[str, list[str]] | None, case: EvalCase) -> float:
-    gt_all = set(
-        list(case.direct_gold_fqns)
-        + list(case.indirect_gold_fqns)
-        + list(case.implicit_gold_fqns)
-    )
-    if not pred:
-        return 0.0
-    pred_all = set(
-        pred.get("direct_deps", [])
-        + pred.get("indirect_deps", [])
-        + pred.get("implicit_deps", [])
-    )
-    metrics = compute_set_metrics(list(gt_all), list(pred_all))
-    return metrics.f1
+    return compute_case_scoring(pred, case)["union_f1"]
+
+
+def build_ground_truth(case: EvalCase) -> dict[str, list[str]]:
+    return {
+        "direct_deps": list(case.direct_gold_fqns),
+        "indirect_deps": list(case.indirect_gold_fqns),
+        "implicit_deps": list(case.implicit_gold_fqns),
+    }
+
+
+def compute_case_scoring(
+    pred: dict[str, list[str]] | None, case: EvalCase
+) -> dict[str, Any]:
+    scoring = compute_layered_dependency_metrics(build_ground_truth(case), pred or {})
+    return {
+        "union_f1": round(scoring.union.f1, 4),
+        "macro_f1": round(scoring.macro_f1, 4),
+        "direct_f1": round(scoring.direct.f1, 4),
+        "indirect_f1": round(scoring.indirect.f1, 4),
+        "implicit_f1": round(scoring.implicit.f1, 4),
+        "mislayer_rate": round(scoring.mislayer_rate, 4),
+        "exact_layer_match": scoring.exact_layer_match,
+        "scoring": scoring.as_dict(),
+    }
 
 
 # ── 主评测循环 ────────────────────────────────────────────────────
@@ -186,7 +197,7 @@ class VariantResult:
         case_id: str,
         difficulty: str,
         failure_type: str,
-        f1: float,
+        scoring: dict[str, Any],
         prediction: dict | None,
         raw_output: str,
     ):
@@ -195,8 +206,16 @@ class VariantResult:
                 "case_id": case_id,
                 "difficulty": difficulty,
                 "failure_type": failure_type,
-                "f1": round(f1, 4),
+                "f1": scoring["union_f1"],
+                "union_f1": scoring["union_f1"],
+                "macro_f1": scoring["macro_f1"],
+                "direct_f1": scoring["direct_f1"],
+                "indirect_f1": scoring["indirect_f1"],
+                "implicit_f1": scoring["implicit_f1"],
+                "mislayer_rate": scoring["mislayer_rate"],
+                "exact_layer_match": scoring["exact_layer_match"],
                 "prediction": prediction,
+                "strict_scoring": scoring["scoring"],
                 "raw_output": raw_output,
             }
         )
@@ -205,18 +224,26 @@ class VariantResult:
         def _avg(items: list[float]) -> float:
             return round(sum(items) / len(items), 4) if items else 0.0
 
-        by_diff: dict[str, list[float]] = {}
+        by_diff: dict[str, list[dict[str, Any]]] = {}
         for c in self.cases:
-            by_diff.setdefault(c["difficulty"], []).append(c["f1"])
+            by_diff.setdefault(c["difficulty"], []).append(c)
 
-        all_f1 = [c["f1"] for c in self.cases]
+        def _diff_avg(difficulty: str, key: str) -> float:
+            subset = by_diff.get(difficulty, [])
+            return _avg([float(item[key]) for item in subset])
+
+        all_union_f1 = [float(c["union_f1"]) for c in self.cases]
+        all_macro_f1 = [float(c["macro_f1"]) for c in self.cases]
+        all_mislayer = [float(c["mislayer_rate"]) for c in self.cases]
         return {
             "variant": self.name,
             "num_cases": len(self.cases),
-            "easy_f1": _avg(by_diff.get("easy", [])),
-            "medium_f1": _avg(by_diff.get("medium", [])),
-            "hard_f1": _avg(by_diff.get("hard", [])),
-            "avg_f1": _avg(all_f1),
+            "easy_f1": _diff_avg("easy", "union_f1"),
+            "medium_f1": _diff_avg("medium", "union_f1"),
+            "hard_f1": _diff_avg("hard", "union_f1"),
+            "avg_f1": _avg(all_union_f1),
+            "avg_macro_f1": _avg(all_macro_f1),
+            "avg_mislayer_rate": _avg(all_mislayer),
         }
 
 
@@ -272,11 +299,19 @@ def run_variant(
                 time.sleep(5)
                 raw_output = str(e)
 
-        f1 = compute_case_f1(prediction, case)
+        scoring = compute_case_scoring(prediction, case)
         result.add(
-            case.case_id, case.difficulty, case.failure_type, f1, prediction, raw_output
+            case.case_id,
+            case.difficulty,
+            case.failure_type,
+            scoring,
+            prediction,
+            raw_output,
         )
-        print(f"F1={f1:.4f}", flush=True)
+        print(
+            f"Union={scoring['union_f1']:.4f} Macro={scoring['macro_f1']:.4f}",
+            flush=True,
+        )
 
     return result
 
@@ -296,6 +331,12 @@ def main() -> int:
         "--max-cases", type=int, default=None, help="Limit cases for testing"
     )
     parser.add_argument(
+        "--variants",
+        type=str,
+        default="",
+        help="Comma-separated variants to run, e.g. fewshot,postprocess",
+    )
+    parser.add_argument(
         "--resume", action="store_true", help="Skip already-completed variants"
     )
     args = parser.parse_args()
@@ -306,8 +347,16 @@ def main() -> int:
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
+    selected_variants = None
+    if args.variants.strip():
+        selected_variants = {
+            item.strip() for item in args.variants.split(",") if item.strip()
+        }
+
     all_summaries = []
     for variant_name, build_fn, parse_fn in VARIANTS:
+        if selected_variants is not None and variant_name not in selected_variants:
+            continue
         out_file = args.output_dir / f"pe_{variant_name}.json"
 
         if args.resume and out_file.exists():
@@ -335,7 +384,9 @@ def main() -> int:
         all_summaries.append(summary)
         print(
             f"  => Easy F1={summary['easy_f1']:.4f}  Medium F1={summary['medium_f1']:.4f}  "
-            f"Hard F1={summary['hard_f1']:.4f}  Avg F1={summary['avg_f1']:.4f}\n"
+            f"Hard F1={summary['hard_f1']:.4f}  Avg Union F1={summary['avg_f1']:.4f}  "
+            f"Avg Macro F1={summary['avg_macro_f1']:.4f}  "
+            f"Avg Mislayer={summary['avg_mislayer_rate']:.4f}\n"
         )
 
     # 汇总表
@@ -348,13 +399,15 @@ def main() -> int:
     print("PE Incremental Evaluation Summary")
     print("=" * 70)
     print(
-        f"{'Variant':<18} {'Easy F1':>8} {'Medium F1':>10} {'Hard F1':>8} {'Avg F1':>8}"
+        f"{'Variant':<18} {'Easy F1':>8} {'Medium F1':>10} {'Hard F1':>8} "
+        f"{'Union':>8} {'Macro':>8} {'MisLayer':>9}"
     )
-    print("-" * 56)
+    print("-" * 80)
     for s in all_summaries:
         print(
             f"{s['variant']:<18} {s['easy_f1']:>8.4f} {s['medium_f1']:>10.4f} "
-            f"{s['hard_f1']:>8.4f} {s['avg_f1']:>8.4f}"
+            f"{s['hard_f1']:>8.4f} {s['avg_f1']:>8.4f} "
+            f"{s['avg_macro_f1']:>8.4f} {s['avg_mislayer_rate']:>9.4f}"
         )
     print("=" * 70)
     print(f"\nResults saved to {args.output_dir}/")

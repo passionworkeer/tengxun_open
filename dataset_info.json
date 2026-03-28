@@ -753,5 +753,13 @@
       "query": "input",
       "response": "output"
     }
+  },
+  "fintune_qwen_dep_strict": {
+    "file_name": "finetune_dataset_500_strict.jsonl",
+    "columns": {
+      "prompt": "instruction",
+      "query": "input",
+      "response": "output"
+    }
   }
 }
