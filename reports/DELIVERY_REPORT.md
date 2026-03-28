@@ -1,229 +1,233 @@
-# 腾讯实习筛选考核：LLM 代码分析效果优化
-## 完整交付报告
+# 腾讯考核题最终交付报告
 
----
+项目：**基于微调 / PE / RAG 的代码分析领域效果优化**  
+方向：**Celery 跨文件依赖分析 / 动态符号解析 / 再导出链追踪**  
+代码基线：`external/celery @ b8f85213f45c937670a6a6806ce55326a0eb537f`
 
-## 📊 核心结论
+## 1. 项目结论
 
-### 三条核心研究发现
+### 1.1 三条最重要的结论
 
-1. **GPT-5.4 基线低分原因**：在 Celery Hard 级隐式依赖场景下 F1 仅 0.2373，与 Easy 场景(0.4475)相差 47%——**当前所有模型的共性天花板不是规模，而是 Type D/E 类失效**
+1. **Prompt Engineering 是当前最强单项优化**  
+   在正式 `54-case` 口径上，GPT-5.4 从 `0.2745` 提升到 `0.6062`，绝对增益 `+0.3317`，相对增益 `+120.8%`。说明对于高质量商业模型，明确的 System Prompt、Few-shot 和后处理，比盲目上 RAG 更能稳定提升最终 FQN 输出质量。
 
-2. **RAG 补偿效果**：三路 RRF RAG 对 Type C/D 有显著补偿（Easy 提升 +30%），但对 Type E（动态加载/字符串映射）无效，说明检索覆盖的是静态结构，动态语义仍需微调解决
+2. **Qwen 的提升依赖“PE + FT”组合，而不是 FT 单独使用**  
+   Qwen strict baseline 只有 `0.0370`，`FT only` 提升到 `0.0932`，但 `PE + FT` 直接达到 `0.4315`。这说明 LoRA 微调更多是在补“领域模式”，真正把模式转成稳定可评分输出的仍是 Prompt Engineering。
 
-3. **工程落地建议**：**仅对 `implicit_level ≥ 3` 的模块启用完整 RAG+FT 策略**，约占文件总量 35%，可节省约 65% Token 消耗，F1 损失 < 3%
+3. **RAG 更适合解决 hard / dynamic 场景，而不是追求整体平均分**  
+   GPT-5.4 端到端 `No-RAG 0.2783 -> With-RAG 0.2940`，总体只提升 `+0.0157`；但 `Hard` 难度从 `0.1980 -> 0.3372`，提升 `+0.1392`。所以 RAG 的角色是“定向修复长链路和动态解析”，不是默认全量启用的通用加分器。
 
----
+## 2. 任务映射与完成度
 
-## 一、模型配置
+| 题目要求 | 当前状态 | 对应产物 |
+|------|------|------|
+| 真实项目上构建 ≥50 条评测用例 | 完成 | `data/eval_cases.json`，54 条 |
+| 识别低分场景共性瓶颈 | 完成 | `reports/bottleneck_diagnosis.md` |
+| PE 四维优化与量化 | 完成 | `reports/pe_optimization.md` |
+| 构建代码分析 RAG Pipeline | 完成 | `reports/rag_pipeline.md` |
+| 微调数据集 ≥500 条 | 完成 | `data/finetune_dataset_500.jsonl` |
+| LoRA 微调与效果评估 | 完成 | `results/qwen_ft_*`、`results/qwen_pe_ft_*` |
+| 完整消融矩阵 | 部分完成 | 当前只缺 Qwen `PE only / RAG only / PE+RAG` 正式重跑 |
 
-| 角色 | 模型 | 类型 | 定位 |
-|------|------|------|------|
-| 评测基线 A | `GPT-5.4` | 闭源商业 | 国际顶尖，商业模型天花板 |
-| 评测基线 B | `GLM-5` | 开源(MIT) | 开源代码最强，国产自研 |
-| 评测基线 C | `Qwen3.5-9B` | 开源本地 | 微调基座，ROI研究目标 |
-| 微调目标 | `Qwen3.5-9B`(LoRA) | 开源微调 | 领域适配，单张 A100 可跑 |
+## 3. 数据集与评测设计
 
----
+### 3.1 数据集
 
-## 二、评测基准构建
+| 数据 | 规模 | 当前状态 |
+|------|------|------|
+| 正式评测集 | `54` 条 | 完成 |
+| Few-shot 示例库 | `20` 条 | 完成 |
+| 微调数据集 | `500` 条 | 完成 |
 
-### 2.1 评测集概况
+### 3.2 评测集分布
 
-| 属性 | 值 |
+| 维度 | 分布 |
 |------|------|
-| 总样本数 | 54 条 |
-| Easy / Medium / Hard | 15 / 19 / 20 |
-| 评测模型 | GPT-5.4 / GLM-5 / Qwen3.5-9B |
-| Celery 版本 | 绑定具体 commit hash |
+| Difficulty | `easy 15 / medium 19 / hard 20` |
+| Failure Type | `Type A 7 / Type B 9 / Type C 11 / Type D 11 / Type E 16` |
 
-### 2.2 失效模式定义（5类）
+### 3.3 Ground Truth 口径
 
-| 类型 | 失效特征 | Celery 典型案例 |
-|------|---------|----------------|
-| **Type A** | 长上下文截断丢失 | 超出窗口导致上游定义节点被遗漏 |
-| **Type B** | 隐式依赖断裂（幻觉） | `@app.task` 装饰器注册时 LLM 编造不存在的内部调用 |
-| **Type C** | 再导出链断裂 | 跨多层 `__init__.py` 别名转发，链路在中间节点中断 |
-| **Type D** | 跨文件命名空间混淆 | 同名函数/类导致 LLM 张冠李戴 |
-| **Type E** | 动态加载与字符串引用失配 | `importlib`/配置字符串，LLM 无法把字符串入口映射回真实符号 |
+- 统一采用 FQN 级别评分
+- 正式 schema 统一到 `direct_deps / indirect_deps / implicit_deps`
+- 微调数据由 `finetune/data_guard.py` 做严格源码存在性校验
 
----
+## 4. 基线模型表现
 
-## 三、Prompt Engineering 优化
+| 模型 | Easy | Medium | Hard | Avg | 备注 |
+|------|------:|------:|------:|------:|------|
+| GPT-5.4 | 0.4348 | 0.2188 | 0.2261 | 0.2815 | 商业模型上界 |
+| GLM-5 | 0.1048 | 0.0681 | 0.0367 | 0.0666 | 原始 thinking 已保留 |
+| Qwen3.5-9B | 0.0667 | 0.0526 | 0.0000 | 0.0370 | strict baseline recovered |
 
-### 3.1 四维度优化策略
+![模型基线对比](../img/final_delivery/01_model_baselines_20260328.png)
 
-| 优化组件 | 增益 |
-|---------|------|
-| System Prompt | +12% F1 |
-| CoT 推理引导 | +8% F1 |
-| Few-shot 示例 (20条) | +15% F1 |
-| 输出后处理 | +5% F1 |
+### 4.1 结论
 
-### 3.2 PE 独立效果量化
+- GPT-5.4 是当前明显的商业模型上界。
+- GLM-5 在当前任务上的主要问题不是“会不会想”，而是输出过长、被 thinking 吃掉预算，最终 FQN 落地能力弱。
+- Qwen 原始 baseline 的主要问题是解析失败和输出不稳定，因此 strict baseline 很低。
 
-| 实验组 | Easy F1 | Medium F1 | Hard F1 | Avg F1 | Token消耗 |
-|--------|---------|-----------|---------|--------|-----------|
-| Baseline (GPT-5.4) | 0.4475 | 0.2670 | 0.2373 | 0.3122 | 基准 |
-| **PE only** | **0.5832** | **0.6939** | **0.5683** | **0.6230** | +40% |
+## 5. Prompt Engineering 系统优化
 
-> **关键发现**：PE 优化在 Hard 场景提升最为显著（+139%），说明提示工程对复杂场景尤为有效
+### 5.1 实验设置
 
----
+- 模型：GPT-5.4
+- 评测集：正式 `54-case`
+- 优化路径：`baseline -> system_prompt -> cot -> fewshot -> postprocess`
 
-## 四、RAG 增强管线
+### 5.2 主结果
 
-### 4.1 三路检索架构
+| Variant | Easy | Medium | Hard | Avg |
+|------|------:|------:|------:|------:|
+| baseline | 0.3907 | 0.2602 | 0.2010 | 0.2745 |
+| system_prompt | 0.4306 | 0.3039 | 0.2356 | 0.3138 |
+| cot | 0.4791 | 0.4170 | 0.3834 | 0.4218 |
+| fewshot | 0.6492 | 0.5351 | 0.5525 | 0.5733 |
+| postprocess | 0.6651 | 0.6165 | 0.5522 | 0.6062 |
 
-```
-代码解析层 → tree-sitter AST 分块
-索引层 → BM25 + Semantic + Graph
-融合层 → RRF(k=30)
-上下文管理 → Top-K 拼接
-```
+![PE 逐步增益](../img/final_delivery/02_pe_progression_20260328.png)
 
-### 4.2 检索指标（50-case评测）
+### 5.3 结论
 
-| 检索策略 | Recall@5 | MRR | 备注 |
-|---------|---------|-----|------|
-| BM25 only | 0.1451 | 0.2622 |Keyword match baseline |
-| Semantic only | 0.0533 | 0.0522 | 最弱 |
-| **Graph only** | **0.3234** | **0.4650** | 最强单路 |
-| **RRF(k=30)** | **0.2941** | **0.4487** | 推荐配置 |
+- `System Prompt` 提供了稳定但有限的首跳增益。
+- 在正式 `54-case` 结果上，`CoT` 是正收益，不再延续旧 `50-case` 草稿里的负收益结论。
+- `Few-shot` 是 PE 阶段第二大增益来源，尤其提升 medium / hard。
+- `Post-process` 是稳定兜底，主要修格式、去重和脏输出。
 
-> **关键发现**：Graph 单路(0.3234)反而优于 RRF 融合(0.2962)——BM25和Semantic引入了噪声
+## 6. RAG 增强管线
 
----
-
-## 五、模型微调实验
-
-### 5.1 训练配置
-
-| 参数 | 值 | 说明 |
-|------|-----|------|
-| 模型 | Qwen/Qwen3.5-9B | 指令微调版本 |
-| LoRA rank | 8 | 防止过拟合 |
-| LoRA alpha | 16 | 2*rank |
-| 学习率 | 5e-5 | LoRA标准 |
-| batch_size | 1 (accum 8) | 有效batch=8 |
-| epoch | 3 | 数据集小，多轮 |
-| 精度 | bf16 | A100支持 |
-
-### 5.2 数据集统计
-
-- **训练集**: 450条 (90%)
-- **验证集**: 50条 (10%)
-- **难度分布**: Hard 162, Easy 163, Medium 175
-- **失效覆盖**: Type A 103, Type B 117, Type C 86, Type D 99, Type E 95
-- **验证状态**: 全部通过 data_guard.py 校验
-
-### 5.3 超参数选型原因
-
-详见 `HYPERPARAMS_REASONING.md`
-
----
-
-## 六、完整消融实验矩阵
-
-| 实验组 | Easy F1 | Medium F1 | Hard F1 | Avg F1 | 状态 |
-|--------|---------|-----------|---------|--------|------|
-| Baseline (GPT-5.4) | 0.4475 | 0.2670 | 0.2373 | 0.3122 | ✅ |
-| Baseline (GLM-5) | - | - | - | - | ⏳ |
-| Baseline (Qwen3.5-9B) | - | - | - | - | 🔄进行中 |
-| PE only | 0.5832 | 0.6939 | 0.5683 | 0.6230 | ✅ |
-| RAG only | - | - | - | - | ⏳ |
-| FT only | - | - | - | - | ⏳ |
-| PE + RAG | - | - | - | - | ⏳ |
-| PE + FT | - | - | - | - | ⏳ |
-| PE + RAG + FT | - | - | - | - | ⏳ |
-
----
-
-## 七、工程落地建议
-
-### 依赖深度 ≤ 2（Easy/Medium 场景）
-- 推荐 **PE + RAG**，F1 可达较高水平，Token 增量可控
-- FT 额外增益 < 2%，训练成本投入产出比低，不推荐
-
-### 依赖深度 ≥ 3（Hard 场景）
-- RAG 的图索引在 Type E 场景召回失败，单独 RAG 不足
-- **必须叠加 FT** 才能让模型具备动态链路推演能力
-- PE + RAG + FT 是 Type E 场景唯一有效策略
-
-### 最终建议
-> 仅对 `implicit_level ≥ 3` 的模块（约占 35%）启用完整 RAG+FT 策略，其余模块 PE+RAG 即可，节省约 65% 整体 Token 消耗，F1 损失 < 3%
-
----
-
-## 八、仓库结构与文件说明
+### 6.1 管线结构
 
 ```
-tengxun_open/
-├── 📄 核心文档
-│   ├── plan.md                     # 项目计划
-│   ├── DELIVERY_REPORT.md          # 本交付报告
-│   └── HYPERPARAMS_REASONING.md    # 超参数选型说明
-│
-├── 📂 数据集
-│   ├── data/eval_cases.json        # 评测数据 54条
-│   └── data/finetune_dataset_500.jsonl # 微调数据 500条
-│
-├── 📊 报告
-│   └── reports/
-│       ├── bottleneck_diagnosis.md # 瓶颈诊断
-│       ├── pe_optimization.md      # PE优化
-│       └── ablation_study.md       # 消融实验
-│
-├── 🧪 实验代码
-│   ├── evaluation/                 # 评测模块
-│   ├── pe/                         # 提示工程
-│   └── rag/                        # RAG检索
-│
-└── 🚀 脚本
-    ├── scripts/step1_baseline.sh   # Step1: 基线
-    ├── scripts/step2_train.sh      # Step2: 训练
-    └── scripts/step*.sh            # Step3-5: 评测
+源码切片(AST chunking)
+-> 三路检索(BM25 / Semantic / Graph)
+-> RRF 融合
+-> 上下文构造(question + entry_symbol + entry_file)
+-> 生成模型输出 FQN JSON
 ```
 
----
+### 6.2 当前正式配置
 
-## 九、复现步骤
+| 项目 | 值 |
+|------|------|
+| Embedding Provider | `google / gemini-embedding-001` |
+| Chunk 数量 | `8086` |
+| Query mode | `question_plus_entry` |
+| Top-K | `5` |
+| RRF k | `30` |
 
-```bash
-# 1. 克隆仓库
-git clone https://github.com/passionworkeer/tengxun_open.git
-cd tengxun_open
+### 6.3 检索指标
 
-# 2. 安装依赖
-pip install -r requirements.txt
+| View | Recall@5 | MRR |
+|------|------:|------:|
+| fused chunk_symbols | 0.4305 | 0.5292 |
+| fused expanded_fqns | 0.4502 | 0.5596 |
 
-# 3. 基线测试
-bash scripts/step1_baseline.sh
+![RAG 检索表现](../img/final_delivery/04_rag_retrieval_20260328.png)
 
-# 4. 启动微调训练
-bash scripts/step2_train.sh
+### 6.4 端到端效果
 
-# 5. 完整评测
-bash scripts/step3_ft_eval.sh
-bash scripts/step4_pe_ft.sh
-bash scripts/step5_pe_rag_ft.sh
-```
+| 指标 | No-RAG | With-RAG | Delta |
+|------|------:|------:|------:|
+| Overall Avg F1 | 0.2783 | 0.2940 | +0.0157 |
+| Easy | 0.3963 | 0.2722 | -0.1241 |
+| Medium | 0.2696 | 0.2656 | -0.0040 |
+| Hard | 0.1980 | 0.3372 | +0.1392 |
 
----
+![RAG 端到端增益](../img/final_delivery/05_rag_end_to_end_20260328.png)
 
-## 十、后续工作和预期产出
+### 6.5 结论
 
-| 任务 | 状态 | 预期产出 |
-|------|------|----------|
-| Qwen基线测试 | 🔄进行中 | F1成绩 |
-| GLM-5测试 | ⏳ | F1成绩 |
-| 微调训练 | ⏳ | LoRA权重 |
-| FT评测 | ⏳ | F1成绩 |
-| PE+FT评测 | ⏳ | F1成绩 |
-| PE+RAG+FT评测 | ⏳ | F1成绩 |
+- 最新 Google embedding 下，`fused` 已经优于所有单路检索，和旧 50-case 草稿里“graph 单路更强”的结论不同。
+- RAG 对 hard / Type A / Type E 有明显帮助。
+- RAG 对 easy 和部分 Type B / Type C 反而会引入干扰。
+- 因此工程上不应默认对所有问题全量启用 RAG。
 
----
+## 7. 微调实验
 
-**报告日期**: 2026-03-27
-**项目状态**: 阶段进行中
-**下一步**: 基线测试完成后启动微调训练
+### 7.1 数据与配置
+
+| 项目 | 值 |
+|------|------|
+| 基座模型 | `Qwen/Qwen3.5-9B` |
+| 微调方法 | LoRA / 4bit 加载 |
+| 微调数据集 | `data/finetune_dataset_500.jsonl` |
+| 训练轮数 | `3` |
+| 有效 batch | `batch=2, grad_accum=8` |
+| LoRA rank / alpha | `16 / 32` |
+
+### 7.2 训练日志摘要
+
+| 指标 | 值 |
+|------|------|
+| train runtime | `0:37:12.92` |
+| final train loss | `0.572` |
+| final eval loss | `0.4779` |
+
+![训练曲线](../img/final_delivery/07_training_curve_20260328.png)
+
+### 7.3 结论
+
+- 现有日志显示 loss 收敛平稳，没有出现明显的发散。
+- 但当前仓库只保留了最终 `eval_loss`，没有完整的逐轮验证曲线，因此“不过拟合”证据是中等强度，不是最强形式。
+
+## 8. 当前消融矩阵
+
+### 8.1 已完成的正式结果
+
+| 策略 | Easy | Medium | Hard | Avg | 状态 |
+|------|------:|------:|------:|------:|------|
+| GPT-5.4 Baseline | 0.4348 | 0.2188 | 0.2261 | 0.2815 | 完成 |
+| GLM-5 Baseline | 0.1048 | 0.0681 | 0.0367 | 0.0666 | 完成 |
+| Qwen3.5 Baseline | 0.0667 | 0.0526 | 0.0000 | 0.0370 | 完成 |
+| GPT-5.4 PE only | 0.6651 | 0.6165 | 0.5522 | 0.6062 | 完成 |
+| GPT-5.4 RAG only | 0.2722 | 0.2656 | 0.3372 | 0.2940 | 完成 |
+| Qwen FT only | 0.1556 | 0.0895 | 0.0500 | 0.0932 | 完成 |
+| Qwen PE + FT | 0.5233 | 0.5370 | 0.2624 | 0.4315 | 完成 |
+| Qwen PE + RAG + FT | 0.4985 | 0.4805 | 0.3672 | 0.4435 | 已有旧版结果 |
+
+![Qwen 策略对比](../img/final_delivery/06_qwen_strategies_20260328.png)
+
+### 8.2 仍需补跑
+
+- Qwen `PE only`
+- Qwen `RAG only`
+- Qwen `PE + RAG`
+- 建议重跑 Qwen `PE + RAG + FT` 以对齐最新 Google embedding
+
+补跑命令已单独整理到：
+
+- [`../docs/qwen_remaining_runs_20260328.md`](../docs/qwen_remaining_runs_20260328.md)
+
+## 9. 当前最稳的策略选择
+
+### 9.1 如果目标是“今天就给出最稳可复现实验”
+
+- 商业模型：`GPT-5.4 + PE`
+- 开源模型：`Qwen PE + FT`
+
+原因：
+
+- `GPT-5.4 + PE` 已有完整正式结果且提升最大
+- `Qwen PE + FT` 是当前最稳的开源路线，不依赖旧 embedding 版本
+
+### 9.2 如果目标是“冲当前可见上限”
+
+- 目标策略：`Qwen PE + RAG + FT`
+- 当前已有 `0.4435` 历史结果
+- 但仍建议基于最新 Google embedding 重跑一次，才能成为正式最终版
+
+## 10. 工程落地建议
+
+1. **默认策略**：对普通 case 先用 `PE`，成本最低、收益最高。
+2. **Hard / Type A / Type E` 场景**：启用 `RAG`，尤其是带 entry 信息的检索。
+3. **开源模型部署**：优先 `Qwen PE + FT`，因为它已经稳定、正式且不依赖旧缓存。
+4. **最终上线的“最强组合”**：等 Qwen `PE only / RAG only / PE+RAG / PE+RAG+FT` 最新版补齐后，再确定完整矩阵结论。
+
+## 11. 仓库入口
+
+- README：[`../README.md`](../README.md)
+- 仓库地图：[`../docs/repository_map_20260328.md`](../docs/repository_map_20260328.md)
+- 当前进度：[`./project_progress_20260328.md`](./project_progress_20260328.md)
+- Qwen 补跑：[`../docs/qwen_remaining_runs_20260328.md`](../docs/qwen_remaining_runs_20260328.md)

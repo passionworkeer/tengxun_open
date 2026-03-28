@@ -1,4 +1,5 @@
 PYTHON ?= uv run python
+REPORT_PYTHON ?= uv run --with matplotlib python
 EVAL_CASES ?= data/eval_cases.json
 RAG_DRAFT_CASES ?= data/eval_cases_migrated_draft_round4.json
 FINETUNE_DATA ?= data/finetune_dataset_500.jsonl
@@ -6,7 +7,7 @@ FEWSHOT_DATA ?= data/fewshot_examples_20.json
 CONFIG_DIR ?= configs
 RAG_REPORT_DIR ?= artifacts/rag
 
-.PHONY: help eval-baseline eval-pe eval-rag eval-rag-draft eval-ft eval-all train report lint-data
+.PHONY: help eval-baseline eval-pe eval-rag eval-rag-draft eval-ft eval-all train report report-final lint-data
 
 help:
 	@echo "Available targets:"
@@ -17,7 +18,8 @@ help:
 	@echo "  make eval-ft        - placeholder for checkpoint evaluation wiring"
 	@echo "  make eval-all       - run summary + retrieval + prompt preview metadata"
 	@echo "  make train          - validate the LoRA scaffold config, then fail until trainer wiring exists"
-	@echo "  make report         - generate ablation report with charts"
+	@echo "  make report         - generate final charts + metrics snapshot"
+	@echo "  make report-final   - alias of make report"
 	@echo "  make lint-data      - validate finetune dataset with data_guard.py"
 
 eval-baseline:
@@ -42,13 +44,18 @@ train:
 	$(PYTHON) finetune/train_lora.py --config $(CONFIG_DIR)/lora_9b.toml
 
 report:
-	jupyter nbconvert --execute experiments/ablation_full_matrix.ipynb
+	$(PYTHON) scripts/generate_project_progress_report.py
+	$(REPORT_PYTHON) scripts/generate_final_delivery_assets.py
+
+report-final: report
 
 lint-data:
 	$(PYTHON) -m finetune.data_guard $(FINETUNE_DATA)
 
 report-status:
 	@echo "Reports:"
+	@echo "  - reports/DELIVERY_REPORT.md"
 	@echo "  - reports/bottleneck_diagnosis.md"
 	@echo "  - reports/pe_optimization.md"
+	@echo "  - reports/rag_pipeline.md"
 	@echo "  - reports/ablation_study.md"

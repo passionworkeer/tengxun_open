@@ -1,133 +1,156 @@
-# Celery 跨文件依赖分析 - 项目文档
+# Celery 跨文件依赖分析：基于 PE / RAG / FT 的效果优化
 
-> 当前权威进度与结果总览：[`reports/project_progress_20260328.md`](reports/project_progress_20260328.md)
->
-> 说明：仓库内仍保留了若干 `2026-03-27` 的中间文档与 50-case 旧口径报告；如和最新结果冲突，以 `project_progress_20260328.md`、`eval_status_20260328.md`、`glm5_eval_analysis_20260328.md` 为准。
+面向腾讯实习考核题的正式仓库版本。任务聚焦于：
 
-## 📁 项目结构
+- 真实开源项目上的跨文件依赖分析
+- 评测集构建与瓶颈诊断
+- Prompt Engineering 系统优化
+- RAG 增强检索与上下文融合
+- Qwen 领域微调与消融实验
 
+## 核心发现
+
+1. **PE 是当前最强单项增益**  
+   在正式 `54-case` 口径上，GPT-5.4 从 `baseline 0.2745` 提升到 `postprocess 0.6062`，绝对提升 `+0.3317`，相对提升 `+120.8%`。
+
+2. **Qwen 的主要收益来自 PE 与 FT 的组合，而不是 FT 单独使用**  
+   Qwen strict baseline 仅 `0.0370`，`FT only` 到 `0.0932`，但 `PE + FT` 直接到 `0.4315`。这说明微调负责补领域知识，PE 负责把知识稳定地提取成可评分的 FQN 输出。
+
+3. **RAG 的价值是“定向修复 hard 场景”，不是无脑全局提分**  
+   GPT-5.4 端到端 `No-RAG 0.2783 -> With-RAG 0.2940`，总体只提升 `+0.0157`；但 `Hard` 难度从 `0.1980 -> 0.3372`，提升 `+0.1392`。RAG 更像是针对 Type A / Type E 的补偿模块。
+
+## 当前结果总览
+
+| 策略 / 模型 | Easy | Medium | Hard | Avg | 说明 |
+|------|------:|------:|------:|------:|------|
+| GPT-5.4 Baseline | 0.4348 | 0.2188 | 0.2261 | 0.2815 | 商业模型基线 |
+| GLM-5 Baseline | 0.1048 | 0.0681 | 0.0367 | 0.0666 | 官方 API，保留原始 thinking |
+| Qwen3.5-9B Baseline | 0.0667 | 0.0526 | 0.0000 | 0.0370 | 严格恢复版，45/54 parse fail |
+| GPT-5.4 PE only | 0.6651 | 0.6165 | 0.5522 | 0.6062 | 54-case 正式重跑 |
+| GPT-5.4 RAG only | 0.2722 | 0.2656 | 0.3372 | 0.2940 | 端到端 weighted RAG |
+| Qwen FT only | 0.1556 | 0.0895 | 0.0500 | 0.0932 | LoRA 后正式结果 |
+| Qwen PE + FT | 0.5233 | 0.5370 | 0.2624 | 0.4315 | 当前最稳的开源路线 |
+| Qwen PE + RAG + FT | 0.4985 | 0.4805 | 0.3672 | 0.4435 | 已有结果，但早于最新 Google embedding |
+
+## 图表速览
+
+![模型基线对比](img/final_delivery/01_model_baselines_20260328.png)
+
+![PE 逐步增益](img/final_delivery/02_pe_progression_20260328.png)
+
+![Qwen 组合策略](img/final_delivery/06_qwen_strategies_20260328.png)
+
+## 当前完成度
+
+### 已完成
+
+- 正式评测集：[`data/eval_cases.json`](data/eval_cases.json)，`54` 条
+- 正式 few-shot 库：[`data/fewshot_examples_20.json`](data/fewshot_examples_20.json)，`20` 条
+- 正式微调集：[`data/finetune_dataset_500.jsonl`](data/finetune_dataset_500.jsonl)，`500` 条
+- GPT / GLM / Qwen baseline
+- GPT PE 四阶段正式重跑
+- Google embedding 版本 RAG 检索正式评测
+- GPT 端到端 RAG 正式评测
+- Qwen FT / PE+FT / 旧版 PE+RAG+FT
+- 最终图表与正式报告
+
+### 仍待补跑
+
+- Qwen `PE only`
+- Qwen `RAG only`
+- Qwen `PE + RAG`
+- 建议重跑 Qwen `PE + RAG + FT` 以对齐最新 Google embedding
+
+详细命令见：
+
+- [`docs/qwen_remaining_runs_20260328.md`](docs/qwen_remaining_runs_20260328.md)
+
+## Google embedding 说明
+
+### 现在需不需要重跑 embedding
+
+- **当前这台机器上不需要。**
+- 最新 Google embedding cache 已经完整生成：
+  - `artifacts/rag/embeddings_cache_google_gemini_embedding_001_3072.json`
+
+### 直接 `git pull` 能不能拿到这个缓存
+
+- **不能。**
+- `artifacts/` 没有进 git，这个缓存文件约 `326MB`，因此只存在于本地运行环境。
+
+### 实际影响
+
+- 如果你还在这台机器上继续跑 Qwen 的 RAG 相关实验，可以直接复用，不需要重新切片。
+- 如果你换到另一台机器重新拉仓库，只会拿到代码、结果 JSON 和报告，不会自动拿到这个 embedding cache。
+- 跨机器复用需要手动复制该文件；否则重新运行 embedding 预计算。
+
+## Quick Start
+
+### 1. 数据检查
+
+```bash
+make lint-data
 ```
+
+### 2. 基线与 RAG 检索
+
+```bash
+make eval-baseline
+make eval-rag
+```
+
+### 3. 生成最终图表与指标快照
+
+```bash
+make report
+```
+
+### 4. Qwen 剩余补跑
+
+```bash
+uv run --with openai python run_qwen_ablation_eval.py --mode pe
+
+export EMBEDDING_PROVIDER=google
+export GOOGLE_API_KEY=你的_google_key
+uv run --with openai python run_qwen_ablation_eval.py --mode rag --repo-root external/celery
+uv run --with openai python run_qwen_ablation_eval.py --mode pe_rag --repo-root external/celery
+```
+
+## 仓库结构
+
+```text
 tengxun_open/
-├── 📄 文档
-│   ├── plan.md                     # 项目计划（7天执行方案）
-│   ├── task.md                     # 任务说明
-│   ├── HYPERPARAMS_REASONING.md    # 超参数选型说明
-│   ├── DEPLOYMENT_COMPLETE.md      # 部署完成说明
-│   └── DEPLOYMENT_SUMMARY.md       # 部署总结
-│
-├── 📂 数据集
-│   ├── data/eval_cases.json        # 评测数据 (54条)
-│   ├── data/eval_cases_final_v1.json # 正式评测集
-│   └── data/finetune_dataset_500.jsonl # 微调数据 (500条)
-│
-├── 🧪 评测模块 (evaluation/)
-│   ├── baseline.py                 # 基础评测
-│   ├── run_qwen_eval.py            # Qwen评估运行
-│   └── metrics.py                  # 评估指标
-│
-├── 🏷️ 提示工程 (pe/)
-│   └── prompt_templates_v2.py      # System Prompt + CoT + Few-shot
-│
-├── 🔍 RAG检索 (rag/)
-│   ├── ast_chunker.py              # AST代码分块
-│   └── rrf_retriever.py            # 三路RRF检索
-│
-├── 🎯 模型微调 (finetune/)
-│   ├── train_lora.py               # LoRA训练配置
-│   └── data_guard.py               # 数据验证流水线
-│
-├── 📊 实验结果 (results/)
-│   └── *.json                      # 各模型评测结果
-│
-└── 🚀 脚本
-    ├── scripts/
-    │   ├── step1_baseline.sh       # Step 1: 基线测试
-    │   ├── step2_train.sh          # Step 2: 启动微调
-    │   ├── step3_ft_eval.sh        # Step 3: FT评测
-    │   ├── step4_pe_ft.sh          # Step 4: PE+FT评测
-    │   ├── step5_pe_rag_ft.sh      # Step 5: PE+RAG+FT评测
-    │   └── run_qwen_eval.sh        # Qwen评测脚本
-    │
-    ├── train_lora.sh               # 一键训练脚本
-    ├── run_finetune_with_logging.sh # 完整训练(带日志)
-    ├── check_download.sh           # 检查模型下载
-    └── start_qwen_vllm.sh          # 启动vLLM服务
+├── README.md
+├── Makefile
+├── data/
+├── evaluation/
+├── pe/
+├── rag/
+├── finetune/
+├── configs/
+├── scripts/
+├── results/
+├── reports/
+├── docs/
+└── img/final_delivery/
 ```
 
-## 🚀 快速开始
+完整地图见：
 
-### 1. 基线测试 (Step 1)
-```bash
-cd tengxun_open
-bash scripts/step1_baseline.sh
-```
+- [`docs/repository_map_20260328.md`](docs/repository_map_20260328.md)
 
-### 2. 启动微调训练 (Step 2)
-```bash
-cd tengxun_open
-bash scripts/step2_train.sh
-# 或带完整日志
-bash run_finetune_with_logging.sh
-```
+## 权威文档入口
 
-### 3. 后续评测 (Step 3-5)
-```bash
-bash scripts/step3_ft_eval.sh      # FT评测
-bash scripts/step4_pe_ft.sh        # PE+FT评测
-bash scripts/step5_pe_rag_ft.sh    # PE+RAG+FT评测
-```
+- 总交付报告：[`reports/DELIVERY_REPORT.md`](reports/DELIVERY_REPORT.md)
+- 瓶颈诊断：[`reports/bottleneck_diagnosis.md`](reports/bottleneck_diagnosis.md)
+- PE 优化：[`reports/pe_optimization.md`](reports/pe_optimization.md)
+- RAG 方案：[`reports/rag_pipeline.md`](reports/rag_pipeline.md)
+- 消融矩阵：[`reports/ablation_study.md`](reports/ablation_study.md)
+- 当前进度：[`reports/project_progress_20260328.md`](reports/project_progress_20260328.md)
+- Qwen 补跑说明：[`docs/qwen_remaining_runs_20260328.md`](docs/qwen_remaining_runs_20260328.md)
 
-## 📊 数据说明
+## 当前最稳的对外结论
 
-### 评测集 (eval_cases.json)
-- **数量**: 54条
-- **难度**: Easy 15条, Medium 19条, Hard 20条
-- **来源**: Celery源码人工标注
-
-### 微调数据集 (finetune_dataset_500.jsonl)
-- **数量**: 500条
-- **难度**: Hard 162, Easy 163, Medium 175
-- **验证**: 全部通过data_guard验证
-
-### 失效类型分类 (5类)
-| 类型 | 描述 |
-|------|------|
-| Type A | 长上下文截断丢失 |
-| Type B | 隐式依赖断裂（装饰器） |
-| Type C | 再导出链断裂 |
-| Type D | 跨文件命名空间混淆 |
-| Type E | 动态加载与字符串引用失配 |
-
-## 🔬 消融实验矩阵
-
-| 实验组 | 说明 |
-|--------|------|
-| Baseline (Qwen3.5-9B) | 基线，未优化 |
-| PE only | 纯提示词工程 |
-| RAG only | 纯检索增强 |
-| FT only | 领域微调 |
-| PE + RAG | 提示词 + 检索 |
-| PE + FT | 提示词 + 微调 |
-| PE + RAG + FT | 完整策略 |
-
-## 📋 超参数配置
-
-训练配置见 `lora_config.yaml`:
-- **模型**: Qwen/Qwen3.5-9B
-- **LoRA rank**: 8
-- **学习率**: 5e-5
-- **batch**: 1 (accum 8)
-- **epoch**: 3
-- **精度**: bf16
-
-详细说明见 `HYPERPARAMS_REASONING.md`
-
-## 📞 支持
-
-- 查看训练日志: `logs/training_YYYYMMDD_HHMMSS/`
-- 查看 результат: `results/`
-- 监控GPU: `nvidia-smi`
-
----
-
-**项目计划**: 7天完成，包含模块1-6的完整实验
+- 如果只看商业模型上界，`GPT-5.4` 仍明显领先。
+- 如果只看“可训练开源模型”的正式结果，当前最稳的是 `Qwen PE + FT = 0.4315`。
+- 如果允许把旧版 RAG+FT 结果作为参考，当前最高开源结果是 `Qwen PE + RAG + FT = 0.4435`，但仍建议按最新 embedding 再补一版。
