@@ -89,7 +89,8 @@
 | strict PE 搜索 | `reports/strict_pe_search_20260329.md` | GPT strict 最优路线 |
 | strict FT 执行状态 | `reports/strict_ft_execution_status_20260329.md` | 当前本机为什么不能直接重训 |
 | 训练证据审计 | `reports/training_evidence_audit_20260329.md` | 现有训练证据强度说明 |
-| strict 训练环境检查 | `results/strict_train_env_20260329.json` | 本机 preflight 落盘结果 |
+| strict replay 训练环境检查 | `results/strict_replay_train_env_20260329.json` | strict-clean replay preflight |
+| 正式训练环境检查 | `results/formal_train_env_20260329.json` | 历史正式配置 preflight |
 | 训练日志结构化摘要 | `results/training_log_summary_20260329.json` | train/eval 摘要 |
 
 说明：

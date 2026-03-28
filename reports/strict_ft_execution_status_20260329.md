@@ -34,10 +34,10 @@
 python3 scripts/check_train_env.py \
   --config configs/train_config_strict_replay_20260329.yaml \
   --require-cuda \
-  --json-out results/strict_train_env_20260329.json
+  --json-out results/strict_replay_train_env_20260329.json
 ```
 
-结果文件：`results/strict_train_env_20260329.json`
+结果文件：`results/strict_replay_train_env_20260329.json`
 
 结论：`overall = FAIL`
 
@@ -59,6 +59,17 @@ python3 scripts/check_train_env.py \
 所以这不是“仓库没准备好”，而是：
 
 > 当前这台 Mac 只适合做数据、评测、文档和 orchestration，不适合承担正式 Qwen 9B strict-clean LoRA 训练。
+
+额外已经落盘的对比证据：
+
+- strict replay preflight：`results/strict_replay_train_env_20260329.json`
+- formal config preflight：`results/formal_train_env_20260329.json`
+
+这组对比现在能直接说明：
+
+- strict replay 配置的 `eval_steps=50 / save_steps=50` 是合理的
+- 历史正式配置的 `eval_steps=500 / save_steps=500` 都超过了估算总步数 `339`
+- 因此旧训练没有逐步 `eval_loss` 曲线，不再只是经验解释，而是有结构化证据
 
 ## 3. 当前最短执行路径
 

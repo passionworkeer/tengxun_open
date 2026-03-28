@@ -3,7 +3,9 @@
 这份审计不替代正式训练日志，而是把已有日志整理成更容易答辩引用的结构化结论。
 
 原始日志：`logs/train_20260327_143745.log`  
-结构化摘要：`results/training_log_summary_20260329.json`
+结构化摘要：`results/training_log_summary_20260329.json`  
+正式配置前置检查：`results/formal_train_env_20260329.json`  
+strict replay 前置检查：`results/strict_replay_train_env_20260329.json`
 
 ## 1. 已提取出的硬证据
 
@@ -54,6 +56,11 @@ python3 scripts/analyze_training_log.py \
 - 日志里只有最终 `eval_loss`
 - `llamafactory` 在本次正式跑线上没有产出 step-level `eval_loss` plot
 - 原始日志里仍然保留了 `No metric eval_loss to plot`
+- `results/formal_train_env_20260329.json` 还显示：
+  - `estimated_total_steps ≈ 339`
+  - `eval_steps = 500`
+  - `save_steps = 500`
+  - 因此不会触发中间 eval，也不会产生中间 checkpoint
 
 ## 4. 更稳妥的答辩表述
 

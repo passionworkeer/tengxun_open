@@ -589,7 +589,7 @@ def build_deck() -> Presentation:
         3.8,
         2.0,
         title="Open-source highest score",
-        body="Use Qwen PE + RAG + FT when peak score matters most.\nThis is the best completed open-source combination in the ablation matrix.",
+        body="Use Qwen PE + RAG + FT when discussing the historical formal matrix.\nStrict-clean FT rerun is still pending on a GPU environment.",
         accent=COLORS["mint"],
         fill=RGBColor(30, 41, 59),
     )
@@ -600,7 +600,7 @@ def build_deck() -> Presentation:
         3.8,
         2.0,
         title="Open-source default route",
-        body="Use Qwen PE + FT when engineering cost matters.\nIt is only slightly below the full best line while being simpler to operate.",
+        body="Use Qwen PE + FT as the historical formal default route.\nPromote it as strict-clean only after the FT family rerun lands.",
         accent=COLORS["amber"],
         fill=RGBColor(30, 41, 59),
     )
@@ -635,7 +635,8 @@ def build_deck() -> Presentation:
         slide,
         [
             "The training curve is stable and the final eval_loss is 0.4779",
-            "Evidence for 'no overfitting' is moderate, not maximal, because we do not keep a full step-wise eval curve",
+            "Evidence for 'no overfitting' is moderate, not maximal, because the historical run did not keep a full step-wise eval curve",
+            "The strict replay config now fixes this with eval_steps/save_steps=50 and best-checkpoint selection",
             "GLM official thinking mode was explored but not included in the formal matrix because both stream and non-stream smoke runs stalled on the first case",
             "Strict assets are the recommended path for replay and defense hardening",
         ],

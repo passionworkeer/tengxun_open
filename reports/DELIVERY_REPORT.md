@@ -230,7 +230,7 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 
 - strict 数据、配置、评测入口、一键脚本都已补齐
 - 当前仓库没有 versioned strict adapter
-- 本机检查结果显示 `CUDA` 与 `llamafactory-cli` 都不满足，见 `results/strict_train_env_20260329.json`
+- 本机检查结果显示 `CUDA` 与 `llamafactory-cli` 都不满足，见 `results/strict_replay_train_env_20260329.json`
 - 因此 Qwen `FT only / PE + FT / PE + RAG + FT` 目前仍属于**历史正式 FT 线**
 
 更具体的执行状态见：

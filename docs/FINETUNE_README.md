@@ -202,7 +202,8 @@ make qwen-strict-rerun
 
 补充：
 
-- 当前仓库已经落盘了本机 strict 训练前置检查：`results/strict_train_env_20260329.json`
+- 当前仓库已经落盘了本机 strict replay 训练前置检查：`results/strict_replay_train_env_20260329.json`
+- 当前仓库也落盘了历史正式配置的前置检查：`results/formal_train_env_20260329.json`
 - 当前仓库已经落盘了训练证据结构化摘要：`results/training_log_summary_20260329.json`
 - 对应说明文档：
   - `reports/strict_ft_execution_status_20260329.md`

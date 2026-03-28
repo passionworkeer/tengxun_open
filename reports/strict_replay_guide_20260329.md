@@ -177,8 +177,8 @@ make check-train-env-strict
 
 注意：
 
-- 当前仓库正式 strict 配置是 `configs/train_config_strict_20260329.yaml`
-- 本机前置检查结果已落盘在 `results/strict_train_env_20260329.json`
+- 当前仓库正式 strict replay 配置是 `configs/train_config_strict_replay_20260329.yaml`
+- 本机前置检查结果已落盘在 `results/strict_replay_train_env_20260329.json`
 - 如果当前机器没有 `CUDA` 或没有 `llamafactory-cli`，不要硬跑；直接切到外部 NVIDIA GPU 环境
 
 最短执行路径：
@@ -199,17 +199,17 @@ make qwen-strict-rerun
 
 ```bash
 python3 -m finetune.data_guard data/finetune_dataset_500_strict.jsonl
-python3 finetune/train_lora.py --config configs/train_config_strict_20260329.yaml
+python3 finetune/train_lora.py --config configs/train_config_strict_replay_20260329.yaml
 
 python3 run_ft_eval.py \
   --cases data/eval_cases.json \
-  --adapter-path artifacts/lora/qwen3.5-9b/strict_20260329 \
+  --adapter-path artifacts/lora/qwen3.5-9b/strict_replay_20260329 \
   --output results/qwen_ft_strict_replay.json
 
 FEWSHOT_DATA_PATH=data/fewshot_examples_20_strict.json \
 python3 run_pe_ft_eval.py \
   --cases data/eval_cases.json \
-  --adapter-path artifacts/lora/qwen3.5-9b/strict_20260329 \
+  --adapter-path artifacts/lora/qwen3.5-9b/strict_replay_20260329 \
   --output results/qwen_pe_ft_strict_replay.json
 
 export EMBEDDING_PROVIDER=google
@@ -218,7 +218,7 @@ FEWSHOT_DATA_PATH=data/fewshot_examples_20_strict.json \
 python3 run_pe_rag_ft_eval.py \
   --cases data/eval_cases.json \
   --repo-root external/celery \
-  --adapter-path artifacts/lora/qwen3.5-9b/strict_20260329 \
+  --adapter-path artifacts/lora/qwen3.5-9b/strict_replay_20260329 \
   --output results/qwen_pe_rag_ft_strict_replay.json
 ```
 
