@@ -8,17 +8,21 @@ from __future__ import annotations
 import argparse
 import ast
 import json
+import re
 import statistics
 from pathlib import Path
 
 
 def parse_log(log_path: Path) -> dict:
     train_points: list[dict[str, float]] = []
+    eval_points: list[dict[str, float]] = []
+    checkpoint_steps: list[int] = []
     final_train_loss = None
     final_eval_loss = None
     train_runtime_seconds = None
     train_runtime_hms = None
     eval_runtime_hms = None
+    checkpoint_pattern = re.compile(r"checkpoint-(\d+)")
 
     for raw_line in log_path.read_text(encoding="utf-8").splitlines():
         line = raw_line.strip()
@@ -31,16 +35,31 @@ def parse_log(log_path: Path) -> dict:
                     "epoch": float(payload["epoch"]),
                 }
             )
+        elif line.startswith("{'eval_loss':"):
+            payload = ast.literal_eval(line)
+            eval_points.append(
+                {
+                    "eval_loss": float(payload["eval_loss"]),
+                    "epoch": float(payload["epoch"]),
+                }
+            )
         elif line.startswith("{'train_runtime':"):
             payload = ast.literal_eval(line)
             train_runtime_seconds = float(payload["train_runtime"])
             final_train_loss = float(payload["train_loss"])
+            final_eval_loss = (
+                float(payload["eval_loss"]) if "eval_loss" in payload else final_eval_loss
+            )
         elif line.startswith("train_runtime"):
             train_runtime_hms = line.split("=", 1)[-1].strip()
         elif line.startswith("eval_loss"):
             final_eval_loss = float(line.split("=", 1)[-1].strip())
         elif line.startswith("eval_runtime"):
             eval_runtime_hms = line.split("=", 1)[-1].strip()
+        elif "Saving model checkpoint to" in line:
+            match = checkpoint_pattern.search(line)
+            if match:
+                checkpoint_steps.append(int(match.group(1)))
 
     if not train_points:
         raise SystemExit(f"日志中未找到 step-level train loss: {log_path}")
@@ -50,6 +69,8 @@ def parse_log(log_path: Path) -> dict:
     for prev, curr in zip(losses, losses[1:]):
         if curr <= prev:
             decreasing_steps += 1
+
+    eval_losses = [point["eval_loss"] for point in eval_points]
 
     return {
         "log_path": str(log_path),
@@ -65,10 +86,15 @@ def parse_log(log_path: Path) -> dict:
         "total_adjacent_steps": max(len(losses) - 1, 0),
         "final_train_loss": round(final_train_loss, 4) if final_train_loss is not None else None,
         "final_eval_loss": round(final_eval_loss, 4) if final_eval_loss is not None else None,
+        "eval_loss_points": len(eval_points),
+        "first_eval_loss": round(eval_losses[0], 4) if eval_losses else None,
+        "best_eval_loss": round(min(eval_losses), 4) if eval_losses else None,
+        "last_logged_eval_loss": round(eval_losses[-1], 4) if eval_losses else None,
+        "checkpoint_steps": checkpoint_steps,
         "train_runtime_seconds": train_runtime_seconds,
         "train_runtime_hms": train_runtime_hms,
         "eval_runtime_hms": eval_runtime_hms,
-        "step_level_eval_curve_present": False,
+        "step_level_eval_curve_present": bool(eval_points),
     }
 
 
@@ -77,7 +103,7 @@ def main() -> int:
     parser.add_argument(
         "--log",
         type=Path,
-        default=Path("logs/train_20260327_143745.log"),
+        default=Path("logs/strict_clean_20260329.train.log"),
         help="Training log path.",
     )
     parser.add_argument(

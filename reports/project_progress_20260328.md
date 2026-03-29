@@ -1,88 +1,75 @@
-# 项目最终进度整理（2026-03-28）
+# 项目最终进度整理（2026-03-29）
 
 ## 一句话结论
 
-- 数据集、GPT/GLM 基线、最新 Google embedding 的 RAG 检索、Qwen 的 FT / PE+FT / PE+RAG+FT 都已有正式结果。
-- 当前最强已落盘的 Qwen 组合是 `PE+RAG+FT`，并已切到 `2026-03-28` 的 Google embedding 正式口径。
-- 严格按当前正式口径，`GPT/GLM/Qwen/RAG/FT/消融矩阵` 都已经收口。
+- 当前默认交付口径已经切到 strict-clean：few-shot / finetune 默认资产分别是 `data/fewshot_examples_20_strict.json` 与 `data/finetune_dataset_500_strict.jsonl`。
+- 商业模型最强路线是 GPT-5.4 的 strict `postprocess_targeted`：`union 0.6338 / macro 0.4757 / mislayer 0.1620`。
+- 开源模型最强完整路线是 Qwen strict-clean `PE + RAG + FT = 0.5018`；`PE + FT = 0.3865` 是复杂度更低的备选。
+- 历史正式 few-shot / finetune 资产继续保留，但仅作归档对照，不再作为当前正式默认数据入口。
 
-## 数据集与任务覆盖
+## 数据集与资产边界
 
-- 正式评测集：`54` 条，位于 `data/eval_cases.json`
-- 标注方式：正式 `54-case` 全部为手工标注
-- 微调数据集：`500` 条，位于 `data/finetune_dataset_500.jsonl`
-- 任务方向：Celery 跨文件依赖分析 / 动态解析 / 再导出链 / 字符串符号解析
-- 失效模式：Type A-E 五类均已定义并在评测集内覆盖
+- 正式评测集：`54` 条，位于 `data/eval_cases.json`，全部手工标注。
+- 当前默认 few-shot：`20` 条 strict-clean 资产。
+- 当前默认微调集：`500` 条 strict-clean 资产。
+- 历史正式 few-shot / finetune 仍在仓库中，但只用于演进对照与污染审计。
 
 ## 基线结果（54-case 正式口径）
 
 | 模型 | Easy F1 | Medium F1 | Hard F1 | Avg F1 | 备注 |
 |------|---------|-----------|---------|--------|------|
-| GPT-5.4 | 0.4348 | 0.2188 | 0.2261 | 0.2815 | 官方 API，正式结果 |
-| GLM-5 | 0.1048 | 0.0681 | 0.0367 | 0.0666 | 官方 API，正式结果 |
-| Qwen3.5-9B | 0.0667 | 0.0526 | 0.0000 | 0.0370 | 旧 raw 输出恢复版，45/54 parse fail 记 0 |
+| GPT-5.4 | 0.4348 | 0.2188 | 0.2261 | 0.2815 | 官方 API |
+| GLM-5 | 0.1048 | 0.0681 | 0.0367 | 0.0666 | 官方 API |
+| Qwen3.5-9B | 0.0667 | 0.0526 | 0.0000 | 0.0370 | strict recovered baseline |
 
-- Qwen baseline 恢复率：`9/54`
+## Prompt Engineering
 
-## Prompt Engineering（GPT-5.4，54-case 正式重跑）
+| Variant | Avg F1 | 备注 |
+|---------|--------|------|
+| baseline | 0.2745 | GPT-5.4 正式 54-case |
+| system_prompt | 0.3138 | GPT-5.4 正式 54-case |
+| cot | 0.4218 | GPT-5.4 正式 54-case |
+| fewshot | 0.5733 | GPT-5.4 正式 54-case |
+| postprocess | 0.6062 | GPT-5.4 正式 54-case |
+| strict postprocess_targeted | 0.6338 | macro=0.4757, mislayer=0.1620 |
 
-| Variant | Easy F1 | Medium F1 | Hard F1 | Avg F1 |
-|---------|---------|-----------|---------|--------|
-| baseline | 0.3907 | 0.2602 | 0.2010 | 0.2745 |
-| system_prompt | 0.4306 | 0.3039 | 0.2356 | 0.3138 |
-| cot | 0.4791 | 0.4170 | 0.3834 | 0.4218 |
-| fewshot | 0.6492 | 0.5351 | 0.5525 | 0.5733 |
-| postprocess | 0.6651 | 0.6165 | 0.5522 | 0.6062 |
+## RAG
 
-- 口径说明：这是在 `data/eval_cases.json` 正式 54 条上的权威结果；`results/pe_eval/` 中的 50-case 结果仅作历史归档。
+- Google embedding 检索：Recall@5=`0.4502`，MRR=`0.5596`
+- GPT 端到端：No-RAG=`0.2783` -> With-RAG=`0.2940`，Delta=`+0.0157`
 
-## RAG 检索（最新 Google embedding）
+## Qwen strict-clean FT family
 
-- Embedding：`google / gemini-embedding-001`
-- 缓存：完整 `8086/8086`
-
-| View | Recall@5 | MRR |
-|------|----------|-----|
-| fused chunk_symbols | 0.4305 | 0.5292 |
-| fused expanded_fqns | 0.4502 | 0.5596 |
-
-## GPT 端到端 RAG 增益（54-case）
-
-- No-RAG Avg F1：`0.2783`
-- With-RAG Avg F1：`0.2940`
-- Avg Delta：`+0.0157`
-
-## Qwen 训练与组合策略（现有可用结果）
-
-| Strategy | Easy F1 | Medium F1 | Hard F1 | Avg F1 | 备注 |
+| Strategy | Easy F1 | Medium F1 | Hard F1 | Avg F1 | 口径 |
 |----------|---------|-----------|---------|--------|------|
-| FT only | 0.1556 | 0.0895 | 0.0500 | 0.0932 | 54-case，全量已跑 |
-| PE + FT | 0.5233 | 0.5370 | 0.2624 | 0.4315 | 54-case，全量已跑 |
-| PE + RAG + FT | 0.4985 | 0.4805 | 0.3672 | 0.4435 | 54-case，Google embedding 正式结果 |
+| FT only | 0.1556 | 0.0895 | 0.0500 | 0.0932 | strict-clean 54-case |
+| PE + FT | 0.5307 | 0.4277 | 0.2393 | 0.3865 | strict-clean 54-case |
+| PE + RAG + FT | 0.6168 | 0.5196 | 0.3986 | 0.5018 | strict-clean 54-case |
 
-## 验收矩阵完成度
+## 训练证据
 
-| 模块 | 当前状态 | 备注 |
+- 当前权威训练日志：`logs/strict_clean_20260329.train.log`
+- step-level train loss 点数：`33`
+- step-level eval loss 点数：`7`
+- best eval loss：`0.4661`
+- final eval loss：`0.4661`
+- checkpoint：`50, 100, 150, 200, 250, 300, 339`
+
+## 当前答辩可成立的完成度表述
+
+| 模块 | 当前状态 | 说明 |
 |------|----------|------|
-| 评测集 ≥50 条 | 完成 | 正式集 54 条 |
-| 瓶颈诊断 | 完成 | Type A-E 已定义并有报告 |
-| PE 四维优化 | 完成 | `results/pe_eval_54_20260328/` 为正式结果；50-case 目录仅作归档 |
-| RAG 检索评测 | 完成 | 最新 Google embedding 已重跑 54-case |
-| 微调数据集 ≥500 条 | 完成 | 正式集 500 条 |
-| LoRA 微调 | 完成 | Qwen FT/PE+FT/PE+RAG+FT 已有结果 |
-| 完整消融矩阵 | 完成 | Qwen 的 PE only / RAG only / PE+RAG / PE+RAG+FT 均已有正式结果 |
+| 评测集 ≥50 条 | 完成 | 54 条、全部手工标注 |
+| 瓶颈诊断 | 完成 | Type A-E 已覆盖并有错误样例支撑 |
+| PE 四维优化 | 完成 | 正式 54-case + strict 搜索都已落盘 |
+| RAG 检索与端到端评估 | 完成 | Google embedding 正式结果已落盘 |
+| 微调数据集 ≥500 条 | 完成 | 当前默认 strict-clean 500 条；历史正式集仅归档 |
+| LoRA 微调 | 完成 | strict-clean 训练日志、adapter handoff、FT family 结果均已落盘 |
+| 完整消融矩阵 | 完成 | 当前对外交付默认使用 strict-clean FT family 结果 |
 
-## 结果口径说明
+## 风险与边界
 
-- 主评分指标采用三层并集后的 FQN 精确匹配；`direct / indirect / implicit` 三层标签仍保留在正式数据中用于诊断与展示。
-- 当前仓库的正式口径已切换到 `2026-03-28` 的 Google embedding 结果，不再使用旧的 `qwen_pe_rag_ft_20260327_163613_stats.json` 作为对外主口径。
-- `Qwen PE + RAG + FT` 以 `results/qwen_pe_rag_ft_google_20260328_stats.json` 为准。
-- 若后续继续补实验，只是扩展分析，不影响当前这版“完整消融矩阵已完成”的结论。
-
-## 当前最稳的对外结论
-
-- 商业模型基线：`GPT-5.4` 明显强于 `GLM-5` 与 `Qwen3.5-9B`。
-- PE 对 GPT 的提升非常显著，System Prompt / Few-shot / Post-process 是主要增益来源。
-- 最新 Google embedding 下，RAG 检索层面已经收口，可作为正式方案。
-- Qwen 的微调与组合策略已经显示明显收益，当前正式结果下完整消融矩阵已闭环。
+- 当前主评分指标仍是三层并集后的 FQN 精确匹配；严格分层判断需同时参考 strict `macro F1 / mislayer rate`。
+- 历史正式 few-shot / finetune 资产存在 overlap 风险，因此已经从当前默认交付链路中降级为归档对照。
+- strict-clean `PE + RAG + FT` 虽然总分最高，但 `mislayer` 仍高于更保守的 `PE + FT`，答辩时应明确“最强”与“最稳”不是同一件事。
 

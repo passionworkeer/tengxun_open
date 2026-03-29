@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import unittest
+from pathlib import Path
 
-from finetune.data_guard import validate_record
+from finetune.data_guard import validate_jsonl, validate_record
 
 
 class ValidateRecordTest(unittest.TestCase):
+    ROOT = Path(__file__).resolve().parents[1]
+
     def test_rejects_invalid_external_fqn(self) -> None:
         record = {
             "instruction": "test",
@@ -41,6 +44,27 @@ class ValidateRecordTest(unittest.TestCase):
         errors = validate_record(record)
 
         self.assertEqual(errors, [])
+
+    def test_historical_dataset_fails_overlap_gate(self) -> None:
+        summary = validate_jsonl(
+            self.ROOT / "data/finetune_dataset_500.jsonl",
+            eval_cases_path=self.ROOT / "data/eval_cases.json",
+        )
+
+        self.assertFalse(summary.ready)
+        self.assertGreater(summary.overlap_audit["exact_gt_overlap_rows"], 0)
+        self.assertGreater(summary.overlap_audit["hard_question_overlap_rows"], 0)
+
+    def test_strict_dataset_passes_overlap_gate(self) -> None:
+        summary = validate_jsonl(
+            self.ROOT / "data/finetune_dataset_500_strict.jsonl",
+            eval_cases_path=self.ROOT / "data/eval_cases.json",
+        )
+
+        self.assertTrue(summary.ready)
+        self.assertEqual(summary.overlap_audit["exact_gt_overlap_rows"], 0)
+        self.assertEqual(summary.overlap_audit["normalized_exact_question_overlap_rows"], 0)
+        self.assertEqual(summary.overlap_audit["hard_question_overlap_rows"], 0)
 
 
 if __name__ == "__main__":

@@ -116,8 +116,9 @@ RUN_NAME=strict_clean_20260329 ./scripts/package_qwen_strict_run.sh
 ### 已完成
 
 - 正式评测集：[`data/eval_cases.json`](data/eval_cases.json)，`54` 条，全部手工标注
-- 正式 few-shot 库：[`data/fewshot_examples_20.json`](data/fewshot_examples_20.json)，`20` 条
-- 正式微调集：[`data/finetune_dataset_500.jsonl`](data/finetune_dataset_500.jsonl)，`500` 条
+- 当前默认 few-shot：[`data/fewshot_examples_20_strict.json`](data/fewshot_examples_20_strict.json)，`20` 条，strict-clean
+- 当前默认微调集：[`data/finetune_dataset_500_strict.jsonl`](data/finetune_dataset_500_strict.jsonl)，`500` 条，strict-clean
+- 历史正式 few-shot / 微调集：[`data/fewshot_examples_20.json`](data/fewshot_examples_20.json)、[`data/finetune_dataset_500.jsonl`](data/finetune_dataset_500.jsonl)，仅作归档对照
 - GPT / GLM / Qwen baseline
 - GPT PE 四阶段正式重跑
 - Google embedding 版本 RAG 检索正式评测
@@ -184,6 +185,11 @@ make audit-strict
 make check-train-env-strict
 ```
 
+说明：
+
+- `make lint-data` 当前默认检查的是 strict-clean 微调集，并且会对 `data/eval_cases.json` 做 overlap 审计。
+- 如果你只是想查看历史正式训练集的状态，可运行 `make lint-data-historical`，但它不再代表当前默认交付数据入口。
+
 ### 2. 基线与 RAG 检索
 
 ```bash
@@ -210,6 +216,10 @@ export EMBEDDING_PROVIDER=google
 export GOOGLE_API_KEY=你的_google_key
 uv run --with openai python run_qwen_ablation_eval.py --mode rag --repo-root external/celery
 uv run --with openai python run_qwen_ablation_eval.py --mode pe_rag --repo-root external/celery
+make materialize-strict-adapter
+make eval-ft
+make eval-ft FT_STRATEGY=pe_ft
+make eval-ft FT_STRATEGY=pe_rag_ft
 make qwen-strict-rerun
 ```
 
@@ -226,8 +236,10 @@ celery-dep-analysis/
 │
 ├── data/                              # 正式数据资产
 │   ├── eval_cases.json                # 54 条正式评测集
-│   ├── finetune_dataset_500.jsonl     # 500 条正式微调数据
-│   └── fewshot_examples_20.json       # 20 条正式 few-shot 示例
+│   ├── finetune_dataset_500_strict.jsonl # 当前默认 500 条 strict-clean 微调数据
+│   ├── fewshot_examples_20_strict.json   # 当前默认 20 条 strict-clean few-shot
+│   ├── finetune_dataset_500.jsonl     # 历史正式微调数据（归档对照）
+│   └── fewshot_examples_20.json       # 历史正式 few-shot 示例（归档对照）
 │
 ├── evaluation/                        # 模型评测与指标计算
 │   ├── baseline.py                    # 数据摘要 / Prompt 预览 / RAG 检索评测入口
@@ -254,7 +266,8 @@ celery-dep-analysis/
 ├── configs/                           # 正式训练配置
 │   ├── lora_9b.toml                   # LoRA 基础配置
 │   ├── qlora_9b.toml                  # QLoRA 配置
-│   └── train_config_20260327_143745.yaml # 实际训练使用配置
+│   ├── strict_clean_20260329.yaml     # 当前默认 strict-clean 训练配置
+│   └── train_config_20260327_143745.yaml # 历史正式训练配置（归档对照）
 │
 ├── experiments/                       # 实验组织层
 │   └── README.md                      # 实验矩阵与后续 Notebook 说明
@@ -262,6 +275,7 @@ celery-dep-analysis/
 ├── scripts/                           # 数据、图表、结果整理脚本
 │   ├── generate_final_delivery_assets.py  # 生成最终图表与指标快照
 │   ├── generate_project_progress_report.py # 生成项目进度报告
+│   ├── materialize_strict_adapter.py      # 提取 strict-clean adapter
 │   ├── recover_qwen_baseline.py           # 恢复 Qwen strict baseline
 │   └── precompute_embeddings.py           # 预计算 embedding 缓存
 │
@@ -272,9 +286,10 @@ celery-dep-analysis/
 │   ├── qwen_pe_only_20260328_stats.json
 │   ├── qwen_rag_only_google_20260328_stats.json
 │   ├── qwen_pe_rag_google_20260328_stats.json
-│   ├── qwen_ft_20260327_160136_stats.json
-│   ├── qwen_pe_ft_20260327_162308_stats.json
-│   └── qwen_pe_rag_ft_google_20260328_stats.json
+│   ├── qwen_strict_runs/strict_clean_20260329/ # 当前默认 strict-clean FT family
+│   ├── qwen_ft_20260327_160136_stats.json      # 历史正式 FT only
+│   ├── qwen_pe_ft_20260327_162308_stats.json   # 历史正式 PE + FT
+│   └── qwen_pe_rag_ft_google_20260328_stats.json # 历史正式 PE + RAG + FT
 │
 ├── reports/                           # 正式报告文档
 │   ├── DELIVERY_REPORT.md             # 总交付报告

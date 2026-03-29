@@ -25,8 +25,8 @@
 | 识别低分场景共性瓶颈 | 完成 | `reports/bottleneck_diagnosis.md` |
 | PE 四维优化与量化 | 完成 | `reports/pe_optimization.md` |
 | 构建代码分析 RAG Pipeline | 完成 | `reports/rag_pipeline.md` |
-| 微调数据集 ≥500 条 | 完成 | `data/finetune_dataset_500.jsonl` |
-| LoRA 微调与效果评估 | 完成 | `results/qwen_ft_*`、`results/qwen_pe_ft_*` |
+| 微调数据集 ≥500 条 | 完成 | `data/finetune_dataset_500_strict.jsonl` |
+| LoRA 微调与效果评估 | 完成 | `results/qwen_strict_runs/strict_clean_20260329/` |
 | 完整消融矩阵 | 完成 | `reports/ablation_study.md` |
 | strict-clean FT replay 与结果审计 | 完成 | `scripts/run_qwen_strict_full.sh`、`reports/qwen_strict_closeout_20260329.md`、`reports/qwen_strict_result_audit_20260329.md` |
 
@@ -37,8 +37,8 @@
 | 数据 | 规模 | 当前状态 |
 |------|------|------|
 | 正式评测集 | `54` 条 | 完成，全部手工标注 |
-| Few-shot 示例库 | `20` 条 | 完成 |
-| 微调数据集 | `500` 条 | 完成 |
+| Few-shot 示例库 | `20` 条 | 完成；当前默认使用 strict-clean few-shot |
+| 微调数据集 | `500` 条 | 完成；当前默认使用 strict-clean 微调集 |
 
 ### 3.2 评测集分布
 
@@ -196,7 +196,7 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 - RAG 对 easy 和部分 Type B / Type C 反而会引入干扰。
 - 因此工程上不应默认对所有问题全量启用 RAG。
 
-## 7. 微调实验（历史正式线 + strict-clean replay）
+## 7. 微调实验（当前默认 strict-clean 线）
 
 ### 7.1 数据与配置
 
@@ -204,7 +204,7 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 |------|------|
 | 基座模型 | `Qwen/Qwen3.5-9B` |
 | 微调方法 | LoRA / 4bit 加载 |
-| 微调数据集 | `data/finetune_dataset_500.jsonl` |
+| 微调数据集 | `data/finetune_dataset_500_strict.jsonl` |
 | 训练轮数 | `3` |
 | 有效 batch | `batch=2, grad_accum=8` |
 | LoRA rank / alpha | `4 / 8` |
@@ -213,22 +213,23 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 
 | 指标 | 值 |
 |------|------|
-| train runtime | `0:37:12.92` |
-| final train loss | `0.572` |
-| final eval loss | `0.4779` |
+| checkpoint | `50 / 100 / 150 / 200 / 250 / 300 / 339` |
+| best eval loss | `0.4661` |
+| 最后一次 logged eval loss | `0.4664` |
 
 ![训练曲线](../img/final_delivery/07_training_curve_20260328.png)
 
 ### 7.3 结论
 
-- 现有日志显示 loss 收敛平稳，没有出现明显的发散。
-- 当前仓库已经保留了基于正式训练日志导出的 step-level train loss 曲线（`img/final_delivery/07_training_curve_20260328.png`）以及最终 `eval_loss=0.4779`。
-- 但训练日志中没有逐步验证集曲线，因此“不过拟合”证据仍是中等强度，不是最强形式。
-- 更结构化的训练证据审计已补到：`reports/training_evidence_audit_20260329.md`
+- 当前默认 strict-clean 日志同时保留了 step-level train loss、step-level eval loss 和中间 checkpoint。
+- 现有日志显示 loss 收敛平稳，没有出现明显发散；best eval loss 出现在 `checkpoint-300`。
+- 当前仓库已经保留了基于 strict-clean 日志导出的训练曲线（`img/final_delivery/07_training_curve_20260328.png`）。
+- 历史正式训练线仍保留作归档对照，但当前交付不再把它当默认训练证据。
+- 更结构化的训练证据审计见：`reports/training_evidence_audit_20260329.md`
 
 ### 7.4 strict-clean FT 当前状态
 
-- strict-clean CUDA 训练已完成
+- strict-clean CUDA 训练已完成，并且是当前默认 FT 线
 - strict 训练日志：`logs/strict_clean_20260329.train.log`
 - strict 运行配置：`configs/strict_clean_20260329.yaml`
 - strict `FT only`：完整 `54/54`，`0.0932`
