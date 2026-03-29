@@ -17,7 +17,7 @@ dist/
 .vscode/
 
 # Data & outputs
-artifacts/
+# artifacts/
 outputs/
 cache/
 logs/
