@@ -28,7 +28,7 @@
 
 历史说明：
 
-- 仓库中保留了若干早期辅助脚本，例如 `scripts/generate_finetune_data.py`、`scripts/train_lora.sh`。
+- 仓库中保留了若干早期辅助脚本，例如 `scripts/generate_finetune_data.py`。
 - `configs/train_config_strict_20260329.yaml` 保留为第一版 strict 草案；由于 `eval_steps=500` 大于整轮总步数，它不适合作为需要逐步 `eval_loss` 曲线的正式重训配置。
 - 这些脚本仍可用于 bootstrap 或本地实验，但**不是当前正式 500 条数据集与正式训练结果的唯一权威来源**。
 - 当前若要做严格答辩或去污染复验，请优先使用 strict 资产，而不是直接在历史正式资产上继续加实验。
@@ -99,7 +99,7 @@ python3 run_ft_eval.py \
 ### PE + FT
 
 ```bash
-python3 run_pe_ft_eval.py \
+python3 run_ft_eval.py --strategy pe_ft \
   --cases data/eval_cases.json \
   --adapter-path 你的_adapter_路径 \
   --output results/qwen_pe_ft_reproduced.json
@@ -111,7 +111,7 @@ python3 run_pe_ft_eval.py \
 export EMBEDDING_PROVIDER=google
 export GOOGLE_API_KEY=你的_google_key
 
-python3 run_pe_rag_ft_eval.py \
+python3 run_ft_eval.py --strategy pe_rag_ft \
   --cases data/eval_cases.json \
   --repo-root external/celery \
   --adapter-path 你的_adapter_路径 \
@@ -217,9 +217,3 @@ make qwen-strict-rerun
 - 用途：把评测结果转成 bootstrapping 数据。
 - 定位：历史辅助脚本，可继续保留用于派生实验。
 - 备注：不是当前正式 `data/finetune_dataset_500.jsonl` 的权威来源说明。
-
-### `scripts/train_lora.sh`
-
-- 用途：本地直接用 `transformers + peft` 跑一个轻量 LoRA 流程。
-- 定位：实验辅助入口，不替代正式 `make train` / `finetune/train_lora.py`。
-- 备注：已调整为兼容当前正式数据集格式，可做快速本地实验。

@@ -11,9 +11,9 @@
 - strict 重训配置已就绪：`configs/train_config_strict_replay_20260329.yaml`
 - strict 一键执行脚本已就绪：`scripts/run_qwen_strict_full.sh`
 - strict 评测入口已就绪：
-  - `run_ft_eval.py`
-  - `run_pe_ft_eval.py`
-  - `run_pe_rag_ft_eval.py`
+  - `run_ft_eval.py --strategy ft`
+  - `run_ft_eval.py --strategy pe_ft`
+  - `run_ft_eval.py --strategy pe_rag_ft`
 - strict 训练环境检查脚本已就绪：`scripts/check_train_env.py`
 
 换句话说，**代码链路已经补全**，缺的不是“脚本”，而是“可用的 GPU 训练环境”。

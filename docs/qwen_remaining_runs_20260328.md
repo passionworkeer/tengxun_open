@@ -1,5 +1,10 @@
 # Qwen 历史正式实验复现说明（2026-03-28）
 
+> **⚠️ 历史文档（仅供参考）**：本指南记录的是 2026-03-28 口径。当前请优先参考：
+> - [`reports/strict_replay_guide_20260329.md`](../reports/strict_replay_guide_20260329.md)（strict replay）
+> - [`reports/qwen_strict_closeout_20260329.md`](../reports/qwen_strict_closeout_20260329.md)（收口说明）
+> - [`docs/FINETUNE_README.md`](../docs/FINETUNE_README.md)（微调入口）
+
 ## 文档目的
 
 这份文档现在只回答一件事：
@@ -92,12 +97,14 @@
 
 仓库里的启动脚本：
 
-- [`start_qwen_vllm.sh`](../start_qwen_vllm.sh)
+```bash
+llamafactory-cli serve --config configs/llm.toml
+```
 
 典型启动方式：
 
 ```bash
-bash start_qwen_vllm.sh
+llamafactory-cli serve --config configs/llm.toml
 ```
 
 确认服务可用：
@@ -199,7 +206,7 @@ uv run --with openai python run_qwen_ablation_eval.py \
 
 使用已有 FT 脚本：
 
-- 脚本：[`run_pe_rag_ft_eval.py`](../run_pe_rag_ft_eval.py)
+- 脚本：`run_ft_eval.py --strategy pe_rag_ft`
 
 默认 adapter 路径：
 
@@ -212,7 +219,7 @@ uv run --with openai python run_qwen_ablation_eval.py \
 export EMBEDDING_PROVIDER=google
 export GOOGLE_API_KEY=你的_google_key
 
-uv run python run_pe_rag_ft_eval.py \
+uv run python run_ft_eval.py --strategy pe_rag_ft \
   --cases data/eval_cases.json \
   --repo-root external/celery \
   --output results/qwen_pe_rag_ft_google_20260328.json
@@ -221,7 +228,7 @@ uv run python run_pe_rag_ft_eval.py \
 如果 LoRA adapter 不在默认位置，显式指定：
 
 ```bash
-uv run python run_pe_rag_ft_eval.py \
+uv run python run_ft_eval.py --strategy pe_rag_ft \
   --cases data/eval_cases.json \
   --repo-root external/celery \
   --adapter-path LLaMA-Factory/saves/qwen3.5-9b/lora/finetune_20260327_143745 \
@@ -258,11 +265,11 @@ uv run python run_pe_rag_ft_eval.py \
 
 这些脚本或口径容易把结果跑偏，不建议继续作为正式入口：
 
-- [`scripts/run_qwen_eval.sh`](../scripts/run_qwen_eval.sh)
+- `scripts/run_qwen_eval.sh`（已删除）
   - 默认 `MAX_CASES=50`
   - 不是当前正式 54-case 口径
-- [`scripts/step5_pe_rag_ft.sh`](../scripts/step5_pe_rag_ft.sh)
-  - 仍引用 `data/eval_cases_final_v1.json`
+- `scripts/step5_pe_rag_ft.sh`（已删除）
+  - 原引用 `data/eval_cases_final_v1.json`
   - 输出文件名过于泛化，容易覆盖历史结果
 - 任何未显式指定输出路径、直接写到旧文件名的临时命令
 

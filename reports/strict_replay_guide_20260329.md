@@ -207,7 +207,7 @@ python3 run_ft_eval.py \
   --output results/qwen_ft_strict_replay.json
 
 FEWSHOT_DATA_PATH=data/fewshot_examples_20_strict.json \
-python3 run_pe_ft_eval.py \
+python3 run_ft_eval.py --strategy pe_ft \
   --cases data/eval_cases.json \
   --adapter-path artifacts/lora/qwen3.5-9b/strict_replay_20260329 \
   --output results/qwen_pe_ft_strict_replay.json
@@ -215,7 +215,7 @@ python3 run_pe_ft_eval.py \
 export EMBEDDING_PROVIDER=google
 export GOOGLE_API_KEY="<your-google-api-key>"
 FEWSHOT_DATA_PATH=data/fewshot_examples_20_strict.json \
-python3 run_pe_rag_ft_eval.py \
+python3 run_ft_eval.py --strategy pe_rag_ft \
   --cases data/eval_cases.json \
   --repo-root external/celery \
   --adapter-path artifacts/lora/qwen3.5-9b/strict_replay_20260329 \
