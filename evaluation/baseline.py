@@ -7,6 +7,11 @@
 3. 运行RAG检索评测
 4. 预览prompt效果
 
+当前正式任务设置：
+- `question_plus_entry` 是默认口径
+- 问题文本之外，还会提供人工标注的入口文件 anchor
+- `5/54` 条样本额外提供显式 `entry_symbol`
+
 用法示例：
     python -m evaluation.baseline --mode all --eval-cases data/eval_cases.json
 """
@@ -40,8 +45,8 @@ class EvalCase:
         difficulty: 难度等级 (easy/medium/hard)
         category: 失败类型分类
         question: 问题描述
-        entry_file: 入口文件路径
-        entry_symbol: 入口符号（函数/类名）
+        entry_file: 任务显式提供的入口文件 anchor
+        entry_symbol: 任务显式提供的入口符号 anchor（函数/类名）
         gold_fqns: 标准答案FQN列表
         reasoning_hint: 推理提示
         source_note: 来源备注
@@ -150,6 +155,7 @@ def summarize_cases(cases: list[EvalCase]) -> dict[str, Any]:
             "with_entry_symbol": sum(1 for case in cases if case.entry_symbol),
             "with_entry_file": sum(1 for case in cases if case.entry_file),
         },
+        "official_task_setting": "question_plus_entry (question + provided entry metadata)",
     }
 
 
@@ -192,7 +198,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--query-mode",
         choices=["question_only", "question_plus_entry"],
         default="question_plus_entry",
-        help="question_only=仅用自然语言检索; question_plus_entry=同时使用 entry_symbol 和 entry_file 元数据.",
+        help=(
+            "question_only=仅用自然语言检索; "
+            "question_plus_entry=正式 entry-guided 口径，同时使用题目中提供的 "
+            "entry_symbol 和 entry_file anchor."
+        ),
     )
     parser.add_argument(
         "--case-id",
@@ -567,6 +577,7 @@ def _parse_schema_v2_case(item: dict[str, Any], index: int) -> EvalCase:
     解析新schema（schema_v2）的案例格式
 
     使用 ground_truth 字段，包含 direct_deps、indirect_deps、implicit_deps。
+    `source_file` 是正式任务显式提供的 entry anchor，因此在运行时映射到 `entry_file`。
     """
     case_id = _require_string(item, "id", index)
     question = _require_string(item, "question", index, case_id=case_id)
@@ -685,7 +696,7 @@ def _build_query_text(case: EvalCase, query_mode: str) -> str:
         case: 评测案例
         query_mode: 查询模式
             - question_only: 仅使用问题文本
-            - question_plus_entry: 同时使用问题、符号名和文件路径
+            - question_plus_entry: 正式 entry-guided 口径，同时使用问题和提供的入口元数据
 
     Returns:
         组装后的查询文本

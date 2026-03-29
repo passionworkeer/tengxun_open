@@ -189,9 +189,9 @@ def build_ft_prompt(case: EvalCase) -> list[dict[str, str]]:
     )
     parts = [f"Question: {case.question.strip()}"]
     if case.entry_symbol:
-        parts.append(f"Entry Symbol: {case.entry_symbol.strip()}")
+        parts.append(f"Provided Entry Symbol: {case.entry_symbol.strip()}")
     if case.entry_file:
-        parts.append(f"Entry File: {case.entry_file.strip()}")
+        parts.append(f"Provided Entry File: {case.entry_file.strip()}")
     parts.append(
         '\nFormat: {"ground_truth": {"direct_deps": ["module.path"], '
         '"indirect_deps": [], "implicit_deps": []}}'

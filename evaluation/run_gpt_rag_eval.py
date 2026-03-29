@@ -28,9 +28,9 @@ def build_prompt_with_rag(case: EvalCase, context: str) -> str:
         f"Question: {case.question.strip()}",
     ]
     if case.entry_symbol:
-        parts.append(f"Entry Symbol: {case.entry_symbol.strip()}")
+        parts.append(f"Provided Entry Symbol: {case.entry_symbol.strip()}")
     if case.entry_file:
-        parts.append(f"Entry File: {case.entry_file.strip()}")
+        parts.append(f"Provided Entry File: {case.entry_file.strip()}")
     if context:
         parts.append(f"\nRetrieved Context:\n{context.strip()}")
     parts.append(
@@ -47,9 +47,9 @@ def build_prompt_no_rag(case: EvalCase) -> str:
         f"Question: {case.question.strip()}",
     ]
     if case.entry_symbol:
-        parts.append(f"Entry Symbol: {case.entry_symbol.strip()}")
+        parts.append(f"Provided Entry Symbol: {case.entry_symbol.strip()}")
     if case.entry_file:
-        parts.append(f"Entry File: {case.entry_file.strip()}")
+        parts.append(f"Provided Entry File: {case.entry_file.strip()}")
     parts.append(
         "\nReturn only a JSON object with:\n"
         '{"ground_truth": {"direct_deps": [...], "indirect_deps": [...], "implicit_deps": [...]}}'

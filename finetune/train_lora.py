@@ -21,6 +21,7 @@ DEFAULT_CONFIG = Path("configs/strict_clean_20260329.yaml")
 DEFAULT_LAUNCHER = os.environ.get("LLAMAFACTORY_CLI", "llamafactory-cli")
 REFERENCE_LOG = Path("logs/strict_clean_20260329.train.log")
 DATASET_INFO = Path("dataset_info.json")
+DATA_DIR = Path("data")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -112,7 +113,20 @@ def resolve_dataset_path(config: dict[str, object]) -> Path | None:
     file_name = dataset_meta.get("file_name")
     if not isinstance(file_name, str):
         return None
-    return Path(file_name)
+    raw_path = Path(file_name)
+    if raw_path.is_absolute():
+        return raw_path
+
+    candidates = (
+        raw_path,
+        DATASET_INFO.parent / raw_path,
+        DATA_DIR / raw_path,
+        DATASET_INFO.parent / DATA_DIR / raw_path,
+    )
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    return DATA_DIR / raw_path
 
 
 def estimate_total_steps(config: dict[str, object]) -> tuple[int, int, int, int] | None:
@@ -142,6 +156,9 @@ def print_preflight(config_path: Path, config: dict[str, object]) -> None:
     dataset_name = config.get("dataset")
     if dataset_name:
         print(f"数据集别名: {dataset_name}")
+    dataset_path = resolve_dataset_path(config)
+    if dataset_path is not None:
+        print(f"数据集路径: {dataset_path}")
 
     estimate = estimate_total_steps(config)
     if estimate is not None:

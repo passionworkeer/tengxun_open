@@ -10,7 +10,7 @@
 | 数据映射 | `dataset_info.json` | 数据集名 `fintune_qwen_dep_strict` |
 | 当前默认训练配置 | `configs/strict_clean_20260329.yaml` | 当前正式 strict-clean LoRA 配置 |
 | 当前默认训练日志 | `logs/strict_clean_20260329.train.log` | 含 step-level train/eval loss |
-| 当前默认 adapter handoff | `artifacts/handoff/strict_clean_20260329_minimal.tar.gz` | 可 materialize 成本地 adapter |
+| 当前默认 adapter handoff | `artifacts/handoff/strict_clean_20260329_minimal.tar.gz` | 训练/打包脚本产出的 handoff 包，需 materialize 后使用 |
 | 当前默认 FT only | `results/qwen_strict_runs/strict_clean_20260329/qwen_ft_strict_metrics.json` | strict-clean 54-case |
 | 当前默认 PE + FT | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict_metrics.json` | strict-clean 54-case |
 | 当前默认 PE + RAG + FT | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict_metrics.json` | strict-clean 54-case |
@@ -177,11 +177,11 @@ python3 -m finetune.data_guard data/finetune_dataset_500_strict.jsonl
 - 训练日志：`logs/<run_name>.train.log`
 - 评测结果：`results/qwen_strict_runs/<run_name>/`
 
-当前默认 adapter 目录是：
+当前默认 adapter 目录约定为：
 
 - `artifacts/lora/qwen3.5-9b/strict_clean_20260329`
 
-历史正式目录保留为：
+历史正式目录保留为约定的历史输出路径：
 
 - `artifacts/lora/qwen3.5-9b/formal_20260327_143745`
 

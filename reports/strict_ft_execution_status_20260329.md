@@ -4,6 +4,7 @@
 > 当前最终状态请优先看：
 > - `reports/qwen_strict_closeout_20260329.md`
 > - `reports/qwen_strict_result_audit_20260329.md`
+> 这不是当前主线状态页，而是历史 preflight 说明。
 
 这份说明只回答一个问题：
 
