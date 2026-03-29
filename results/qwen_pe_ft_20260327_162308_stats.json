@@ -1,0 +1,28 @@
+{
+  "total_cases": 54,
+  "by_difficulty": {
+    "easy": {
+      "count": 15,
+      "avg_f1": 0.5233,
+      "min_f1": 0.0,
+      "max_f1": 1.0
+    },
+    "hard": {
+      "count": 20,
+      "avg_f1": 0.2624,
+      "min_f1": 0.0,
+      "max_f1": 1.0
+    },
+    "medium": {
+      "count": 19,
+      "avg_f1": 0.537,
+      "min_f1": 0.0,
+      "max_f1": 1.0
+    }
+  },
+  "overall": {
+    "avg_f1": 0.4315,
+    "min_f1": 0.0,
+    "max_f1": 1.0
+  }
+}

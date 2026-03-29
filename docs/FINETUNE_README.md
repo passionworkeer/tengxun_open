@@ -23,8 +23,14 @@
 | strict 微调数据集 | `data/finetune_dataset_500_strict.jsonl` | 去除 exact GT / hard question overlap 的 500 条训练数据 |
 | strict 数据映射 | `dataset_info.json` | 数据集名 `fintune_qwen_dep_strict` |
 | strict 重训配置 | `configs/train_config_strict_replay_20260329.yaml` | strict-clean LoRA 配置，含逐步 eval_loss/checkpoint |
+| strict 实际运行配置 | `configs/strict_clean_20260329.yaml` | 2026-03-29 CUDA 训练使用配置 |
+| strict 训练日志 | `logs/strict_clean_20260329.train.log` | strict-clean CUDA 训练日志 |
+| strict FT only 结果 | `results/qwen_strict_runs/strict_clean_20260329/qwen_ft_strict_metrics.json` | strict-clean 54-case |
+| strict PE + FT 结果 | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict_metrics.json` | strict replay 当前仅 48/54 |
+| strict PE + RAG + FT 结果 | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict_metrics.json` | strict-clean 54-case 最优 |
 | strict 审计报告 | `reports/strict_data_audit_20260329.md` | 记录 exact GT 与题面级 overlap 清理结果 |
 | strict 评分报告 | `reports/strict_scoring_audit_20260329.md` | 分层 strict 指标与 mislayer 诊断 |
+| strict 结果完整度审计 | `reports/qwen_strict_result_audit_20260329.md` | strict 结果哪些完整、哪些是 partial |
 
 历史说明：
 
@@ -76,13 +82,14 @@ python3 finetune/train_lora.py --config configs/train_config_strict_replay_20260
 make check-train-env-strict
 ```
 
-如果你已经切到外部 CUDA 环境，并且想一次性完成 strict-clean 训练与三组评测，直接执行：
+如果你想在新的 CUDA 环境上复现这次 strict-clean 流程，直接执行：
 
 ```bash
 make qwen-strict-rerun
 ```
 
 收口说明见：`reports/qwen_strict_closeout_20260329.md`
+结果完整度审计见：`reports/qwen_strict_result_audit_20260329.md`
 GPU runbook 见：`docs/qwen_strict_gpu_runbook_20260329.md`
 
 ## 3. 正式评测入口
@@ -146,7 +153,7 @@ python3 run_ft_eval.py --strategy pe_rag_ft \
 - 可视化曲线：`img/final_delivery/07_training_curve_20260328.png`
 - `data_guard` 的校验范围：对 Celery 内部 FQN 做源码存在性校验，对白名单外部依赖包做显式放行
 
-当前没有逐步 `eval_loss` 曲线，因此判断不过拟合的证据强度是中等，不是最强形式。
+历史正式训练没有逐步 `eval_loss` 曲线，因此判断不过拟合的证据强度是中等，不是最强形式。
 
 原因也已经明确：
 
@@ -166,6 +173,15 @@ strict 重训配置 `configs/train_config_strict_replay_20260329.yaml` 已修复
 - step-level train loss 曲线
 - step-level eval loss 曲线
 - strict adapter 对应的 `FT only / PE + FT / PE + RAG + FT` 三组结果
+
+当前仓库已经落盘的 strict 训练证据包括：
+
+- `logs/strict_clean_20260329.train.log`
+- best checkpoint：`checkpoint-300`
+- final eval loss：`0.4661`
+- strict `FT only`：完整 `54/54`
+- strict `PE + RAG + FT`：完整 `54/54`
+- strict `PE + FT`：当前 `48/54`
 
 ## 6. 资产管理建议
 
@@ -199,7 +215,8 @@ make qwen-strict-rerun
 
 - 如果你是在复述历史正式交付结果，用正式资产。
 - 如果你是在回答“有没有训练/评测泄漏”的追问，用 strict 资产。
-- 如果你准备重训并更新最终答辩数字，优先走 strict 资产，然后重跑 `FT only / PE + FT / PE + RAG + FT`。
+- 如果你是在复述当前 strict-clean 最终状态，优先看 `reports/qwen_strict_closeout_20260329.md` 和 `reports/qwen_strict_result_audit_20260329.md`。
+- 如果你准备在另一台 GPU 机器上重现这次流程，优先走 strict 资产，然后重跑 `FT only / PE + FT / PE + RAG + FT`。
 
 补充：
 

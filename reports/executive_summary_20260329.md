@@ -66,7 +66,7 @@ GPT 端到端：
 - RAG 更适合长链调用、动态解析、跨文件隐式依赖
 - 不适合默认对所有 case 全量启用
 
-### 3. Qwen：FT 单独不够，真正有效的是 PE + FT，但 FT 家族当前仍是历史正式线
+### 3. Qwen：strict-clean 训练已完成，当前最强完整路线是 PE + RAG + FT
 
 Qwen strict baseline：
 
@@ -74,16 +74,18 @@ Qwen strict baseline：
 
 关键组合：
 
-- 历史正式 `FT only = 0.0932`
+- strict-clean `FT only = 0.0932`
+- strict-clean `PE + RAG + FT = 0.5018`
 - 历史正式 `PE + FT = 0.4315`
-- 历史正式 `PE + RAG + FT = 0.4435`
+- strict `PE + FT = 0.3465`（当前仅 `48/54`）
 
 结论：
 
 - PE 是开源模型的核心增益源
 - FT 负责领域适配
 - RAG 只有在和 PE / FT 组合时才真正发挥价值
-- strict-clean 数据、配置和一键重跑脚本已经就绪，但这条线还需要外部 CUDA 环境重训后才能更新最终数字
+- 当前最强的**完整 strict-clean 开源路线**已经更新为 `PE + RAG + FT = 0.5018`
+- `PE + FT` strict replay 当前只有 `48/54`，因此仍需和历史正式完整结果分开汇报
 
 ## 最终推荐策略
 
@@ -99,9 +101,9 @@ Qwen strict baseline：
 
 ### 开源模型
 
-- 历史正式最高分：`Qwen PE + RAG + FT`
-- 历史正式默认路线：`Qwen PE + FT`
-- 最严格口径下，应补充一句：strict-clean FT rerun 已准备，结果待外部 GPU 落盘
+- strict-clean 最强完整路线：`Qwen PE + RAG + FT`
+- 历史正式完整默认路线参考：`Qwen PE + FT`
+- 最严格口径下，应补充一句：`Qwen PE + FT strict replay` 当前只有 `48/54`
 
 ## 方法论上的核心结论
 

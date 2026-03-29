@@ -1,5 +1,10 @@
 # Strict FT 执行状态（2026-03-29）
 
+> 历史说明：这份文档记录的是 **GPU 执行前**，为什么本机无法完成 strict-clean 重训。  
+> 当前最终状态请优先看：
+> - `reports/qwen_strict_closeout_20260329.md`
+> - `reports/qwen_strict_result_audit_20260329.md`
+
 这份说明只回答一个问题：
 
 > 为什么 Qwen strict-clean 微调线现在还没有在本机直接重跑完成？
@@ -91,13 +96,13 @@ make qwen-strict-rerun
 
 对应脚本：`scripts/run_qwen_strict_full.sh`
 
-## 4. 对答辩口径的影响
+## 4. 对当时答辩口径的影响
 
 这条状态说明意味着：
 
 - GPT strict PE 结论已经是干净且可复验的
-- Qwen `FT only / PE + FT / PE + RAG + FT` 仍然属于**历史正式结果**
-- strict-clean Qwen FT 线已经具备完整执行包，但**尚未在可用 GPU 环境上重新落盘**
+- Qwen `FT only / PE + FT / PE + RAG + FT` 当时仍然属于**历史正式结果**
+- strict-clean Qwen FT 线当时已经具备完整执行包，但**尚未在可用 GPU 环境上重新落盘**
 
 因此更稳妥的对外说法应该是：
 
