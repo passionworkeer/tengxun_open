@@ -187,7 +187,7 @@ celery-dep-analysis/
 
 - [`docs/official_asset_manifest.md`](./official_asset_manifest.md)：正式资产与历史归档边界
 - [`docs/FINETUNE_README.md`](./FINETUNE_README.md)：微调资产与复现实验入口
-- [`docs/qwen_strict_gpu_runbook_20260329.md`](./qwen_strict_gpu_runbook_20260329.md)：CUDA 训练执行手册
+- [`docs/qwen_strict_gpu_runbook_20260329.md`](./qwen_strict_gpu_runbook_20260329.md)：CUDA / GPU strict-clean 复现手册
 - [`docs/qwen_remaining_runs_20260328.md`](./qwen_remaining_runs_20260328.md)：历史执行记录，供追溯
 - [`docs/repository_map_20260328.md`](./repository_map_20260328.md)：这份文件
 
@@ -224,4 +224,5 @@ celery-dep-analysis/
 - 当前机器上可以直接复用，不需要重新切片或重新 embedding
 - 这个文件没有进入 git，因为 `artifacts/` 被忽略且文件过大
 - 如果你在另一台机器重新拉仓库，只会拿到代码和正式报告，不会自动拿到这个 326MB 缓存文件
-- 若要跨机器复用，需手动复制该文件；否则运行 `scripts/precompute_embeddings.py` 重新生成
+- 正式入口 `make prepare-rag-cache` / `make eval-rag` / `make eval-ft FT_STRATEGY=pe_rag_ft` / `make qwen-strict-rerun` 会在 cache 缺失时自动重建
+- 手动复制该文件现在只是加速手段，不再是跨机器复现的前置条件

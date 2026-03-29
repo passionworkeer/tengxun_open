@@ -215,7 +215,13 @@ python3 -m finetune.data_guard data/finetune_dataset_500.jsonl
 ```bash
 export EMBEDDING_PROVIDER=google
 export GOOGLE_API_KEY="<api-key>"
-python3 scripts/precompute_embeddings.py
+make prepare-rag-cache
+```
+
+如果你只想直接调用底层脚本，也可以：
+
+```bash
+python3 scripts/precompute_embeddings.py --repo-root external/celery
 ```
 
 ### 4. 使用 few-shot 示例

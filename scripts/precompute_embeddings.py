@@ -8,14 +8,19 @@ Default provider selection:
 
 Cache is provider-aware and can be stopped/restarted safely.
 
-Usage: python3 scripts/precompute_embeddings.py
+Usage:
+  python3 scripts/precompute_embeddings.py
+  python3 scripts/precompute_embeddings.py --repo-root external/celery
 """
 
+from __future__ import annotations
+
+import argparse
 import json
 import os
 import re
-import time
 import sys
+import time
 from pathlib import Path
 
 # ── Config ────────────────────────────────────────────────────────────
@@ -25,7 +30,7 @@ SAVE_EVERY = 5  # save cache every N batches
 MAX_RETRIES = int(os.environ.get("EMBED_MAX_RETRIES", "3"))
 RETRY_DELAY = float(os.environ.get("EMBED_RETRY_DELAY", "10.0"))
 MAX_CHARS = int(os.environ.get("EMBED_MAX_CHARS", "2000"))  # chars per chunk
-REPO_ROOT = Path("external/celery")
+DEFAULT_REPO_ROOT = Path("external/celery")
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -133,7 +138,7 @@ def truncate(text: str, max_chars: int = MAX_CHARS) -> str:
     return text if len(text) <= max_chars else text[:max_chars]
 
 
-def main() -> None:
+def build_cache(repo_root: Path) -> None:
     config = resolve_embedding_config()
     client = EmbeddingProviderClient(config)
     if not client.available():
@@ -158,7 +163,7 @@ def main() -> None:
     print(f"Loaded {len(cache)} cached embeddings from {config.cache_file}")
 
     # Load all chunks
-    chunks = chunk_repository(REPO_ROOT)
+    chunks = chunk_repository(repo_root)
     chunk_texts = {
         c.chunk_id: truncate(f"{c.symbol} {c.signature} {c.content}") for c in chunks
     }
@@ -224,6 +229,18 @@ def main() -> None:
     total_time = time.time() - t0
     print(f"\nDone! {len(cache)}/{total} embeddings in {total_time / 60:.1f}min")
     print(f"Cache: {config.cache_file}")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Precompute embeddings cache.")
+    parser.add_argument(
+        "--repo-root",
+        type=Path,
+        default=DEFAULT_REPO_ROOT,
+        help="Repository root to chunk and embed.",
+    )
+    args = parser.parse_args()
+    build_cache(args.repo_root)
 
 
 if __name__ == "__main__":

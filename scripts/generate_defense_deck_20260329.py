@@ -253,7 +253,7 @@ def build_deck() -> Presentation:
     )
     add_text(
         slide,
-        "Branch: codex/strict-pe-search | March 29, 2026",
+        "Final delivery on main | March 29, 2026",
         0.8,
         5.25,
         4.8,
