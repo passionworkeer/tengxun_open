@@ -46,7 +46,7 @@ def normalize_fqn(value: str) -> str:
 
 
 def is_valid_fqn(value: str) -> bool:
-    """
+    r"""
     检查字符串是否为有效的FQN格式
 
     FQN必须符合：^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)+$

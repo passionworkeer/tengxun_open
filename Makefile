@@ -24,7 +24,7 @@ FT_STRATEGY ?= ft
 FT_OUTPUT ?=
 RAG_FORMAL_REPORT ?= results/rag_google_eval_54cases_20260328.json
 
-.PHONY: help eval-baseline eval-pe eval-rag eval-rag-draft eval-ft eval-all train train-historical train-strict train-strict-dry-run qwen-strict-rerun report report-final lint-data lint-data-historical audit-strict rescore-strict check-train-env check-train-env-historical check-train-env-strict audit-train-log audit-train-log-historical materialize-strict-adapter
+.PHONY: help eval-baseline eval-pe eval-rag eval-rag-draft eval-ft eval-all train train-historical train-strict train-strict-dry-run qwen-strict-rerun report report-final lint-data lint-data-historical audit-strict rescore-strict check-train-env check-train-env-historical check-train-env-strict audit-train-log audit-train-log-historical materialize-strict-adapter prepare-rag-cache
 
 help:
 	@echo "可用目标："
@@ -50,6 +50,7 @@ help:
 	@echo "  make audit-strict   - 生成 strict 数据污染审计与去污染数据集"
 	@echo "  make rescore-strict - 对现有结果做 strict 分层重评分"
 	@echo "  make materialize-strict-adapter - 从 handoff 包提取 strict-clean adapter 到默认目录"
+	@echo "  make prepare-rag-cache - 自动重建正式 Google embedding cache（如缺失）"
 
 eval-baseline:
 	$(PYTHON) -m evaluation.baseline --mode baseline --eval-cases $(EVAL_CASES)
@@ -57,7 +58,13 @@ eval-baseline:
 eval-pe:
 	$(PYTHON) -m evaluation.baseline --mode pe --prompt-version v2 --eval-cases $(EVAL_CASES)
 
-eval-rag:
+prepare-rag-cache:
+	@echo "=== RAG cache bootstrap ==="
+	@test -n "$$GOOGLE_API_KEY" || (echo "错误：未设置 GOOGLE_API_KEY" && exit 1)
+	@EMBEDDING_PROVIDER=google GOOGLE_EMBEDDING_MODEL=models/gemini-embedding-001 \
+	$(PYTHON) scripts/ensure_rag_cache.py --repo-root external/celery
+
+eval-rag: prepare-rag-cache
 	@echo "=== RAG 检索评测（正式口径） ==="
 	@echo "Embedding: google / gemini-embedding-001"
 	@echo "输出文件: $(RAG_FORMAL_REPORT)"
@@ -74,6 +81,7 @@ materialize-strict-adapter:
 	$(PYTHON) scripts/materialize_strict_adapter.py --tarball $(STRICT_ADAPTER_TARBALL) --output-dir $(STRICT_ADAPTER_DIR)
 
 eval-ft: materialize-strict-adapter
+	$(if $(filter pe_rag_ft,$(FT_STRATEGY)),$(MAKE) prepare-rag-cache,)
 	$(PYTHON) run_ft_eval.py --strategy $(FT_STRATEGY) --cases $(EVAL_CASES) --repo-root external/celery --adapter-path $(STRICT_ADAPTER_DIR) $(if $(FT_OUTPUT),--output $(FT_OUTPUT),)
 
 eval-all:

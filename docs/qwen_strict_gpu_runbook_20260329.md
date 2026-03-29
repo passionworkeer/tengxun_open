@@ -1,20 +1,20 @@
 # Qwen Strict-Clean CUDA 机器执行文档（2026-03-29）
 
-> 历史说明：这份 runbook 对应的是 **2026-03-29 外部 CUDA 执行前** 的操作手册。  
+> 归档说明：这份 runbook 最初对应 **2026-03-29 外部 CUDA 执行前** 的操作手册，当前已改写成 **strict-clean 结果的 GPU 复现实验手册**。  
 > 当前 strict-clean 训练已经完成；结果完整度请看：
 > - `reports/qwen_strict_closeout_20260329.md`
 > - `reports/qwen_strict_result_audit_20260329.md`
 
 这份文档只负责一件事：
 
-> 在外部 NVIDIA CUDA 机器上，把 Qwen strict-clean `FT only / PE + FT / PE + RAG + FT` 跑完、核对结果，并打包带回。
+> 在外部 NVIDIA CUDA 机器上，重新复现 Qwen strict-clean `FT only / PE + FT / PE + RAG + FT`，并把结果打包带回。
 
 如果你只想知道最短执行路径，直接看下面这一段。
 
 ## 1. 一键执行版
 
 ```bash
-git checkout codex/strict-ft-remediation
+git checkout main
 git pull
 
 export PYTHONPATH=.
@@ -48,9 +48,9 @@ artifacts/handoff/strict_clean_20260329.tar.gz
 
 - GPT strict PE 最优已经落盘
 - Qwen `PE only / RAG only / PE + RAG` 现有结果可直接使用
-- Qwen `FT only / PE + FT / PE + RAG + FT` 还停留在历史正式线
+- Qwen `FT only / PE + FT / PE + RAG + FT` strict-clean 结果已经完整落盘
 
-这次去 CUDA 机器上跑，目的就是把 Qwen 的 FT family 从“历史正式线”升级成“strict-clean 已落盘线”。
+这次去 CUDA 机器上跑，目的不再是“补结果”，而是做独立复现、重新核对训练证据，或者在你需要时刷新一版新的 strict-clean 运行包。
 
 当前本机为什么不能跑，见：
 
@@ -76,7 +76,7 @@ artifacts/handoff/strict_clean_20260329.tar.gz
 ### 4.1 拉取正确分支
 
 ```bash
-git checkout codex/strict-ft-remediation
+git checkout main
 git pull
 ```
 
@@ -242,11 +242,11 @@ RAG 没跑起来：
 
 ## 10. 跑完后我这边会做什么
 
-你把 `artifacts/handoff/strict_clean_20260329.tar.gz` 带回来后，我会继续：
+你把 `artifacts/handoff/strict_clean_20260329.tar.gz` 带回来后，如结果需要刷新，我会继续：
 
 1. 核对 strict-clean FT family 指标
 2. 更新 `README.md`
 3. 更新 `reports/DELIVERY_REPORT.md`
 4. 更新 `reports/ablation_study.md`
 5. 更新 `reports/final_numbers_cheatsheet_20260329.md`
-6. 把 Qwen FT 家族正式切到 strict-clean 口径
+6. 如有必要，刷新 Qwen FT 家族的正式 strict-clean 口径

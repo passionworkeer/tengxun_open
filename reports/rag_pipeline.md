@@ -55,7 +55,8 @@ Celery 源码
 
 - 当前机器上可以直接复用，不需要重新 embedding
 - 该文件没有进入 git，因此换机器拉仓库后不会自动带下来
-- 但仓库已经提供 `scripts/precompute_embeddings.py`，可在新机器上按同一配置重新生成正式 cache
+- 但仓库现在已经把 `scripts/precompute_embeddings.py` 接入正式入口，`make prepare-rag-cache` / `make eval-rag` / `make eval-ft FT_STRATEGY=pe_rag_ft` / `make qwen-strict-rerun` 会在 cache 缺失时自动重建
+- 手动复制 cache 仅用于节省时间，不再是跨机器复现的必要步骤
 
 ## 3. 检索效果
 

@@ -74,7 +74,7 @@
 
 | 资产 | 路径 | 说明 |
 |------|------|------|
-| Google embedding cache | `artifacts/rag/embeddings_cache_google_gemini_embedding_001_3072.json` | 当前机器已有完整 cache |
+| Google embedding cache | `artifacts/rag/embeddings_cache_google_gemini_embedding_001_3072.json` | 当前机器已有完整 cache；正式入口缺失时可自动重建 |
 | strict-clean adapter handoff | `artifacts/handoff/strict_clean_20260329_minimal.tar.gz` | 可通过 `make materialize-strict-adapter` 提取 |
 
 ## 7. 历史归档

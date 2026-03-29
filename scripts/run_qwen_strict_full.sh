@@ -151,6 +151,11 @@ fi
 
 if [[ "$run_rag" == "1" ]]; then
   echo
+  echo "[6.5/7] Prepare formal RAG cache"
+  EMBEDDING_PROVIDER=google GOOGLE_EMBEDDING_MODEL=models/gemini-embedding-001 \
+    PYTHONPATH=. "$PYTHON_BIN" scripts/ensure_rag_cache.py --repo-root "$REPO_ROOT"
+
+  echo
   echo "[7/7] PE + RAG + FT eval"
   PYTHONPATH=. "$PYTHON_BIN" run_ft_eval.py \
     --strategy pe_rag_ft \

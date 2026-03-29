@@ -67,7 +67,7 @@
 - Qwen strict-clean 收口说明：[`reports/qwen_strict_closeout_20260329.md`](reports/qwen_strict_closeout_20260329.md)
 - Qwen strict-clean 结果审计：[`reports/qwen_strict_result_audit_20260329.md`](reports/qwen_strict_result_audit_20260329.md)
 - strict FT 历史执行状态：[`reports/strict_ft_execution_status_20260329.md`](reports/strict_ft_execution_status_20260329.md)
-- CUDA 机器执行文档：[`docs/qwen_strict_gpu_runbook_20260329.md`](docs/qwen_strict_gpu_runbook_20260329.md)
+- CUDA / GPU 复现手册：[`docs/qwen_strict_gpu_runbook_20260329.md`](docs/qwen_strict_gpu_runbook_20260329.md)
 - 训练证据审计：[`reports/training_evidence_audit_20260329.md`](reports/training_evidence_audit_20260329.md)
 - 答辩主讲稿：[`reports/defense_script_20260329.md`](reports/defense_script_20260329.md)
 - 导师追问 Q&A：[`reports/defense_qa_20260329.md`](reports/defense_qa_20260329.md)
@@ -157,9 +157,13 @@ RUN_NAME=strict_clean_20260329 ./scripts/package_qwen_strict_run.sh
 
 - 如果你还在这台机器上继续跑 Qwen 的 RAG 相关实验，可以直接复用，不需要重新切片。
 - 如果你换到另一台机器重新拉仓库，拿到的是代码、结果 JSON、报告和完整的重建脚本，不会自动拿到这个 embedding cache。
-- 跨机器复现有两条路：
-  - 手动复制这份 cache，直接复用。
-  - 运行 `scripts/precompute_embeddings.py` 在新机器上重新生成 cache。
+- 当前正式入口已经不再要求你手动处理这份 cache：
+  - `make prepare-rag-cache`
+  - `make eval-rag`
+  - `make eval-ft FT_STRATEGY=pe_rag_ft`
+  - `make qwen-strict-rerun`
+  都会在 cache 缺失时自动按正式 Google 配置重建。
+- 手动复制这份 cache 现在只是加速手段，不再是跨机器复现的前置条件。
 - 因此正式 RAG 方案是**可复现的**，只是大体积 cache 没有直接进 git。
 
 ## Quick Start
@@ -196,10 +200,11 @@ make check-train-env-strict
 make eval-baseline
 export EMBEDDING_PROVIDER=google
 export GOOGLE_API_KEY=你的_google_key
+make prepare-rag-cache
 make eval-rag
 ```
 
-`make eval-rag` 使用正式的 Google embedding 口径，运行前需要先设置 `EMBEDDING_PROVIDER=google` 和 `GOOGLE_API_KEY`。
+`make prepare-rag-cache` / `make eval-rag` 使用正式的 Google embedding 口径；如果正式 cache 缺失，会自动按当前仓库代码重建。
 
 ### 3. 生成最终图表与指标快照
 
@@ -214,6 +219,7 @@ uv run --with openai python run_qwen_ablation_eval.py --mode pe
 
 export EMBEDDING_PROVIDER=google
 export GOOGLE_API_KEY=你的_google_key
+make prepare-rag-cache
 uv run --with openai python run_qwen_ablation_eval.py --mode rag --repo-root external/celery
 uv run --with openai python run_qwen_ablation_eval.py --mode pe_rag --repo-root external/celery
 make materialize-strict-adapter

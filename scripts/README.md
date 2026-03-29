@@ -90,6 +90,7 @@ llamafactory-cli serve --config configs/llm.toml
 - `results/qwen_strict_runs/strict_clean_20260329/`
 - `reports/qwen_strict_result_audit_20260329.md`
 - `make eval-ft` / `make materialize-strict-adapter`
+- RAG 相关正式入口先看 `make prepare-rag-cache`
 
 ## 历史 / 辅助脚本
 

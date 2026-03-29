@@ -143,7 +143,7 @@ make check-train-env-strict  # 环境检查
 | 限制 | 说明 | 状态 |
 |------|------|------|
 | **LoRA 权重** | strict-clean adapter 通过 handoff 包分发，默认可 `make materialize-strict-adapter` 提取 | ✅ 默认复现链路已接通 |
-| **Embedding Cache** | 约 326MB，未进 git（`artifacts/` 已 .gitignore） | 可用 `scripts/precompute_embeddings.py` 重建 |
+| **Embedding Cache** | 约 326MB，未进 git（`artifacts/` 已 .gitignore） | `make prepare-rag-cache` / `make eval-rag` 等正式入口可自动重建 |
 | **历史结果并存** | 仓库同时保留历史正式线和 strict-clean 线，需要按文档口径区分使用 | ✅ 已在 README / 报告中标注 |
 | **商业模型 API Key** | GPT/GLM 评测依赖 API Key | ⚠️ 需用户提供 |
 
