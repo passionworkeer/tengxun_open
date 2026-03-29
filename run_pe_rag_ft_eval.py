@@ -9,6 +9,7 @@ PE+RAG+FT 评测脚本（完整策略）
 from __future__ import annotations
 
 import json
+import os
 import re
 import time
 import argparse
@@ -33,7 +34,10 @@ from rag.embedding_provider import resolve_embedding_config
 
 
 BASE_MODEL = "Qwen/Qwen3.5-9B"
-ADAPTER_PATH = "LLaMA-Factory/saves/qwen3.5-9b/lora/finetune_20260327_143745"
+ADAPTER_PATH = os.environ.get(
+    "QWEN_LORA_ADAPTER_PATH",
+    "LLaMA-Factory/saves/qwen3.5-9b/lora/finetune_20260327_143745",
+)
 DATA_PATH = Path("data/eval_cases.json")
 REPO_ROOT = Path("external/celery")
 MAX_NEW_TOKENS = 500

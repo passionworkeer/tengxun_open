@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 """
-从评测结果生成微调训练数据
+历史辅助脚本：从评测结果生成 bootstrapping 微调训练数据
 
 用法:
     python scripts/generate_finetune_data.py --input results/gpt5_eval_results.json --output data/finetune_from_gpt5.jsonl
+
+说明:
+    该脚本可继续用于派生实验或 bootstrap，不作为当前正式
+    data/finetune_dataset_500.jsonl 的权威生成入口说明。
 """
 
 import json

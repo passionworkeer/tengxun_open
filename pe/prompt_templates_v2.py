@@ -16,6 +16,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from dataclasses import dataclass
 from functools import lru_cache
@@ -49,6 +50,28 @@ Reason internally using this checklist before answering:
 """
 
 
+LAYER_GUARD_RULES = """\
+Layer assignment rules:
+1. direct_deps: only symbols directly imported, called, instantiated, accessed, or returned by the entry file / entry symbol itself.
+2. indirect_deps: symbols reached through one or more explicit intermediate code symbols such as re-export, alias, wrapper, factory, cached_property, or subclass_with_self.
+3. implicit_deps: symbols reached through runtime-triggered edges such as decorators, finalize hooks, signals, registries, lazy Proxy resolution, dynamic string imports, symbol_by_name, or loader autodiscovery.
+4. Each FQN must appear in exactly one layer. Never duplicate the same symbol across layers.
+5. A symbol reached via string resolution, hook registration, or runtime callback cannot be direct_deps.
+6. If uncertain, prefer indirect_deps over direct_deps; prefer implicit_deps for runtime-triggered edges.
+"""
+
+
+STRICT_LAYER_COT_TEMPLATE = """\
+Reason internally using this checklist before answering:
+1. Identify the first stable code symbol reached from the entry file / entry symbol.
+2. Mark only that first-hop stable code symbol as direct_deps.
+3. Move any symbol reached via re-export, wrapper, alias, factory, cached_property, or helper into indirect_deps.
+4. Move any symbol reached via decorator registration, finalize callbacks, signals, Proxy/lazy resolution, or string/module-name lookup into implicit_deps.
+5. Run an exclusivity check so each FQN appears in at most one layer.
+6. Return only the required JSON object.
+"""
+
+
 OUTPUT_INSTRUCTIONS = """Return only a JSON object with:
 {
   "ground_truth": {
@@ -59,7 +82,12 @@ OUTPUT_INSTRUCTIONS = """Return only a JSON object with:
 }"""
 
 
-DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "fewshot_examples_20.json"
+DATA_PATH = Path(
+    os.environ.get(
+        "FEWSHOT_DATA_PATH",
+        Path(__file__).resolve().parent.parent / "data" / "fewshot_examples_20.json",
+    )
+)
 REQUIRED_FEW_SHOT_TARGET = 20
 _TOKEN_PATTERN = re.compile(r"[A-Za-z_][A-Za-z0-9_]+")
 
@@ -189,28 +217,36 @@ FEW_SHOT_LIBRARY: tuple[FewShotExample, ...] = load_few_shot_examples()
 
 
 def format_few_shot_example(example: FewShotExample) -> str:
-    preconditions = (
-        "\n".join(
-            f"{idx}. {item}"
-            for idx, item in enumerate(example.environment_preconditions, start=1)
-        )
-        if example.environment_preconditions
-        else "None"
+    answer = format_few_shot_assistant_message(example)
+    return (
+        f"{format_few_shot_user_message(example)}\n\n"
+        f"Answer:\n{answer}"
     )
-    reasoning = "\n".join(
-        f"{idx}. {item}" for idx, item in enumerate(example.reasoning_steps, start=1)
-    )
-    answer = json.dumps(
-        {"ground_truth": example.ground_truth.as_dict()},
-        ensure_ascii=False,
-        indent=2,
-    )
+
+
+def _format_numbered_block(items: Sequence[str], empty_value: str = "None") -> str:
+    if not items:
+        return empty_value
+    return "\n".join(f"{idx}. {item}" for idx, item in enumerate(items, start=1))
+
+
+def format_few_shot_user_message(example: FewShotExample) -> str:
     return (
         f"[Few-shot {example.case_id} | {example.failure_type} | {example.title}]\n"
         f"Question:\n{example.question}\n\n"
-        f"Environment Preconditions:\n{preconditions}\n\n"
-        f"Reasoning:\n{reasoning}\n\n"
-        f"Answer:\n{answer}"
+        f"Environment Preconditions:\n"
+        f"{_format_numbered_block(example.environment_preconditions)}\n\n"
+        f"Reference Reasoning:\n"
+        f"{_format_numbered_block(example.reasoning_steps, empty_value='None')}\n\n"
+        f"{OUTPUT_INSTRUCTIONS}"
+    )
+
+
+def format_few_shot_assistant_message(example: FewShotExample) -> str:
+    return json.dumps(
+        {"ground_truth": example.ground_truth.as_dict()},
+        ensure_ascii=False,
+        indent=2,
     )
 
 
@@ -302,21 +338,22 @@ def build_user_prompt(
     context: str,
     entry_symbol: str = "",
     entry_file: str = "",
+    include_empty_context: bool = True,
 ) -> str:
     lines = ["Question:", question.strip()]
     if entry_symbol.strip():
         lines.extend(["", "Entry Symbol:", entry_symbol.strip()])
     if entry_file.strip():
         lines.extend(["", "Entry File:", entry_file.strip()])
-    lines.extend(
-        [
-            "",
-            "Context:",
-            context.strip(),
-            "",
-            OUTPUT_INSTRUCTIONS,
-        ]
-    )
+    if context.strip() or include_empty_context:
+        lines.extend(
+            [
+                "",
+                "Context:",
+                context.strip(),
+            ]
+        )
+    lines.extend(["", OUTPUT_INSTRUCTIONS])
     return "\n".join(lines)
 
 
@@ -327,6 +364,9 @@ def build_prompt_bundle(
     entry_file: str = "",
     max_examples: int = 6,
     library: Sequence[FewShotExample] | None = None,
+    system_prompt: str = SYSTEM_PROMPT,
+    cot_template: str = COT_TEMPLATE,
+    include_empty_context: bool = True,
 ) -> PromptBundle:
     selected = select_few_shot_examples(
         question=question,
@@ -336,14 +376,15 @@ def build_prompt_bundle(
         library=library,
     )
     return PromptBundle(
-        system_prompt=SYSTEM_PROMPT,
-        cot_template=COT_TEMPLATE,
+        system_prompt=system_prompt,
+        cot_template=cot_template,
         few_shot_examples=tuple(selected),
         user_prompt=build_user_prompt(
             question=question,
             context=context,
             entry_symbol=entry_symbol,
             entry_file=entry_file,
+            include_empty_context=include_empty_context,
         ),
     )
 
@@ -354,6 +395,11 @@ def build_messages(
     entry_symbol: str = "",
     entry_file: str = "",
     max_examples: int = 6,
+    library: Sequence[FewShotExample] | None = None,
+    system_prompt: str = SYSTEM_PROMPT,
+    cot_template: str = COT_TEMPLATE,
+    include_empty_context: bool = True,
+    assistant_fewshot: bool = False,
 ) -> list[dict[str, str]]:
     bundle = build_prompt_bundle(
         question=question,
@@ -361,12 +407,27 @@ def build_messages(
         entry_symbol=entry_symbol,
         entry_file=entry_file,
         max_examples=max_examples,
+        library=library,
+        system_prompt=system_prompt,
+        cot_template=cot_template,
+        include_empty_context=include_empty_context,
     )
     messages = [{"role": "system", "content": bundle.system_prompt.strip()}]
     if bundle.cot_template.strip():
         messages.append({"role": "system", "content": bundle.cot_template.strip()})
     for example in bundle.few_shot_examples:
-        messages.append({"role": "user", "content": format_few_shot_example(example)})
+        if assistant_fewshot:
+            messages.append(
+                {"role": "user", "content": format_few_shot_user_message(example)}
+            )
+            messages.append(
+                {
+                    "role": "assistant",
+                    "content": format_few_shot_assistant_message(example),
+                }
+            )
+        else:
+            messages.append({"role": "user", "content": format_few_shot_example(example)})
     messages.append({"role": "user", "content": bundle.user_prompt.strip()})
     return messages
 

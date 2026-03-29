@@ -1,11 +1,13 @@
 # Remaining Work Checklist
 
+> 历史清单说明：这份文件记录的是 `2026-03-28` 收口前的待办快照，不代表当前正式状态。
+> 当前正式完成度与对外交付口径以 `reports/project_progress_20260328.md` 和 `docs/official_asset_manifest.md` 为准。
 > 更新日期：2026-03-28
 > 所有历史草稿已归档至 `docs/drafts_archived_20260326/`
 
 ---
 
-## 项目当前状态
+## 历史快照
 
 | 模块 | 状态 | 关键产物 |
 |------|------|---------|

@@ -4,7 +4,7 @@
 
 参数:
     --cases: 评测数据集路径（默认: data/eval_cases.json）
-    --adapter-path: LoRA adapter路径（默认: LLaMA-Factory/saves/qwen3.5-9b/lora/finetune_20260327_143745）
+    --adapter-path: LoRA adapter路径（默认读取 QWEN_LORA_ADAPTER_PATH，否则回退到历史正式路径）
     --base-model: 基础模型路径（默认: Qwen/Qwen3.5-9B）
     --output: 输出结果路径（默认: results/qwen_ft_TIMESTAMP.json）
     --max-cases: 限制评测案例数量（用于测试）
@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import argparse
+import os
 import re
 import time
 from pathlib import Path
@@ -26,6 +27,12 @@ from peft import PeftModel
 
 from evaluation.baseline import load_eval_cases, EvalCase
 from evaluation.metrics import compute_set_metrics
+
+
+DEFAULT_ADAPTER_PATH = os.environ.get(
+    "QWEN_LORA_ADAPTER_PATH",
+    "LLaMA-Factory/saves/qwen3.5-9b/lora/finetune_20260327_143745",
+)
 
 
 def build_prompt_v2(case: EvalCase, context: str = "") -> str:
@@ -159,7 +166,7 @@ def generate_response(model, tokenizer, prompt: str, max_new_tokens: int = 500) 
 def run_ft_eval(
     cases: list[EvalCase],
     base_model_path: str = "Qwen/Qwen3.5-9B",
-    adapter_path: str = "LLaMA-Factory/saves/qwen3.5-9b/lora/finetune_20260327_143745",
+    adapter_path: str = DEFAULT_ADAPTER_PATH,
     output_path: Path | None = None,
     max_cases: int | None = None,
 ) -> list[dict[str, Any]]:
@@ -277,7 +284,7 @@ def main() -> int:
     parser.add_argument(
         "--adapter-path",
         type=str,
-        default="LLaMA-Factory/saves/qwen3.5-9b/lora/finetune_20260327_143745",
+        default=DEFAULT_ADAPTER_PATH,
         help="Path to LoRA adapter.",
     )
     parser.add_argument(

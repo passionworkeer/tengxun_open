@@ -1,88 +1,101 @@
 # 项目数据说明文档
 
+> 当前正式口径：`data/eval_cases.json` 是唯一正式评测入口，共 `54` 条，全部手工标注。
+> 当前 strict 复验口径：在正式资产之外，额外提供 `fewshot_examples_20_strict.json`、`finetune_dataset_500_strict.jsonl`、`strict_scoring_audit_20260329.md`、`strict_data_audit_20260329.md` 用于答辩防守与去污染复验。
+> 其他 `50-case` / `draft` 文件仅用于历史追溯或辅助实验，不作为正式评测入口。
+
 ## 概述
 
-本项目用于 **Celery 跨文件依赖分析**，核心任务是给定一个问题，输出该代码的完整依赖链（direct_deps / indirect_deps / implicit_deps）。
+本项目用于 **Celery 跨文件依赖分析**。核心任务是给定一个问题，输出该代码问题的完整依赖链：
+
+- `direct_deps`
+- `indirect_deps`
+- `implicit_deps`
+
+正式主评分指标仍对这三层并集后的 FQN 做精确匹配；三层标签本身仍保留在数据中，用于诊断与展示。
+严格复验时，补充使用 `active-layer macro F1` 与 `mislayer rate` 两个分层指标。
 
 ---
 
 ## 数据文件一览
 
-| 文件 | 数量 | 用途 |
-|------|------|------|
-| `data/eval_cases_migrated_draft_round4.json` | 50 | **评测数据集**（正式评测用） |
-| `data/fewshot_examples_20.json` | 20 | Few-shot 示例池 |
-| `data/finetune_dataset_500.jsonl` | 500 | 微调训练数据 |
-| `data/hard_samples_expanded.jsonl` | 100 | 困难样本扩展数据 |
-| `data/pyan3_generated_samples.jsonl` | 50 | Pyan3 图分析生成的样本 |
-| `data/audit_results.jsonl` | ~1000 | 审计结果原始数据 |
-| `data/audit_report.json` | - | 审计报告摘要 |
+| 文件 | 数量 | 角色 | 说明 |
+|------|------|------|------|
+| `data/eval_cases.json` | 54 | 正式 | 正式评测集，全部手工标注 |
+| `data/fewshot_examples_20.json` | 20 | 正式 | Few-shot 示例池 |
+| `data/finetune_dataset_500.jsonl` | 500 | 正式 | LoRA 微调数据 |
+| `data/fewshot_examples_20_strict.json` | 20 | strict 复验 | 去除 exact GT / hard question overlap 的 few-shot 变体 |
+| `data/finetune_dataset_500_strict.jsonl` | 500 | strict 复验 | 去除 exact GT / hard question overlap 的微调变体 |
+| `data/hard_samples_expanded.jsonl` | 100 | 辅助 | hard 场景扩展样本 |
+| `data/pyan3_generated_samples.jsonl` | 50 | 辅助 | Pyan3 静态图生成样本 |
+| `data/audit_results.jsonl` | ~1000 | 辅助 | 审计原始结果 |
+| `data/audit_report.json` | - | 辅助 | 审计摘要 |
+| `data/eval_cases_migrated_draft_round4.json` | 50 | 历史 | 早期 draft 评测集，不再作为正式入口 |
 
 ---
 
-## 1. 评测数据集 `eval_cases_migrated_draft_round4.json`
+## 1. 正式评测集 `eval_cases.json`
 
 ### 用途
-**50 道评测题目**，用于评估模型的 Celery 依赖分析能力。跑评测时使用这个文件。
+
+正式 `54` 道评测题目，用于基线、PE、RAG 和微调后的统一评估。
 
 ### 数据结构
 
 ```json
 {
-  "id": "easy_001",                    // 案例唯一ID
-  "difficulty": "easy",                // 难度: easy / medium / hard
-  "category": "re_export",             // 失败类型分类
-  "failure_type": "Type C",           // 失效类型: Type A / B / C / D / E
-  "implicit_level": null,              // 隐式依赖层级
+  "id": "easy_001",
+  "difficulty": "easy",
+  "category": "re_export",
+  "failure_type": "Type C",
+  "implicit_level": null,
   "question": "Which real function does the top-level `celery.shared_task` symbol resolve to?",
-  "source_file": "celery/__init__.py", // 入口文件
-  "source_commit": "...",              // 源码 commit
-  "ground_truth": {                    // 标准答案
+  "source_file": "celery/__init__.py",
+  "source_commit": "...",
+  "ground_truth": {
     "direct_deps": ["celery.app.shared_task"],
     "indirect_deps": [],
     "implicit_deps": []
   },
-  "reasoning_hint": "",                // 推理提示
-  "source_note": ""                    // 来源备注
+  "reasoning_hint": "",
+  "source_note": ""
 }
 ```
 
-### 难度分布
-- **Easy**: 15 cases
-- **Medium**: 20 cases  
-- **Hard**: 15 cases
+### 当前分布
 
-### 失败类型分布（Failure Type Bottleneck）
-| Type | 描述 | 典型问题 |
-|------|------|---------|
-| **Type A** | Bootstep生命周期 | Blueprint.apply 调用顺序 |
-| **Type B** | 信号回调链 | @shared_task, connect_on_app_finalize |
-| **Type C** | Re-export | `__init__.py` 多层转发、别名 |
-| **Type D** | 命名空间混淆 | 同名函数、局部覆盖 |
-| **Type E** | 动态符号解析 | symbol_by_name、importlib、配置字符串 |
+- Difficulty：`easy 15 / medium 19 / hard 20`
+- Failure Type：`Type A 7 / Type B 9 / Type C 11 / Type D 11 / Type E 16`
+- 标注方式：`54/54` 全部人工阅读源码后确认
+
+补充说明：
+
+- `source_file` 是正式数据里的稳定入口文件信号。
+- 评测 loader 会把 `source_file` 映射到运行时查询用的 `entry_file`。
+- 另有 `5/54` 条样本带显式 `entry_symbol` 元信息。
 
 ---
 
 ## 2. Few-shot 示例池 `fewshot_examples_20.json`
 
 ### 用途
-20 条高质量 few-shot 示例，按失效类型配比，用于 Prompt Engineering 优化。
+
+`20` 条高质量 few-shot 示例，用于 Prompt Engineering 优化。
 
 ### 数据结构
 
 ```json
 {
-  "id": "B01",                         // 示例ID
-  "title": "@shared_task 装饰器注册", // 标题
-  "failure_type": "Type B",            // 失效类型
+  "id": "B01",
+  "title": "@shared_task 装饰器注册",
+  "failure_type": "Type B",
   "question": "给定 `@shared_task` 装饰后的函数，最终注册到哪个任务对象路径？",
-  "environment_preconditions": [],       // 环境前提条件
-  "reasoning_steps": [                 // 推理步骤
+  "environment_preconditions": [],
+  "reasoning_steps": [
     "Step 1: 定位 `shared_task` 在 `celery/app/__init__.py`",
-    "Step 2: 发现 `shared_task` 内部先通过 `connect_on_app_finalize(...)` 注册 finalize 回调",
-    "..."
+    "Step 2: 发现 `shared_task` 内部先通过 `connect_on_app_finalize(...)` 注册 finalize 回调"
   ],
-  "ground_truth": {                    // 标准答案
+  "ground_truth": {
     "direct_deps": ["celery.app.base.Celery._task_from_fun"],
     "indirect_deps": ["celery._state.connect_on_app_finalize"],
     "implicit_deps": ["celery.app.shared_task"]
@@ -91,26 +104,34 @@
 ```
 
 ### 配比
-- Type B (装饰器): 5 条
-- Type C (再导出): 5 条
-- Type D (命名空间): 4 条
-- Type E (动态加载): 4 条
-- Type A (长上下文): 2 条
+
+- Type B：5 条
+- Type C：5 条
+- Type D：4 条
+- Type E：4 条
+- Type A：2 条
+
+补充说明：
+
+- `fewshot_examples_20.json` 是历史正式 few-shot 资产。
+- 若目标是严格答辩或去污染复验，使用 `fewshot_examples_20_strict.json`。
+- `pe/prompt_templates_v2.py` 支持通过 `FEWSHOT_DATA_PATH` 切换到 strict few-shot。
 
 ---
 
 ## 3. 微调训练数据 `finetune_dataset_500.jsonl`
 
 ### 用途
-用于 LoRA 微调训练，已验证质量。
 
-### 数据结构（Alpaca 格式）
+正式 `500` 条 LoRA 微调训练数据。
+
+### 数据结构
 
 ```jsonl
 {
-  "instruction": "分析跨包依赖的最终来源",     // 任务指令
-  "input": "# celery/app/base.py\n# import 部分: from kombu.utils.uuid import uuid\n# 问题: base.py 中使用的 kombu uuid 函数...",  // 输入（代码+问题）
-  "output": "推理过程：\nStep 1: celery/app/base.py 直接从 kombu 包导入 uuid\n...\n最终依赖：\n{\"direct_deps\": [\"kombu.utils.uuid.uuid\"], ...}",  // 完整推理+答案
+  "instruction": "分析跨包依赖的最终来源",
+  "input": "# celery/app/base.py\n# import 部分: from kombu.utils.uuid import uuid\n# 问题: base.py 中使用的 kombu uuid 函数...",
+  "output": "推理过程：...\n最终依赖：\n{\"direct_deps\": [\"kombu.utils.uuid.uuid\"], ...}",
   "difficulty": "hard",
   "failure_type": "Type C",
   "category": "cross_package_import",
@@ -119,87 +140,86 @@
 }
 ```
 
-### 字段说明
-| 字段 | 说明 |
-|------|------|
-| `instruction` | 任务描述/指令 |
-| `input` | 输入内容（代码片段+问题） |
-| `output` | 完整回答（推理过程+JSON答案） |
-| `difficulty` | 难度等级 |
-| `failure_type` | 失败类型 |
-| `category` | 具体分类 |
-| `verified` | 是否已验证 |
-| `verify_method` | 验证方式 |
+### 校验口径
+
+- `finetune/data_guard.py` 会对 **Celery 内部 FQN** 做源码存在性校验。
+- 对白名单中的外部依赖包（如 `kombu`、`vine`、`billiard`）做显式放行。
+- 因此它是“面向本任务的数据守卫”，不是对所有外部依赖都做源码级追踪。
+
+补充说明：
+
+- `finetune_dataset_500.jsonl` 是历史正式 500 条训练资产。
+- 若目标是严格答辩或去污染复验，使用 `finetune_dataset_500_strict.jsonl`，并配合权威 strict replay 配置 `configs/train_config_strict_replay_20260329.yaml` / `make train-strict`。
+- `configs/train_config_strict_20260329.yaml` 仅保留为第一版 strict 草案，不再作为推荐重训入口。
 
 ---
 
-## 4. 困难样本扩展 `hard_samples_expanded.jsonl`
+## 4. 辅助与历史数据
 
-### 用途
-100 条困难样本，用于提升模型在硬场景的表现。
+### `hard_samples_expanded.jsonl`
 
-### 数据结构
-同 `finetune_dataset_500.jsonl`，但全部是 hard 难度。
+- 定位：辅助 hard 场景扩展样本
+- 说明：可用于派生训练或增强分析，不是正式评测集
 
-```jsonl
-{"instruction": "...", "input": "...", "output": "...", "difficulty": "hard", "failure_type": "...", ...}
-```
+### `pyan3_generated_samples.jsonl`
 
----
+- 定位：Pyan3 静态图生成样本
+- 说明：辅助挖样与扩展研究，不纳入正式评测口径
 
-## 5. Pyan3 分析样本 `pyan3_generated_samples.jsonl`
+### `audit_results.jsonl`
 
-### 用途
-50 条由 Pyan3 静态图分析工具生成的样本。
+- 定位：审计原始数据
+- 说明：用于内部排查和统计，不作为正式交付核心资产
 
-### 数据结构
-同 finetune 数据格式，包含 `source_project: "pyan3"` 标识。
+### `eval_cases_migrated_draft_round4.json`
 
----
-
-## 6. 审计结果 `audit_results.jsonl`
-
-### 用途
-~1000 条审计结果原始数据。
-
-### 字段
-```json
-{"case_id": "...", "predicted_deps": [...], "actual_deps": [...], "match_score": ...}
-```
+- 定位：历史 draft 评测集
+- 说明：保留演进过程，不再作为正式评测入口
 
 ---
 
 ## 快速开始
 
-### 1. 跑评测（使用 eval_cases）
+### 1. 跑正式评测
 
 ```bash
 # GPT-5.4
 python3 -m evaluation.run_gpt_eval \
     --api-key "<api-key>" \
-    --cases data/eval_cases_migrated_draft_round4.json \
-    --output results/gpt5_eval_results.json \
-    --max-cases 50
+    --cases data/eval_cases.json \
+    --output results/gpt5_eval_results.json
 
 # Qwen 本地部署
 python3 -m evaluation.run_qwen_eval \
     --base-url http://localhost:8000/v1 \
-    --cases data/eval_cases_migrated_draft_round4.json \
+    --cases data/eval_cases.json \
     --output results/qwen3_eval_results.json
+
+# 对已有结果做 strict 重评分
+python3 scripts/rescore_result_file.py \
+    --path results/gpt5_eval_results.json
 ```
 
-### 2. 生成微调数据
+### 2. 校验正式微调数据
 
 ```bash
-python3 scripts/generate_finetune_data.py \
-    --input results/gpt5_eval_results.json \
-    --output data/my_finetune_data.jsonl \
-    --min-f1 0.5
+python3 -m finetune.data_guard data/finetune_dataset_500.jsonl
+
+# strict 复验版
+python3 -m finetune.data_guard data/finetune_dataset_500_strict.jsonl
 ```
 
-### 3. 使用 few-shot 示例
+### 3. 重建正式 embedding cache
 
-读取 `data/fewshot_examples_20.json`，在 System Prompt 中选择相关示例注入。
+```bash
+export EMBEDDING_PROVIDER=google
+export GOOGLE_API_KEY="<api-key>"
+python3 scripts/precompute_embeddings.py
+```
+
+### 4. 使用 few-shot 示例
+
+读取 `data/fewshot_examples_20.json`，在 Prompt 组装阶段按失效类型挑选相关示例注入。
 
 ---
 
@@ -207,17 +227,19 @@ python3 scripts/generate_finetune_data.py \
 
 | 文件 | 验证状态 | 说明 |
 |------|---------|------|
-| eval_cases | ✅ 已验证 | 50道题全部人工审核 |
-| fewshot | ✅ 已验证 | 20条示例含完整推理链 |
-| finetune_dataset_500 | ✅ 已验证 | 500条含verified=True |
-| hard_samples_expanded | ✅ 已验证 | 100条困难样本 |
-| pyan3 | ⚠️ 待验证 | 50条待人工审核 |
+| `eval_cases.json` | ✅ 已验证 | `54` 条全部人工审核 |
+| `fewshot_examples_20.json` | ✅ 已验证 | `20` 条正式 few-shot，保留历史正式口径 |
+| `fewshot_examples_20_strict.json` | ✅ strict 已验证 | 去除 exact GT / hard question overlap 的复验版 |
+| `finetune_dataset_500.jsonl` | ✅ 已验证 | `500` 条正式训练数据，保留历史正式口径 |
+| `finetune_dataset_500_strict.jsonl` | ✅ strict 已验证 | 去除 exact GT / hard question overlap 的复验版 |
+| `hard_samples_expanded.jsonl` | ✅ 已整理 | 辅助样本，不是正式评测集 |
+| `pyan3_generated_samples.jsonl` | ⚠️ 辅助数据 | 不纳入正式交付口径 |
 
 ---
 
 ## 依赖分析输出格式
 
-所有数据统一使用以下 JSON 格式：
+所有正式数据统一使用以下 JSON 格式：
 
 ```json
 {
@@ -248,4 +270,4 @@ python3 scripts/generate_finetune_data.py \
 
 1. **FQN 格式**：必须使用 `.` 分隔符，如 `celery.app.base.Celery`，而非 `celery/app/base.py:Celery`
 2. **UTF-8 BOM**：部分 JSON 文件带 BOM，读取时使用 `encoding='utf-8-sig'`
-3. **评测数据**：只用 `eval_cases_migrated_draft_round4.json`，其他是历史版本或训练数据
+3. **评测数据**：正式评测只用 `data/eval_cases.json`；`eval_cases_migrated_draft_round4.json` 是历史版本

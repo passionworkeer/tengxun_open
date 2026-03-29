@@ -1,0 +1,19 @@
+{
+  "log_path": "logs/train_20260327_143745.log",
+  "train_loss_points": 33,
+  "first_train_loss": 1.677,
+  "last_logged_train_loss": 0.4021,
+  "min_logged_train_loss": 0.3247,
+  "max_logged_train_loss": 1.677,
+  "median_logged_train_loss": 0.4573,
+  "mean_logged_train_loss": 0.5758,
+  "loss_drop_first_to_last_logged": -1.2749,
+  "decreasing_adjacent_steps": 18,
+  "total_adjacent_steps": 32,
+  "final_train_loss": 0.572,
+  "final_eval_loss": 0.4779,
+  "train_runtime_seconds": 2233.0,
+  "train_runtime_hms": "0:37:12.92",
+  "eval_runtime_hms": "0:00:19.77",
+  "step_level_eval_curve_present": false
+}

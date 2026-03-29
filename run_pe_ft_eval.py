@@ -9,6 +9,7 @@ PE+FT 评测脚本（提示词优化 + 微调后模型）
 from __future__ import annotations
 
 import json
+import os
 import re
 import time
 import argparse
@@ -31,7 +32,10 @@ from pe.prompt_templates_v2 import (
 
 
 BASE_MODEL = "Qwen/Qwen3.5-9B"
-ADAPTER_PATH = "LLaMA-Factory/saves/qwen3.5-9b/lora/finetune_20260327_143745"
+ADAPTER_PATH = os.environ.get(
+    "QWEN_LORA_ADAPTER_PATH",
+    "LLaMA-Factory/saves/qwen3.5-9b/lora/finetune_20260327_143745",
+)
 DATA_PATH = Path("data/eval_cases.json")
 MAX_NEW_TOKENS = 500
 

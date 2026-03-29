@@ -1,50 +1,74 @@
 # 数据质检报告
 
-**Owner**: codex
-**日期**: 2026-03-27
+**Owner**: codex  
+**日期**: 2026-03-29  
 **Celery 版本**: `b8f85213f45c937670a6a6806ce55326a0eb537f`
-**状态**: ✅ 三份正式数据已严格收敛
 
-## 正式数据集清单
+## 结论
 
-| 文件 | 条目数 | 用途 | 状态 |
+- `data/eval_cases.json` 仍是唯一正式评测入口，共 `54` 条，全部手工标注。
+- 历史正式 few-shot / finetune 资产保留，但不再声称“严格无污染”。
+- 当前仓库已额外生成 strict 复验资产：
+  - `data/fewshot_examples_20_strict.json`
+  - `data/finetune_dataset_500_strict.jsonl`
+- strict 资产当前满足：
+  - exact GT overlap = `0`
+  - normalized exact question overlap = `0`
+  - hard question overlap（exact 或 similarity >= `0.90`）= `0`
+
+## 正式资产与 strict 资产
+
+| 文件 | 条目数 | 角色 | 当前口径 |
 |------|--------|------|------|
-| `data/eval_cases.json` | **54条** | 正式评测集 | ✅ 严格通过 |
-| `data/finetune_dataset_500.jsonl` | **500条** | 微调训练集 | ✅ 严格通过 |
-| `data/fewshot_examples_20.json` | **20条** | Few-shot 示例 | ✅ 严格通过 |
+| `data/eval_cases.json` | 54 | 正式评测集 | 正式 |
+| `data/fewshot_examples_20.json` | 20 | Few-shot 示例 | 历史正式 |
+| `data/finetune_dataset_500.jsonl` | 500 | 微调训练集 | 历史正式 |
+| `data/fewshot_examples_20_strict.json` | 20 | Few-shot 示例 | strict 复验 |
+| `data/finetune_dataset_500_strict.jsonl` | 500 | 微调训练集 | strict 复验 |
 
-## 微调数据集结果
+## 污染审计摘要
 
-- 最终有效记录：`500`
-- 难度分布：`easy=163` / `medium=175` / `hard=162`
-- hard_ratio：`0.324`
-- 严格补充样本：`0` 条
+### 历史正式资产
 
-## 正式评测集修正
+- few-shot exact GT overlap：`2`
+- finetune exact GT overlap：`26` 个 row-case pair / `19` 行 / `14` 个 eval case
+- few-shot normalized exact question overlap：`0`
+- finetune normalized exact question overlap：`4`
+- few-shot hard question overlap：`0`
+- finetune hard question overlap：`7`
 
-- celery_hard_016: 去掉外部 helper `importlib.import_module`
-- celery_hard_015: 去掉外部 helper `vine.starpromise`
-- celery_hard_018: 仅保留 Celery 内部可复核链路，移除 `os.environ.get` / `django.conf.settings`
-- celery_hard_019: 去掉外部 helper `importlib.import_module`
-- celery_hard_121: 去掉外部 helper `vine.starpromise`
-- celery_type_d_001: 修正为稳定的内部解析函数问题
-- celery_type_d_006: 修正为稳定且可复核的内部目标类
-- celery_type_a_003: 去掉外部 helper `vine.starpromise`
-- celery_medium_019: 用内部最终目标替换外部 re-export 细节
-- celery_easy_020: 改成纯内部扩展加载链问题
+### strict 复验资产
 
-## Few-shot 修正
+- few-shot exact GT overlap：`0`
+- finetune exact GT overlap：`0`
+- few-shot normalized exact question overlap：`0`
+- finetune normalized exact question overlap：`0`
+- few-shot hard question overlap：`0`
+- finetune hard question overlap：`0`
 
-- E04: 改为内部可复核的 alias 解析结果
-- fewshot: 20 条全部补齐 difficulty 字段
+详见：
 
-## 微调集严格清洗
+- `reports/strict_data_audit_20260329.md`
 
-- seed: data/finetune_dataset_500.jsonl
+## strict 构建规则
 
-## 微调集补充样本
+- 过滤 exact GT overlap
+- 过滤 normalized exact question overlap
+- 过滤 hard question overlap（similarity >= `0.90`）
+- `0.85 ~ 0.90` 的 near-overlap 进入审计报告，不自动删除
 
+## 微调数据状态
 
-## 已删除的过渡工件
+- strict 微调数据有效记录：`500`
+- strict failure type 分布：
+  - `Type A = 104`
+  - `Type B = 116`
+  - `Type C = 89`
+  - `Type D = 94`
+  - `Type E = 97`
 
-- 无新增过渡工件需要删除。
+## 使用建议
+
+- 如果你是在复现实习项目原始正式结果，继续使用历史正式资产。
+- 如果你是在回答“是否存在训练/评测泄漏”的导师追问，使用 strict 资产。
+- 如果你准备继续训练并更新最终答辩结果，优先使用 strict 资产并重跑受影响实验。

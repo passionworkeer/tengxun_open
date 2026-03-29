@@ -25,7 +25,7 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### 输出配置
-output_dir: ./saves/qwen3.5-9b/lora/finetune_${TIMESTAMP}
+output_dir: ./artifacts/lora/qwen3.5-9b/formal_20260327_143745
 logging_steps: 10
 save_steps: 500
 plot_loss: true

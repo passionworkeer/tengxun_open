@@ -6,15 +6,15 @@
 #   pip install qwen_lora peft transformers datasets accelerate
 #
 # 用法:
-#   ./scripts/train_lora.sh --data data/finetune_from_gpt5.jsonl --output artifacts/lora/qwen3-finetuned
+#   ./scripts/train_lora.sh --data data/finetune_dataset_500.jsonl --output artifacts/lora/qwen3.5-9b-local
 #
 
 set -e
 
 # 默认参数
-DATA_PATH="data/finetune_from_gpt5.jsonl"
-OUTPUT_DIR="artifacts/lora/qwen3-finetuned"
-MODEL_NAME="Qwen/Qwen2.5-7B-Instruct"  # 或本地路径
+DATA_PATH="data/finetune_dataset_500.jsonl"
+OUTPUT_DIR="artifacts/lora/qwen3.5-9b-local"
+MODEL_NAME="Qwen/Qwen3.5-9B"  # 或本地路径
 LORA_R=16
 LORA_ALPHA=32
 BATCH_SIZE=2
@@ -65,7 +65,7 @@ echo "=========================================="
 # 检查数据文件
 if [ ! -f "$DATA_PATH" ]; then
     echo "ERROR: Data file not found: $DATA_PATH"
-    echo "生成数据: python scripts/generate_finetune_data.py ..."
+    echo "请确认正式数据集存在，或显式传入 --data ..."
     exit 1
 fi
 
@@ -91,9 +91,9 @@ from transformers import (
 )
 
 # 解析参数
-DATA_PATH = os.environ.get("DATA_PATH", "data/finetune_from_gpt5.jsonl")
-OUTPUT_DIR = os.environ.get("OUTPUT_DIR", "artifacts/lora/qwen3-finetuned")
-MODEL_NAME = os.environ.get("MODEL_NAME", "Qwen/Qwen2.5-7B-Instruct")
+DATA_PATH = os.environ.get("DATA_PATH", "data/finetune_dataset_500.jsonl")
+OUTPUT_DIR = os.environ.get("OUTPUT_DIR", "artifacts/lora/qwen3.5-9b-local")
+MODEL_NAME = os.environ.get("MODEL_NAME", "Qwen/Qwen3.5-9B")
 LORA_R = int(os.environ.get("LORA_R", "16"))
 LORA_ALPHA = int(os.environ.get("LORA_ALPHA", "32"))
 BATCH_SIZE = int(os.environ.get("BATCH_SIZE", "2"))
@@ -103,7 +103,19 @@ MAX_SEQ_LENGTH = int(os.environ.get("MAX_SEQ_LENGTH", "2048"))
 
 def format_for_qwen(sample):
     """将sample格式化为Qwen训练格式"""
-    messages = sample["messages"]
+    if "messages" in sample:
+        messages = sample["messages"]
+    else:
+        instruction = sample.get("instruction", "").strip()
+        query = sample.get("input", "").strip()
+        response = sample.get("output", "").strip()
+        user_text = instruction
+        if query:
+            user_text = f"{instruction}\n\n{query}" if instruction else query
+        messages = [
+            {"role": "user", "content": user_text},
+            {"role": "assistant", "content": response},
+        ]
     text = ""
     for msg in messages:
         if msg["role"] == "system":

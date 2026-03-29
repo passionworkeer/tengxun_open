@@ -1,0 +1,6488 @@
+{
+  "source_path": "results/gpt_rag_e2e_54cases_20260328.json",
+  "no_rag": {
+    "cases": [
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "easy_001",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_f1": 0.6667,
+        "macro_f1": 0.6667,
+        "direct_f1": 0.6667,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 1,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6667
+          },
+          "direct": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6667
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.5,
+          "macro_recall": 1.0,
+          "macro_f1": 0.6667,
+          "active_layer_count": 1,
+          "active_layers": [
+            "direct_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 2
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "easy_002",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 5
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "easy_003",
+        "difficulty": "easy",
+        "failure_type": "Type E",
+        "union_f1": 0.3333,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 1,
+        "mislayer_rate": 1.0,
+        "scoring": {
+          "union": {
+            "precision": 0.2,
+            "recall": 1.0,
+            "f1": 0.3333
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 1,
+          "mislayer_rate": 1.0,
+          "gold_total": 1,
+          "predicted_total": 5
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "easy_004",
+        "difficulty": "easy",
+        "failure_type": "Type D",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 3
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "medium_001",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.2,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 1,
+        "mislayer_rate": 1.0,
+        "scoring": {
+          "union": {
+            "precision": 0.1111,
+            "recall": 1.0,
+            "f1": 0.2
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 1,
+          "mislayer_rate": 1.0,
+          "gold_total": 1,
+          "predicted_total": 9
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "medium_002",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 3
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "medium_003",
+        "difficulty": "medium",
+        "failure_type": "Type D",
+        "union_f1": 0.3333,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 1,
+        "mislayer_rate": 1.0,
+        "scoring": {
+          "union": {
+            "precision": 0.2,
+            "recall": 1.0,
+            "f1": 0.3333
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 1,
+          "mislayer_rate": 1.0,
+          "gold_total": 1,
+          "predicted_total": 5
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "medium_004",
+        "difficulty": "medium",
+        "failure_type": "Type C",
+        "union_f1": 1.0,
+        "macro_f1": 1.0,
+        "direct_f1": 1.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 1,
+        "exact_layer_match": true,
+        "exact_union_match": true,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "direct": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 1.0,
+          "macro_recall": 1.0,
+          "macro_f1": 1.0,
+          "active_layer_count": 1,
+          "active_layers": [
+            "direct_deps"
+          ],
+          "exact_layer_match": true,
+          "exact_union_match": true,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 1
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "hard_001",
+        "difficulty": "hard",
+        "failure_type": "Type B",
+        "union_f1": 0.3333,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 1,
+        "mislayer_rate": 1.0,
+        "scoring": {
+          "union": {
+            "precision": 0.2,
+            "recall": 1.0,
+            "f1": 0.3333
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 1,
+          "mislayer_rate": 1.0,
+          "gold_total": 1,
+          "predicted_total": 5
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "hard_002",
+        "difficulty": "hard",
+        "failure_type": "Type B",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 8
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "hard_003",
+        "difficulty": "hard",
+        "failure_type": "Type B",
+        "union_f1": 0.4,
+        "macro_f1": 0.3333,
+        "direct_f1": 1.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.25,
+            "recall": 1.0,
+            "f1": 0.4
+          },
+          "direct": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.3333,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.3333,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 4
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "hard_004",
+        "difficulty": "hard",
+        "failure_type": "Type E",
+        "union_f1": 0.2857,
+        "macro_f1": 0.25,
+        "direct_f1": 0.5,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.1667,
+            "recall": 1.0,
+            "f1": 0.2857
+          },
+          "direct": {
+            "precision": 0.3333,
+            "recall": 1.0,
+            "f1": 0.5
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.1667,
+          "macro_recall": 0.5,
+          "macro_f1": 0.25,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 6
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_hard_014",
+        "difficulty": "hard",
+        "failure_type": "Type B",
+        "union_f1": 0.5,
+        "macro_f1": 0.1667,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.5,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 3,
+        "mislayered_matches": 2,
+        "mislayer_rate": 0.6667,
+        "scoring": {
+          "union": {
+            "precision": 0.4286,
+            "recall": 0.6,
+            "f1": 0.5
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.5,
+            "recall": 0.5,
+            "f1": 0.5
+          },
+          "macro_precision": 0.1667,
+          "macro_recall": 0.1667,
+          "macro_f1": 0.1667,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 3,
+          "mislayered_matches": 2,
+          "mislayer_rate": 0.6667,
+          "gold_total": 5,
+          "predicted_total": 7
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_hard_016",
+        "difficulty": "hard",
+        "failure_type": "Type E",
+        "union_f1": 0.2857,
+        "macro_f1": 0.0741,
+        "direct_f1": 0.2222,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 2,
+        "mislayered_matches": 1,
+        "mislayer_rate": 0.5,
+        "scoring": {
+          "union": {
+            "precision": 0.2,
+            "recall": 0.5,
+            "f1": 0.2857
+          },
+          "direct": {
+            "precision": 0.125,
+            "recall": 1.0,
+            "f1": 0.2222
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0417,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.0741,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 2,
+          "mislayered_matches": 1,
+          "mislayer_rate": 0.5,
+          "gold_total": 4,
+          "predicted_total": 10
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_hard_013",
+        "difficulty": "hard",
+        "failure_type": "Type B",
+        "union_f1": 0.6667,
+        "macro_f1": 0.1667,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.5,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 4,
+        "mislayered_matches": 3,
+        "mislayer_rate": 0.75,
+        "scoring": {
+          "union": {
+            "precision": 0.5714,
+            "recall": 0.8,
+            "f1": 0.6667
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.3333,
+            "recall": 1.0,
+            "f1": 0.5
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.1111,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.1667,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 4,
+          "mislayered_matches": 3,
+          "mislayer_rate": 0.75,
+          "gold_total": 5,
+          "predicted_total": 7
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_hard_015",
+        "difficulty": "hard",
+        "failure_type": "Type B",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 5,
+          "predicted_total": 12
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_hard_018",
+        "difficulty": "hard",
+        "failure_type": "Type E",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 7,
+          "predicted_total": 4
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_medium_017",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.5,
+        "macro_f1": 0.1667,
+        "direct_f1": 0.5,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 2,
+        "mislayered_matches": 1,
+        "mislayer_rate": 0.5,
+        "scoring": {
+          "union": {
+            "precision": 0.5,
+            "recall": 0.5,
+            "f1": 0.5
+          },
+          "direct": {
+            "precision": 0.3333,
+            "recall": 1.0,
+            "f1": 0.5
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.1111,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.1667,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 2,
+          "mislayered_matches": 1,
+          "mislayer_rate": 0.5,
+          "gold_total": 4,
+          "predicted_total": 4
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "easy_007",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 2
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "easy_005",
+        "difficulty": "easy",
+        "failure_type": "Type B",
+        "union_f1": 0.3333,
+        "macro_f1": 0.3333,
+        "direct_f1": 1.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 1.0,
+            "recall": 0.2,
+            "f1": 0.3333
+          },
+          "direct": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.3333,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.3333,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 5,
+          "predicted_total": 1
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "easy_006",
+        "difficulty": "easy",
+        "failure_type": "Type B",
+        "union_f1": 0.5,
+        "macro_f1": 0.3333,
+        "direct_f1": 1.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 2,
+        "mislayered_matches": 1,
+        "mislayer_rate": 0.5,
+        "scoring": {
+          "union": {
+            "precision": 0.5,
+            "recall": 0.5,
+            "f1": 0.5
+          },
+          "direct": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.3333,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.3333,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 2,
+          "mislayered_matches": 1,
+          "mislayer_rate": 0.5,
+          "gold_total": 4,
+          "predicted_total": 4
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "easy_008",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 2,
+          "predicted_total": 2
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "medium_005",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 4,
+          "predicted_total": 7
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "medium_006",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 6,
+          "predicted_total": 10
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "medium_007",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 7,
+          "predicted_total": 10
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "medium_008",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.6,
+        "macro_f1": 0.1667,
+        "direct_f1": 0.5,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 3,
+        "mislayered_matches": 2,
+        "mislayer_rate": 0.6667,
+        "scoring": {
+          "union": {
+            "precision": 0.5,
+            "recall": 0.75,
+            "f1": 0.6
+          },
+          "direct": {
+            "precision": 0.3333,
+            "recall": 1.0,
+            "f1": 0.5
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.1111,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.1667,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 3,
+          "mislayered_matches": 2,
+          "mislayer_rate": 0.6667,
+          "gold_total": 4,
+          "predicted_total": 6
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_medium_020",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.4706,
+        "macro_f1": 0.1111,
+        "direct_f1": 0.3333,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 4,
+        "mislayered_matches": 3,
+        "mislayer_rate": 0.75,
+        "scoring": {
+          "union": {
+            "precision": 0.3636,
+            "recall": 0.6667,
+            "f1": 0.4706
+          },
+          "direct": {
+            "precision": 0.25,
+            "recall": 0.5,
+            "f1": 0.3333
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0833,
+          "macro_recall": 0.1667,
+          "macro_f1": 0.1111,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 4,
+          "mislayered_matches": 3,
+          "mislayer_rate": 0.75,
+          "gold_total": 6,
+          "predicted_total": 11
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_hard_019",
+        "difficulty": "hard",
+        "failure_type": "Type E",
+        "union_f1": 0.2857,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 1,
+        "mislayer_rate": 1.0,
+        "scoring": {
+          "union": {
+            "precision": 0.3333,
+            "recall": 0.25,
+            "f1": 0.2857
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 1,
+          "mislayer_rate": 1.0,
+          "gold_total": 4,
+          "predicted_total": 3
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_hard_121",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_f1": 0.5882,
+        "macro_f1": 0.0833,
+        "direct_f1": 0.25,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 5,
+        "mislayered_matches": 4,
+        "mislayer_rate": 0.8,
+        "scoring": {
+          "union": {
+            "precision": 0.5,
+            "recall": 0.7143,
+            "f1": 0.5882
+          },
+          "direct": {
+            "precision": 0.1429,
+            "recall": 1.0,
+            "f1": 0.25
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0476,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.0833,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 5,
+          "mislayered_matches": 4,
+          "mislayer_rate": 0.8,
+          "gold_total": 7,
+          "predicted_total": 10
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_hard_122",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 5,
+          "predicted_total": 6
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_hard_024",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 2,
+          "predicted_total": 9
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_hard_025",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 8
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_type_d_001",
+        "difficulty": "hard",
+        "failure_type": "Type D",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 1,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 1,
+          "active_layers": [
+            "direct_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 1
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_type_d_002",
+        "difficulty": "hard",
+        "failure_type": "Type D",
+        "union_f1": 0.6154,
+        "macro_f1": 0.1111,
+        "direct_f1": 0.3333,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 4,
+        "mislayered_matches": 3,
+        "mislayer_rate": 0.75,
+        "scoring": {
+          "union": {
+            "precision": 0.4444,
+            "recall": 1.0,
+            "f1": 0.6154
+          },
+          "direct": {
+            "precision": 0.2,
+            "recall": 1.0,
+            "f1": 0.3333
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0667,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.1111,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 4,
+          "mislayered_matches": 3,
+          "mislayer_rate": 0.75,
+          "gold_total": 4,
+          "predicted_total": 9
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_type_d_003",
+        "difficulty": "medium",
+        "failure_type": "Type D",
+        "union_f1": 0.4,
+        "macro_f1": 0.5,
+        "direct_f1": 1.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.3333,
+            "recall": 0.5,
+            "f1": 0.4
+          },
+          "direct": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.5,
+          "macro_recall": 0.5,
+          "macro_f1": 0.5,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 2,
+          "predicted_total": 3
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_type_d_004",
+        "difficulty": "medium",
+        "failure_type": "Type D",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 1,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 1,
+          "active_layers": [
+            "direct_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 0
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_type_d_005",
+        "difficulty": "hard",
+        "failure_type": "Type D",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 2,
+          "predicted_total": 2
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_type_d_006",
+        "difficulty": "medium",
+        "failure_type": "Type D",
+        "union_f1": 0.2857,
+        "macro_f1": 0.3333,
+        "direct_f1": 1.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.25,
+            "recall": 0.3333,
+            "f1": 0.2857
+          },
+          "direct": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.3333,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.3333,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 3,
+          "predicted_total": 4
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_type_a_001",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 6,
+          "predicted_total": 11
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_type_a_002",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 5,
+          "predicted_total": 17
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_type_a_003",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 4,
+          "predicted_total": 9
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_medium_019",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.6667,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 3,
+        "mislayered_matches": 3,
+        "mislayer_rate": 1.0,
+        "scoring": {
+          "union": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6667
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 3,
+          "mislayered_matches": 3,
+          "mislayer_rate": 1.0,
+          "gold_total": 3,
+          "predicted_total": 6
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_medium_021",
+        "difficulty": "medium",
+        "failure_type": "Type C",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 4
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_medium_022",
+        "difficulty": "medium",
+        "failure_type": "Type D",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 6,
+          "predicted_total": 12
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_medium_023",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 3,
+          "predicted_total": 5
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_medium_024",
+        "difficulty": "medium",
+        "failure_type": "Type B",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 2,
+          "predicted_total": 9
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_easy_018",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_f1": 0.6667,
+        "macro_f1": 0.5,
+        "direct_f1": 1.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6667
+          },
+          "direct": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.5,
+          "macro_recall": 0.5,
+          "macro_f1": 0.5,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 2
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_easy_019",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_f1": 0.4444,
+        "macro_f1": 0.2667,
+        "direct_f1": 0.8,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 2,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.2857,
+            "recall": 1.0,
+            "f1": 0.4444
+          },
+          "direct": {
+            "precision": 0.6667,
+            "recall": 1.0,
+            "f1": 0.8
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.2222,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.2667,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 2,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 2,
+          "predicted_total": 7
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_easy_020",
+        "difficulty": "easy",
+        "failure_type": "Type E",
+        "union_f1": 0.6667,
+        "macro_f1": 0.2667,
+        "direct_f1": 0.8,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 3,
+        "mislayered_matches": 1,
+        "mislayer_rate": 0.3333,
+        "scoring": {
+          "union": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6667
+          },
+          "direct": {
+            "precision": 0.6667,
+            "recall": 1.0,
+            "f1": 0.8
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.2222,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.2667,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 3,
+          "mislayered_matches": 1,
+          "mislayer_rate": 0.3333,
+          "gold_total": 3,
+          "predicted_total": 6
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_medium_025",
+        "difficulty": "medium",
+        "failure_type": "Type D",
+        "union_f1": 0.6667,
+        "macro_f1": 0.3333,
+        "direct_f1": 0.6667,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 2,
+        "mislayered_matches": 1,
+        "mislayer_rate": 0.5,
+        "scoring": {
+          "union": {
+            "precision": 1.0,
+            "recall": 0.5,
+            "f1": 0.6667
+          },
+          "direct": {
+            "precision": 1.0,
+            "recall": 0.5,
+            "f1": 0.6667
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.5,
+          "macro_recall": 0.25,
+          "macro_f1": 0.3333,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 2,
+          "mislayered_matches": 1,
+          "mislayer_rate": 0.5,
+          "gold_total": 4,
+          "predicted_total": 2
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_easy_021",
+        "difficulty": "easy",
+        "failure_type": "Type D",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 1,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 1,
+          "active_layers": [
+            "direct_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 1
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_easy_022",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_f1": 0.6667,
+        "macro_f1": 0.5,
+        "direct_f1": 1.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6667
+          },
+          "direct": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.5,
+          "macro_recall": 0.5,
+          "macro_f1": 0.5,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 2
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_easy_023",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_f1": 1.0,
+        "macro_f1": 1.0,
+        "direct_f1": 1.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 1,
+        "exact_layer_match": true,
+        "exact_union_match": true,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "direct": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 1.0,
+          "macro_recall": 1.0,
+          "macro_f1": 1.0,
+          "active_layer_count": 1,
+          "active_layers": [
+            "direct_deps"
+          ],
+          "exact_layer_match": true,
+          "exact_union_match": true,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 1
+        }
+      },
+      {
+        "source": "gpt_rag_no_rag",
+        "case_id": "celery_easy_024",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_f1": 0.6667,
+        "macro_f1": 0.6667,
+        "direct_f1": 0.6667,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 1,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6667
+          },
+          "direct": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6667
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.5,
+          "macro_recall": 1.0,
+          "macro_f1": 0.6667,
+          "active_layer_count": 1,
+          "active_layers": [
+            "direct_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 2
+        }
+      }
+    ],
+    "summary": {
+      "overall": {
+        "count": 54,
+        "avg_union_f1": 0.2783,
+        "avg_macro_f1": 0.1543,
+        "avg_direct_f1": 0.2822,
+        "avg_indirect_f1": 0.0093,
+        "avg_implicit_f1": 0.0093,
+        "layer_penalty": 0.124,
+        "avg_mislayer_rate": 0.2355,
+        "exact_layer_match_rate": 0.037
+      },
+      "by_difficulty": {
+        "easy": {
+          "count": 15,
+          "avg_union_f1": 0.3963,
+          "avg_macro_f1": 0.3022,
+          "avg_direct_f1": 0.5289,
+          "avg_indirect_f1": 0.0,
+          "avg_implicit_f1": 0.0,
+          "layer_penalty": 0.0941,
+          "avg_mislayer_rate": 0.1222
+        },
+        "hard": {
+          "count": 20,
+          "avg_union_f1": 0.198,
+          "avg_macro_f1": 0.0593,
+          "avg_direct_f1": 0.1153,
+          "avg_indirect_f1": 0.025,
+          "avg_implicit_f1": 0.025,
+          "layer_penalty": 0.1387,
+          "avg_mislayer_rate": 0.2733
+        },
+        "medium": {
+          "count": 19,
+          "avg_union_f1": 0.2696,
+          "avg_macro_f1": 0.1374,
+          "avg_direct_f1": 0.2632,
+          "avg_indirect_f1": 0.0,
+          "avg_implicit_f1": 0.0,
+          "layer_penalty": 0.1322,
+          "avg_mislayer_rate": 0.2851
+        }
+      },
+      "by_failure_type": {
+        "Type A": {
+          "count": 7,
+          "avg_union_f1": 0.084,
+          "avg_macro_f1": 0.0119,
+          "avg_direct_f1": 0.0357,
+          "avg_indirect_f1": 0.0,
+          "avg_implicit_f1": 0.0,
+          "layer_penalty": 0.0721,
+          "avg_mislayer_rate": 0.1143
+        },
+        "Type B": {
+          "count": 9,
+          "avg_union_f1": 0.3037,
+          "avg_macro_f1": 0.1481,
+          "avg_direct_f1": 0.3333,
+          "avg_indirect_f1": 0.0556,
+          "avg_implicit_f1": 0.0556,
+          "layer_penalty": 0.1556,
+          "avg_mislayer_rate": 0.3241
+        },
+        "Type C": {
+          "count": 11,
+          "avg_union_f1": 0.4647,
+          "avg_macro_f1": 0.4182,
+          "avg_direct_f1": 0.5576,
+          "avg_indirect_f1": 0.0,
+          "avg_implicit_f1": 0.0,
+          "layer_penalty": 0.0465,
+          "avg_mislayer_rate": 0.0
+        },
+        "Type D": {
+          "count": 11,
+          "avg_union_f1": 0.2092,
+          "avg_macro_f1": 0.1162,
+          "avg_direct_f1": 0.2727,
+          "avg_indirect_f1": 0.0,
+          "avg_implicit_f1": 0.0,
+          "layer_penalty": 0.093,
+          "avg_mislayer_rate": 0.2045
+        },
+        "Type E": {
+          "count": 16,
+          "avg_union_f1": 0.2684,
+          "avg_macro_f1": 0.0647,
+          "avg_direct_f1": 0.1785,
+          "avg_indirect_f1": 0.0,
+          "avg_implicit_f1": 0.0,
+          "layer_penalty": 0.2037,
+          "avg_mislayer_rate": 0.4219
+        }
+      }
+    }
+  },
+  "with_rag": {
+    "cases": [
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "easy_001",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 3
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "easy_002",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 3
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "easy_003",
+        "difficulty": "easy",
+        "failure_type": "Type E",
+        "union_f1": 0.25,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 1,
+        "mislayer_rate": 1.0,
+        "scoring": {
+          "union": {
+            "precision": 0.1429,
+            "recall": 1.0,
+            "f1": 0.25
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 1,
+          "mislayer_rate": 1.0,
+          "gold_total": 1,
+          "predicted_total": 7
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "easy_004",
+        "difficulty": "easy",
+        "failure_type": "Type D",
+        "union_f1": 0.3333,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 1,
+        "mislayer_rate": 1.0,
+        "scoring": {
+          "union": {
+            "precision": 0.2,
+            "recall": 1.0,
+            "f1": 0.3333
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 1,
+          "mislayer_rate": 1.0,
+          "gold_total": 1,
+          "predicted_total": 5
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "medium_001",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.4,
+        "macro_f1": 0.25,
+        "direct_f1": 0.5,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.25,
+            "recall": 1.0,
+            "f1": 0.4
+          },
+          "direct": {
+            "precision": 0.3333,
+            "recall": 1.0,
+            "f1": 0.5
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.1667,
+          "macro_recall": 0.5,
+          "macro_f1": 0.25,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 4
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "medium_002",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.4,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 1,
+        "mislayer_rate": 1.0,
+        "scoring": {
+          "union": {
+            "precision": 0.25,
+            "recall": 1.0,
+            "f1": 0.4
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 1,
+          "mislayer_rate": 1.0,
+          "gold_total": 1,
+          "predicted_total": 4
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "medium_003",
+        "difficulty": "medium",
+        "failure_type": "Type D",
+        "union_f1": 0.3333,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 1,
+        "mislayer_rate": 1.0,
+        "scoring": {
+          "union": {
+            "precision": 0.2,
+            "recall": 1.0,
+            "f1": 0.3333
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 1,
+          "mislayer_rate": 1.0,
+          "gold_total": 1,
+          "predicted_total": 5
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "medium_004",
+        "difficulty": "medium",
+        "failure_type": "Type C",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 1,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 1,
+          "active_layers": [
+            "direct_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 1
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "hard_001",
+        "difficulty": "hard",
+        "failure_type": "Type B",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 4
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "hard_002",
+        "difficulty": "hard",
+        "failure_type": "Type B",
+        "union_f1": 0.2222,
+        "macro_f1": 0.2222,
+        "direct_f1": 0.6667,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.125,
+            "recall": 1.0,
+            "f1": 0.2222
+          },
+          "direct": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6667
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.1667,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.2222,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 8
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "hard_003",
+        "difficulty": "hard",
+        "failure_type": "Type B",
+        "union_f1": 0.4,
+        "macro_f1": 0.3333,
+        "direct_f1": 1.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.25,
+            "recall": 1.0,
+            "f1": 0.4
+          },
+          "direct": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.3333,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.3333,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 4
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "hard_004",
+        "difficulty": "hard",
+        "failure_type": "Type E",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 4
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_hard_014",
+        "difficulty": "hard",
+        "failure_type": "Type B",
+        "union_f1": 0.4444,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 2,
+        "mislayered_matches": 2,
+        "mislayer_rate": 1.0,
+        "scoring": {
+          "union": {
+            "precision": 0.5,
+            "recall": 0.4,
+            "f1": 0.4444
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 2,
+          "mislayered_matches": 2,
+          "mislayer_rate": 1.0,
+          "gold_total": 5,
+          "predicted_total": 4
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_hard_016",
+        "difficulty": "hard",
+        "failure_type": "Type E",
+        "union_f1": 0.4286,
+        "macro_f1": 0.0833,
+        "direct_f1": 0.25,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 3,
+        "mislayered_matches": 2,
+        "mislayer_rate": 0.6667,
+        "scoring": {
+          "union": {
+            "precision": 0.3,
+            "recall": 0.75,
+            "f1": 0.4286
+          },
+          "direct": {
+            "precision": 0.1429,
+            "recall": 1.0,
+            "f1": 0.25
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0476,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.0833,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 3,
+          "mislayered_matches": 2,
+          "mislayer_rate": 0.6667,
+          "gold_total": 4,
+          "predicted_total": 10
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_hard_013",
+        "difficulty": "hard",
+        "failure_type": "Type B",
+        "union_f1": 0.5,
+        "macro_f1": 0.2667,
+        "direct_f1": 0.4,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.4,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 3,
+        "mislayered_matches": 1,
+        "mislayer_rate": 0.3333,
+        "scoring": {
+          "union": {
+            "precision": 0.4286,
+            "recall": 0.6,
+            "f1": 0.5
+          },
+          "direct": {
+            "precision": 0.3333,
+            "recall": 0.5,
+            "f1": 0.4
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.3333,
+            "recall": 0.5,
+            "f1": 0.4
+          },
+          "macro_precision": 0.2222,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.2667,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 3,
+          "mislayered_matches": 1,
+          "mislayer_rate": 0.3333,
+          "gold_total": 5,
+          "predicted_total": 7
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_hard_015",
+        "difficulty": "hard",
+        "failure_type": "Type B",
+        "union_f1": 0.2353,
+        "macro_f1": 0.2167,
+        "direct_f1": 0.4,
+        "indirect_f1": 0.25,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 2,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.1667,
+            "recall": 0.4,
+            "f1": 0.2353
+          },
+          "direct": {
+            "precision": 0.25,
+            "recall": 1.0,
+            "f1": 0.4
+          },
+          "indirect": {
+            "precision": 0.2,
+            "recall": 0.3333,
+            "f1": 0.25
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.15,
+          "macro_recall": 0.4444,
+          "macro_f1": 0.2167,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 2,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 5,
+          "predicted_total": 12
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_hard_018",
+        "difficulty": "hard",
+        "failure_type": "Type E",
+        "union_f1": 0.4211,
+        "macro_f1": 0.0741,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.2222,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 4,
+        "mislayered_matches": 3,
+        "mislayer_rate": 0.75,
+        "scoring": {
+          "union": {
+            "precision": 0.3333,
+            "recall": 0.5714,
+            "f1": 0.4211
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.25,
+            "recall": 0.2,
+            "f1": 0.2222
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0833,
+          "macro_recall": 0.0667,
+          "macro_f1": 0.0741,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 4,
+          "mislayered_matches": 3,
+          "mislayer_rate": 0.75,
+          "gold_total": 7,
+          "predicted_total": 12
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_medium_017",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 4,
+          "predicted_total": 5
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "easy_007",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 5
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "easy_005",
+        "difficulty": "easy",
+        "failure_type": "Type B",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 5,
+          "predicted_total": 5
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "easy_006",
+        "difficulty": "easy",
+        "failure_type": "Type B",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 4,
+          "predicted_total": 4
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "easy_008",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 2,
+          "predicted_total": 2
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "medium_005",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.1818,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 1,
+        "mislayer_rate": 1.0,
+        "scoring": {
+          "union": {
+            "precision": 0.1429,
+            "recall": 0.25,
+            "f1": 0.1818
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 1,
+          "mislayer_rate": 1.0,
+          "gold_total": 4,
+          "predicted_total": 7
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "medium_006",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.6667,
+        "macro_f1": 0.2222,
+        "direct_f1": 0.6667,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 4,
+        "mislayered_matches": 2,
+        "mislayer_rate": 0.5,
+        "scoring": {
+          "union": {
+            "precision": 0.6667,
+            "recall": 0.6667,
+            "f1": 0.6667
+          },
+          "direct": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6667
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.1667,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.2222,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 4,
+          "mislayered_matches": 2,
+          "mislayer_rate": 0.5,
+          "gold_total": 6,
+          "predicted_total": 6
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "medium_007",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.4,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 3,
+        "mislayered_matches": 3,
+        "mislayer_rate": 1.0,
+        "scoring": {
+          "union": {
+            "precision": 0.375,
+            "recall": 0.4286,
+            "f1": 0.4
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 3,
+          "mislayered_matches": 3,
+          "mislayer_rate": 1.0,
+          "gold_total": 7,
+          "predicted_total": 8
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "medium_008",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.8,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 4,
+        "mislayered_matches": 4,
+        "mislayer_rate": 1.0,
+        "scoring": {
+          "union": {
+            "precision": 0.6667,
+            "recall": 1.0,
+            "f1": 0.8
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 4,
+          "mislayered_matches": 4,
+          "mislayer_rate": 1.0,
+          "gold_total": 4,
+          "predicted_total": 6
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_medium_020",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 6,
+          "predicted_total": 7
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_hard_019",
+        "difficulty": "hard",
+        "failure_type": "Type E",
+        "union_f1": 0.5,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 3,
+        "mislayered_matches": 3,
+        "mislayer_rate": 1.0,
+        "scoring": {
+          "union": {
+            "precision": 0.375,
+            "recall": 0.75,
+            "f1": 0.5
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 3,
+          "mislayered_matches": 3,
+          "mislayer_rate": 1.0,
+          "gold_total": 4,
+          "predicted_total": 8
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_hard_121",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_f1": 0.625,
+        "macro_f1": 0.1111,
+        "direct_f1": 0.3333,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 5,
+        "mislayered_matches": 4,
+        "mislayer_rate": 0.8,
+        "scoring": {
+          "union": {
+            "precision": 0.5556,
+            "recall": 0.7143,
+            "f1": 0.625
+          },
+          "direct": {
+            "precision": 0.2,
+            "recall": 1.0,
+            "f1": 0.3333
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0667,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.1111,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 5,
+          "mislayered_matches": 4,
+          "mislayer_rate": 0.8,
+          "gold_total": 7,
+          "predicted_total": 9
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_hard_122",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_f1": 0.1429,
+        "macro_f1": 0.1333,
+        "direct_f1": 0.4,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.1111,
+            "recall": 0.2,
+            "f1": 0.1429
+          },
+          "direct": {
+            "precision": 0.25,
+            "recall": 1.0,
+            "f1": 0.4
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0833,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.1333,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 5,
+          "predicted_total": 9
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_hard_024",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_f1": 0.8,
+        "macro_f1": 0.2222,
+        "direct_f1": 0.6667,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 2,
+        "mislayered_matches": 1,
+        "mislayer_rate": 0.5,
+        "scoring": {
+          "union": {
+            "precision": 0.6667,
+            "recall": 1.0,
+            "f1": 0.8
+          },
+          "direct": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6667
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.1667,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.2222,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 2,
+          "mislayered_matches": 1,
+          "mislayer_rate": 0.5,
+          "gold_total": 2,
+          "predicted_total": 3
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_hard_025",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_f1": 0.2222,
+        "macro_f1": 0.5,
+        "direct_f1": 1.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.125,
+            "recall": 1.0,
+            "f1": 0.2222
+          },
+          "direct": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.5,
+          "macro_recall": 0.5,
+          "macro_f1": 0.5,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 8
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_type_d_001",
+        "difficulty": "hard",
+        "failure_type": "Type D",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 2
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_type_d_002",
+        "difficulty": "hard",
+        "failure_type": "Type D",
+        "union_f1": 0.5,
+        "macro_f1": 0.1333,
+        "direct_f1": 0.4,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 3,
+        "mislayered_matches": 2,
+        "mislayer_rate": 0.6667,
+        "scoring": {
+          "union": {
+            "precision": 0.375,
+            "recall": 0.75,
+            "f1": 0.5
+          },
+          "direct": {
+            "precision": 0.25,
+            "recall": 1.0,
+            "f1": 0.4
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0833,
+          "macro_recall": 0.3333,
+          "macro_f1": 0.1333,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 3,
+          "mislayered_matches": 2,
+          "mislayer_rate": 0.6667,
+          "gold_total": 4,
+          "predicted_total": 8
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_type_d_003",
+        "difficulty": "medium",
+        "failure_type": "Type D",
+        "union_f1": 0.4,
+        "macro_f1": 0.5,
+        "direct_f1": 1.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.3333,
+            "recall": 0.5,
+            "f1": 0.4
+          },
+          "direct": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.5,
+          "macro_recall": 0.5,
+          "macro_f1": 0.5,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 2,
+          "predicted_total": 3
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_type_d_004",
+        "difficulty": "medium",
+        "failure_type": "Type D",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 2
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_type_d_005",
+        "difficulty": "hard",
+        "failure_type": "Type D",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 2,
+          "predicted_total": 4
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_type_d_006",
+        "difficulty": "medium",
+        "failure_type": "Type D",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 3,
+          "predicted_total": 8
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_type_a_001",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_f1": 0.5882,
+        "macro_f1": 0.1481,
+        "direct_f1": 0.4444,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 5,
+        "mislayered_matches": 3,
+        "mislayer_rate": 0.6,
+        "scoring": {
+          "union": {
+            "precision": 0.4545,
+            "recall": 0.8333,
+            "f1": 0.5882
+          },
+          "direct": {
+            "precision": 0.3333,
+            "recall": 0.6667,
+            "f1": 0.4444
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.1111,
+          "macro_recall": 0.2222,
+          "macro_f1": 0.1481,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 5,
+          "mislayered_matches": 3,
+          "mislayer_rate": 0.6,
+          "gold_total": 6,
+          "predicted_total": 11
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_type_a_002",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_f1": 0.2857,
+        "macro_f1": 0.1111,
+        "direct_f1": 0.3333,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 3,
+        "mislayered_matches": 2,
+        "mislayer_rate": 0.6667,
+        "scoring": {
+          "union": {
+            "precision": 0.1875,
+            "recall": 0.6,
+            "f1": 0.2857
+          },
+          "direct": {
+            "precision": 0.25,
+            "recall": 0.5,
+            "f1": 0.3333
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0833,
+          "macro_recall": 0.1667,
+          "macro_f1": 0.1111,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 3,
+          "mislayered_matches": 2,
+          "mislayer_rate": 0.6667,
+          "gold_total": 5,
+          "predicted_total": 16
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_type_a_003",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_f1": 0.4286,
+        "macro_f1": 0.4127,
+        "direct_f1": 0.6667,
+        "indirect_f1": 0.5714,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 3,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.3,
+            "recall": 0.75,
+            "f1": 0.4286
+          },
+          "direct": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6667
+          },
+          "indirect": {
+            "precision": 0.5,
+            "recall": 0.6667,
+            "f1": 0.5714
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.3333,
+          "macro_recall": 0.5556,
+          "macro_f1": 0.4127,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 3,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 4,
+          "predicted_total": 10
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_medium_019",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.75,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 3,
+        "mislayered_matches": 3,
+        "mislayer_rate": 1.0,
+        "scoring": {
+          "union": {
+            "precision": 0.6,
+            "recall": 1.0,
+            "f1": 0.75
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 3,
+          "mislayered_matches": 3,
+          "mislayer_rate": 1.0,
+          "gold_total": 3,
+          "predicted_total": 5
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_medium_021",
+        "difficulty": "medium",
+        "failure_type": "Type C",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 3
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_medium_022",
+        "difficulty": "medium",
+        "failure_type": "Type D",
+        "union_f1": 0.7143,
+        "macro_f1": 0.5333,
+        "direct_f1": 0.8,
+        "indirect_f1": 0.8,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 5,
+        "mislayered_matches": 1,
+        "mislayer_rate": 0.2,
+        "scoring": {
+          "union": {
+            "precision": 0.625,
+            "recall": 0.8333,
+            "f1": 0.7143
+          },
+          "direct": {
+            "precision": 0.6667,
+            "recall": 1.0,
+            "f1": 0.8
+          },
+          "indirect": {
+            "precision": 1.0,
+            "recall": 0.6667,
+            "f1": 0.8
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.5556,
+          "macro_recall": 0.5556,
+          "macro_f1": 0.5333,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 5,
+          "mislayered_matches": 1,
+          "mislayer_rate": 0.2,
+          "gold_total": 6,
+          "predicted_total": 8
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_medium_023",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 3,
+          "predicted_total": 13
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_medium_024",
+        "difficulty": "medium",
+        "failure_type": "Type B",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 2,
+          "predicted_total": 8
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_easy_018",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 2
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_easy_019",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_f1": 0.3333,
+        "macro_f1": 0.1667,
+        "direct_f1": 0.5,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.25,
+            "recall": 0.5,
+            "f1": 0.3333
+          },
+          "direct": {
+            "precision": 0.5,
+            "recall": 0.5,
+            "f1": 0.5
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.1667,
+          "macro_recall": 0.1667,
+          "macro_f1": 0.1667,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 2,
+          "predicted_total": 4
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_easy_020",
+        "difficulty": "easy",
+        "failure_type": "Type E",
+        "union_f1": 0.5,
+        "macro_f1": 0.1667,
+        "direct_f1": 0.5,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 2,
+        "mislayered_matches": 1,
+        "mislayer_rate": 0.5,
+        "scoring": {
+          "union": {
+            "precision": 0.4,
+            "recall": 0.6667,
+            "f1": 0.5
+          },
+          "direct": {
+            "precision": 0.5,
+            "recall": 0.5,
+            "f1": 0.5
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.1667,
+          "macro_recall": 0.1667,
+          "macro_f1": 0.1667,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 2,
+          "mislayered_matches": 1,
+          "mislayer_rate": 0.5,
+          "gold_total": 3,
+          "predicted_total": 5
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_medium_025",
+        "difficulty": "medium",
+        "failure_type": "Type D",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 4,
+          "predicted_total": 7
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_easy_021",
+        "difficulty": "easy",
+        "failure_type": "Type D",
+        "union_f1": 0.0,
+        "macro_f1": 0.0,
+        "direct_f1": 0.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 3,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 0,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "direct": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.0,
+          "macro_recall": 0.0,
+          "macro_f1": 0.0,
+          "active_layer_count": 3,
+          "active_layers": [
+            "direct_deps",
+            "indirect_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 0,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 4
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_easy_022",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_f1": 0.6667,
+        "macro_f1": 0.5,
+        "direct_f1": 1.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 2,
+        "exact_layer_match": false,
+        "exact_union_match": false,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6667
+          },
+          "direct": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 0.5,
+          "macro_recall": 0.5,
+          "macro_f1": 0.5,
+          "active_layer_count": 2,
+          "active_layers": [
+            "direct_deps",
+            "implicit_deps"
+          ],
+          "exact_layer_match": false,
+          "exact_union_match": false,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 2
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_easy_023",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_f1": 1.0,
+        "macro_f1": 1.0,
+        "direct_f1": 1.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 1,
+        "exact_layer_match": true,
+        "exact_union_match": true,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "direct": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 1.0,
+          "macro_recall": 1.0,
+          "macro_f1": 1.0,
+          "active_layer_count": 1,
+          "active_layers": [
+            "direct_deps"
+          ],
+          "exact_layer_match": true,
+          "exact_union_match": true,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 1
+        }
+      },
+      {
+        "source": "gpt_rag_with_rag",
+        "case_id": "celery_easy_024",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_f1": 1.0,
+        "macro_f1": 1.0,
+        "direct_f1": 1.0,
+        "indirect_f1": 0.0,
+        "implicit_f1": 0.0,
+        "active_layer_count": 1,
+        "exact_layer_match": true,
+        "exact_union_match": true,
+        "matched_fqns": 1,
+        "mislayered_matches": 0,
+        "mislayer_rate": 0.0,
+        "scoring": {
+          "union": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "direct": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "indirect": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "implicit": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "macro_precision": 1.0,
+          "macro_recall": 1.0,
+          "macro_f1": 1.0,
+          "active_layer_count": 1,
+          "active_layers": [
+            "direct_deps"
+          ],
+          "exact_layer_match": true,
+          "exact_union_match": true,
+          "matched_fqns": 1,
+          "mislayered_matches": 0,
+          "mislayer_rate": 0.0,
+          "gold_total": 1,
+          "predicted_total": 1
+        }
+      }
+    ],
+    "summary": {
+      "overall": {
+        "count": 54,
+        "avg_union_f1": 0.294,
+        "avg_macro_f1": 0.1353,
+        "avg_direct_f1": 0.2579,
+        "avg_indirect_f1": 0.0341,
+        "avg_implicit_f1": 0.0074,
+        "layer_penalty": 0.1587,
+        "avg_mislayer_rate": 0.2997,
+        "exact_layer_match_rate": 0.037
+      },
+      "by_difficulty": {
+        "easy": {
+          "count": 15,
+          "avg_union_f1": 0.2722,
+          "avg_macro_f1": 0.1889,
+          "avg_direct_f1": 0.2667,
+          "avg_indirect_f1": 0.0,
+          "avg_implicit_f1": 0.0,
+          "layer_penalty": 0.0833,
+          "avg_mislayer_rate": 0.1667
+        },
+        "hard": {
+          "count": 20,
+          "avg_union_f1": 0.3372,
+          "avg_macro_f1": 0.1484,
+          "avg_direct_f1": 0.3481,
+          "avg_indirect_f1": 0.0522,
+          "avg_implicit_f1": 0.02,
+          "layer_penalty": 0.1888,
+          "avg_mislayer_rate": 0.3492
+        },
+        "medium": {
+          "count": 19,
+          "avg_union_f1": 0.2656,
+          "avg_macro_f1": 0.0792,
+          "avg_direct_f1": 0.1561,
+          "avg_indirect_f1": 0.0421,
+          "avg_implicit_f1": 0.0,
+          "layer_penalty": 0.1864,
+          "avg_mislayer_rate": 0.3526
+        }
+      },
+      "by_failure_type": {
+        "Type A": {
+          "count": 7,
+          "avg_union_f1": 0.4418,
+          "avg_macro_f1": 0.2341,
+          "avg_direct_f1": 0.5492,
+          "avg_indirect_f1": 0.0816,
+          "avg_implicit_f1": 0.0,
+          "layer_penalty": 0.2077,
+          "avg_mislayer_rate": 0.3667
+        },
+        "Type B": {
+          "count": 9,
+          "avg_union_f1": 0.2002,
+          "avg_macro_f1": 0.1154,
+          "avg_direct_f1": 0.2741,
+          "avg_indirect_f1": 0.0278,
+          "avg_implicit_f1": 0.0444,
+          "layer_penalty": 0.0848,
+          "avg_mislayer_rate": 0.1481
+        },
+        "Type C": {
+          "count": 11,
+          "avg_union_f1": 0.2727,
+          "avg_macro_f1": 0.2424,
+          "avg_direct_f1": 0.3182,
+          "avg_indirect_f1": 0.0,
+          "avg_implicit_f1": 0.0,
+          "layer_penalty": 0.0303,
+          "avg_mislayer_rate": 0.0
+        },
+        "Type D": {
+          "count": 11,
+          "avg_union_f1": 0.2074,
+          "avg_macro_f1": 0.1061,
+          "avg_direct_f1": 0.2,
+          "avg_indirect_f1": 0.0727,
+          "avg_implicit_f1": 0.0,
+          "layer_penalty": 0.1013,
+          "avg_mislayer_rate": 0.2606
+        },
+        "Type E": {
+          "count": 16,
+          "avg_union_f1": 0.3561,
+          "avg_macro_f1": 0.0498,
+          "avg_direct_f1": 0.1198,
+          "avg_indirect_f1": 0.0139,
+          "avg_implicit_f1": 0.0,
+          "layer_penalty": 0.3063,
+          "avg_mislayer_rate": 0.5885
+        }
+      }
+    }
+  },
+  "paired_delta": {
+    "avg_union_delta": 0.0157,
+    "avg_macro_delta": -0.0189,
+    "cases": [
+      {
+        "case_id": "easy_001",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_delta": -0.6667,
+        "macro_delta": -0.6667
+      },
+      {
+        "case_id": "easy_002",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_delta": 0.0,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "easy_003",
+        "difficulty": "easy",
+        "failure_type": "Type E",
+        "union_delta": -0.0833,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "easy_004",
+        "difficulty": "easy",
+        "failure_type": "Type D",
+        "union_delta": 0.3333,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "medium_001",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_delta": 0.2,
+        "macro_delta": 0.25
+      },
+      {
+        "case_id": "medium_002",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_delta": 0.4,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "medium_003",
+        "difficulty": "medium",
+        "failure_type": "Type D",
+        "union_delta": 0.0,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "medium_004",
+        "difficulty": "medium",
+        "failure_type": "Type C",
+        "union_delta": -1.0,
+        "macro_delta": -1.0
+      },
+      {
+        "case_id": "hard_001",
+        "difficulty": "hard",
+        "failure_type": "Type B",
+        "union_delta": -0.3333,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "hard_002",
+        "difficulty": "hard",
+        "failure_type": "Type B",
+        "union_delta": 0.2222,
+        "macro_delta": 0.2222
+      },
+      {
+        "case_id": "hard_003",
+        "difficulty": "hard",
+        "failure_type": "Type B",
+        "union_delta": 0.0,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "hard_004",
+        "difficulty": "hard",
+        "failure_type": "Type E",
+        "union_delta": -0.2857,
+        "macro_delta": -0.25
+      },
+      {
+        "case_id": "celery_hard_014",
+        "difficulty": "hard",
+        "failure_type": "Type B",
+        "union_delta": -0.0556,
+        "macro_delta": -0.1667
+      },
+      {
+        "case_id": "celery_hard_016",
+        "difficulty": "hard",
+        "failure_type": "Type E",
+        "union_delta": 0.1429,
+        "macro_delta": 0.0092
+      },
+      {
+        "case_id": "celery_hard_013",
+        "difficulty": "hard",
+        "failure_type": "Type B",
+        "union_delta": -0.1667,
+        "macro_delta": 0.1
+      },
+      {
+        "case_id": "celery_hard_015",
+        "difficulty": "hard",
+        "failure_type": "Type B",
+        "union_delta": 0.2353,
+        "macro_delta": 0.2167
+      },
+      {
+        "case_id": "celery_hard_018",
+        "difficulty": "hard",
+        "failure_type": "Type E",
+        "union_delta": 0.4211,
+        "macro_delta": 0.0741
+      },
+      {
+        "case_id": "celery_medium_017",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_delta": -0.5,
+        "macro_delta": -0.1667
+      },
+      {
+        "case_id": "easy_007",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_delta": 0.0,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "easy_005",
+        "difficulty": "easy",
+        "failure_type": "Type B",
+        "union_delta": -0.3333,
+        "macro_delta": -0.3333
+      },
+      {
+        "case_id": "easy_006",
+        "difficulty": "easy",
+        "failure_type": "Type B",
+        "union_delta": -0.5,
+        "macro_delta": -0.3333
+      },
+      {
+        "case_id": "easy_008",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_delta": 0.0,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "medium_005",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_delta": 0.1818,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "medium_006",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_delta": 0.6667,
+        "macro_delta": 0.2222
+      },
+      {
+        "case_id": "medium_007",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_delta": 0.4,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "medium_008",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_delta": 0.2,
+        "macro_delta": -0.1667
+      },
+      {
+        "case_id": "celery_medium_020",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_delta": -0.4706,
+        "macro_delta": -0.1111
+      },
+      {
+        "case_id": "celery_hard_019",
+        "difficulty": "hard",
+        "failure_type": "Type E",
+        "union_delta": 0.2143,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "celery_hard_121",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_delta": 0.0368,
+        "macro_delta": 0.0278
+      },
+      {
+        "case_id": "celery_hard_122",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_delta": 0.1429,
+        "macro_delta": 0.1333
+      },
+      {
+        "case_id": "celery_hard_024",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_delta": 0.8,
+        "macro_delta": 0.2222
+      },
+      {
+        "case_id": "celery_hard_025",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_delta": 0.2222,
+        "macro_delta": 0.5
+      },
+      {
+        "case_id": "celery_type_d_001",
+        "difficulty": "hard",
+        "failure_type": "Type D",
+        "union_delta": 0.0,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "celery_type_d_002",
+        "difficulty": "hard",
+        "failure_type": "Type D",
+        "union_delta": -0.1154,
+        "macro_delta": 0.0222
+      },
+      {
+        "case_id": "celery_type_d_003",
+        "difficulty": "medium",
+        "failure_type": "Type D",
+        "union_delta": 0.0,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "celery_type_d_004",
+        "difficulty": "medium",
+        "failure_type": "Type D",
+        "union_delta": 0.0,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "celery_type_d_005",
+        "difficulty": "hard",
+        "failure_type": "Type D",
+        "union_delta": 0.0,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "celery_type_d_006",
+        "difficulty": "medium",
+        "failure_type": "Type D",
+        "union_delta": -0.2857,
+        "macro_delta": -0.3333
+      },
+      {
+        "case_id": "celery_type_a_001",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_delta": 0.5882,
+        "macro_delta": 0.1481
+      },
+      {
+        "case_id": "celery_type_a_002",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_delta": 0.2857,
+        "macro_delta": 0.1111
+      },
+      {
+        "case_id": "celery_type_a_003",
+        "difficulty": "hard",
+        "failure_type": "Type A",
+        "union_delta": 0.4286,
+        "macro_delta": 0.4127
+      },
+      {
+        "case_id": "celery_medium_019",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_delta": 0.0833,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "celery_medium_021",
+        "difficulty": "medium",
+        "failure_type": "Type C",
+        "union_delta": 0.0,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "celery_medium_022",
+        "difficulty": "medium",
+        "failure_type": "Type D",
+        "union_delta": 0.7143,
+        "macro_delta": 0.5333
+      },
+      {
+        "case_id": "celery_medium_023",
+        "difficulty": "medium",
+        "failure_type": "Type E",
+        "union_delta": 0.0,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "celery_medium_024",
+        "difficulty": "medium",
+        "failure_type": "Type B",
+        "union_delta": 0.0,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "celery_easy_018",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_delta": -0.6667,
+        "macro_delta": -0.5
+      },
+      {
+        "case_id": "celery_easy_019",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_delta": -0.1111,
+        "macro_delta": -0.1
+      },
+      {
+        "case_id": "celery_easy_020",
+        "difficulty": "easy",
+        "failure_type": "Type E",
+        "union_delta": -0.1667,
+        "macro_delta": -0.1
+      },
+      {
+        "case_id": "celery_medium_025",
+        "difficulty": "medium",
+        "failure_type": "Type D",
+        "union_delta": -0.6667,
+        "macro_delta": -0.3333
+      },
+      {
+        "case_id": "celery_easy_021",
+        "difficulty": "easy",
+        "failure_type": "Type D",
+        "union_delta": 0.0,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "celery_easy_022",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_delta": 0.0,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "celery_easy_023",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_delta": 0.0,
+        "macro_delta": 0.0
+      },
+      {
+        "case_id": "celery_easy_024",
+        "difficulty": "easy",
+        "failure_type": "Type C",
+        "union_delta": 0.3333,
+        "macro_delta": 0.3333
+      }
+    ]
+  }
+}

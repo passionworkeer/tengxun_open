@@ -1,0 +1,3276 @@
+[
+  {
+    "case_id": "easy_001",
+    "difficulty": "easy",
+    "failure_type": "Type C",
+    "f1": 0.5,
+    "union_f1": 0.5,
+    "macro_f1": 0.5,
+    "direct_f1": 0.5,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery",
+        "celery.__init__.local.recreate_module",
+        "celery._state.default_app"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5
+      },
+      "direct": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.3333,
+      "macro_recall": 1.0,
+      "macro_f1": 0.5,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 3
+    },
+    "raw_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.app.base.Celery\"],\"indirect_deps\":[],\"implicit_deps\":[\"celery.__init__.local.recreate_module\",\"celery._state.default_app\"]}}"
+  },
+  {
+    "case_id": "easy_002",
+    "difficulty": "easy",
+    "failure_type": "Type C",
+    "f1": 0.0,
+    "union_f1": 0.0,
+    "macro_f1": 0.0,
+    "direct_f1": 0.0,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.__init__.shared_task",
+        "celery.__init__.__all__"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "direct": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.0,
+      "macro_recall": 0.0,
+      "macro_f1": 0.0,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 2
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.__init__.shared_task\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": [\n      \"celery.__init__.__all__\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "easy_003",
+    "difficulty": "easy",
+    "failure_type": "Type E",
+    "f1": 0.4,
+    "union_f1": 0.4,
+    "macro_f1": 0.4,
+    "direct_f1": 0.4,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.loaders.default.Loader",
+        "celery.loaders.get_loader_cls",
+        "celery.loaders.LOADERS",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1": 0.4
+      },
+      "direct": {
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1": 0.4
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.25,
+      "macro_recall": 1.0,
+      "macro_f1": 0.4,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 4
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.default.Loader\"\n    ],\n    \"indirect_deps\": [\n      \"celery.loaders.get_loader_cls\"\n    ],\n    \"implicit_deps\": [\n      \"celery.loaders.LOADERS\",\n      \"celery.utils.imports.symbol_by_name\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "easy_004",
+    "difficulty": "easy",
+    "failure_type": "Type D",
+    "f1": 0.4,
+    "union_f1": 0.4,
+    "macro_f1": 0.4,
+    "direct_f1": 0.4,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.concurrency.prefork.TaskPool",
+        "celery.concurrency.get_implementation",
+        "celery.concurrency.__init__.ALIASES",
+        "kombu.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1": 0.4
+      },
+      "direct": {
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1": 0.4
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.25,
+      "macro_recall": 1.0,
+      "macro_f1": 0.4,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 4
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.concurrency.prefork:TaskPool\"\n    ],\n    \"indirect_deps\": [\n      \"celery.concurrency.get_implementation\"\n    ],\n    \"implicit_deps\": [\n      \"celery.concurrency.__init__.ALIASES\",\n      \"kombu.utils.imports.symbol_by_name\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_001",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 0.4,
+    "union_f1": 0.4,
+    "macro_f1": 0.4,
+    "direct_f1": 0.4,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.backends.redis.RedisBackend",
+        "celery.app.backends.by_name",
+        "celery.utils.imports.symbol_by_name",
+        "celery.app.backends.BACKEND_ALIASES"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1": 0.4
+      },
+      "direct": {
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1": 0.4
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.25,
+      "macro_recall": 1.0,
+      "macro_f1": 0.4,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 4
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.backends.redis.RedisBackend\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.backends.by_name\",\n      \"celery.utils.imports.symbol_by_name\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.backends.BACKEND_ALIASES\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_002",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 0.4,
+    "union_f1": 0.4,
+    "macro_f1": 0.4,
+    "direct_f1": 0.4,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.loaders.app.AppLoader",
+        "celery.loaders.get_loader_cls",
+        "celery.loaders.LOADER_ALIASES",
+        "kombu.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1": 0.4
+      },
+      "direct": {
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1": 0.4
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.25,
+      "macro_recall": 1.0,
+      "macro_f1": 0.4,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 4
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.app:AppLoader\"\n    ],\n    \"indirect_deps\": [\n      \"celery.loaders.get_loader_cls\"\n    ],\n    \"implicit_deps\": [\n      \"celery.loaders.LOADER_ALIASES\",\n      \"kombu.utils.imports.symbol_by_name\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_003",
+    "difficulty": "medium",
+    "failure_type": "Type D",
+    "f1": 0.4,
+    "union_f1": 0.4,
+    "macro_f1": 0.4,
+    "direct_f1": 0.4,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.concurrency.thread.TaskPool",
+        "celery.concurrency.get_implementation",
+        "celery.concurrency.ALIASES",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1": 0.4
+      },
+      "direct": {
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1": 0.4
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.25,
+      "macro_recall": 1.0,
+      "macro_f1": 0.4,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 4
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.concurrency.thread:TaskPool\"\n    ],\n    \"indirect_deps\": [\n      \"celery.concurrency.get_implementation\"\n    ],\n    \"implicit_deps\": [\n      \"celery.concurrency.ALIASES\",\n      \"celery.utils.imports.symbol_by_name\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_004",
+    "difficulty": "medium",
+    "failure_type": "Type C",
+    "f1": 0.6667,
+    "union_f1": 0.6667,
+    "macro_f1": 0.6667,
+    "direct_f1": 0.6667,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.utils.imports.gen_task_name",
+        "celery.app.base.Celery.gen_task_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667
+      },
+      "direct": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.5,
+      "macro_recall": 1.0,
+      "macro_f1": 0.6667,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 2
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.imports.gen_task_name\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.gen_task_name\"\n    ],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "hard_001",
+    "difficulty": "hard",
+    "failure_type": "Type B",
+    "f1": 0.4,
+    "union_f1": 0.4,
+    "macro_f1": 0.4,
+    "direct_f1": 0.4,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun",
+        "celery._state.connect_on_app_finalize",
+        "celery._state._get_active_apps",
+        "celery._state._announce_app_finalized"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1": 0.4
+      },
+      "direct": {
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1": 0.4
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.25,
+      "macro_recall": 1.0,
+      "macro_f1": 0.4,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 4
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery._task_from_fun\"\n    ],\n    \"indirect_deps\": [\n      \"celery._state.connect_on_app_finalize\",\n      \"celery._state._get_active_apps\"\n    ],\n    \"implicit_deps\": [\n      \"celery._state._announce_app_finalized\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "hard_002",
+    "difficulty": "hard",
+    "failure_type": "Type B",
+    "f1": 0.5,
+    "union_f1": 0.5,
+    "macro_f1": 0.5,
+    "direct_f1": 0.5,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun",
+        "celery.app.base.Celery.task",
+        "celery.app.base.Celery._tasks"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5
+      },
+      "direct": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.3333,
+      "macro_recall": 1.0,
+      "macro_f1": 0.5,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 3
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery._task_from_fun\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.task\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.base.Celery._tasks\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "hard_003",
+    "difficulty": "hard",
+    "failure_type": "Type B",
+    "f1": 0.5,
+    "union_f1": 0.5,
+    "macro_f1": 0.5,
+    "direct_f1": 0.5,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery._state._announce_app_finalized",
+        "celery.app.base.Celery.finalize",
+        "celery._state._on_app_finalizers"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5
+      },
+      "direct": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.3333,
+      "macro_recall": 1.0,
+      "macro_f1": 0.5,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 3
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery._state._announce_app_finalized\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.finalize\"\n    ],\n    \"implicit_deps\": [\n      \"celery._state._on_app_finalizers\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "hard_004",
+    "difficulty": "hard",
+    "failure_type": "Type E",
+    "f1": 0.6667,
+    "union_f1": 0.6667,
+    "macro_f1": 0.6667,
+    "direct_f1": 0.6667,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.worker.request.Request",
+        "celery.app.task.Task.Request"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667
+      },
+      "direct": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.5,
+      "macro_recall": 1.0,
+      "macro_f1": 0.6667,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 2
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.worker.request.Request\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.task.Task.Request\"\n    ],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "celery_hard_014",
+    "difficulty": "hard",
+    "failure_type": "Type B",
+    "f1": 0.7273,
+    "union_f1": 0.7273,
+    "macro_f1": 0.0952,
+    "direct_f1": 0.2857,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.75,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun",
+        "celery.app.builtins.add_backend_cleanup_task",
+        "celery._state.connect_on_app_finalize",
+        "celery._state._announce_app_finalized",
+        "celery.app.base.Celery.finalize",
+        "celery.app.base.Celery.backend"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.6667,
+        "recall": 0.8,
+        "f1": 0.7273
+      },
+      "direct": {
+        "precision": 0.1667,
+        "recall": 1.0,
+        "f1": 0.2857
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.0556,
+      "macro_recall": 0.3333,
+      "macro_f1": 0.0952,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 4,
+      "mislayered_matches": 3,
+      "mislayer_rate": 0.75,
+      "gold_total": 5,
+      "predicted_total": 6
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery._task_from_fun\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.builtins.add_backend_cleanup_task\",\n      \"celery._state.connect_on_app_finalize\",\n      \"celery._state._announce_app_finalized\",\n      \"celery.app.base.Celery.finalize\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.base.Celery.backend\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_hard_016",
+    "difficulty": "hard",
+    "failure_type": "Type E",
+    "f1": 0.6,
+    "union_f1": 0.6,
+    "macro_f1": 0.1429,
+    "direct_f1": 0.2857,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.6667,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.loaders.base.BaseLoader.autodiscover_tasks",
+        "celery.loaders.base.autodiscover_tasks",
+        "celery.loaders.base.find_related_module",
+        "celery.app.base.Celery._autodiscover_tasks_from_fixups",
+        "celery.app.base.Celery.autodiscover_tasks",
+        "importlib.import_module"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.5,
+        "recall": 0.75,
+        "f1": 0.6
+      },
+      "direct": {
+        "precision": 0.1667,
+        "recall": 1.0,
+        "f1": 0.2857
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.0833,
+      "macro_recall": 0.5,
+      "macro_f1": 0.1429,
+      "active_layer_count": 2,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 3,
+      "mislayered_matches": 2,
+      "mislayer_rate": 0.6667,
+      "gold_total": 4,
+      "predicted_total": 6
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.base.BaseLoader.autodiscover_tasks\",\n      \"celery.loaders.base.autodiscover_tasks\",\n      \"celery.loaders.base.find_related_module\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery._autodiscover_tasks_from_fixups\",\n      \"celery.app.base.Celery.autodiscover_tasks\"\n    ],\n    \"implicit_deps\": [\n      \"importlib.import_module\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_hard_013",
+    "difficulty": "hard",
+    "failure_type": "Type B",
+    "f1": 0.7273,
+    "union_f1": 0.7273,
+    "macro_f1": 0.1667,
+    "direct_f1": 0.5,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.5,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery.tasks",
+        "celery.app.base.Celery.finalize",
+        "celery._state._announce_app_finalized",
+        "celery.app.shared_task",
+        "celery.local.Proxy",
+        "celery._state.connect_on_app_finalize"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.6667,
+        "recall": 0.8,
+        "f1": 0.7273
+      },
+      "direct": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.1111,
+      "macro_recall": 0.3333,
+      "macro_f1": 0.1667,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 4,
+      "mislayered_matches": 2,
+      "mislayer_rate": 0.5,
+      "gold_total": 5,
+      "predicted_total": 6
+    },
+    "raw_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.app.base.Celery.tasks\"],\"indirect_deps\":[\"celery.app.base.Celery.finalize\",\"celery._state._announce_app_finalized\"],\"implicit_deps\":[\"celery.app.shared_task\",\"celery.local.Proxy\",\"celery._state.connect_on_app_finalize\"]}}"
+  },
+  {
+    "case_id": "celery_hard_015",
+    "difficulty": "hard",
+    "failure_type": "Type B",
+    "f1": 0.2222,
+    "union_f1": 0.2222,
+    "macro_f1": 0.1333,
+    "direct_f1": 0.4,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.app.base.Celery.autodiscover_tasks",
+        "celery._state.connect_on_app_finalize",
+        "celery._state._announce_app_finalized"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.25,
+        "recall": 0.2,
+        "f1": 0.2222
+      },
+      "direct": {
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1": 0.4
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.0833,
+      "macro_recall": 0.3333,
+      "macro_f1": 0.1333,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 5,
+      "predicted_total": 4
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery._autodiscover_tasks\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.autodiscover_tasks\",\n      \"celery._state.connect_on_app_finalize\"\n    ],\n    \"implicit_deps\": [\n      \"celery._state._announce_app_finalized\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_hard_018",
+    "difficulty": "hard",
+    "failure_type": "Type E",
+    "f1": 0.6667,
+    "union_f1": 0.6667,
+    "macro_f1": 0.0741,
+    "direct_f1": 0.2222,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.8,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.contrib.django.task.DjangoTask",
+        "celery.fixups.django.fixup",
+        "celery.fixups.django.DjangoFixup.install",
+        "celery.fixups.django.DjangoFixup.install_task",
+        "celery.app.base.Celery.task_cls",
+        "celery.app.base.Celery.create_task_cls",
+        "celery.app.base.Celery.Task",
+        "celery.app.base.Celery._custom_task_cls_used"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.625,
+        "recall": 0.7143,
+        "f1": 0.6667
+      },
+      "direct": {
+        "precision": 0.125,
+        "recall": 1.0,
+        "f1": 0.2222
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.0417,
+      "macro_recall": 0.3333,
+      "macro_f1": 0.0741,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 5,
+      "mislayered_matches": 4,
+      "mislayer_rate": 0.8,
+      "gold_total": 7,
+      "predicted_total": 8
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.contrib.django.task.DjangoTask\"\n    ],\n    \"indirect_deps\": [\n      \"celery.fixups.django.fixup\",\n      \"celery.fixups.django.DjangoFixup.install\",\n      \"celery.fixups.django.DjangoFixup.install_task\",\n      \"celery.app.base.Celery.task_cls\",\n      \"celery.app.base.Celery.create_task_cls\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.base.Celery.Task\",\n      \"celery.app.base.Celery._custom_task_cls_used\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_medium_017",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 0.6667,
+    "union_f1": 0.6667,
+    "macro_f1": 0.2222,
+    "direct_f1": 0.6667,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.5,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.fixups.django.fixup",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667
+      },
+      "direct": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.1667,
+      "macro_recall": 0.3333,
+      "macro_f1": 0.2222,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 2,
+      "mislayered_matches": 1,
+      "mislayer_rate": 0.5,
+      "gold_total": 4,
+      "predicted_total": 2
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.fixups.django.fixup\"\n    ],\n    \"indirect_deps\": [\n      \"celery.utils.imports.symbol_by_name\"\n    ],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "easy_007",
+    "difficulty": "easy",
+    "failure_type": "Type C",
+    "f1": 0.6667,
+    "union_f1": 0.6667,
+    "macro_f1": 0.6667,
+    "direct_f1": 0.6667,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.task.Task",
+        "celery._state.default_app"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667
+      },
+      "direct": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.5,
+      "macro_recall": 1.0,
+      "macro_f1": 0.6667,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 2
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.task.Task\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": [\n      \"celery._state.default_app\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "easy_005",
+    "difficulty": "easy",
+    "failure_type": "Type B",
+    "f1": 0.5714,
+    "union_f1": 0.5714,
+    "macro_f1": 0.2222,
+    "direct_f1": 0.6667,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.5,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery._state.get_current_app",
+        "celery.local.Proxy"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 1.0,
+        "recall": 0.4,
+        "f1": 0.5714
+      },
+      "direct": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.1667,
+      "macro_recall": 0.3333,
+      "macro_f1": 0.2222,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 2,
+      "mislayered_matches": 1,
+      "mislayer_rate": 0.5,
+      "gold_total": 5,
+      "predicted_total": 2
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery._state.get_current_app\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": [\n      \"celery.local.Proxy\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "easy_006",
+    "difficulty": "easy",
+    "failure_type": "Type B",
+    "f1": 0.5,
+    "union_f1": 0.5,
+    "macro_f1": 0.1333,
+    "direct_f1": 0.4,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.5,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery._state.get_current_task",
+        "celery._state.current_task",
+        "celery.local.Proxy",
+        "celery._state._task_stack"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5
+      },
+      "direct": {
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1": 0.4
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.0833,
+      "macro_recall": 0.3333,
+      "macro_f1": 0.1333,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 2,
+      "mislayered_matches": 1,
+      "mislayer_rate": 0.5,
+      "gold_total": 4,
+      "predicted_total": 4
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery._state.get_current_task\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": [\n      \"celery._state.current_task\",\n      \"celery.local.Proxy\",\n      \"celery._state._task_stack\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "easy_008",
+    "difficulty": "easy",
+    "failure_type": "Type C",
+    "f1": 0.5,
+    "union_f1": 0.5,
+    "macro_f1": 0.3333,
+    "direct_f1": 0.6667,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.canvas.group",
+        "celery.__init__.group"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5
+      },
+      "direct": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.25,
+      "macro_recall": 0.5,
+      "macro_f1": 0.3333,
+      "active_layer_count": 2,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 2,
+      "predicted_total": 2
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.canvas.group\"\n    ],\n    \"indirect_deps\": [\n      \"celery.__init__.group\"\n    ],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "medium_005",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 0.4444,
+    "union_f1": 0.4444,
+    "macro_f1": 0.0,
+    "direct_f1": 0.0,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 1.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.loaders.default.Loader",
+        "celery.app.base.Celery.loader",
+        "celery.app.base.Celery._get_default_loader",
+        "celery.loaders.get_loader_cls",
+        "celery.app.base.DEFAULT_LOADER"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.4,
+        "recall": 0.5,
+        "f1": 0.4444
+      },
+      "direct": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.0,
+      "macro_recall": 0.0,
+      "macro_f1": 0.0,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 2,
+      "mislayered_matches": 2,
+      "mislayer_rate": 1.0,
+      "gold_total": 4,
+      "predicted_total": 5
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.default.Loader\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.loader\",\n      \"celery.app.base.Celery._get_default_loader\",\n      \"celery.loaders.get_loader_cls\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.base.DEFAULT_LOADER\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_006",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 1.0,
+    "union_f1": 1.0,
+    "macro_f1": 0.1667,
+    "direct_f1": 0.5,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.6667,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.backends.rpc.RPCBackend",
+        "celery.app.base.Celery._get_backend",
+        "celery.app.backends.by_url",
+        "celery.app.backends.by_name",
+        "celery.utils.imports.symbol_by_name",
+        "celery.app.backends.BACKEND_ALIASES"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "direct": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.1111,
+      "macro_recall": 0.3333,
+      "macro_f1": 0.1667,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": true,
+      "matched_fqns": 6,
+      "mislayered_matches": 4,
+      "mislayer_rate": 0.6667,
+      "gold_total": 6,
+      "predicted_total": 6
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.backends.rpc.RPCBackend\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery._get_backend\",\n      \"celery.app.backends.by_url\",\n      \"celery.app.backends.by_name\",\n      \"celery.utils.imports.symbol_by_name\"\n    ],\n    \"implicit_deps\": [\n      \"celery.app.backends.BACKEND_ALIASES\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_007",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 0.6667,
+    "union_f1": 0.6667,
+    "macro_f1": 0.0741,
+    "direct_f1": 0.2222,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.8,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.loaders.default.Loader",
+        "celery._state._get_current_app",
+        "celery.app.base.Celery.loader",
+        "celery.app.base.Celery._get_loader",
+        "celery.loaders.get_loader_cls",
+        "celery._state.current_app",
+        "celery.local.Proxy",
+        "celery._state.default_app"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.625,
+        "recall": 0.7143,
+        "f1": 0.6667
+      },
+      "direct": {
+        "precision": 0.125,
+        "recall": 1.0,
+        "f1": 0.2222
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.0417,
+      "macro_recall": 0.3333,
+      "macro_f1": 0.0741,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 5,
+      "mislayered_matches": 4,
+      "mislayer_rate": 0.8,
+      "gold_total": 7,
+      "predicted_total": 8
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.default.Loader\"\n    ],\n    \"indirect_deps\": [\n      \"celery._state._get_current_app\",\n      \"celery.app.base.Celery.loader\",\n      \"celery.app.base.Celery._get_loader\",\n      \"celery.loaders.get_loader_cls\"\n    ],\n    \"implicit_deps\": [\n      \"celery._state.current_app\",\n      \"celery.local.Proxy\",\n      \"celery._state.default_app\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "medium_008",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 0.8889,
+    "union_f1": 0.8889,
+    "macro_f1": 0.1111,
+    "direct_f1": 0.3333,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.75,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.worker.strategy.default",
+        "celery.app.task.Task.start_strategy",
+        "celery.app.task.Task.Strategy",
+        "celery.utils.imports.instantiate",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.8,
+        "recall": 1.0,
+        "f1": 0.8889
+      },
+      "direct": {
+        "precision": 0.2,
+        "recall": 1.0,
+        "f1": 0.3333
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.0667,
+      "macro_recall": 0.3333,
+      "macro_f1": 0.1111,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 4,
+      "mislayered_matches": 3,
+      "mislayer_rate": 0.75,
+      "gold_total": 4,
+      "predicted_total": 5
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.worker.strategy.default\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.task.Task.start_strategy\",\n      \"celery.app.task.Task.Strategy\"\n    ],\n    \"implicit_deps\": [\n      \"celery.utils.imports.instantiate\",\n      \"celery.utils.imports.symbol_by_name\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_medium_020",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 0.6667,
+    "union_f1": 0.6667,
+    "macro_f1": 0.1667,
+    "direct_f1": 0.5,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.5,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.loaders.default.Loader",
+        "celery.app.base.Celery.loader",
+        "celery.loaders.get_loader_cls",
+        "celery._state._get_current_app",
+        "celery._state.default_loader",
+        "celery.app.base.Celery._get_default_loader"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.6667,
+        "recall": 0.6667,
+        "f1": 0.6667
+      },
+      "direct": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.1111,
+      "macro_recall": 0.3333,
+      "macro_f1": 0.1667,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 4,
+      "mislayered_matches": 2,
+      "mislayer_rate": 0.5,
+      "gold_total": 6,
+      "predicted_total": 6
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.default.Loader\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.loader\",\n      \"celery.loaders.get_loader_cls\",\n      \"celery._state._get_current_app\"\n    ],\n    \"implicit_deps\": [\n      \"celery._state.default_loader\",\n      \"celery.app.base.Celery._get_default_loader\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_hard_019",
+    "difficulty": "hard",
+    "failure_type": "Type E",
+    "f1": 0.5714,
+    "union_f1": 0.5714,
+    "macro_f1": 0.0,
+    "direct_f1": 0.0,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 1.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "kombu.utils.imports.symbol_by_name",
+        "celery.loaders.base.BaseLoader.config_from_object",
+        "celery.loaders.base.BaseLoader._smart_import"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.6667,
+        "recall": 0.5,
+        "f1": 0.5714
+      },
+      "direct": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.0,
+      "macro_recall": 0.0,
+      "macro_f1": 0.0,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 2,
+      "mislayered_matches": 2,
+      "mislayer_rate": 1.0,
+      "gold_total": 4,
+      "predicted_total": 3
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"kombu.utils.imports.symbol_by_name\"\n    ],\n    \"indirect_deps\": [\n      \"celery.loaders.base.BaseLoader.config_from_object\",\n      \"celery.loaders.base.BaseLoader._smart_import\"\n    ],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "celery_hard_121",
+    "difficulty": "hard",
+    "failure_type": "Type A",
+    "f1": 0.8571,
+    "union_f1": 0.8571,
+    "macro_f1": 0.0833,
+    "direct_f1": 0.25,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.8333,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.loaders.base.find_related_module",
+        "celery.app.base.Celery.autodiscover_tasks",
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.app.base.Celery._autodiscover_tasks_from_names",
+        "celery.loaders.base.BaseLoader.autodiscover_tasks",
+        "celery.loaders.base.autodiscover_tasks",
+        "celery.signals.import_modules"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.8571,
+        "recall": 0.8571,
+        "f1": 0.8571
+      },
+      "direct": {
+        "precision": 0.1429,
+        "recall": 1.0,
+        "f1": 0.25
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.0476,
+      "macro_recall": 0.3333,
+      "macro_f1": 0.0833,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 6,
+      "mislayered_matches": 5,
+      "mislayer_rate": 0.8333,
+      "gold_total": 7,
+      "predicted_total": 7
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.loaders.base.find_related_module\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.autodiscover_tasks\",\n      \"celery.app.base.Celery._autodiscover_tasks\",\n      \"celery.app.base.Celery._autodiscover_tasks_from_names\",\n      \"celery.loaders.base.BaseLoader.autodiscover_tasks\",\n      \"celery.loaders.base.autodiscover_tasks\"\n    ],\n    \"implicit_deps\": [\n      \"celery.signals.import_modules\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_hard_122",
+    "difficulty": "hard",
+    "failure_type": "Type A",
+    "f1": 0.2222,
+    "union_f1": 0.2222,
+    "macro_f1": 0.1333,
+    "direct_f1": 0.4,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.bootsteps.Blueprint._should_include",
+        "celery.bootsteps.Step.__init__",
+        "celery.bootsteps.Blueprint.apply",
+        "celery.bootsteps.Blueprint.claim_steps"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.25,
+        "recall": 0.2,
+        "f1": 0.2222
+      },
+      "direct": {
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1": 0.4
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.0833,
+      "macro_recall": 0.3333,
+      "macro_f1": 0.1333,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 5,
+      "predicted_total": 4
+    },
+    "raw_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.bootsteps.Blueprint._should_include\"],\"indirect_deps\":[\"celery.bootsteps.Step.__init__\",\"celery.bootsteps.Blueprint.apply\",\"celery.bootsteps.Blueprint.claim_steps\"],\"implicit_deps\":[]}}"
+  },
+  {
+    "case_id": "celery_hard_024",
+    "difficulty": "hard",
+    "failure_type": "Type A",
+    "f1": 0.8,
+    "union_f1": 0.8,
+    "macro_f1": 0.25,
+    "direct_f1": 0.5,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.5,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.beat.PersistentScheduler.setup_schedule",
+        "celery.beat.PersistentScheduler._create_schedule",
+        "celery.beat.PersistentScheduler._store"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.6667,
+        "recall": 1.0,
+        "f1": 0.8
+      },
+      "direct": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.1667,
+      "macro_recall": 0.5,
+      "macro_f1": 0.25,
+      "active_layer_count": 2,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 2,
+      "mislayered_matches": 1,
+      "mislayer_rate": 0.5,
+      "gold_total": 2,
+      "predicted_total": 3
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.beat.PersistentScheduler.setup_schedule\"\n    ],\n    \"indirect_deps\": [\n      \"celery.beat.PersistentScheduler._create_schedule\"\n    ],\n    \"implicit_deps\": [\n      \"celery.beat.PersistentScheduler._store\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_hard_025",
+    "difficulty": "hard",
+    "failure_type": "Type A",
+    "f1": 0.3333,
+    "union_f1": 0.3333,
+    "macro_f1": 0.3333,
+    "direct_f1": 0.3333,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.worker.consumer.tasks.Tasks.qos_global",
+        "celery.worker.consumer.tasks.Tasks.start",
+        "celery.worker.consumer.tasks.Tasks.set_prefetch_count",
+        "celery.worker.consumer.tasks.TASK_LOGIC",
+        "celery.worker.consumer.tasks.DISABLE_PREFETCH"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.2,
+        "recall": 1.0,
+        "f1": 0.3333
+      },
+      "direct": {
+        "precision": 0.2,
+        "recall": 1.0,
+        "f1": 0.3333
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.2,
+      "macro_recall": 1.0,
+      "macro_f1": 0.3333,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 5
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.worker.consumer.tasks.Tasks.qos_global\"\n    ],\n    \"indirect_deps\": [\n      \"celery.worker.consumer.tasks.Tasks.start\",\n      \"celery.worker.consumer.tasks.Tasks.set_prefetch_count\"\n    ],\n    \"implicit_deps\": [\n      \"celery.worker.consumer.tasks.TASK_LOGIC\",\n      \"celery.worker.consumer.tasks.DISABLE_PREFETCH\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_type_d_001",
+    "difficulty": "hard",
+    "failure_type": "Type D",
+    "f1": 1.0,
+    "union_f1": 1.0,
+    "macro_f1": 1.0,
+    "direct_f1": 1.0,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": true,
+    "prediction": {
+      "direct_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "direct": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 1.0,
+      "macro_recall": 1.0,
+      "macro_f1": 1.0,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": true,
+      "exact_union_match": true,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 1
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.imports.symbol_by_name\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "celery_type_d_002",
+    "difficulty": "hard",
+    "failure_type": "Type D",
+    "f1": 0.6667,
+    "union_f1": 0.6667,
+    "macro_f1": 0.1111,
+    "direct_f1": 0.3333,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.6667,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.canvas._chain",
+        "celery.canvas.Signature.register_type",
+        "celery.canvas.Signature.from_dict",
+        "celery.canvas.signature",
+        "celery.canvas.chain"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.6,
+        "recall": 0.75,
+        "f1": 0.6667
+      },
+      "direct": {
+        "precision": 0.2,
+        "recall": 1.0,
+        "f1": 0.3333
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.0667,
+      "macro_recall": 0.3333,
+      "macro_f1": 0.1111,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 3,
+      "mislayered_matches": 2,
+      "mislayer_rate": 0.6667,
+      "gold_total": 4,
+      "predicted_total": 5
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.canvas._chain\"\n    ],\n    \"indirect_deps\": [\n      \"celery.canvas.Signature.register_type\",\n      \"celery.canvas.Signature.from_dict\",\n      \"celery.canvas.signature\",\n      \"celery.canvas.chain\"\n    ],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "celery_type_d_003",
+    "difficulty": "medium",
+    "failure_type": "Type D",
+    "f1": 0.5,
+    "union_f1": 0.5,
+    "macro_f1": 0.3333,
+    "direct_f1": 0.6667,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.canvas.signature",
+        "celery.canvas.subtask"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5
+      },
+      "direct": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.25,
+      "macro_recall": 0.5,
+      "macro_f1": 0.3333,
+      "active_layer_count": 2,
+      "active_layers": [
+        "direct_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 2,
+      "predicted_total": 2
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.canvas.signature\"\n    ],\n    \"indirect_deps\": [\n      \"celery.canvas.subtask\"\n    ],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "celery_type_d_004",
+    "difficulty": "medium",
+    "failure_type": "Type D",
+    "f1": 0.6667,
+    "union_f1": 0.6667,
+    "macro_f1": 0.6667,
+    "direct_f1": 0.6667,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.utils.log.current_process_index",
+        "celery.utils.nodenames._fmt_process_index"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667
+      },
+      "direct": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.5,
+      "macro_recall": 1.0,
+      "macro_f1": 0.6667,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 2
+    },
+    "raw_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.utils.log.current_process_index\"],\"indirect_deps\":[\"celery.utils.nodenames._fmt_process_index\"],\"implicit_deps\":[]}}"
+  },
+  {
+    "case_id": "celery_type_d_005",
+    "difficulty": "hard",
+    "failure_type": "Type D",
+    "f1": 0.6667,
+    "union_f1": 0.6667,
+    "macro_f1": 0.0,
+    "direct_f1": 0.0,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 1.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.routes.Router"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667
+      },
+      "direct": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.0,
+      "macro_recall": 0.0,
+      "macro_f1": 0.0,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 1,
+      "mislayer_rate": 1.0,
+      "gold_total": 2,
+      "predicted_total": 1
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.routes.Router.query_router.<param>.router\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": [\n      \"celery.app.routes.Router\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_type_d_006",
+    "difficulty": "medium",
+    "failure_type": "Type D",
+    "f1": 0.75,
+    "union_f1": 0.75,
+    "macro_f1": 0.1111,
+    "direct_f1": 0.3333,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.6667,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.concurrency.thread.TaskPool",
+        "celery.concurrency.get_implementation",
+        "celery.utils.imports.symbol_by_name",
+        "celery.concurrency.ALIASES",
+        "celery.concurrency.CELERY_CUSTOM_WORKER_POOL"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.6,
+        "recall": 1.0,
+        "f1": 0.75
+      },
+      "direct": {
+        "precision": 0.2,
+        "recall": 1.0,
+        "f1": 0.3333
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.0667,
+      "macro_recall": 0.3333,
+      "macro_f1": 0.1111,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 3,
+      "mislayered_matches": 2,
+      "mislayer_rate": 0.6667,
+      "gold_total": 3,
+      "predicted_total": 5
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.concurrency.thread.TaskPool\"\n    ],\n    \"indirect_deps\": [\n      \"celery.concurrency.get_implementation\",\n      \"celery.utils.imports.symbol_by_name\"\n    ],\n    \"implicit_deps\": [\n      \"celery.concurrency.ALIASES\",\n      \"celery.concurrency.CELERY_CUSTOM_WORKER_POOL\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_type_a_001",
+    "difficulty": "hard",
+    "failure_type": "Type A",
+    "f1": 0.4444,
+    "union_f1": 0.4444,
+    "macro_f1": 0.1667,
+    "direct_f1": 0.3333,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.5,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.bootsteps.Step._should_include",
+        "celery.bootsteps.Blueprint.apply",
+        "celery.bootsteps.Blueprint.claim_steps"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.6667,
+        "recall": 0.3333,
+        "f1": 0.4444
+      },
+      "direct": {
+        "precision": 0.3333,
+        "recall": 0.3333,
+        "f1": 0.3333
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.1667,
+      "macro_recall": 0.1667,
+      "macro_f1": 0.1667,
+      "active_layer_count": 2,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 2,
+      "mislayered_matches": 1,
+      "mislayer_rate": 0.5,
+      "gold_total": 6,
+      "predicted_total": 3
+    },
+    "raw_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.bootsteps.Step._should_include\"],\"indirect_deps\":[\"celery.bootsteps.Blueprint.apply\",\"celery.bootsteps.Blueprint.claim_steps\"],\"implicit_deps\":[]}}"
+  },
+  {
+    "case_id": "celery_type_a_002",
+    "difficulty": "hard",
+    "failure_type": "Type A",
+    "f1": 0.4,
+    "union_f1": 0.4,
+    "macro_f1": 0.0556,
+    "direct_f1": 0.1667,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.6667,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.worker.request.Request.on_failure",
+        "celery.worker.request.Request.acknowledge",
+        "celery.worker.request.Request.reject",
+        "celery.exceptions.TimeLimitExceeded",
+        "billiard.exceptions.WorkerLostError",
+        "celery.exceptions.Reject",
+        "celery.exceptions.Ignore",
+        "celery.worker.request.Request.task.acks_late",
+        "celery.worker.request.Request.task.acks_on_failure_or_timeout",
+        "celery.worker.request.Request.task.reject_on_worker_lost"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.3,
+        "recall": 0.6,
+        "f1": 0.4
+      },
+      "direct": {
+        "precision": 0.1,
+        "recall": 0.5,
+        "f1": 0.1667
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.0333,
+      "macro_recall": 0.1667,
+      "macro_f1": 0.0556,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 3,
+      "mislayered_matches": 2,
+      "mislayer_rate": 0.6667,
+      "gold_total": 5,
+      "predicted_total": 10
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.worker.request.Request.on_failure\",\n      \"celery.worker.request.Request.acknowledge\",\n      \"celery.worker.request.Request.reject\"\n    ],\n    \"indirect_deps\": [\n      \"celery.exceptions.TimeLimitExceeded\",\n      \"billiard.exceptions.WorkerLostError\",\n      \"celery.exceptions.Reject\",\n      \"celery.exceptions.Ignore\",\n      \"celery.worker.request.Request.task.acks_late\",\n      \"celery.worker.request.Request.task.acks_on_failure_or_timeout\",\n      \"celery.worker.request.Request.task.reject_on_worker_lost\"\n    ],\n    \"implicit_deps\": [\n      \"ordinary Exception -> reject(requeue=False)\",\n      \"TimeLimitExceeded with acks_on_timeout=False -> reject(requeue=False)\",\n      \"WorkerLostError with reject_on_worker_lost=False -> reject(requeue=False)\",\n      \"celery.exceptions.Reject -> reject(requeue=exc.requeue)\",\n      \"celery.exceptions.Ignore -> acknowledge\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_type_a_003",
+    "difficulty": "hard",
+    "failure_type": "Type A",
+    "f1": 0.4444,
+    "union_f1": 0.4444,
+    "macro_f1": 0.1667,
+    "direct_f1": 0.3333,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.5,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.app.base.Celery.autodiscover_tasks",
+        "celery.signals.import_modules",
+        "celery.app.base.Celery._autodiscover_tasks_from_fixups",
+        "celery._state.connect_on_app_finalize"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.4,
+        "recall": 0.5,
+        "f1": 0.4444
+      },
+      "direct": {
+        "precision": 0.2,
+        "recall": 1.0,
+        "f1": 0.3333
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.1,
+      "macro_recall": 0.5,
+      "macro_f1": 0.1667,
+      "active_layer_count": 2,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 2,
+      "mislayered_matches": 1,
+      "mislayer_rate": 0.5,
+      "gold_total": 4,
+      "predicted_total": 5
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.app.base.Celery._autodiscover_tasks\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.base.Celery.autodiscover_tasks\",\n      \"celery.signals.import_modules\",\n      \"celery.app.base.Celery._autodiscover_tasks_from_fixups\"\n    ],\n    \"implicit_deps\": [\n      \"celery._state.connect_on_app_finalize\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_medium_019",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 0.8,
+    "union_f1": 0.8,
+    "macro_f1": 0.3333,
+    "direct_f1": 0.6667,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.5,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.concurrency.prefork.TaskPool",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8
+      },
+      "direct": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.25,
+      "macro_recall": 0.5,
+      "macro_f1": 0.3333,
+      "active_layer_count": 2,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 2,
+      "mislayered_matches": 1,
+      "mislayer_rate": 0.5,
+      "gold_total": 3,
+      "predicted_total": 2
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.concurrency.prefork.TaskPool\"\n    ],\n    \"indirect_deps\": [\n      \"celery.utils.imports.symbol_by_name\"\n    ],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "celery_medium_021",
+    "difficulty": "medium",
+    "failure_type": "Type C",
+    "f1": 0.0,
+    "union_f1": 0.0,
+    "macro_f1": 0.0,
+    "direct_f1": 0.0,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "direct": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.0,
+      "macro_recall": 0.0,
+      "macro_f1": 0.0,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 0,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 0
+    },
+    "raw_output": "{\"ground_truth\":{\"direct_deps\":[],\"indirect_deps\":[],\"implicit_deps\":[]}}"
+  },
+  {
+    "case_id": "celery_medium_022",
+    "difficulty": "medium",
+    "failure_type": "Type D",
+    "f1": 0.4,
+    "union_f1": 0.4,
+    "macro_f1": 0.1212,
+    "direct_f1": 0.3636,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.3333,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.canvas.Signature.TYPES",
+        "celery.canvas.Signature.register_type",
+        "celery.canvas.Signature.from_dict",
+        "celery.canvas._chain",
+        "celery.canvas.xmap",
+        "celery.canvas.xstarmap",
+        "celery.canvas.chunks",
+        "celery.canvas.group",
+        "celery.canvas._chord"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.3333,
+        "recall": 0.5,
+        "f1": 0.4
+      },
+      "direct": {
+        "precision": 0.2222,
+        "recall": 1.0,
+        "f1": 0.3636
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.0741,
+      "macro_recall": 0.3333,
+      "macro_f1": 0.1212,
+      "active_layer_count": 3,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps",
+        "implicit_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 3,
+      "mislayered_matches": 1,
+      "mislayer_rate": 0.3333,
+      "gold_total": 6,
+      "predicted_total": 9
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.canvas.Signature.TYPES\",\n      \"celery.canvas.Signature.register_type\"\n    ],\n    \"indirect_deps\": [\n      \"celery.canvas.Signature.from_dict\",\n      \"celery.canvas._chain\",\n      \"celery.canvas.xmap\",\n      \"celery.canvas.xstarmap\",\n      \"celery.canvas.chunks\",\n      \"celery.canvas.group\",\n      \"celery.canvas._chord\"\n    ],\n    \"implicit_deps\": [\n      \"subtask_type\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_medium_023",
+    "difficulty": "medium",
+    "failure_type": "Type E",
+    "f1": 0.8,
+    "union_f1": 0.8,
+    "macro_f1": 0.3333,
+    "direct_f1": 0.6667,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.5,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.utils.functional.head_from_fun",
+        "celery.utils.functional.FUNHEAD_TEMPLATE"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1": 0.8
+      },
+      "direct": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.25,
+      "macro_recall": 0.5,
+      "macro_f1": 0.3333,
+      "active_layer_count": 2,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 2,
+      "mislayered_matches": 1,
+      "mislayer_rate": 0.5,
+      "gold_total": 3,
+      "predicted_total": 2
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.functional.head_from_fun\",\n      \"celery.utils.functional.FUNHEAD_TEMPLATE\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": [\n      \"namespace\",\n      \"definition\",\n      \"namespace['__head__']\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_medium_024",
+    "difficulty": "medium",
+    "failure_type": "Type B",
+    "f1": 0.8,
+    "union_f1": 0.8,
+    "macro_f1": 0.25,
+    "direct_f1": 0.5,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.5,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.app.task.Context",
+        "celery.backends.base._create_fake_task_request",
+        "celery.app.trace.build_tracer"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.6667,
+        "recall": 1.0,
+        "f1": 0.8
+      },
+      "direct": {
+        "precision": 0.3333,
+        "recall": 1.0,
+        "f1": 0.5
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.1667,
+      "macro_recall": 0.5,
+      "macro_f1": 0.25,
+      "active_layer_count": 2,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 2,
+      "mislayered_matches": 1,
+      "mislayer_rate": 0.5,
+      "gold_total": 2,
+      "predicted_total": 3
+    },
+    "raw_output": "{\"ground_truth\":{\"direct_deps\":[\"celery.app.task.Context\"],\"indirect_deps\":[\"celery.backends.base._create_fake_task_request\"],\"implicit_deps\":[\"celery.app.trace.build_tracer\",\"delivery_info\"]}}"
+  },
+  {
+    "case_id": "celery_easy_018",
+    "difficulty": "easy",
+    "failure_type": "Type C",
+    "f1": 1.0,
+    "union_f1": 1.0,
+    "macro_f1": 1.0,
+    "direct_f1": 1.0,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": true,
+    "prediction": {
+      "direct_deps": [
+        "celery.utils.imports.gen_task_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "direct": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 1.0,
+      "macro_recall": 1.0,
+      "macro_f1": 1.0,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": true,
+      "exact_union_match": true,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 1
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.imports.gen_task_name\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": [\n      \"celery/app/utils.py\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_easy_019",
+    "difficulty": "easy",
+    "failure_type": "Type C",
+    "f1": 0.4,
+    "union_f1": 0.4,
+    "macro_f1": 0.4,
+    "direct_f1": 0.4,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.utils.imports.cwd_in_path",
+        "importlib.import_module",
+        "sys.path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.3333,
+        "recall": 0.5,
+        "f1": 0.4
+      },
+      "direct": {
+        "precision": 0.3333,
+        "recall": 0.5,
+        "f1": 0.4
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.3333,
+      "macro_recall": 0.5,
+      "macro_f1": 0.4,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 2,
+      "predicted_total": 3
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.imports.cwd_in_path\"\n    ],\n    \"indirect_deps\": [\n      \"importlib.import_module\"\n    ],\n    \"implicit_deps\": [\n      \"sys.path\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_easy_020",
+    "difficulty": "easy",
+    "failure_type": "Type E",
+    "f1": 0.6667,
+    "union_f1": 0.6667,
+    "macro_f1": 0.2,
+    "direct_f1": 0.4,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.5,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.utils.imports.load_extension_classes",
+        "celery.utils.imports.symbol_by_name",
+        "importlib.metadata.entry_points"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.6667,
+        "recall": 0.6667,
+        "f1": 0.6667
+      },
+      "direct": {
+        "precision": 0.3333,
+        "recall": 0.5,
+        "f1": 0.4
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.1667,
+      "macro_recall": 0.25,
+      "macro_f1": 0.2,
+      "active_layer_count": 2,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 2,
+      "mislayered_matches": 1,
+      "mislayer_rate": 0.5,
+      "gold_total": 3,
+      "predicted_total": 3
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.imports.load_extension_classes\",\n      \"celery.utils.imports.symbol_by_name\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": [\n      \"importlib.metadata.entry_points\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_medium_025",
+    "difficulty": "medium",
+    "failure_type": "Type D",
+    "f1": 0.4444,
+    "union_f1": 0.4444,
+    "macro_f1": 0.2857,
+    "direct_f1": 0.5714,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "celery.worker.request.Request",
+        "celery.app.task.Task.Request",
+        "celery.app.task.Task.Strategy",
+        "celery.worker.strategy.default",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.4,
+        "recall": 0.5,
+        "f1": 0.4444
+      },
+      "direct": {
+        "precision": 0.4,
+        "recall": 1.0,
+        "f1": 0.5714
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.2,
+      "macro_recall": 0.5,
+      "macro_f1": 0.2857,
+      "active_layer_count": 2,
+      "active_layers": [
+        "direct_deps",
+        "indirect_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 2,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 4,
+      "predicted_total": 5
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.worker.request.Request\"\n    ],\n    \"indirect_deps\": [\n      \"celery.app.task.Task.Request\",\n      \"celery.app.task.Task.Strategy\",\n      \"celery.worker.strategy.default\"\n    ],\n    \"implicit_deps\": [\n      \"celery.utils.imports.symbol_by_name\"\n    ]\n  }\n}"
+  },
+  {
+    "case_id": "celery_easy_021",
+    "difficulty": "easy",
+    "failure_type": "Type D",
+    "f1": 0.6667,
+    "union_f1": 0.6667,
+    "macro_f1": 0.6667,
+    "direct_f1": 0.6667,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": false,
+    "prediction": {
+      "direct_deps": [
+        "collections.abc.MutableMapping",
+        "celery.canvas.Signature"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667
+      },
+      "direct": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 0.5,
+      "macro_recall": 1.0,
+      "macro_f1": 0.6667,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": false,
+      "exact_union_match": false,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 2
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"collections.abc.MutableMapping\"\n    ],\n    \"indirect_deps\": [\n      \"celery.canvas.Signature\"\n    ],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "celery_easy_022",
+    "difficulty": "easy",
+    "failure_type": "Type C",
+    "f1": 1.0,
+    "union_f1": 1.0,
+    "macro_f1": 1.0,
+    "direct_f1": 1.0,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": true,
+    "prediction": {
+      "direct_deps": [
+        "kombu.utils.uuid.uuid"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "direct": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 1.0,
+      "macro_recall": 1.0,
+      "macro_f1": 1.0,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": true,
+      "exact_union_match": true,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 1
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"kombu.utils.uuid.uuid\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "celery_easy_023",
+    "difficulty": "easy",
+    "failure_type": "Type C",
+    "f1": 1.0,
+    "union_f1": 1.0,
+    "macro_f1": 1.0,
+    "direct_f1": 1.0,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": true,
+    "prediction": {
+      "direct_deps": [
+        "celery.utils.nodenames.nodename"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "direct": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 1.0,
+      "macro_recall": 1.0,
+      "macro_f1": 1.0,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": true,
+      "exact_union_match": true,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 1
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.nodenames.nodename\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": []\n  }\n}"
+  },
+  {
+    "case_id": "celery_easy_024",
+    "difficulty": "easy",
+    "failure_type": "Type C",
+    "f1": 1.0,
+    "union_f1": 1.0,
+    "macro_f1": 1.0,
+    "direct_f1": 1.0,
+    "indirect_f1": 0.0,
+    "implicit_f1": 0.0,
+    "mislayer_rate": 0.0,
+    "exact_layer_match": true,
+    "prediction": {
+      "direct_deps": [
+        "celery.utils.nodenames.worker_direct"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "strict_scoring": {
+      "union": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "direct": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "indirect": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "implicit": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_precision": 1.0,
+      "macro_recall": 1.0,
+      "macro_f1": 1.0,
+      "active_layer_count": 1,
+      "active_layers": [
+        "direct_deps"
+      ],
+      "exact_layer_match": true,
+      "exact_union_match": true,
+      "matched_fqns": 1,
+      "mislayered_matches": 0,
+      "mislayer_rate": 0.0,
+      "gold_total": 1,
+      "predicted_total": 1
+    },
+    "raw_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.nodenames.worker_direct\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": []\n  }\n}"
+  }
+]

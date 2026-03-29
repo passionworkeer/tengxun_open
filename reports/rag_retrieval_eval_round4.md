@@ -1,5 +1,7 @@
 # RAG Retrieval Eval — v2 Hybrid Index
 
+> 历史草稿说明：这份文档记录的是早期 `50-case` 检索实验，用于保留演进过程，不是当前正式对外交付口径。正式结论以 `54-case` 的 [`reports/rag_pipeline.md`](./rag_pipeline.md) 为准。
+
 ## Scope
 
 - Dataset: `data/eval_cases_migrated_draft_round4.json`

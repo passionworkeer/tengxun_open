@@ -1,0 +1,86 @@
+{
+  "config_path": "configs/train_config_20260327_143745.yaml",
+  "launcher": "llamafactory-cli",
+  "require_cuda": true,
+  "model_name_or_path": "Qwen/Qwen3.5-9B",
+  "dataset_name": "fintune_qwen_dep",
+  "dataset_file": "/Users/jiajingqiu/tengxun/data/finetune_dataset_500.jsonl",
+  "dataset_rows": 500,
+  "train_rows": 450,
+  "effective_batch": 4,
+  "estimated_total_steps": 339,
+  "output_dir": "/Users/jiajingqiu/tengxun/artifacts/lora/qwen3.5-9b/formal_20260327_143745",
+  "hard_fail": true,
+  "checks": [
+    {
+      "name": "python",
+      "status": "pass",
+      "detail": "Python 3.9.6"
+    },
+    {
+      "name": "torch",
+      "status": "pass",
+      "detail": "torch 2.8.0"
+    },
+    {
+      "name": "cuda",
+      "status": "fail",
+      "detail": "CUDA 不可用；当前仅适合 orchestration / 文档整理，不适合正式 9B LoRA 训练。"
+    },
+    {
+      "name": "mps",
+      "status": "pass",
+      "detail": "Apple MPS 可用"
+    },
+    {
+      "name": "launcher",
+      "status": "fail",
+      "detail": "未找到训练启动器 `llamafactory-cli`；需安装 LLaMA-Factory 或通过 LLAMAFACTORY_CLI 指向可执行文件。"
+    },
+    {
+      "name": "config",
+      "status": "pass",
+      "detail": "存在: configs/train_config_20260327_143745.yaml"
+    },
+    {
+      "name": "dataset_info",
+      "status": "pass",
+      "detail": "存在: /Users/jiajingqiu/tengxun/dataset_info.json"
+    },
+    {
+      "name": "dataset_mapping",
+      "status": "pass",
+      "detail": "dataset_info.json 已注册 `fintune_qwen_dep`"
+    },
+    {
+      "name": "dataset_file",
+      "status": "pass",
+      "detail": "存在: /Users/jiajingqiu/tengxun/data/finetune_dataset_500.jsonl"
+    },
+    {
+      "name": "repo_root",
+      "status": "pass",
+      "detail": "存在: /Users/jiajingqiu/tengxun/external/celery"
+    },
+    {
+      "name": "training_shape",
+      "status": "pass",
+      "detail": "rows=500, train_rows=450, effective_batch=4, total_steps≈339"
+    },
+    {
+      "name": "eval_schedule",
+      "status": "warn",
+      "detail": "eval_steps=500 >= 总步数≈339，不会生成逐步 eval_loss"
+    },
+    {
+      "name": "save_schedule",
+      "status": "warn",
+      "detail": "save_steps=500 >= 总步数≈339，不会生成中间 checkpoint"
+    },
+    {
+      "name": "output_parent",
+      "status": "warn",
+      "detail": "输出目录父路径将被创建: /Users/jiajingqiu/tengxun/artifacts/lora/qwen3.5-9b"
+    }
+  ]
+}

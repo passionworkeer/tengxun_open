@@ -20,7 +20,7 @@ Celery 源码
 -> AST chunker
 -> 3 路索引(BM25 / Semantic / Graph)
 -> RRF 融合
--> question_plus_entry（仅 5/54 条样本含 entry_symbol / entry_file）构造查询
+-> question_plus_entry（54/54 条样本含 source_file，5/54 条样本另有显式 entry_symbol）构造查询
 -> Top-K context build
 -> 送入生成模型
 -> JSON/FQN 输出
@@ -55,6 +55,7 @@ Celery 源码
 
 - 当前机器上可以直接复用，不需要重新 embedding
 - 该文件没有进入 git，因此换机器拉仓库后不会自动带下来
+- 但仓库已经提供 `scripts/precompute_embeddings.py`，可在新机器上按同一配置重新生成正式 cache
 
 ## 3. 检索效果
 
@@ -159,4 +160,4 @@ RAG 不能默认全开，正确用法是：
 ### 6.3 当前最稳的结论
 
 RAG 在这个项目里不是“平均分提升器”，而是“复杂场景修复器”。  
-检索层已经收口，下一步重点不是继续换 embedding，而是补齐 Qwen 侧的 `RAG only / PE + RAG / PE + RAG + FT` 正式实验。
+检索层已经收口，下一步重点不是继续换 embedding，而是围绕 hard / Type A / Type E 做更细粒度的条件式触发和上下文降噪。
