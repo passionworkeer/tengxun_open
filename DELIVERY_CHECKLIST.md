@@ -109,13 +109,14 @@ make check-train-env-strict  # 环境检查
 | **GPT-5.4 PE** | **0.67** | **0.62** | **0.55** | **0.61** | 最优单项 |
 | GPT-5.4 RAG | 0.27 | 0.27 | 0.34 | 0.29 | Hard 场景补偿 |
 | Qwen3.5-9B PE + RAG + FT | 0.62 | 0.52 | 0.40 | 0.50 | strict-clean 开源最高分 |
-| Qwen3.5-9B PE + FT | 0.52 | 0.54 | 0.26 | 0.43 | 历史正式完整 54-case 参考路线 |
+| Qwen3.5-9B PE + FT | 0.53 | 0.43 | 0.24 | 0.39 | strict-clean 低复杂度路线 |
 
 ### 关键发现
 
 1. **PE 是最强单项增益**：GPT-5.4 从 0.28 提升至 0.61（+120%）
 2. **RAG 定向修复 Hard 场景**：Hard 难度从 0.23→0.34，而非全局无差别提分
-3. **PE + FT 是开源性价比最优解**：0.43 分，接近商业模型基线
+3. **开源模型最强完整路线是 strict-clean `PE + RAG + FT`**：`0.5018`
+4. **strict-clean `PE + FT` 已形成低复杂度备选路线**：`0.3865`
 
 ---
 
@@ -141,7 +142,7 @@ make check-train-env-strict  # 环境检查
 |------|------|------|
 | **LoRA 权重** | strict-clean adapter 未直接提交到仓库，仅提交配置 / 日志 / 结果与 handoff 包 | ⚠️ 如需原始权重需外部保存 |
 | **Embedding Cache** | 约 326MB，未进 git（`artifacts/` 已 .gitignore） | 可用 `scripts/precompute_embeddings.py` 重建 |
-| **Strict PE + FT** | strict replay 当前仅有 `48/54` 条样本，不作为完整 `54-case` 主结果 | ⚠️ 需补齐或保留历史正式口径 |
+| **历史结果并存** | 仓库同时保留历史正式线和 strict-clean 线，需要按文档口径区分使用 | ✅ 已在 README / 报告中标注 |
 | **商业模型 API Key** | GPT/GLM 评测依赖 API Key | ⚠️ 需用户提供 |
 
 ---
@@ -164,6 +165,7 @@ reports/pe_optimization.md          # PE 优化详情
 reports/rag_pipeline.md             # RAG 技术方案
 docs/official_asset_manifest.md     # 正式资产清单
 docs/qwen_strict_gpu_runbook_20260329.md  # CUDA 执行手册
+docs/repository_map_20260328.md     # 仓库导航与分类说明
 ```
 
 ---

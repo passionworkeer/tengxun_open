@@ -2,6 +2,25 @@
 
 > 最后更新：2026-03-29
 
+这份说明只回答两个问题：
+
+1. 哪些脚本是当前交付版还在用的
+2. 哪些脚本只是历史实验辅助，不应当成正式入口
+
+## 当前最常用的正式入口
+
+```bash
+# 生成最终图表与指标快照
+python3 scripts/generate_final_delivery_assets.py
+
+# 生成答辩 PPT
+python3 scripts/generate_defense_deck_20260329.py
+
+# strict 数据审计与重评分
+python3 scripts/build_strict_datasets.py
+python3 scripts/rescore_official_results.py
+```
+
 ## PE 评测（GPT/GLM，通过 API）
 
 ```bash
@@ -22,8 +41,8 @@ bash scripts/run_qwen_strict_full.sh
 | `build_strict_datasets.py` | 生成 strict 去污染数据集 |
 | `check_train_env.py` | 检查 CUDA / 训练环境是否就绪 |
 | `generate_final_delivery_assets.py` | 生成最终图表（需要 matplotlib） |
-| `generate_project_progress_report.py` | 生成项目进度报告 |
 | `generate_defense_deck_20260329.py` | 生成答辩 PPT |
+| `generate_project_progress_report.py` | 生成项目进度报告 |
 | `generate_eval_status_report.py` | 生成评测状态报告 |
 | `precompute_embeddings.py` | 预计算 embedding 缓存 |
 | `recover_qwen_baseline.py` | 恢复 Qwen strict baseline |
@@ -32,7 +51,7 @@ bash scripts/run_qwen_strict_full.sh
 | `analyze_glm5_official_results.py` | 分析 GLM5 官方评测结果 |
 | `analyze_llm_eval_results.py` | 分析 LLM 评测结果 |
 | `analyze_training_log.py` | 解析训练日志，输出结构化摘要 |
-| `generate_finetune_data.py` | 生成正式微调数据 |
+| `generate_finetune_data.py` | 历史辅助脚本，用于 bootstrapping 微调数据 |
 | `generate_targeted_badcase_finetune.py` | 针对 bad case 生成定向微调数据 |
 | `finalize_official_datasets.py` | 整理最终数据集 |
 | `run_pe_eval.py` | PE评测入口 |
@@ -62,4 +81,19 @@ llamafactory-cli serve --config configs/llm.toml
 - `qwen_ft_*.json` — FT only 结果
 - `qwen_pe_ft_*.json` — PE + FT 结果
 - `qwen_pe_rag_ft_*.json` — 完整策略结果
-- `strict_metrics_20260329/summary.json` — strict 口径权威汇总
+- `strict_metrics_20260329/summary.json` — 历史正式结果的 strict 汇总快照
+
+当前如果你要看 **Qwen strict-clean 最终结果**，不要先看 `strict_metrics_20260329/summary.json`，而是优先看：
+
+- `results/qwen_strict_runs/strict_clean_20260329/`
+- `reports/qwen_strict_result_audit_20260329.md`
+
+## 历史 / 辅助脚本
+
+下面这些脚本保留是为了追溯实验过程，不是当前交付的唯一正式入口：
+
+- `generate_finetune_data.py`
+- `generate_targeted_badcase_finetune.py`
+- `run_conditional_rag_policy_experiment.py`
+- `run_conditional_rag_model_experiment.py`
+- `run_dynamic_typee_retrieval_experiment.py`
