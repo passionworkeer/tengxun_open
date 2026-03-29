@@ -120,8 +120,10 @@ celery-dep-analysis/
 正式数据入口：
 
 - [`data/eval_cases.json`](../data/eval_cases.json)：正式 54-case 评测集
-- [`data/finetune_dataset_500.jsonl`](../data/finetune_dataset_500.jsonl)：正式 500 条微调集
-- [`data/fewshot_examples_20.json`](../data/fewshot_examples_20.json)：正式 20 条 few-shot 库
+- [`data/finetune_dataset_500_strict.jsonl`](../data/finetune_dataset_500_strict.jsonl)：当前默认 500 条 strict-clean 微调集
+- [`data/fewshot_examples_20_strict.json`](../data/fewshot_examples_20_strict.json)：当前默认 20 条 strict-clean few-shot 库
+- [`data/finetune_dataset_500.jsonl`](../data/finetune_dataset_500.jsonl)：历史正式微调集（归档对照）
+- [`data/fewshot_examples_20.json`](../data/fewshot_examples_20.json)：历史正式 few-shot 库（归档对照）
 
 ### `results/`
 

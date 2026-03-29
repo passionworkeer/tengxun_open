@@ -21,14 +21,11 @@ import argparse
 import json
 import os
 import re
+import tarfile
 import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-
-import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
-from peft import PeftModel
 
 from evaluation.baseline import load_eval_cases, EvalCase
 from evaluation.metrics import compute_set_metrics
@@ -43,9 +40,11 @@ from rag.embedding_provider import resolve_embedding_config
 
 
 BASE_MODEL = "Qwen/Qwen3.5-9B"
+DEFAULT_STRICT_ADAPTER_DIR = Path("artifacts/lora/qwen3.5-9b/strict_clean_20260329")
+DEFAULT_STRICT_ADAPTER_TARBALL = Path("artifacts/handoff/strict_clean_20260329_minimal.tar.gz")
 DEFAULT_ADAPTER_PATH = os.environ.get(
     "QWEN_LORA_ADAPTER_PATH",
-    "LLaMA-Factory/saves/qwen3.5-9b/lora/finetune_20260327_143745",
+    str(DEFAULT_STRICT_ADAPTER_DIR),
 )
 DATA_PATH = Path("data/eval_cases.json")
 REPO_ROOT = Path("external/celery")
@@ -62,7 +61,55 @@ VALID_STRATEGIES = ("ft", "pe_ft", "pe_rag_ft")
 # Model loading
 # ---------------------------------------------------------------------------
 
+def _has_adapter_weights(adapter_path: Path) -> bool:
+    required = ("adapter_config.json", "adapter_model.safetensors")
+    return all((adapter_path / filename).exists() for filename in required)
+
+
+def ensure_adapter_path(adapter_path: str) -> Path:
+    path = Path(adapter_path)
+    if _has_adapter_weights(path):
+        return path
+
+    if path == DEFAULT_STRICT_ADAPTER_DIR and DEFAULT_STRICT_ADAPTER_TARBALL.exists():
+        path.mkdir(parents=True, exist_ok=True)
+        with tarfile.open(DEFAULT_STRICT_ADAPTER_TARBALL, "r:gz") as archive:
+            for member in archive.getmembers():
+                if not member.isfile():
+                    continue
+                filename = Path(member.name).name
+                if not filename:
+                    continue
+                target = path / filename
+                if target.exists():
+                    continue
+                extracted = archive.extractfile(member)
+                if extracted is None:
+                    continue
+                target.write_bytes(extracted.read())
+
+    if not _has_adapter_weights(path):
+        raise FileNotFoundError(
+            "LoRA adapter not found. "
+            f"Expected adapter weights under {path}. "
+            "You can run `make materialize-strict-adapter`, pass `--adapter-path`, "
+            "or set `QWEN_LORA_ADAPTER_PATH`."
+        )
+    return path
+
+
 def load_model(base_model_path: str, adapter_path: str):
+    try:
+        import torch
+        from peft import PeftModel
+        from transformers import AutoModelForCausalLM, AutoTokenizer
+    except ModuleNotFoundError as exc:
+        raise SystemExit(
+            "缺少微调评测依赖。请先安装 `requirements-finetune.txt`，"
+            "或在已有训练环境中执行 `run_ft_eval.py`。"
+        ) from exc
+
+    resolved_adapter_path = ensure_adapter_path(adapter_path)
     print(f"加载基础模型: {base_model_path}")
     tokenizer = AutoTokenizer.from_pretrained(base_model_path, trust_remote_code=True)
     if tokenizer.pad_token is None:
@@ -75,8 +122,8 @@ def load_model(base_model_path: str, adapter_path: str):
         device_map="auto",
         trust_remote_code=True,
     )
-    print(f"加载LoRA adapter: {adapter_path}")
-    model = PeftModel.from_pretrained(model, adapter_path)
+    print(f"加载LoRA adapter: {resolved_adapter_path}")
+    model = PeftModel.from_pretrained(model, str(resolved_adapter_path))
     model.eval()
     return model, tokenizer
 

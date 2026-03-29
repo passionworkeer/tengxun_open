@@ -17,9 +17,9 @@ import subprocess
 from pathlib import Path
 
 
-DEFAULT_CONFIG = Path("configs/train_config_20260327_143745.yaml")
+DEFAULT_CONFIG = Path("configs/strict_clean_20260329.yaml")
 DEFAULT_LAUNCHER = os.environ.get("LLAMAFACTORY_CLI", "llamafactory-cli")
-REFERENCE_LOG = Path("logs/train_20260327_143745.log")
+REFERENCE_LOG = Path("logs/strict_clean_20260329.train.log")
 DATASET_INFO = Path("dataset_info.json")
 
 

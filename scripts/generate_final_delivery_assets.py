@@ -129,18 +129,25 @@ def difficulty_avg(summary: dict[str, Any], difficulty: str) -> float:
 
 
 def parse_training_log(log_path: Path) -> dict[str, Any]:
-    pattern = re.compile(r"^\{'loss':")
+    train_pattern = re.compile(r"^\{'loss':")
     points: list[tuple[float, float]] = []
+    eval_points: list[tuple[float, float]] = []
     eval_loss = None
     train_loss = None
     train_runtime = None
 
     for raw_line in log_path.read_text(encoding="utf-8", errors="ignore").splitlines():
         line = raw_line.strip()
-        if pattern.match(line):
+        if train_pattern.match(line):
             try:
                 payload = ast.literal_eval(line)
                 points.append((float(payload["epoch"]), float(payload["loss"])))
+            except Exception:
+                continue
+        elif line.startswith("{'eval_loss':"):
+            try:
+                payload = ast.literal_eval(line)
+                eval_points.append((float(payload["epoch"]), float(payload["eval_loss"])))
             except Exception:
                 continue
         elif "train_runtime" in line and "train_loss" in line:
@@ -148,6 +155,8 @@ def parse_training_log(log_path: Path) -> dict[str, Any]:
                 payload = ast.literal_eval(line)
                 train_loss = float(payload["train_loss"])
                 train_runtime = str(payload["train_runtime"])
+                if "eval_loss" in payload:
+                    eval_loss = float(payload["eval_loss"])
             except Exception:
                 pass
         elif "eval_loss" in line and "=" in line:
@@ -158,7 +167,9 @@ def parse_training_log(log_path: Path) -> dict[str, Any]:
 
     return {
         "points": points,
+        "eval_points": eval_points,
         "eval_loss": eval_loss,
+        "best_eval_loss": min((loss for _, loss in eval_points), default=eval_loss),
         "train_loss": train_loss,
         "train_runtime": train_runtime,
     }
@@ -458,21 +469,47 @@ def make_training_curve_chart(
     output_path: Path,
     training: dict[str, Any],
 ) -> None:
-    points = training["points"]
-    if not points:
+    train_points = training["points"]
+    if not train_points:
         return
 
-    epochs = [epoch for epoch, _ in points]
-    losses = [loss for _, loss in points]
+    epochs = [epoch for epoch, _ in train_points]
+    losses = [loss for _, loss in train_points]
     fig, ax = plt.subplots(figsize=(11, 5.5))
-    ax.plot(epochs, losses, marker="o", markersize=3, linewidth=1.8, color="#2E86AB")
+    ax.plot(
+        epochs,
+        losses,
+        marker="o",
+        markersize=3,
+        linewidth=1.8,
+        color="#2E86AB",
+        label="Train loss",
+    )
+    eval_points = training.get("eval_points", [])
+    if eval_points:
+        eval_epochs = [epoch for epoch, _ in eval_points]
+        eval_losses = [loss for _, loss in eval_points]
+        ax.plot(
+            eval_epochs,
+            eval_losses,
+            marker="s",
+            markersize=5,
+            linewidth=1.6,
+            color="#C44E52",
+            label="Eval loss",
+        )
     ax.set_xlabel("Epoch")
-    ax.set_ylabel("Training Loss")
-    ax.set_title("Qwen LoRA Training Loss Curve")
+    ax.set_ylabel("Loss")
+    ax.set_title("Qwen Strict-Clean LoRA Training Curves")
     ax.grid(alpha=0.2)
     if training["eval_loss"] is not None:
-        ax.axhline(training["eval_loss"], color="#C44E52", linestyle="--", label=f"Final eval_loss={training['eval_loss']:.4f}")
-        ax.legend()
+        ax.axhline(
+            training["eval_loss"],
+            color="#C44E52",
+            linestyle="--",
+            alpha=0.45,
+        )
+    ax.legend()
     fig.tight_layout()
     output_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output_path, dpi=180, bbox_inches="tight")
@@ -487,8 +524,8 @@ def main() -> int:
 
     eval_cases = load_json(ROOT / "data/eval_cases.json")
     case_map = {case["id"]: case for case in eval_cases}
-    fewshot_count = len(load_json(ROOT / "data/fewshot_examples_20.json"))
-    finetune_count = load_jsonl_count(ROOT / "data/finetune_dataset_500.jsonl")
+    fewshot_count = len(load_json(ROOT / "data/fewshot_examples_20_strict.json"))
+    finetune_count = load_jsonl_count(ROOT / "data/finetune_dataset_500_strict.jsonl")
 
     gpt_results = load_json(ROOT / "results/gpt5_eval_results.json")
     glm_scored = load_json(ROOT / "results/glm_eval_scored_20260328.json")
@@ -502,7 +539,7 @@ def main() -> int:
     qwen_ft = load_qwen_stats(ROOT / "results/qwen_strict_runs/strict_clean_20260329/qwen_ft_strict_stats.json")
     qwen_pe_ft = load_qwen_stats(ROOT / "results/qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict_stats.json")
     qwen_pe_rag_ft = load_qwen_stats(ROOT / "results/qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict_stats.json")
-    training = parse_training_log(ROOT / "logs/train_20260327_143745.log")
+    training = parse_training_log(ROOT / "logs/strict_clean_20260329.train.log")
 
     gpt_summary = summarize_baseline_results(gpt_results, case_map=case_map)
     snapshot = {
@@ -531,8 +568,10 @@ def main() -> int:
         },
         "training": {
             "point_count": len(training["points"]),
+            "eval_point_count": len(training["eval_points"]),
             "final_train_loss": training["train_loss"],
             "final_eval_loss": training["eval_loss"],
+            "best_eval_loss": training["best_eval_loss"],
             "train_runtime": training["train_runtime"],
         },
     }

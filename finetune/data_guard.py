@@ -21,6 +21,12 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
+from scripts.build_strict_datasets import (
+    _audit_exact_overlaps,
+    _audit_question_overlaps,
+    _extract_question,
+)
+
 
 # FQN格式正则
 FQN_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)+$")
@@ -58,6 +64,7 @@ class ValidationSummary:
     hard_ratio: float
     min_records: int
     min_hard_ratio: float
+    overlap_audit: dict[str, Any]
     gate_errors: tuple[str, ...]
     ready: bool
 
@@ -344,6 +351,8 @@ def validate_jsonl(
     path: Path,
     min_records: int = 500,
     min_hard_ratio: float = 0.3,
+    eval_cases_path: Path | None = Path("data/eval_cases.json"),
+    fail_on_overlap: bool = True,
 ) -> ValidationSummary:
     """
     验证JSONL格式的微调数据集
@@ -363,6 +372,7 @@ def validate_jsonl(
     invalid = 0
     difficulty_counter: Counter[str] = Counter()
     hard_count = 0
+    valid_records: list[dict[str, Any]] = []
 
     for line_number, line in enumerate(
         path.read_text(encoding="utf-8-sig").splitlines(), start=1
@@ -384,6 +394,7 @@ def validate_jsonl(
             continue
 
         valid += 1
+        valid_records.append(record)
         difficulty = str(record["difficulty"])
         difficulty_counter[difficulty] += 1
         if difficulty == "hard":
@@ -400,6 +411,64 @@ def validate_jsonl(
             f"hard_ratio={hard_ratio} is below min_hard_ratio={min_hard_ratio}"
         )
 
+    overlap_audit: dict[str, Any] = {
+        "enabled": False,
+        "eval_cases_path": str(eval_cases_path) if eval_cases_path else None,
+        "exact_gt_overlap_row_case_pairs": 0,
+        "exact_gt_overlap_rows": 0,
+        "exact_gt_overlap_cases": 0,
+        "normalized_exact_question_overlap_rows": 0,
+        "hard_question_overlap_rows": 0,
+        "review_question_overlap_rows": 0,
+    }
+    if eval_cases_path is not None:
+        if not eval_cases_path.exists():
+            gate_errors.append(f"eval_cases_path not found: {eval_cases_path}")
+        else:
+            eval_cases = json.loads(eval_cases_path.read_text(encoding="utf-8-sig"))
+            candidate_rows = []
+            for index, record in enumerate(valid_records):
+                candidate_rows.append(
+                    {
+                        **record,
+                        "row_id": str(index),
+                        "__question": _extract_question(str(record.get("input", ""))),
+                    }
+                )
+            exact_audit = _audit_exact_overlaps(eval_cases, [], candidate_rows)
+            question_audit = _audit_question_overlaps(
+                eval_cases,
+                candidate_rows,
+                question_key="__question",
+            )
+            overlap_audit = {
+                "enabled": True,
+                "eval_cases_path": str(eval_cases_path),
+                "exact_gt_overlap_row_case_pairs": exact_audit["finetune_overlap_record_count"],
+                "exact_gt_overlap_rows": exact_audit["finetune_overlap_row_count"],
+                "exact_gt_overlap_cases": exact_audit["finetune_overlap_case_count"],
+                "normalized_exact_question_overlap_rows": question_audit["normalized_exact_count"],
+                "hard_question_overlap_rows": question_audit["hard_overlap_count"],
+                "review_question_overlap_rows": question_audit["review_count"],
+            }
+            if fail_on_overlap:
+                if overlap_audit["exact_gt_overlap_rows"] > 0:
+                    gate_errors.append(
+                        "eval overlap detected: "
+                        f"exact_gt_overlap_rows={overlap_audit['exact_gt_overlap_rows']}"
+                    )
+                if overlap_audit["normalized_exact_question_overlap_rows"] > 0:
+                    gate_errors.append(
+                        "eval overlap detected: "
+                        "normalized_exact_question_overlap_rows="
+                        f"{overlap_audit['normalized_exact_question_overlap_rows']}"
+                    )
+                if overlap_audit["hard_question_overlap_rows"] > 0:
+                    gate_errors.append(
+                        "eval overlap detected: "
+                        f"hard_question_overlap_rows={overlap_audit['hard_question_overlap_rows']}"
+                    )
+
     return ValidationSummary(
         valid_records=valid,
         invalid_records=invalid,
@@ -407,6 +476,7 @@ def validate_jsonl(
         hard_ratio=hard_ratio,
         min_records=min_records,
         min_hard_ratio=min_hard_ratio,
+        overlap_audit=overlap_audit,
         gate_errors=tuple(gate_errors),
         ready=(invalid == 0 and not gate_errors),
     )
@@ -428,12 +498,30 @@ def main() -> int:
         default=0.3,
         help="Minimum hard-sample ratio required for the gate to pass.",
     )
+    parser.add_argument(
+        "--eval-cases",
+        type=Path,
+        default=Path("data/eval_cases.json"),
+        help="Path to formal eval_cases.json for overlap audit. Use --skip-overlap-audit to disable.",
+    )
+    parser.add_argument(
+        "--skip-overlap-audit",
+        action="store_true",
+        help="Skip overlap audit against the formal evaluation set.",
+    )
+    parser.add_argument(
+        "--allow-overlap",
+        action="store_true",
+        help="Report overlap counts but do not fail the gate on contamination.",
+    )
     args = parser.parse_args()
 
     summary = validate_jsonl(
         args.dataset,
         min_records=args.min_records,
         min_hard_ratio=args.min_hard_ratio,
+        eval_cases_path=None if args.skip_overlap_audit else args.eval_cases,
+        fail_on_overlap=not args.allow_overlap,
     )
     print(json.dumps(asdict(summary), indent=2, ensure_ascii=False))
     return 0 if summary.ready else 1

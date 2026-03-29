@@ -18,6 +18,7 @@ dist/
 
 # Data & outputs
 # artifacts/
+artifacts/lora/
 outputs/
 cache/
 logs/

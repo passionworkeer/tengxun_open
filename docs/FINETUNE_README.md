@@ -1,47 +1,49 @@
 # Qwen Fine-tuning Pipeline
 
-## 1. 正式口径
+## 1. 当前默认口径
 
-当前仓库中与微调相关的**正式资产**如下：
-
-| 资产 | 路径 | 说明 |
-|------|------|------|
-| 正式微调数据集 | `data/finetune_dataset_500.jsonl` | 正式 500 条训练数据 |
-| LLaMA-Factory 数据映射 | `dataset_info.json` | 数据集名 `fintune_qwen_dep` 对应正式 JSONL |
-| 正式训练配置 | `configs/train_config_20260327_143745.yaml` | 本轮正式 LoRA 配置 |
-| 正式输出目录 | `artifacts/lora/qwen3.5-9b/formal_20260327_143745` | 当前正式配置的 `output_dir` |
-| 正式训练日志 | `logs/train_20260327_143745.log` | 训练时长、loss、最终 eval_loss |
-| 正式训练曲线 | `img/final_delivery/07_training_curve_20260328.png` | 由正式训练日志导出的 train loss 曲线 |
-| FT only 结果 | `results/qwen_ft_20260327_160136_stats.json` | 正式 54-case 结果 |
-| PE + FT 结果 | `results/qwen_pe_ft_20260327_162308_stats.json` | 正式 54-case 结果 |
-| PE + RAG + FT 结果 | `results/qwen_pe_rag_ft_google_20260328_stats.json` | 正式 54-case 结果 |
-
-当前仓库中与微调相关的**strict 复验资产**如下：
+当前仓库里与微调相关的**默认交付资产**已经统一切到 strict-clean：
 
 | 资产 | 路径 | 说明 |
 |------|------|------|
-| strict 微调数据集 | `data/finetune_dataset_500_strict.jsonl` | 去除 exact GT / hard question overlap 的 500 条训练数据 |
-| strict 数据映射 | `dataset_info.json` | 数据集名 `fintune_qwen_dep_strict` |
-| strict 重训配置 | `configs/train_config_strict_replay_20260329.yaml` | strict-clean LoRA 配置，含逐步 eval_loss/checkpoint |
-| strict 实际运行配置 | `configs/strict_clean_20260329.yaml` | 2026-03-29 CUDA 训练使用配置 |
-| strict 训练日志 | `logs/strict_clean_20260329.train.log` | strict-clean CUDA 训练日志 |
-| strict FT only 结果 | `results/qwen_strict_runs/strict_clean_20260329/qwen_ft_strict_metrics.json` | strict-clean 54-case |
-| strict PE + FT 结果 | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict_metrics.json` | strict-clean 54-case |
-| strict PE + RAG + FT 结果 | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict_metrics.json` | strict-clean 54-case 最优 |
-| strict 审计报告 | `reports/strict_data_audit_20260329.md` | 记录 exact GT 与题面级 overlap 清理结果 |
-| strict 评分报告 | `reports/strict_scoring_audit_20260329.md` | 分层 strict 指标与 mislayer 诊断 |
-| strict 结果完整度审计 | `reports/qwen_strict_result_audit_20260329.md` | strict 结果哪些完整、哪些是 partial |
+| 当前默认微调数据集 | `data/finetune_dataset_500_strict.jsonl` | strict-clean 500 条训练数据 |
+| 数据映射 | `dataset_info.json` | 数据集名 `fintune_qwen_dep_strict` |
+| 当前默认训练配置 | `configs/strict_clean_20260329.yaml` | 当前正式 strict-clean LoRA 配置 |
+| 当前默认训练日志 | `logs/strict_clean_20260329.train.log` | 含 step-level train/eval loss |
+| 当前默认 adapter handoff | `artifacts/handoff/strict_clean_20260329_minimal.tar.gz` | 可 materialize 成本地 adapter |
+| 当前默认 FT only | `results/qwen_strict_runs/strict_clean_20260329/qwen_ft_strict_metrics.json` | strict-clean 54-case |
+| 当前默认 PE + FT | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict_metrics.json` | strict-clean 54-case |
+| 当前默认 PE + RAG + FT | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict_metrics.json` | strict-clean 54-case |
+| 当前默认训练曲线 | `img/final_delivery/07_training_curve_20260328.png` | 基于 strict-clean 日志导出 |
 
-历史说明：
+当前默认结论：
 
-- 仓库中保留了若干早期辅助脚本，例如 `scripts/generate_finetune_data.py`。
-- `configs/train_config_strict_20260329.yaml` 保留为第一版 strict 草案；由于 `eval_steps=500` 大于整轮总步数，它不适合作为需要逐步 `eval_loss` 曲线的正式重训配置。
-- 这些脚本仍可用于 bootstrap 或本地实验，但**不是当前正式 500 条数据集与正式训练结果的唯一权威来源**。
-- 当前若要做严格答辩或去污染复验，请优先使用 strict 资产，而不是直接在历史正式资产上继续加实验。
+- `FT only = 0.0932`
+- `PE + FT = 0.3865`
+- `PE + RAG + FT = 0.5018`
 
-## 2. 正式训练入口
+## 2. 历史正式归档口径
 
-推荐直接使用仓库里的正式入口：
+历史正式微调资产仍然保留，但只作归档对照，不再作为当前默认训练 / 评测入口：
+
+| 资产 | 路径 | 说明 |
+|------|------|------|
+| 历史正式微调数据集 | `data/finetune_dataset_500.jsonl` | 历史正式 500 条训练数据 |
+| 历史数据映射 | `dataset_info.json` | 数据集名 `fintune_qwen_dep` |
+| 历史正式训练配置 | `configs/train_config_20260327_143745.yaml` | 早期正式 LoRA 配置 |
+| 历史正式训练日志 | `logs/train_20260327_143745.log` | 只有最终 eval_loss |
+| 历史正式 FT only | `results/qwen_ft_20260327_160136_stats.json` | 历史 54-case 结果 |
+| 历史正式 PE + FT | `results/qwen_pe_ft_20260327_162308_stats.json` | 历史 54-case 结果 |
+| 历史正式 PE + RAG + FT | `results/qwen_pe_rag_ft_google_20260328_stats.json` | 历史 54-case 结果 |
+
+补充说明：
+
+- 历史正式 few-shot / finetune 与 eval 存在 overlap 风险，详见 `reports/strict_data_audit_20260329.md`。
+- `make lint-data` 当前默认已经不再校验这套历史训练集；如需查看，使用 `make lint-data-historical`。
+
+## 3. 当前默认训练入口
+
+推荐直接使用仓库里的当前默认 strict-clean 入口：
 
 ```bash
 export PYTHONPATH=.
@@ -52,64 +54,53 @@ make train
 等价命令：
 
 ```bash
-python3 -m finetune.data_guard data/finetune_dataset_500.jsonl
-python3 finetune/train_lora.py --config configs/train_config_20260327_143745.yaml
-```
-
-strict 复验入口：
-
-```bash
-export PYTHONPATH=.
-make train-strict-dry-run
-make train-strict
-```
-
-等价命令：
-
-```bash
 python3 -m finetune.data_guard data/finetune_dataset_500_strict.jsonl
-python3 finetune/train_lora.py --config configs/train_config_strict_replay_20260329.yaml
+python3 finetune/train_lora.py --config configs/strict_clean_20260329.yaml
 ```
 
-说明：
-
-- `make train` 实际调用 `finetune/train_lora.py`，再由它启动 `llamafactory-cli train ...`。
-- `make train-strict-dry-run` 会读取 strict 重训配置并输出数据集规模、估算总步数以及 `eval_steps/save_steps` 是否合理。
-- 当前正式配置依赖 `LLaMA-Factory` 训练环境；若 `llamafactory-cli` 不在 PATH 中，可通过 `LLAMAFACTORY_CLI` 指向可执行文件。
-- 如果你要先确认本机能不能承担 strict 训练，不要直接开跑，先执行：
+如果你要先确认机器能不能承担训练，先执行：
 
 ```bash
-make check-train-env-strict
+make check-train-env
 ```
 
-如果你想在新的 CUDA 环境上复现这次 strict-clean 流程，直接执行：
+如果你要重放严格复现实验流程，保留了 strict replay 入口：
 
 ```bash
+make train-strict-dry-run
 make qwen-strict-rerun
 ```
 
-收口说明见：`reports/qwen_strict_closeout_20260329.md`
-结果完整度审计见：`reports/qwen_strict_result_audit_20260329.md`
-GPU runbook 见：`docs/qwen_strict_gpu_runbook_20260329.md`
+相关文档：
 
-## 3. 正式评测入口
+- `reports/qwen_strict_closeout_20260329.md`
+- `reports/qwen_strict_result_audit_20260329.md`
+- `docs/qwen_strict_gpu_runbook_20260329.md`
+
+## 4. 当前默认评测入口
+
+### 先 materialize adapter
+
+```bash
+make materialize-strict-adapter
+```
+
+这会把 handoff 包提取到：
+
+```text
+artifacts/lora/qwen3.5-9b/strict_clean_20260329/
+```
 
 ### FT only
 
 ```bash
-python3 run_ft_eval.py \
-  --cases data/eval_cases.json \
-  --adapter-path 你的_adapter_路径 \
-  --output results/qwen_ft_reproduced.json
+make eval-ft
 ```
 
 ### PE + FT
 
 ```bash
-python3 run_ft_eval.py --strategy pe_ft \
-  --cases data/eval_cases.json \
-  --adapter-path 你的_adapter_路径 \
-  --output results/qwen_pe_ft_reproduced.json
+make eval-ft FT_STRATEGY=pe_ft
 ```
 
 ### PE + RAG + FT
@@ -117,120 +108,95 @@ python3 run_ft_eval.py --strategy pe_ft \
 ```bash
 export EMBEDDING_PROVIDER=google
 export GOOGLE_API_KEY=你的_google_key
-
-python3 run_ft_eval.py --strategy pe_rag_ft \
-  --cases data/eval_cases.json \
-  --repo-root external/celery \
-  --adapter-path 你的_adapter_路径 \
-  --output results/qwen_pe_rag_ft_reproduced.json
+make eval-ft FT_STRATEGY=pe_rag_ft
 ```
 
-## 4. Adapter 路径说明
+如果你已有其他 adapter，也可以显式指定：
 
-历史正式跑线使用的是外部训练目录中的 LoRA adapter，因此仓库里保留的是：
-
-- 正式训练配置
-- 正式训练日志
-- 正式评测结果
-- 正式训练曲线
-
-而不是直接 versioned 的 adapter 权重。
-
-这不影响复现流程：
-
-- 你可以在本地按正式配置重新训练，得到新的 adapter。
-- 评测脚本统一支持显式传入 `--adapter-path`。
-- 如果你已有本地 adapter，也可以通过环境变量 `QWEN_LORA_ADAPTER_PATH` 统一指定。
+```bash
+QWEN_LORA_ADAPTER_PATH=/path/to/adapter python3 run_ft_eval.py --strategy pe_ft
+```
 
 ## 5. 训练证据
 
-当前仓库保留的训练证据包括：
+当前默认训练证据来自 `logs/strict_clean_20260329.train.log`，不是历史正式日志。
 
-- step-level train loss：来自 `logs/train_20260327_143745.log`
-- final train loss：`0.572`
-- final eval loss：`0.4779`
-- train runtime：`0:37:12.92`
-- 可视化曲线：`img/final_delivery/07_training_curve_20260328.png`
-- `data_guard` 的校验范围：对 Celery 内部 FQN 做源码存在性校验，对白名单外部依赖包做显式放行
+当前已经落盘的硬证据包括：
 
-历史正式训练没有逐步 `eval_loss` 曲线，因此判断不过拟合的证据强度是中等，不是最强形式。
+- step-level train loss
+- step-level eval loss
+- 中间 checkpoint：`50 / 100 / 150 / 200 / 250 / 300 / 339`
+- best eval loss：`0.4661`
+- 最后一次 logged eval loss：`0.4664`
+- 训练曲线：`img/final_delivery/07_training_curve_20260328.png`
+- 结构化摘要：`results/training_log_summary_20260329.json`
 
-原因也已经明确：
+因此当前默认训练线已经满足：
 
-- 历史正式配置 `configs/train_config_20260327_143745.yaml` 中，`eval_steps=500`、`save_steps=500`
-- 而这份 500 条训练集在当前 batch 设置下整轮总步数约为 `339`
-- 因此训练过程中不会触发中间 eval，也不会产生逐步 `eval_loss`
+- 有逐步 train / eval 曲线
+- 有中间 checkpoint
+- 有完整 `FT only / PE + FT / PE + RAG + FT` 三组结果
 
-strict 重训配置 `configs/train_config_strict_replay_20260329.yaml` 已修复为：
+历史正式训练线仍保留，但只用于演进对照。它的问题是：
 
-- `eval_steps=50`
-- `save_steps=50`
-- `load_best_model_at_end=true`
-- `metric_for_best_model=eval_loss`
+- `eval_steps=500`
+- `save_steps=500`
+- 估算总步数只有约 `339`
 
-如果你在 strict 配置上重训，建议同时导出：
+所以历史正式训练线不会产生 step-level eval，也不再作为默认答辩证据。
 
-- step-level train loss 曲线
-- step-level eval loss 曲线
-- strict adapter 对应的 `FT only / PE + FT / PE + RAG + FT` 三组结果
+## 6. 数据守卫与污染审计
 
-当前仓库已经落盘的 strict 训练证据包括：
+当前 `data_guard` 默认会做两层检查：
 
-- `logs/strict_clean_20260329.train.log`
-- best checkpoint：`checkpoint-300`
-- final eval loss：`0.4661`
-- strict `FT only`：完整 `54/54`
-- strict `PE + RAG + FT`：完整 `54/54`
-- strict `PE + FT`：完整 `54/54`
+1. 记录格式、difficulty、FQN 合法性、Celery 内部源码存在性
+2. 与 `data/eval_cases.json` 的 overlap 审计
 
-## 6. 资产管理建议
+默认命令：
 
-若你在本仓库内重跑训练，建议统一使用以下目录约定：
+```bash
+python3 -m finetune.data_guard data/finetune_dataset_500_strict.jsonl
+```
+
+它会拒绝：
+
+- exact GT overlap
+- normalized exact question overlap
+- hard question overlap
+
+因此：
+
+- strict-clean 训练集会通过 gate
+- 历史正式训练集会报告 overlap 风险并 fail gate
+
+## 7. 资产管理建议
+
+建议统一按下面的目录约定管理新的训练产物：
 
 - 训练输出：`artifacts/lora/qwen3.5-9b/<run_name>/`
-- 训练日志：`logs/<run_name>.log`
-- 评测结果：`results/<run_name>_stats.json`
+- 训练日志：`logs/<run_name>.train.log`
+- 评测结果：`results/qwen_strict_runs/<run_name>/`
 
-当前正式配置默认写入：
+当前默认 adapter 目录是：
+
+- `artifacts/lora/qwen3.5-9b/strict_clean_20260329`
+
+历史正式目录保留为：
 
 - `artifacts/lora/qwen3.5-9b/formal_20260327_143745`
 
-如果你不想覆盖这个正式目录，复制一份 YAML 配置并修改 `output_dir` 后再启动训练。
+## 8. 什么时候该引用哪套资产
 
-strict 配置默认写入：
+- 如果你是在复述当前最终交付结果，用 strict-clean 资产。
+- 如果你是在解释演进过程或对照历史分数，再引用历史正式资产。
+- 如果你是在回答“有没有训练/评测泄漏”的追问，优先看 strict 审计和 strict-clean 结果。
+- 如果你准备在另一台 GPU 机器上重现这次流程，优先走 strict-clean 资产。
 
-- `artifacts/lora/qwen3.5-9b/strict_replay_20260329`
+## 9. 相关文档
 
-这样可以把“历史正式结果”和“你本次复现结果”分开，避免覆盖。
-
-如果你已经在外部 CUDA 环境上准备复现实验，优先直接使用：
-
-```bash
-make qwen-strict-rerun
-```
-
-它会串起训练、`FT only`、`PE + FT`，以及条件满足时的 `PE + RAG + FT`。
-
-## 7. 什么时候该用正式资产，什么时候该用 strict 资产
-
-- 如果你是在复述历史正式交付结果，用正式资产。
-- 如果你是在回答“有没有训练/评测泄漏”的追问，用 strict 资产。
-- 如果你是在复述当前 strict-clean 最终状态，优先看 `reports/qwen_strict_closeout_20260329.md` 和 `reports/qwen_strict_result_audit_20260329.md`。
-- 如果你准备在另一台 GPU 机器上重现这次流程，优先走 strict 资产，然后重跑 `FT only / PE + FT / PE + RAG + FT`。
-
-补充：
-
-- 当前仓库已经落盘了本机 strict replay 训练前置检查：`results/strict_replay_train_env_20260329.json`
-- 当前仓库也落盘了历史正式配置的前置检查：`results/formal_train_env_20260329.json`
-- 当前仓库已经落盘了训练证据结构化摘要：`results/training_log_summary_20260329.json`
-- 对应说明文档：
-  - `reports/strict_ft_execution_status_20260329.md`
-  - `reports/training_evidence_audit_20260329.md`
-
-## 8. 历史辅助脚本
-
-### `scripts/generate_finetune_data.py`
-
-- 用途：把评测结果转成 bootstrapping 数据。
-- 定位：历史辅助脚本，可继续保留用于派生实验。
-- 备注：不是当前正式 `data/finetune_dataset_500.jsonl` 的权威来源说明。
+- `reports/strict_data_audit_20260329.md`
+- `reports/strict_scoring_audit_20260329.md`
+- `reports/qwen_strict_closeout_20260329.md`
+- `reports/qwen_strict_result_audit_20260329.md`
+- `reports/training_evidence_audit_20260329.md`
+- `docs/qwen_strict_gpu_runbook_20260329.md`

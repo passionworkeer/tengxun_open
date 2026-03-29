@@ -23,8 +23,10 @@
 tengxun/
 ├── data/                    # 正式数据资产
 │   ├── eval_cases.json              # 54 条评测集（核心）
-│   ├── fewshot_examples_20.json    # 20 条 few-shot 示例
-│   └── finetune_dataset_500.jsonl  # 500 条微调数据
+│   ├── fewshot_examples_20_strict.json   # 当前默认 20 条 strict-clean few-shot
+│   ├── finetune_dataset_500_strict.jsonl # 当前默认 500 条 strict-clean 微调数据
+│   ├── fewshot_examples_20.json          # 历史正式 few-shot（归档对照）
+│   └── finetune_dataset_500.jsonl        # 历史正式微调数据（归档对照）
 │
 ├── evaluation/              # 评测模块
 │   ├── baseline.py                   # 数据摘要 / RAG 评测入口
@@ -71,7 +73,7 @@ pip install -r requirements-finetune.txt  # GPU 训练用
 ### 一键复现
 
 ```bash
-# 数据校验
+# 数据校验（当前默认 strict-clean）
 make lint-data
 
 # 基线评测
@@ -140,7 +142,7 @@ make check-train-env-strict  # 环境检查
 
 | 限制 | 说明 | 状态 |
 |------|------|------|
-| **LoRA 权重** | strict-clean adapter 未直接提交到仓库，仅提交配置 / 日志 / 结果与 handoff 包 | ⚠️ 如需原始权重需外部保存 |
+| **LoRA 权重** | strict-clean adapter 通过 handoff 包分发，默认可 `make materialize-strict-adapter` 提取 | ✅ 默认复现链路已接通 |
 | **Embedding Cache** | 约 326MB，未进 git（`artifacts/` 已 .gitignore） | 可用 `scripts/precompute_embeddings.py` 重建 |
 | **历史结果并存** | 仓库同时保留历史正式线和 strict-clean 线，需要按文档口径区分使用 | ✅ 已在 README / 报告中标注 |
 | **商业模型 API Key** | GPT/GLM 评测依赖 API Key | ⚠️ 需用户提供 |

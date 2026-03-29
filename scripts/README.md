@@ -19,6 +19,7 @@ python3 scripts/generate_defense_deck_20260329.py
 # strict 数据审计与重评分
 python3 scripts/build_strict_datasets.py
 python3 scripts/rescore_official_results.py
+python3 scripts/materialize_strict_adapter.py
 ```
 
 ## PE 评测（GPT/GLM，通过 API）
@@ -43,6 +44,7 @@ bash scripts/run_qwen_strict_full.sh
 | `generate_final_delivery_assets.py` | 生成最终图表（需要 matplotlib） |
 | `generate_defense_deck_20260329.py` | 生成答辩 PPT |
 | `generate_project_progress_report.py` | 生成项目进度报告 |
+| `materialize_strict_adapter.py` | 从 strict-clean handoff 包提取默认 adapter |
 | `generate_eval_status_report.py` | 生成评测状态报告 |
 | `precompute_embeddings.py` | 预计算 embedding 缓存 |
 | `recover_qwen_baseline.py` | 恢复 Qwen strict baseline |
@@ -87,6 +89,7 @@ llamafactory-cli serve --config configs/llm.toml
 
 - `results/qwen_strict_runs/strict_clean_20260329/`
 - `reports/qwen_strict_result_audit_20260329.md`
+- `make eval-ft` / `make materialize-strict-adapter`
 
 ## 历史 / 辅助脚本
 

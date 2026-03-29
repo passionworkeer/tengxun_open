@@ -634,9 +634,9 @@ def build_deck() -> Presentation:
     add_bullets(
         slide,
         [
-            "The training curve is stable and the final eval_loss is 0.4779",
-            "Evidence for 'no overfitting' is moderate, not maximal, because the historical run did not keep a full step-wise eval curve",
-            "The strict replay config now fixes this with eval_steps/save_steps=50 and best-checkpoint selection",
+            "The current strict-clean training curve is stable, with best eval_loss 0.4661 and last logged eval_loss 0.4664",
+            "This run keeps a step-wise eval curve and intermediate checkpoints, so the training evidence is materially stronger than the historical formal run",
+            "The strict replay config fixed the old issue by using eval_steps/save_steps=50 and best-checkpoint selection",
             "GLM official thinking mode was explored but not included in the formal matrix because both stream and non-stream smoke runs stalled on the first case",
             "Strict assets are the recommended path for replay and defense hardening",
         ],

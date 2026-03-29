@@ -6544,8 +6544,10 @@
   },
   "training": {
     "point_count": 33,
-    "final_train_loss": 0.572,
-    "final_eval_loss": 0.4779,
-    "train_runtime": "2233"
+    "eval_point_count": 7,
+    "final_train_loss": 0.5776,
+    "final_eval_loss": 0.4661,
+    "best_eval_loss": 0.4661,
+    "train_runtime": "2507"
   }
 }

@@ -1,10 +1,10 @@
 # 微调训练证据审计（2026-03-29）
 
-这份审计不替代正式训练日志，而是把已有日志整理成更容易答辩引用的结构化结论。
+这份审计不替代原始训练日志，而是把**当前默认 strict-clean 训练证据**整理成更容易答辩引用的结构化结论。
 
-原始日志：`logs/train_20260327_143745.log`  
+当前权威日志：`logs/strict_clean_20260329.train.log`  
 结构化摘要：`results/training_log_summary_20260329.json`  
-正式配置前置检查：`results/formal_train_env_20260329.json`  
+历史正式配置前置检查：`results/formal_train_env_20260329.json`  
 strict replay 前置检查：`results/strict_replay_train_env_20260329.json`
 
 ## 1. 已提取出的硬证据
@@ -13,7 +13,7 @@ strict replay 前置检查：`results/strict_replay_train_env_20260329.json`
 
 ```bash
 python3 scripts/analyze_training_log.py \
-  --log logs/train_20260327_143745.log \
+  --log logs/strict_clean_20260329.train.log \
   --output results/training_log_summary_20260329.json
 ```
 
@@ -22,58 +22,55 @@ python3 scripts/analyze_training_log.py \
 | 指标 | 数值 |
 |---|---:|
 | step-level train loss 点数 | `33` |
-| 首个 logged train loss | `1.6770` |
-| 最后一个 logged train loss | `0.4021` |
-| 最低 logged train loss | `0.3247` |
-| 最终 train loss | `0.5720` |
-| 最终 eval loss | `0.4779` |
-| 训练时长 | `0:37:12.92` |
-| 最终评测时长 | `0:00:19.77` |
+| step-level eval loss 点数 | `7` |
+| 首个 logged train loss | `1.6810` |
+| 最后一个 logged train loss | `0.3306` |
+| 最低 logged train loss | `0.3124` |
+| best eval loss | `0.4661` |
+| 最后一次 logged eval loss | `0.4664` |
+| checkpoint | `50 / 100 / 150 / 200 / 250 / 300 / 339` |
 
 补充统计：
 
-- 从首个 logged train loss 到最后一个 logged train loss，下降了 `1.2749`
-- `32` 个相邻步中，有 `18` 个是下降的
-- 日志里没有 step-level `eval_loss` 曲线
+- 从首个 logged train loss 到最后一个 logged train loss，下降了约 `1.3504`
+- `eval_loss` 从 `0.7476` 逐步下降到 `0.4661`
+- best eval loss 出现在 `checkpoint-300`
 
 ## 2. 可以成立的结论
 
 基于当前日志，以下说法是成立的：
 
 - 训练 loss 整体呈下降趋势，不存在明显发散
-- 最终 `eval_loss = 0.4779` 低于最终 `train_loss = 0.5720`
-- 当前证据支持“训练过程收敛稳定”，不支持“出现明显后期崩溃或过拟合尖峰”
+- 验证集 loss 有逐步记录，而不是只有最终单点
+- 当前证据支持“训练过程收敛稳定，且有逐步验证集监控”
+- 由于启用了 `load_best_model_at_end`，当前最终装载模型对应的 eval loss 可按 `0.4661` 理解
 
-## 3. 不能过度声称的部分
+## 3. 仍需保持克制的部分
 
-以下说法仍然不能讲得太满：
+以下说法仍然要讲清边界：
 
-- 不能说“已经有完整的逐步验证集曲线证明不过拟合”
-- 不能说“已经做了最强形式的 overfitting monitoring”
+- 不能把历史正式训练线和当前 strict-clean 训练线混成一个结论
+- 不能仅凭 loss 曲线就宣称“泛化已经被完全证明”
 
 原因很明确：
 
-- 日志里只有最终 `eval_loss`
-- `llamafactory` 在本次正式跑线上没有产出 step-level `eval_loss` plot
-- 原始日志里仍然保留了 `No metric eval_loss to plot`
-- `results/formal_train_env_20260329.json` 还显示：
-  - `estimated_total_steps ≈ 339`
-  - `eval_steps = 500`
-  - `save_steps = 500`
-  - 因此不会触发中间 eval，也不会产生中间 checkpoint
+- 历史正式训练线确实只有最终 `eval_loss`
+- 当前更强的训练证据来自 strict-clean 日志，而不是历史正式日志
+- 因此答辩时应明确“当前默认训练证据已经补强”，不要回退去引用旧结论
 
 ## 4. 更稳妥的答辩表述
 
 建议统一成这句话：
 
-> 正式训练日志保留了 33 个 step-level train loss 点和最终 `eval_loss=0.4779`。现有证据显示训练过程收敛稳定、没有明显发散，但由于没有逐步验证集曲线，关于“不过拟合”的证据强度仍然是中等，不是最强形式。
+> 当前默认 strict-clean 训练日志保留了逐步 train / eval 曲线和中间 checkpoint。现有证据显示训练过程收敛稳定、best eval loss 出现在 `checkpoint-300`，已经满足“有监控过拟合”的验收要求；历史正式训练线则仅保留作归档对照。
 
-## 5. 下一步怎样把证据补到最硬
+## 5. 历史正式训练线为什么不再作默认证据
 
-如果后续在 strict-clean 训练线上重跑，建议同时保证三件事：
+历史正式日志 `logs/train_20260327_143745.log` 仍保留，但它的边界也已经明确：
 
-1. 保存 step-level train loss
-2. 保存 step-level eval loss
-3. 把 strict adapter 对应的 `FT only / PE + FT / PE + RAG + FT` 一起重评
+- `estimated_total_steps ≈ 339`
+- `eval_steps = 500`
+- `save_steps = 500`
+- 因此不会触发中间 eval，也不会产生逐步 `eval_loss`
 
-这样答辩时就可以把“训练证据强度中等”进一步升级成“训练与验证双曲线完整保留”。
+这条历史训练线现在只用于演进对照，不再作为当前默认交付的训练证据入口。

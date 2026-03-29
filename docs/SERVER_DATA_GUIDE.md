@@ -22,10 +22,10 @@
 | 文件 | 数量 | 角色 | 说明 |
 |------|------|------|------|
 | `data/eval_cases.json` | 54 | 正式 | 正式评测集，全部手工标注 |
-| `data/fewshot_examples_20.json` | 20 | 正式 | Few-shot 示例池 |
-| `data/finetune_dataset_500.jsonl` | 500 | 正式 | LoRA 微调数据 |
-| `data/fewshot_examples_20_strict.json` | 20 | strict 复验 | 去除 exact GT / hard question overlap 的 few-shot 变体 |
-| `data/finetune_dataset_500_strict.jsonl` | 500 | strict 复验 | 去除 exact GT / hard question overlap 的微调变体 |
+| `data/fewshot_examples_20_strict.json` | 20 | 当前默认 | 去除 exact GT / hard question overlap 的 few-shot 变体 |
+| `data/finetune_dataset_500_strict.jsonl` | 500 | 当前默认 | 去除 exact GT / hard question overlap 的微调变体 |
+| `data/fewshot_examples_20.json` | 20 | 历史正式 | Few-shot 示例池，保留作归档对照 |
+| `data/finetune_dataset_500.jsonl` | 500 | 历史正式 | LoRA 微调数据，保留作归档对照 |
 | `data/hard_samples_expanded.jsonl` | 100 | 辅助 | hard 场景扩展样本 |
 | `data/pyan3_generated_samples.jsonl` | 50 | 辅助 | Pyan3 静态图生成样本 |
 | `data/audit_results.jsonl` | ~1000 | 辅助 | 审计原始结果 |
@@ -113,8 +113,8 @@
 
 补充说明：
 
+- 当前默认交付 few-shot 是 `fewshot_examples_20_strict.json`。
 - `fewshot_examples_20.json` 是历史正式 few-shot 资产。
-- 若目标是严格答辩或去污染复验，使用 `fewshot_examples_20_strict.json`。
 - `pe/prompt_templates_v2.py` 支持通过 `FEWSHOT_DATA_PATH` 切换到 strict few-shot。
 
 ---
@@ -123,7 +123,7 @@
 
 ### 用途
 
-正式 `500` 条 LoRA 微调训练数据。
+当前默认 `500` 条 strict-clean LoRA 微调训练数据。
 
 ### 数据结构
 
@@ -148,8 +148,9 @@
 
 补充说明：
 
+- 当前默认微调集是 `finetune_dataset_500_strict.jsonl`。
 - `finetune_dataset_500.jsonl` 是历史正式 500 条训练资产。
-- 若目标是严格答辩或去污染复验，使用 `finetune_dataset_500_strict.jsonl`，并配合权威 strict replay 配置 `configs/train_config_strict_replay_20260329.yaml` / `make train-strict`。
+- 若目标是重放 strict 训练流程，使用 `finetune_dataset_500_strict.jsonl`，并配合 `configs/strict_clean_20260329.yaml` / `make train`。
 - `configs/train_config_strict_20260329.yaml` 仅保留为第一版 strict 草案，不再作为推荐重训入口。
 
 ---
@@ -200,13 +201,13 @@ python3 scripts/rescore_result_file.py \
     --path results/gpt5_eval_results.json
 ```
 
-### 2. 校验正式微调数据
+### 2. 校验当前默认微调数据
 
 ```bash
-python3 -m finetune.data_guard data/finetune_dataset_500.jsonl
-
-# strict 复验版
 python3 -m finetune.data_guard data/finetune_dataset_500_strict.jsonl
+
+# 历史正式归档版
+python3 -m finetune.data_guard data/finetune_dataset_500.jsonl
 ```
 
 ### 3. 重建正式 embedding cache
@@ -219,7 +220,7 @@ python3 scripts/precompute_embeddings.py
 
 ### 4. 使用 few-shot 示例
 
-读取 `data/fewshot_examples_20.json`，在 Prompt 组装阶段按失效类型挑选相关示例注入。
+读取 `data/fewshot_examples_20_strict.json`，在 Prompt 组装阶段按失效类型挑选相关示例注入。
 
 ---
 
@@ -228,10 +229,10 @@ python3 scripts/precompute_embeddings.py
 | 文件 | 验证状态 | 说明 |
 |------|---------|------|
 | `eval_cases.json` | ✅ 已验证 | `54` 条全部人工审核 |
-| `fewshot_examples_20.json` | ✅ 已验证 | `20` 条正式 few-shot，保留历史正式口径 |
-| `fewshot_examples_20_strict.json` | ✅ strict 已验证 | 去除 exact GT / hard question overlap 的复验版 |
-| `finetune_dataset_500.jsonl` | ✅ 已验证 | `500` 条正式训练数据，保留历史正式口径 |
-| `finetune_dataset_500_strict.jsonl` | ✅ strict 已验证 | 去除 exact GT / hard question overlap 的复验版 |
+| `fewshot_examples_20_strict.json` | ✅ 当前默认 | 去除 exact GT / hard question overlap 的当前 few-shot 入口 |
+| `fewshot_examples_20.json` | ✅ 已验证 | `20` 条历史正式 few-shot，保留历史口径 |
+| `finetune_dataset_500_strict.jsonl` | ✅ 当前默认 | 去除 exact GT / hard question overlap 的当前微调入口 |
+| `finetune_dataset_500.jsonl` | ⚠️ 历史正式 | `500` 条历史训练数据，默认 gate 现在会报告 overlap 风险 |
 | `hard_samples_expanded.jsonl` | ✅ 已整理 | 辅助样本，不是正式评测集 |
 | `pyan3_generated_samples.jsonl` | ⚠️ 辅助数据 | 不纳入正式交付口径 |
 

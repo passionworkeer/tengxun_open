@@ -9,8 +9,10 @@
 | 资产 | 路径 | 说明 |
 |------|------|------|
 | 正式评测集 | `data/eval_cases.json` | 54 条，全部手工标注 |
-| 正式 few-shot | `data/fewshot_examples_20.json` | 20 条 |
-| 正式微调集 | `data/finetune_dataset_500.jsonl` | 500 条 |
+| 当前默认 few-shot | `data/fewshot_examples_20_strict.json` | 20 条，strict-clean |
+| 当前默认微调集 | `data/finetune_dataset_500_strict.jsonl` | 500 条，strict-clean |
+| 历史正式 few-shot | `data/fewshot_examples_20.json` | 历史正式资产，仅作归档对照 |
+| 历史正式微调集 | `data/finetune_dataset_500.jsonl` | 历史正式资产，仅作归档对照 |
 
 ## 2. 正式结果资产
 
@@ -25,12 +27,12 @@
 | Qwen PE only | `results/qwen_pe_only_20260328_stats.json` | 正式结果 |
 | Qwen RAG only | `results/qwen_rag_only_google_20260328_stats.json` | 正式结果 |
 | Qwen PE + RAG | `results/qwen_pe_rag_google_20260328_stats.json` | 正式结果 |
-| Qwen FT only | `results/qwen_ft_20260327_160136_stats.json` | 历史正式 FT 结果（与 strict-clean FT only 一致） |
-| Qwen PE + FT | `results/qwen_pe_ft_20260327_162308_stats.json` | 历史正式 FT 结果 |
-| Qwen PE + RAG + FT | `results/qwen_pe_rag_ft_google_20260328_stats.json` | 历史正式 FT 结果 |
-| Qwen strict-clean FT only | `results/qwen_strict_runs/strict_clean_20260329/qwen_ft_strict_metrics.json` | strict-clean 54-case |
-| Qwen strict-clean PE + RAG + FT | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict_metrics.json` | strict-clean 54-case 最优 |
-| Qwen strict-clean PE + FT | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict_metrics.json` | strict-clean 54-case |
+| Qwen strict-clean FT only | `results/qwen_strict_runs/strict_clean_20260329/qwen_ft_strict_metrics.json` | 当前默认 strict-clean 54-case |
+| Qwen strict-clean PE + FT | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict_metrics.json` | 当前默认 strict-clean 54-case |
+| Qwen strict-clean PE + RAG + FT | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict_metrics.json` | 当前默认 strict-clean 54-case 最优 |
+| Qwen FT only（历史正式） | `results/qwen_ft_20260327_160136_stats.json` | 历史正式 FT 结果 |
+| Qwen PE + FT（历史正式） | `results/qwen_pe_ft_20260327_162308_stats.json` | 历史正式 FT 结果 |
+| Qwen PE + RAG + FT（历史正式） | `results/qwen_pe_rag_ft_google_20260328_stats.json` | 历史正式 FT 结果 |
 
 ## 3. 正式报告资产
 
@@ -59,10 +61,12 @@
 
 | 资产 | 路径 | 说明 |
 |------|------|------|
-| 训练配置 | `configs/train_config_20260327_143745.yaml` | 正式 LoRA 配置 |
-| 数据映射 | `dataset_info.json` | `fintune_qwen_dep` -> `finetune_dataset_500.jsonl` |
-| 训练日志 | `logs/train_20260327_143745.log` | 正式训练运行日志 |
-| 训练曲线 | `img/final_delivery/07_training_curve_20260328.png` | 基于正式日志导出 |
+| 当前默认训练配置 | `configs/strict_clean_20260329.yaml` | strict-clean LoRA 配置 |
+| 当前默认数据映射 | `dataset_info.json` | `fintune_qwen_dep_strict` -> `finetune_dataset_500_strict.jsonl` |
+| 当前默认训练日志 | `logs/strict_clean_20260329.train.log` | 含逐步 train/eval 曲线 |
+| 当前默认训练曲线 | `img/final_delivery/07_training_curve_20260328.png` | 基于 strict-clean 日志导出 |
+| 历史正式训练配置 | `configs/train_config_20260327_143745.yaml` | 历史正式 LoRA 配置 |
+| 历史正式训练日志 | `logs/train_20260327_143745.log` | 历史正式训练运行日志 |
 
 ## 6. 大体积本地资产
 
@@ -71,7 +75,7 @@
 | 资产 | 路径 | 说明 |
 |------|------|------|
 | Google embedding cache | `artifacts/rag/embeddings_cache_google_gemini_embedding_001_3072.json` | 当前机器已有完整 cache |
-| LoRA adapter weights | 本地训练输出目录 | 评测脚本支持 `--adapter-path` 显式指定 |
+| strict-clean adapter handoff | `artifacts/handoff/strict_clean_20260329_minimal.tar.gz` | 可通过 `make materialize-strict-adapter` 提取 |
 
 ## 7. 历史归档
 
