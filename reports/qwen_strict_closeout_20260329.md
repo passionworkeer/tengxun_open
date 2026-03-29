@@ -65,11 +65,26 @@ export DISABLE_VERSION_CHECK=1
 llamafactory-cli train configs/strict_clean_20260329.yaml
 
 # 评测
-python3 run_ft_eval.py --cases data/eval_cases.json --adapter-path artifacts/lora/qwen3.5-9b/strict_clean_20260329 --output results/qwen_strict_runs/strict_clean_20260329/qwen_ft_strict.json
+python3 run_ft_eval.py \
+  --strategy ft \
+  --cases data/eval_cases.json \
+  --adapter-path artifacts/lora/qwen3.5-9b/strict_clean_20260329 \
+  --output results/qwen_strict_runs/strict_clean_20260329/qwen_ft_strict.json
 
-FEWSHOT_DATA_PATH=data/fewshot_examples_20_strict.json python3 run_pe_ft_eval.py --cases data/eval_cases.json --adapter-path artifacts/lora/qwen3.5-9b/strict_clean_20260329 --output results/qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict.json
+FEWSHOT_DATA_PATH=data/fewshot_examples_20_strict.json \
+python3 run_ft_eval.py \
+  --strategy pe_ft \
+  --cases data/eval_cases.json \
+  --adapter-path artifacts/lora/qwen3.5-9b/strict_clean_20260329 \
+  --output results/qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict.json
 
-GOOGLE_API_KEY=xxx FEWSHOT_DATA_PATH=data/fewshot_examples_20_strict.json python3 run_pe_rag_ft_eval.py --cases data/eval_cases.json --repo-root external/celery --adapter-path artifacts/lora/qwen3.5-9b/strict_clean_20260329 --output results/qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict.json
+GOOGLE_API_KEY=xxx FEWSHOT_DATA_PATH=data/fewshot_examples_20_strict.json \
+python3 run_ft_eval.py \
+  --strategy pe_rag_ft \
+  --cases data/eval_cases.json \
+  --repo-root external/celery \
+  --adapter-path artifacts/lora/qwen3.5-9b/strict_clean_20260329 \
+  --output results/qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict.json
 
 # 打包
 RUN_NAME=strict_clean_20260329 INCLUDE_ADAPTER=1 ./scripts/package_qwen_strict_run.sh
@@ -80,5 +95,5 @@ RUN_NAME=strict_clean_20260329 INCLUDE_ADAPTER=1 ./scripts/package_qwen_strict_r
 strict-clean 训练和三组评测都已落盘，下面三句话可以无保留对外使用：
 
 - "FT 增益不依赖训练集 overlap"
-- "Qwen strict-clean 默认路线是 `PE + RAG + FT`"
+- "Qwen strict-clean 默认最强路线是 `PE + RAG + FT`，低复杂度路线是 `PE + FT`"
 - "开源模型最优路线已经完成 strict-clean 闭环"

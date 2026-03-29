@@ -146,9 +146,9 @@
 
 ### 开源模型
 
-- 历史正式最高分：`Qwen PE + RAG + FT`
-- 历史正式默认路线：`Qwen PE + FT`
-- 最严格口径下补一句：strict-clean FT rerun pending
+- strict-clean 最高分：`Qwen PE + RAG + FT`
+- strict-clean 低复杂度路线：`Qwen PE + FT`
+- 历史正式 `Qwen PE + FT = 0.4315` 只作归档对照
 
 最后一句：
 

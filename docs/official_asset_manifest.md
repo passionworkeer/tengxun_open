@@ -30,7 +30,7 @@
 | Qwen PE + RAG + FT | `results/qwen_pe_rag_ft_google_20260328_stats.json` | 历史正式 FT 结果 |
 | Qwen strict-clean FT only | `results/qwen_strict_runs/strict_clean_20260329/qwen_ft_strict_metrics.json` | strict-clean 54-case |
 | Qwen strict-clean PE + RAG + FT | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict_metrics.json` | strict-clean 54-case 最优 |
-| Qwen strict-clean PE + FT | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict_metrics.json` | strict replay 当前仅 48/54 |
+| Qwen strict-clean PE + FT | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict_metrics.json` | strict-clean 54-case |
 
 ## 3. 正式报告资产
 
@@ -100,5 +100,5 @@
 说明：
 
 - GPT strict PE 结果已落盘，可直接用于答辩。
-- Qwen strict-clean 训练已经完成，`FT only` 与 `PE + RAG + FT` 已完整落盘。
-- `Qwen PE + FT strict replay` 当前只有 `48/54`，因此仍应和历史正式完整 `54-case` 结果分开汇报。
+- Qwen strict-clean 训练已经完成，`FT only / PE + FT / PE + RAG + FT` 已完整落盘。
+- 历史正式 `Qwen PE + FT = 0.4315` 与 strict-clean `Qwen PE + FT = 0.3865` 应明确区分；当前主汇报优先使用 strict-clean 结果。

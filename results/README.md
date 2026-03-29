@@ -16,6 +16,7 @@
 | Qwen3.5-9B PE+FT | `qwen_pe_ft_20260327_162308.json` | PE+FT（历史正式线）|
 | Qwen3.5-9B PE+RAG+FT | `qwen_pe_rag_ft_google_20260328.json` | 完整组合（历史正式线最高分）|
 | Qwen3.5-9B strict-clean FT | `qwen_strict_runs/strict_clean_20260329/qwen_ft_strict_metrics.json` | strict-clean 54-case |
+| Qwen3.5-9B strict-clean PE+FT | `qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict_metrics.json` | strict-clean 54-case |
 | Qwen3.5-9B strict-clean PE+RAG+FT | `qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict_metrics.json` | strict-clean 54-case 最优 |
 
 ## PE 分项结果
@@ -30,8 +31,8 @@ pe_targeted_full_20260329/      # targeted few-shot 全量结果
 ## Strict 口径结果（2026-03-29）
 
 ```
-strict_metrics_20260329/       # 全模型 strict 重评分
-  ├── summary.json             # ⚠️ 最权威数字汇总表
+strict_metrics_20260329/       # 历史正式结果的 strict 重评分快照
+  ├── summary.json             # 历史正式线 strict 汇总，不是 strict-clean FT family 的最新权威表
   ├── gpt_baseline.json
   ├── gpt_rag_e2e.json
   ├── pe_baseline.json
@@ -49,7 +50,7 @@ strict_metrics_20260329/       # 全模型 strict 重评分
   └── qwen_pe_rag_ft.json
 ```
 
-另外，strict-clean GPU 运行的原始结果位于：
+另外，strict-clean GPU 运行的最终结果位于：
 
 ```text
 qwen_strict_runs/strict_clean_20260329/
@@ -66,8 +67,8 @@ qwen_strict_runs/strict_clean_20260329/
 
 注意：
 
-- `qwen_pe_ft_strict.*` 当前只覆盖 `48/54` 条样本。
-- 完整度审计见：`reports/qwen_strict_result_audit_20260329.md`
+- `qwen_ft_strict.* / qwen_pe_ft_strict.* / qwen_pe_rag_ft_strict.*` 现在都已覆盖 `54/54` 条样本。
+- strict-clean FT family 的最终权威结果，请优先看 `qwen_strict_runs/strict_clean_20260329/` 目录和 `reports/qwen_strict_result_audit_20260329.md`。
 
 ## RAG 检索结果
 

@@ -2,6 +2,11 @@
 
 ## 总览
 
+> 说明：下表的 `qwen_pe_ft / qwen_pe_rag_ft` 行是对**历史正式结果**做 strict 重评分后的快照，  
+> 不是 2026-03-29 strict-clean 重训后的 FT family 最新结果。strict-clean 最终结果请优先看：
+> - `reports/qwen_strict_closeout_20260329.md`
+> - `reports/qwen_strict_result_audit_20260329.md`
+
 | Experiment | Avg Union F1 | Avg Active-Layer Macro F1 | Avg Mislayer Rate | Exact Layer Match Rate |
 |---|---:|---:|---:|---:|
 | gpt_baseline | 0.2815 | 0.1652 | 0.1954 | 0.0741 |
@@ -36,4 +41,3 @@
 - `macro F1` 是 strict 主口径，只对 gold 或 prediction 非空的 active layers 求平均。
 - `mislayer rate` 衡量“FQN 命中了，但放错层”的比例；越高越差。
 - `layer penalty = union - active-layer macro` 只作为辅助参考，不再单独作为主结论指标。
-

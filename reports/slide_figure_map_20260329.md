@@ -73,14 +73,14 @@
 关键数字：
 
 - FT only `0.0932`
-- 历史正式 PE + FT `0.4315`
+- strict-clean PE + FT `0.3865`
 - strict-clean PE + RAG + FT `0.5018`
-- strict `PE + FT` 当前 `48/54 = 0.3465`，不放进完整 `54-case` 主排名
+- 历史正式 PE + FT `0.4315`（归档对照）
 
 ## 最容易挂错的点
 
 1. `0.6062` 是 GPT 原始正式 PE union 结果，不是 strict 最优。
 2. strict GPT PE 最优必须写成 `0.6338 / 0.4757 / 0.1620`。
 3. `GLM thinking` 不是正式主实验结果，不能出现在主表里。
-4. `Qwen PE + FT` 是历史正式默认路线，`Qwen PE + RAG + FT` 才是历史正式开源最高分。
-5. 如果导师按最严格口径追问，必须补一句：`Qwen PE + FT strict replay` 当前只有 `48/54`，完整 `54-case` 仍参考历史正式结果。
+4. 当前主口径应优先使用 strict-clean：`Qwen PE + FT = 0.3865`，`Qwen PE + RAG + FT = 0.5018`。
+5. 历史正式 `Qwen PE + FT = 0.4315` 仍可保留为演进对照，但不能覆盖 strict-clean 主结论。

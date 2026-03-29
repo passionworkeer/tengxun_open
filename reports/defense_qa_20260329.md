@@ -113,8 +113,8 @@ RAG 的价值主要在：
 但如果导师继续追问 Qwen 的 FT 家族，我会明确补充：
 
 - strict-clean 训练已经完成
-- strict-clean `FT only` 和 `PE + RAG + FT` 都已完整落盘
-- `PE + FT strict replay` 当前只有 `48/54`，所以仍应和历史正式完整 `PE + FT = 0.4315` 分开汇报
+- strict-clean `FT only / PE + FT / PE + RAG + FT` 都已完整落盘
+- 当前主汇报优先使用 strict-clean 结果；历史正式 `PE + FT = 0.4315` 只保留为归档对照
 
 ## Q11. 为什么你说开源模型不是 FT 单独最有效，而是 PE+FT？
 
@@ -135,8 +135,8 @@ RAG 的价值主要在：
 如果是开源模型：
 
 - strict-clean 最强完整路线：`Qwen PE + RAG + FT`
-- 历史正式完整默认路线参考：`Qwen PE + FT`
-- 最严格口径下要补一句：`Qwen PE + FT strict replay` 当前只有 `48/54`
+- strict-clean 低复杂度路线：`Qwen PE + FT`
+- 历史正式 `Qwen PE + FT = 0.4315` 只作为归档参考
 
 ## Q13. 你的项目最有说服力的地方是什么？
 

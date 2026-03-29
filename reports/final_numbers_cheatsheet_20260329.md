@@ -11,7 +11,7 @@
 7. GPT RAG 端到端：`0.2940`
 8. Qwen strict baseline：`0.0370`
 9. Qwen strict-clean `PE + RAG + FT`：`0.5018`
-10. Qwen strict `PE + FT` 当前 `48/54 = 0.3465`；历史正式完整 `PE + FT = 0.4315`
+10. Qwen strict-clean `PE + FT`：`0.3865`；历史正式 `PE + FT = 0.4315` 只作归档参考
 
 ## 2. 商业模型口径
 
@@ -53,7 +53,7 @@
 ### Qwen 组合
 
 - strict-clean PE + RAG + FT：`0.5018`
-- strict-clean PE + FT：`0.3465`（当前仅 `48/54`）
+- strict-clean PE + FT：`0.3865`
 - 历史正式 PE + FT：`0.4315`
 - PE + RAG：`0.1534`
 - 历史正式 PE + RAG + FT：`0.4435`
@@ -78,8 +78,8 @@
 - GPT 正式 PE `0.6062` 是原始正式 54-case union 结果，不是 strict 最优
 - strict GPT PE 最优是 `postprocess_targeted 0.6338 / 0.4757 / 0.1620`
 - Qwen 当前最强的完整 strict-clean 路线是 `PE + RAG + FT = 0.5018`
-- Qwen 默认高性价比路线如需讲完整 `54-case`，仍引用历史正式 `PE + FT = 0.4315`
-- 如果导师按最严格口径追问，必须补充“strict `PE + FT` 当前只有 `48/54`”
+- Qwen strict-clean 低复杂度路线是 `PE + FT = 0.3865`
+- 历史正式 `PE + FT = 0.4315` 只作归档参考，不再是主汇报默认值
 - GLM `thinking` 没有进入正式主实验矩阵
 
 ## 6. 一句话口播版

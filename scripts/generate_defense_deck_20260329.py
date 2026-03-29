@@ -544,7 +544,7 @@ def build_deck() -> Presentation:
     add_picture(slide, "img/final_delivery/06_qwen_strategies_20260328.png", 0.65, 1.2, 7.1, 4.5)
     add_stat_card(slide, 8.2, 1.35, 1.35, 0.9, label="FT only", value="0.0932", accent=COLORS["amber"])
     add_stat_card(slide, 9.75, 1.35, 1.35, 0.9, label="PE only", value="0.2246", accent=COLORS["sky"])
-    add_stat_card(slide, 11.3, 1.35, 1.35, 0.9, label="PE + FT", value="0.4315", accent=COLORS["mint"])
+    add_stat_card(slide, 11.3, 1.35, 1.35, 0.9, label="PE + FT", value="0.3865", accent=COLORS["mint"])
     add_card(
         slide,
         8.1,
@@ -562,7 +562,7 @@ def build_deck() -> Presentation:
         4.7,
         1.15,
         title="Best open-source route",
-        body="Highest score: PE + RAG + FT = 0.4435\nDefault cost-effective route: PE + FT = 0.4315",
+        body="Highest strict-clean score: PE + RAG + FT = 0.5018\nLower-complexity strict route: PE + FT = 0.3865",
         accent=COLORS["sky"],
     )
     add_footer(slide, "Formal ablation matrix: reports/ablation_study.md")
@@ -589,7 +589,7 @@ def build_deck() -> Presentation:
         3.8,
         2.0,
         title="Open-source highest score",
-        body="Use Qwen PE + RAG + FT when discussing the historical formal matrix.\nStrict-clean FT rerun is still pending on a GPU environment.",
+        body="Use Qwen PE + RAG + FT as the current strict-clean highest-score route.\nIt is the strongest complete open-source path in the repo.",
         accent=COLORS["mint"],
         fill=RGBColor(30, 41, 59),
     )
@@ -600,7 +600,7 @@ def build_deck() -> Presentation:
         3.8,
         2.0,
         title="Open-source default route",
-        body="Use Qwen PE + FT as the historical formal default route.\nPromote it as strict-clean only after the FT family rerun lands.",
+        body="Use Qwen PE + FT as the lower-complexity strict-clean route.\nKeep historical 0.4315 only as an archived comparison point.",
         accent=COLORS["amber"],
         fill=RGBColor(30, 41, 59),
     )

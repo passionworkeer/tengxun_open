@@ -173,14 +173,14 @@ Qwen strict baseline 非常低，strict-clean `FT only` 依然只有 `0.0932`，
 ### 开源模型
 
 - strict-clean 最强完整路线：`Qwen PE + RAG + FT = 0.5018`
-- 历史正式完整 `54-case` 高性价比参考路线：`Qwen PE + FT = 0.4315`
-- 严格口径下要主动补充：`Qwen PE + FT strict replay` 当前只有 `48/54`
+- strict-clean 低复杂度路线：`Qwen PE + FT = 0.3865`
+- 历史正式 `Qwen PE + FT = 0.4315` 只作为归档对照，不再作为主口径
 
 ### 工程上怎么落地
 
 1. 默认先走 `PE`
 2. Hard / Type A / Type E 场景再开 `RAG`
-3. 如果用开源模型部署并追求当前最强完整结果，就选 `Qwen PE + RAG + FT`；如果强调较低复杂度，则把 `Qwen PE + FT` 明确标成历史正式完整参考路线
+3. 如果用开源模型部署并追求当前最强完整结果，就选 `Qwen PE + RAG + FT`；如果强调较低复杂度，则选 strict-clean `Qwen PE + FT`
 
 ## 7. 一句话总结
 
