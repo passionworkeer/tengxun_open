@@ -115,9 +115,13 @@ if [[ ! -d "$ADAPTER_PATH" ]]; then
   exit 1
 fi
 
+FEWSHOT_DATA_PATH="${FEWSHOT_DATA_PATH:-data/fewshot_examples_20_strict.json}"
+export FEWSHOT_DATA_PATH
+
 echo
 echo "[5/7] FT only eval"
 PYTHONPATH=. "$PYTHON_BIN" run_ft_eval.py \
+  --strategy ft \
   --cases data/eval_cases.json \
   --adapter-path "$ADAPTER_PATH" \
   --output "$RUN_ROOT/qwen_ft_strict.json"
@@ -128,8 +132,8 @@ PYTHONPATH=. "$PYTHON_BIN" run_ft_eval.py \
 
 echo
 echo "[6/7] PE + FT eval"
-FEWSHOT_DATA_PATH=data/fewshot_examples_20_strict.json \
-PYTHONPATH=. "$PYTHON_BIN" run_pe_ft_eval.py \
+PYTHONPATH=. "$PYTHON_BIN" run_ft_eval.py \
+  --strategy pe_ft \
   --cases data/eval_cases.json \
   --adapter-path "$ADAPTER_PATH" \
   --output "$RUN_ROOT/qwen_pe_ft_strict.json"
@@ -148,8 +152,8 @@ fi
 if [[ "$run_rag" == "1" ]]; then
   echo
   echo "[7/7] PE + RAG + FT eval"
-  FEWSHOT_DATA_PATH=data/fewshot_examples_20_strict.json \
-  PYTHONPATH=. "$PYTHON_BIN" run_pe_rag_ft_eval.py \
+  PYTHONPATH=. "$PYTHON_BIN" run_ft_eval.py \
+    --strategy pe_rag_ft \
     --cases data/eval_cases.json \
     --repo-root "$REPO_ROOT" \
     --adapter-path "$ADAPTER_PATH" \

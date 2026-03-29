@@ -1,73 +1,65 @@
-# 脚本说明
+# scripts 目录说明
 
-## 🎯 评测跑线脚本
+> 最后更新：2026-03-29
 
-| 脚本 | 用途 | 命令 |
-|------|------|------|
-| `step1_baseline.sh` | 基线测试（未微调） | `bash step1_baseline.sh` |
-| `step2_train.sh` | 启动微调训练 | `bash step2_train.sh` |
-| `step3_ft_eval.sh` | FT模型评测 | `bash step3_ft_eval.sh` |
-| `step4_pe_ft.sh` | PE+FT评测 | `bash step4_pe_ft.sh` |
-| `step5_pe_rag_ft.sh` | PE+RAG+FT评测 | `bash step5_pe_rag_ft.sh` |
-
-## 🧪 Qwen 消融补跑入口
-
-这组脚本用于复现 Qwen 的基线、PE、RAG、PE+RAG 与 PE+RAG+FT 评测。
-
-统一脚本：
+## PE 评测（GPT/GLM，通过 API）
 
 ```bash
-uv run --with openai python run_qwen_ablation_eval.py --mode pe
-uv run --with openai python run_qwen_ablation_eval.py --mode rag --repo-root external/celery
-uv run --with openai python run_qwen_ablation_eval.py --mode pe_rag --repo-root external/celery
+python scripts/run_pe_eval.py --api-key <key> --variants fewshot,postprocess
 ```
 
-如需沿用最新 Google embedding 的 RAG：
+## Qwen 评测
 
 ```bash
-export EMBEDDING_PROVIDER=google
-export GOOGLE_API_KEY=你的_google_key
-uv run --with openai python run_qwen_ablation_eval.py --mode rag --repo-root external/celery
-uv run --with openai python run_qwen_ablation_eval.py --mode pe_rag --repo-root external/celery
+# 需要先启动 vLLM 服务
+bash scripts/run_qwen_strict_full.sh
 ```
 
-## 🛠️ 工具脚本
+## 数据与报告
 
 | 脚本 | 用途 |
 |------|------|
-| `run_qwen_eval.sh` | Qwen评估运行 |
-| `run_qwen_ablation_eval.py` | Qwen baseline / PE / RAG / PE+RAG 统一评测 |
-| `check_download.sh` | 检查模型下载进度 |
-| `start_qwen_vllm.sh` | 启动vLLM服务 |
+| `build_strict_datasets.py` | 生成 strict 去污染数据集 |
+| `check_train_env.py` | 检查 CUDA / 训练环境是否就绪 |
+| `generate_final_delivery_assets.py` | 生成最终图表（需要 matplotlib） |
+| `generate_project_progress_report.py` | 生成项目进度报告 |
+| `generate_defense_deck_20260329.py` | 生成答辩 PPT |
+| `generate_eval_status_report.py` | 生成评测状态报告 |
+| `precompute_embeddings.py` | 预计算 embedding 缓存 |
+| `recover_qwen_baseline.py` | 恢复 Qwen strict baseline |
+| `rescore_official_results.py` | 对正式结果做 strict 重评分 |
+| `rescore_result_file.py` | 对单文件结果做 strict 重评分 |
+| `analyze_glm5_official_results.py` | 分析 GLM5 官方评测结果 |
+| `analyze_llm_eval_results.py` | 分析 LLM 评测结果 |
+| `analyze_training_log.py` | 解析训练日志，输出结构化摘要 |
+| `generate_finetune_data.py` | 生成正式微调数据 |
+| `generate_targeted_badcase_finetune.py` | 针对 bad case 生成定向微调数据 |
+| `finalize_official_datasets.py` | 整理最终数据集 |
+| `run_pe_eval.py` | PE评测入口 |
+| `run_qwen_strict_full.sh` | Qwen strict 评测完整跑线 |
+| `package_qwen_strict_run.sh` | Qwen 评测打包脚本 |
 
-## 🚀 完整跑线
+## RAG 实验脚本
+
+| 脚本 | 用途 |
+|------|------|
+| `run_conditional_rag_policy_experiment.py` | 条件RAG策略实验 |
+| `run_conditional_rag_model_experiment.py` | 条件RAG模型实验 |
+| `run_dynamic_typee_retrieval_experiment.py` | 动态类型检索实验 |
+
+## 服务启动（用于 Qwen 评测）
+
+启动 vLLM 服务后，用 `run_qwen_strict_full.sh` 评测：
 
 ```bash
-# 依次执行基线、训练、评测脚本
-bash scripts/step1_baseline.sh
-bash scripts/step2_train.sh
-bash scripts/step3_ft_eval.sh
-bash scripts/step4_pe_ft.sh
-bash scripts/step5_pe_rag_ft.sh
+# 手动启动 vLLM（参考 LLaMA-Factory 文档）
+llamafactory-cli serve --config configs/llm.toml
 ```
 
-## 📊 输出结果
+## 输出结果
 
-评测结果保存在 `results/`:
-- `qwen_baseline_recovered_summary_20260328.json` - 基线恢复结果
-- `qwen_ft_20260327_160136_stats.json` - FT 结果
-- `qwen_pe_ft_20260327_162308_stats.json` - PE+FT 结果
-- `qwen_pe_rag_ft_google_20260328_stats.json` - 完整策略结果
-
-## ⚡ 实时监控
-
-```bash
-# 查看vLLM服务
-curl http://localhost:8000/v1/models
-
-# 查看训练日志
-tail -f logs/train.log
-
-# 查看GPU
-nvidia-smi
-```
+结果保存在 `results/`：
+- `qwen_ft_*.json` — FT only 结果
+- `qwen_pe_ft_*.json` — PE + FT 结果
+- `qwen_pe_rag_ft_*.json` — 完整策略结果
+- `strict_metrics_20260329/summary.json` — strict 口径权威汇总

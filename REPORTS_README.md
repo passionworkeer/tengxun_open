@@ -1,5 +1,12 @@
 # 报告与结果索引
 
+## 快速入口
+
+- **交付检查清单**（推荐优先阅读）：`DELIVERY_CHECKLIST.md`
+- **答辩前检查**：`reports/final_submission_checklist_20260329.md`
+- **数字速查**：`reports/final_numbers_cheatsheet_20260329.md`
+- **完整结果索引**：`results/README.md`
+
 ## 导师优先阅读顺序
 
 1. `README.md`
@@ -68,14 +75,4 @@
 
 - 题目要求的 `PE / RAG / FT / PE+RAG / PE+FT / All` 已经补齐。
 - `docs/qwen_remaining_runs_20260328.md` 现在用于复现这些结果，不再是待办清单。
-
-## 旧文件怎么处理
-
-仓库内仍保留若干历史中间结果：
-
-- `results/qwen3_*`
-- `results/pe_eval/`
-- 旧版 `2026-03-27` 报告
-- `results/glm5_*` 的早期实验文件
-
-这些文件适合追溯过程，不应覆盖当前正式结论。
+- 完整结果索引见 `results/README.md`。

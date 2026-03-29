@@ -1,25 +1,41 @@
+# Byte-compiled
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# Python tooling
 .pytest_cache/
 .mypy_cache/
 .venv/
 venv/
 build/
 dist/
+
+# IDE
 .idea/
 .vscode/
+
+# Data & outputs
 artifacts/
 outputs/
+cache/
+logs/
+*.log
+
+# Reports (keep .md but not generated binaries)
 reports/*.png
 reports/*.pdf
+reports/*.pptx
+results/*.png
+results/*.pdf
+
+# Environment & secrets
 .env
 .env.*
 *.env
 api_key*
 apikey*
-api_key*
 *token*
 *credential*
 *.pem
@@ -27,4 +43,3 @@ api_key*
 id_rsa*
 id_ed25519*
 .ssh/
-

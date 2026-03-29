@@ -1,5 +1,7 @@
 # Celery 跨文件依赖分析：基于 PE / RAG / FT 的效果优化
 
+> **📋 交付检查清单**（推荐优先阅读）：[`DELIVERY_CHECKLIST.md`](DELIVERY_CHECKLIST.md)
+
 面向腾讯实习考核题的正式仓库版本。任务聚焦于：
 
 - 真实开源项目上的跨文件依赖分析
