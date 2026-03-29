@@ -1,0 +1,26 @@
+{
+  "experiment": "Qwen PE+RAG+FT",
+  "date": "2026-03-29",
+  "model": "Qwen/Qwen3.5-9B",
+  "ft_checkpoint": "artifacts/lora/qwen3.5-9b/strict_clean_20260329",
+  "eval_cases": "data/eval_cases.json",
+  "n_cases": 54,
+  "embedding": {
+    "provider": "google",
+    "model": "models/gemini-embedding-001",
+    "dimension": 3072,
+    "cache_file": "artifacts/rag/embeddings_cache_google_gemini_embedding_001_3072.json"
+  },
+  "rag": {
+    "available": true,
+    "repo_root": "external/celery",
+    "rag_top_k": 5,
+    "per_source": 12,
+    "query_mode": "question_plus_entry",
+    "rrf_k": 30,
+    "weights": null,
+    "max_context_tokens": 4096
+  },
+  "output_file": "results/qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict.json",
+  "stats_file": "results/qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict_stats.json"
+}
