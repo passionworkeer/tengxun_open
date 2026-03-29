@@ -61,12 +61,12 @@
 
 | 资产 | 路径 | 说明 |
 |------|------|------|
-| 当前默认训练配置 | `configs/strict_clean_20260329.yaml` | strict-clean LoRA 配置 |
+| 当前默认训练配置 | `configs/strict_clean_20260329.yaml` | strict-clean LoRA 配置，需由训练任务生成输出 |
 | 当前默认数据映射 | `dataset_info.json` | `fintune_qwen_dep_strict` -> `finetune_dataset_500_strict.jsonl` |
 | 当前默认训练日志 | `logs/strict_clean_20260329.train.log` | 含逐步 train/eval 曲线 |
 | 当前默认训练曲线 | `img/final_delivery/07_training_curve_20260328.png` | 基于 strict-clean 日志导出 |
-| 历史正式训练配置 | `configs/train_config_20260327_143745.yaml` | 历史正式 LoRA 配置 |
-| 历史正式训练日志 | `logs/train_20260327_143745.log` | 历史正式训练运行日志 |
+| 历史正式训练配置 | `configs/train_config_20260327_143745.yaml` | 历史正式 LoRA 配置，属于历史跑线产物 |
+| 历史正式训练日志 | `logs/train_20260327_143745.log` | 历史正式训练运行日志，属于历史跑线产物 |
 
 ## 6. 大体积本地资产
 
@@ -75,7 +75,7 @@
 | 资产 | 路径 | 说明 |
 |------|------|------|
 | Google embedding cache | `artifacts/rag/embeddings_cache_google_gemini_embedding_001_3072.json` | 当前机器已有完整 cache；正式入口缺失时可自动重建 |
-| strict-clean adapter handoff | `artifacts/handoff/strict_clean_20260329_minimal.tar.gz` | 可通过 `make materialize-strict-adapter` 提取 |
+| strict-clean adapter handoff | `artifacts/handoff/strict_clean_20260329_minimal.tar.gz` | 由打包脚本产出，可通过 `make materialize-strict-adapter` 提取 |
 
 ## 7. 历史归档
 

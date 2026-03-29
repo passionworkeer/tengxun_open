@@ -32,6 +32,14 @@
 - Qwen FT family 统一使用 strict-clean 完整结果
 - 历史正式 `PE + FT = 0.4315` 仅作为归档参考，不再放进 strict-clean 主结论
 
+strict-clean FT family 还要同时看层级质量，不要只盯 union：
+
+| 策略 / 模型 | Avg Union | Avg Macro | Avg Mislayer | Exact Layer | 说明 |
+|------|------:|------:|------:|------:|------|
+| Qwen FT only | 0.0932 | 0.0833 | 0.0185 | 0.0556 | strict-clean 54-case |
+| Qwen PE + FT | 0.3865 | 0.2998 | 0.1198 | 0.0926 | strict-clean 54-case，低复杂度备选 |
+| Qwen PE + RAG + FT | 0.5018 | 0.3645 | 0.2207 | 0.1481 | strict-clean 54-case，开源最优 |
+
 | 策略 / 模型 | Easy | Medium | Hard | Avg | 说明 |
 |------|------:|------:|------:|------:|------|
 | GPT-5.4 Baseline | 0.4348 | 0.2188 | 0.2261 | 0.2815 | 商业模型基线 |
@@ -54,6 +62,7 @@
 
 ## 正式评分口径
 
+- 这套任务是 `entry-guided` 的：问题文本之外，还会显式提供 `source_file` / 少量 `entry_symbol` 作为入口锚点。
 - 主评分指标：将 `direct_deps / indirect_deps / implicit_deps` 三层并集后做 FQN 精确匹配。
 - 三层标签仍完整保留在正式数据里，用于瓶颈诊断、few-shot 构造和 bad case 展示。
 - 严格复验时，补充看 `active-layer macro F1` 和 `mislayer rate`，见 [`reports/strict_scoring_audit_20260329.md`](reports/strict_scoring_audit_20260329.md)。

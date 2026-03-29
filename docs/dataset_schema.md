@@ -11,6 +11,7 @@
 - 面向 `Celery` 的跨文件依赖分析任务
 - 至少 50 条人工构建样本
 - 每条样本都必须可回溯到真实源码路径
+- 任务定义是 `entry-guided`：问题文本之外，还要提供入口文件 anchor，少量样本可再提供入口符号 anchor
 
 ### 字段定义
 
@@ -22,7 +23,7 @@
 | `failure_type` | string | 是 | `Type A` / `Type B` / `Type C` / `Type D` / `Type E` |
 | `implicit_level` | integer | 是 | 隐式程度等级（1-5），用于工程落地判断 |
 | `question` | string | 是 | 给模型的任务描述 |
-| `source_file` | string | 是 | 入口文件相对路径（相对 `external/celery/`） |
+| `source_file` | string | 是 | 任务显式提供的入口文件 anchor（相对 `external/celery/`） |
 | `source_commit` | string | 是 | 来源提交号，保证版本绑定 |
 | `ground_truth` | object | 是 | 正确答案，包含三个子字段 |
 | `ground_truth.direct_deps` | string[] | 是 | 直接依赖 FQN 列表 |
@@ -38,6 +39,7 @@
 - `difficulty` 由链路深度和隐式程度共同决定，不只看文件数量
 - 每条样本要能由他人重新从源码复核
 - `failure_type` 必须明确，用于后续热力图绘制
+- `source_file` 是任务提供的入口锚点，评测和提示词可使用它，但不能把它当作模型自己推理出的中间答案
 
 ### 难度分布目标
 

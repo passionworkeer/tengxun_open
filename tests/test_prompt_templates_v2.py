@@ -19,7 +19,7 @@ class PromptTemplatesV2Test(unittest.TestCase):
         )
 
         self.assertNotIn("Context:\n", prompt)
-        self.assertIn("Entry Symbol:\ncelery.bin.worker.worker", prompt)
+        self.assertIn("Provided Entry Symbol:\ncelery.bin.worker.worker", prompt)
 
     def test_build_messages_supports_assistant_fewshot_pairs(self) -> None:
         self.assertGreater(len(FEW_SHOT_LIBRARY), 0)

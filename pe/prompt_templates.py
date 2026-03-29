@@ -551,9 +551,9 @@ def build_user_prompt(
 ) -> str:
     lines = ["Question:", question.strip()]
     if entry_symbol.strip():
-        lines.extend(["", "Entry Symbol:", entry_symbol.strip()])
+        lines.extend(["", "Provided Entry Symbol:", entry_symbol.strip()])
     if entry_file.strip():
-        lines.extend(["", "Entry File:", entry_file.strip()])
+        lines.extend(["", "Provided Entry File:", entry_file.strip()])
     lines.extend(
         [
             "",

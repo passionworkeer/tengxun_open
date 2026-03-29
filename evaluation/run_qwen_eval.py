@@ -31,9 +31,9 @@ def build_prompt_v2(case: EvalCase, context: str = "") -> str:
     """
     parts = [f"Question: {case.question.strip()}"]
     if case.entry_symbol:
-        parts.append(f"Entry Symbol: {case.entry_symbol.strip()}")
+        parts.append(f"Provided Entry Symbol: {case.entry_symbol.strip()}")
     if case.entry_file:
-        parts.append(f"Entry File: {case.entry_file.strip()}")
+        parts.append(f"Provided Entry File: {case.entry_file.strip()}")
     if context:
         parts.append(f"Context:\n{context.strip()}")
     parts.append(

@@ -14,6 +14,7 @@
 
 正式主评分指标仍对这三层并集后的 FQN 做精确匹配；三层标签本身仍保留在数据中，用于诊断与展示。
 严格复验时，补充使用 `active-layer macro F1` 与 `mislayer rate` 两个分层指标。
+这套任务是 `entry-guided` 的：问题文本之外，还会显式提供 `source_file`（运行时映射为 `entry_file`），少量样本再补充 `entry_symbol`。
 
 ---
 
@@ -70,8 +71,8 @@
 
 补充说明：
 
-- `source_file` 是正式数据里的稳定入口文件信号。
-- 评测 loader 会把 `source_file` 映射到运行时查询用的 `entry_file`。
+- `source_file` 是正式数据里的稳定入口文件 anchor，不是模型自己猜出来的导航信息。
+- 评测 loader 会把 `source_file` 映射到运行时查询用的 `entry_file`，因此评测是 entry-guided，不是 blind question-only。
 - 另有 `5/54` 条样本带显式 `entry_symbol` 元信息。
 
 ---
