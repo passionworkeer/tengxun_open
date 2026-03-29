@@ -137,12 +137,13 @@ RAG 的整体提升不大，但对 hard case 很有帮助。
 
 ### 4.2 微调不是单独就够
 
-Qwen strict baseline 非常低，历史正式 `FT only` 有提升，但真正大幅提升来自历史正式 `PE + FT`。
+Qwen strict baseline 非常低，strict-clean `FT only` 依然只有 `0.0932`，而当前最强的完整 strict-clean 路线已经是 `PE + RAG + FT = 0.5018`。
 
 这说明：
 
 - FT 负责领域模式适配
 - PE 负责把模式转成稳定可评分输出
+- RAG 只有在模型已经具备领域模式和输出约束后，才真正变成增益项
 
 所以开源模型里最值得讲的结论不是“微调万能”，而是：
 
@@ -171,15 +172,15 @@ Qwen strict baseline 非常低，历史正式 `FT only` 有提升，但真正大
 
 ### 开源模型
 
-- 历史正式最高分：`Qwen PE + RAG + FT = 0.4435`
-- 历史正式高性价比默认路线：`Qwen PE + FT = 0.4315`
-- 严格口径下要主动补充：strict-clean FT rerun 执行包已就绪，但结果还待外部 CUDA 环境落盘
+- strict-clean 最强完整路线：`Qwen PE + RAG + FT = 0.5018`
+- 历史正式完整 `54-case` 高性价比参考路线：`Qwen PE + FT = 0.4315`
+- 严格口径下要主动补充：`Qwen PE + FT strict replay` 当前只有 `48/54`
 
 ### 工程上怎么落地
 
 1. 默认先走 `PE`
 2. Hard / Type A / Type E 场景再开 `RAG`
-3. 如果用开源模型部署，工程默认仍然优先 `Qwen PE + FT`，但答辩时要把它明确标成历史正式 FT 线
+3. 如果用开源模型部署并追求当前最强完整结果，就选 `Qwen PE + RAG + FT`；如果强调较低复杂度，则把 `Qwen PE + FT` 明确标成历史正式完整参考路线
 
 ## 7. 一句话总结
 

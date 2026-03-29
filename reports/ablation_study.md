@@ -3,6 +3,9 @@
 这份报告只讨论“策略选择”问题：  
 同一任务下，`PE / RAG / FT` 各自带来什么，组合后又意味着什么。
 
+> 口径说明：当前仓库同时保留**历史正式完整 54-case 矩阵**和 **strict-clean replay**。  
+> strict-clean 已完整落盘的 Qwen 路线是 `FT only` 与 `PE + RAG + FT`；`PE + FT strict replay` 当前只有 `48/54`，因此仍需和历史正式完整 `PE + FT = 0.4315` 分开汇报。
+
 ## 1. 实验口径
 
 ### 1.1 统一任务
@@ -33,9 +36,9 @@
 | Qwen PE only | 0.3167 | 0.2491 | 0.1323 | 0.2246 | 54-case 正式版 |
 | Qwen RAG only | 0.0667 | 0.0000 | 0.0000 | 0.0185 | Google embedding |
 | Qwen PE + RAG | 0.1514 | 0.2614 | 0.0523 | 0.1534 | Google embedding |
-| Qwen FT only | 0.1556 | 0.0895 | 0.0500 | 0.0932 | LoRA |
-| Qwen PE + FT | 0.5233 | 0.5370 | 0.2624 | 0.4315 | 高性价比开源路线 |
-| Qwen PE + RAG + FT | 0.4985 | 0.4805 | 0.3672 | 0.4435 | 历史正式开源最高分 |
+| Qwen FT only | 0.1556 | 0.0895 | 0.0500 | 0.0932 | strict-clean 54-case |
+| Qwen PE + FT | 0.5233 | 0.5370 | 0.2624 | 0.4315 | 历史正式完整 54-case；strict replay 当前 `48/54 = 0.3465` |
+| Qwen PE + RAG + FT | 0.6168 | 0.5196 | 0.3986 | 0.5018 | strict-clean 54-case 最优 |
 
 ![模型基线对比](../img/final_delivery/01_model_baselines_20260328.png)
 
@@ -87,19 +90,19 @@
 - `PE only` 已经明显优于 `FT only`，说明输出约束与任务角色定义是开源模型的第一增益项
 - 真正有生产价值的是 `PE + FT` 或 `PE + RAG + FT`，而不是单独 FT 或单独 RAG
 
-### 3.3 All 策略给出最高分，但高性价比方案仍是 PE + FT
+### 3.3 strict-clean 最强完整路线已经变成 PE + RAG + FT，但 PE + FT 仍是低复杂度参考
 
 在 Qwen 上：
 
-- `PE + FT = 0.4315`
-- `PE + RAG + FT = 0.4435`
-- `Delta = +0.0120`
+- strict-clean `PE + RAG + FT = 0.5018`
+- 历史正式完整 `PE + FT = 0.4315`
+- strict `PE + FT = 0.3465`（当前仅 `48/54`）
 
 这说明：
 
-- `All` 确实是完整矩阵里的最高分
-- 但它相对 `PE + FT` 的增益只有 `+0.0120`
-- 如果考虑部署复杂度、依赖外部检索和上下文成本，`PE + FT` 仍然是更均衡的默认开源路线
+- strict-clean `PE + RAG + FT` 已经给出当前最强的完整开源结果
+- 历史正式完整 `PE + FT` 仍然是较低复杂度的参考路线
+- 但 strict `PE + FT` 当前只有 `48/54`，因此不能直接和完整 `54-case` strict 结果并列做主表
 
 还有一个必须解释的异常点：
 
@@ -123,16 +126,16 @@
 
 ### 4.2 开源模型
 
-如果只看当前历史正式矩阵的开源结果：
+如果看当前仓库里的开源结果：
 
-- **历史正式最高分**：`Qwen PE + RAG + FT = 0.4435`
-- **历史正式高性价比**：`Qwen PE + FT = 0.4315`
+- **strict-clean 最强完整路线**：`Qwen PE + RAG + FT = 0.5018`
+- **历史正式完整高性价比参考**：`Qwen PE + FT = 0.4315`
 - **PE 单独贡献**：`Qwen PE only = 0.2246`
 - **RAG 单独贡献**：`Qwen RAG only = 0.0185`
 
 如果按 strict-clean 口径回答导师追问，还需要主动补一句：
 
-- `FT only / PE + FT / PE + RAG + FT` 仍待 GPU 环境重训后重评
+- `Qwen PE + FT strict replay` 当前只有 `48/54`
 
 ### 4.3 策略适用边界
 
@@ -146,13 +149,13 @@
 
 ### 5.1 按平均分排序
 
-Qwen 侧当前正式结果从高到低是：
+Qwen 侧当前**完整结果**从高到低是：
 
-1. `PE + RAG + FT = 0.4435`
-2. `PE + FT = 0.4315`
+1. `PE + RAG + FT = 0.5018`（strict-clean）
+2. `PE + FT = 0.4315`（历史正式完整 54-case）
 3. `PE only = 0.2246`
 4. `PE + RAG = 0.1534`
-5. `FT only = 0.0932`
+5. `FT only = 0.0932`（strict-clean）
 6. `Baseline = 0.0370`
 7. `RAG only = 0.0185`
 
@@ -169,8 +172,9 @@ Qwen 侧当前正式结果从高到低是：
 最稳的说法是：
 
 1. 商业模型上界：`GPT-5.4 + PE = 0.6062`
-2. 当前历史正式开源最稳路线：`Qwen PE + FT = 0.4315`
-3. RAG 的主要价值：修 `hard / Type A / Type E`
+2. 当前 strict-clean 开源最强完整路线：`Qwen PE + RAG + FT = 0.5018`
+3. 当前历史正式完整低复杂度参考路线：`Qwen PE + FT = 0.4315`
+4. RAG 的主要价值：修 `hard / Type A / Type E`
 
 ### 6.2 现在已经能完整回答题目要求的策略矩阵
 
@@ -185,13 +189,13 @@ Qwen 侧当前正式结果从高到低是：
 ### 7.1 现在就能落地的结论
 
 - **默认商业模型方案**：`GPT-5.4 + PE`
-- **默认开源模型方案**：历史正式 `Qwen PE + FT`
-- **追求最高分的开源方案**：历史正式 `Qwen PE + RAG + FT`
-- **最严格答辩补充**：strict-clean FT rerun 仍待外部 GPU 落盘
+- **默认开源模型方案**：strict-clean `Qwen PE + RAG + FT`
+- **低复杂度参考方案**：历史正式 `Qwen PE + FT`
+- **最严格答辩补充**：`Qwen PE + FT strict replay` 当前只有 `48/54`
 
 复现说明见：
 
-- [`../docs/qwen_remaining_runs_20260328.md`](../docs/qwen_remaining_runs_20260328.md)
+- [`./qwen_strict_result_audit_20260329.md`](./qwen_strict_result_audit_20260329.md)
 
 ## 8. 结论
 

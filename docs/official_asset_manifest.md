@@ -25,9 +25,12 @@
 | Qwen PE only | `results/qwen_pe_only_20260328_stats.json` | 正式结果 |
 | Qwen RAG only | `results/qwen_rag_only_google_20260328_stats.json` | 正式结果 |
 | Qwen PE + RAG | `results/qwen_pe_rag_google_20260328_stats.json` | 正式结果 |
-| Qwen FT only | `results/qwen_ft_20260327_160136_stats.json` | 历史正式 FT 结果 |
+| Qwen FT only | `results/qwen_ft_20260327_160136_stats.json` | 历史正式 FT 结果（与 strict-clean FT only 一致） |
 | Qwen PE + FT | `results/qwen_pe_ft_20260327_162308_stats.json` | 历史正式 FT 结果 |
 | Qwen PE + RAG + FT | `results/qwen_pe_rag_ft_google_20260328_stats.json` | 历史正式 FT 结果 |
+| Qwen strict-clean FT only | `results/qwen_strict_runs/strict_clean_20260329/qwen_ft_strict_metrics.json` | strict-clean 54-case |
+| Qwen strict-clean PE + RAG + FT | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict_metrics.json` | strict-clean 54-case 最优 |
+| Qwen strict-clean PE + FT | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict_metrics.json` | strict replay 当前仅 48/54 |
 
 ## 3. 正式报告资产
 
@@ -80,14 +83,15 @@
 
 ## 8. strict 复验与执行状态
 
-这些文件用于回答“评分是否过宽松”“few-shot / finetune 是否污染”“为什么 Qwen strict-clean 还没重跑完”：
+这些文件用于回答“评分是否过宽松”“few-shot / finetune 是否污染”“Qwen strict-clean 到底完成到什么程度”：
 
 | 资产 | 路径 | 说明 |
 |------|------|------|
 | strict 数据审计 | `reports/strict_data_audit_20260329.md` | exact GT / question overlap 清理结论 |
 | strict 评分审计 | `reports/strict_scoring_audit_20260329.md` | union / macro / mislayer |
 | strict PE 搜索 | `reports/strict_pe_search_20260329.md` | GPT strict 最优路线 |
-| strict FT 执行状态 | `reports/strict_ft_execution_status_20260329.md` | 当前本机为什么不能直接重训 |
+| strict FT 执行状态 | `reports/strict_ft_execution_status_20260329.md` | GPU 执行前的本机 preflight 历史记录 |
+| strict FT 结果审计 | `reports/qwen_strict_result_audit_20260329.md` | strict-clean 结果完整度说明 |
 | 训练证据审计 | `reports/training_evidence_audit_20260329.md` | 现有训练证据强度说明 |
 | strict replay 训练环境检查 | `results/strict_replay_train_env_20260329.json` | strict-clean replay preflight |
 | 正式训练环境检查 | `results/formal_train_env_20260329.json` | 历史正式配置 preflight |
@@ -96,5 +100,5 @@
 说明：
 
 - GPT strict PE 结果已落盘，可直接用于答辩。
-- Qwen `FT only / PE + FT / PE + RAG + FT` 仍是历史正式 FT 线。
-- strict-clean Qwen FT 线的执行包已具备，但结果尚待外部 CUDA 环境落盘。
+- Qwen strict-clean 训练已经完成，`FT only` 与 `PE + RAG + FT` 已完整落盘。
+- `Qwen PE + FT strict replay` 当前只有 `48/54`，因此仍应和历史正式完整 `54-case` 结果分开汇报。

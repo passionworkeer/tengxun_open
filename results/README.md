@@ -15,6 +15,8 @@
 | Qwen3.5-9B FT | `qwen_ft_20260327_160136.json` | LoRA 微调（历史正式线）|
 | Qwen3.5-9B PE+FT | `qwen_pe_ft_20260327_162308.json` | PE+FT（历史正式线）|
 | Qwen3.5-9B PE+RAG+FT | `qwen_pe_rag_ft_google_20260328.json` | 完整组合（历史正式线最高分）|
+| Qwen3.5-9B strict-clean FT | `qwen_strict_runs/strict_clean_20260329/qwen_ft_strict_metrics.json` | strict-clean 54-case |
+| Qwen3.5-9B strict-clean PE+RAG+FT | `qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict_metrics.json` | strict-clean 54-case 最优 |
 
 ## PE 分项结果
 
@@ -46,6 +48,26 @@ strict_metrics_20260329/       # 全模型 strict 重评分
   ├── qwen_pe_ft.json
   └── qwen_pe_rag_ft.json
 ```
+
+另外，strict-clean GPU 运行的原始结果位于：
+
+```text
+qwen_strict_runs/strict_clean_20260329/
+  ├── qwen_ft_strict.json
+  ├── qwen_ft_strict_metrics.json
+  ├── qwen_ft_strict_stats.json
+  ├── qwen_pe_ft_strict.json
+  ├── qwen_pe_ft_strict_metrics.json
+  ├── qwen_pe_ft_strict_stats.json
+  ├── qwen_pe_rag_ft_strict.json
+  ├── qwen_pe_rag_ft_strict_metrics.json
+  └── qwen_pe_rag_ft_strict_stats.json
+```
+
+注意：
+
+- `qwen_pe_ft_strict.*` 当前只覆盖 `48/54` 条样本。
+- 完整度审计见：`reports/qwen_strict_result_audit_20260329.md`
 
 ## RAG 检索结果
 

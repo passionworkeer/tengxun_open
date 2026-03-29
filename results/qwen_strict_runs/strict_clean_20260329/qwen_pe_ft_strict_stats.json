@@ -1,0 +1,30 @@
+{
+  "total_cases": 48,
+  "strategy": "PE+FT",
+  "by_difficulty": {
+    "easy": {
+      "count": 10,
+      "avg_f1": 0.4294,
+      "min_f1": 0.0,
+      "max_f1": 1.0
+    },
+    "hard": {
+      "count": 20,
+      "avg_f1": 0.2393,
+      "min_f1": 0.0,
+      "max_f1": 0.9091
+    },
+    "medium": {
+      "count": 18,
+      "avg_f1": 0.4197,
+      "min_f1": 0.0,
+      "max_f1": 1.0
+    }
+  },
+  "overall": {
+    "avg_f1": 0.3465,
+    "min_f1": 0.0,
+    "max_f1": 1.0
+  },
+  "coverage_note": "Partial strict replay: 48/54 cases present in qwen_pe_ft_strict.json"
+}

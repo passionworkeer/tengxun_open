@@ -108,8 +108,8 @@ make check-train-env-strict  # 环境检查
 | GPT-5.4 Baseline | 0.43 | 0.22 | 0.23 | 0.28 | 商业模型基线 |
 | **GPT-5.4 PE** | **0.67** | **0.62** | **0.55** | **0.61** | 最优单项 |
 | GPT-5.4 RAG | 0.27 | 0.27 | 0.34 | 0.29 | Hard 场景补偿 |
-| Qwen3.5-9B PE + RAG + FT | 0.50 | 0.48 | 0.37 | 0.44 | 开源最高分 |
-| Qwen3.5-9B PE + FT | 0.52 | 0.54 | 0.26 | 0.43 | 性价比最优 |
+| Qwen3.5-9B PE + RAG + FT | 0.62 | 0.52 | 0.40 | 0.50 | strict-clean 开源最高分 |
+| Qwen3.5-9B PE + FT | 0.52 | 0.54 | 0.26 | 0.43 | 历史正式完整 54-case 参考路线 |
 
 ### 关键发现
 
@@ -139,9 +139,9 @@ make check-train-env-strict  # 环境检查
 
 | 限制 | 说明 | 状态 |
 |------|------|------|
-| **LoRA 权重** | 需要外部 CUDA 环境训练，未提交到仓库 | ⚠️ 需手动执行 `make train-strict` |
+| **LoRA 权重** | strict-clean adapter 未直接提交到仓库，仅提交配置 / 日志 / 结果与 handoff 包 | ⚠️ 如需原始权重需外部保存 |
 | **Embedding Cache** | 约 326MB，未进 git（`artifacts/` 已 .gitignore） | 可用 `scripts/precompute_embeddings.py` 重建 |
-| **Strict FT 结果** | 需要 CUDA GPU + LLaMA-Factory 执行 strict 重训 | ⚠️ 需外部环境 |
+| **Strict PE + FT** | strict replay 当前仅有 `48/54` 条样本，不作为完整 `54-case` 主结果 | ⚠️ 需补齐或保留历史正式口径 |
 | **商业模型 API Key** | GPT/GLM 评测依赖 API Key | ⚠️ 需用户提供 |
 
 ---

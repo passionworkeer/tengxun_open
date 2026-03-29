@@ -1,5 +1,11 @@
 # Strict 复验与答辩说明（2026-03-29）
 
+> 历史说明：这份文档主要记录 strict 评分 / strict 数据 / strict replay 的构建过程。  
+> Qwen strict-clean 的最终执行状态，请以：
+> - `reports/qwen_strict_closeout_20260329.md`
+> - `reports/qwen_strict_result_audit_20260329.md`
+> 为准。
+
 ## 1. 这条分支修了什么
 
 本分支不是重写历史正式结果，而是在保留正式资产的前提下，新增一套严格复验口径：

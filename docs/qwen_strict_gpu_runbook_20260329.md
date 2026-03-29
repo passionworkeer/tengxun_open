@@ -1,5 +1,10 @@
 # Qwen Strict-Clean CUDA 机器执行文档（2026-03-29）
 
+> 历史说明：这份 runbook 对应的是 **2026-03-29 外部 CUDA 执行前** 的操作手册。  
+> 当前 strict-clean 训练已经完成；结果完整度请看：
+> - `reports/qwen_strict_closeout_20260329.md`
+> - `reports/qwen_strict_result_audit_20260329.md`
+
 这份文档只负责一件事：
 
 > 在外部 NVIDIA CUDA 机器上，把 Qwen strict-clean `FT only / PE + FT / PE + RAG + FT` 跑完、核对结果，并打包带回。
