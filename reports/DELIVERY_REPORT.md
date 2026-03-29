@@ -11,8 +11,8 @@
 1. **Prompt Engineering 是当前最强单项优化**  
    在正式 `54-case` 口径上，GPT-5.4 从 `0.2745` 提升到 `0.6062`，绝对增益 `+0.3317`，相对增益 `+120.8%`。在 `2026-03-29` 的 strict PE 搜索增补里，最优路线进一步更新为 `postprocess_targeted`，达到 `union 0.6338 / macro 0.4757 / mislayer 0.1620`。这说明对于高质量商业模型，真正有效的不是更“狠”的规则，而是更针对 failure mode 的 few-shot 选例与分层保留后处理。
 
-2. **Qwen strict-clean 训练已完成，当前最强的完整开源路线更新为 `PE + RAG + FT = 0.5018`**  
-   Qwen strict baseline 只有 `0.0370`，strict-clean `FT only` 仍只有 `0.0932`，而 strict-clean `PE + RAG + FT` 达到 `0.5018`。这说明 LoRA 微调更多是在补“领域模式”，真正把模式转成稳定可评分输出的仍是 Prompt Engineering 与检索协同；需要额外说明的是，`PE + FT strict replay` 当前只有 `48/54`，因此完整 `54-case` 的 `PE + FT` 仍以历史正式 `0.4315` 作为参考。
+2. **Qwen strict-clean 训练已完成，FT family 三条线都已完整落盘**  
+   Qwen strict baseline 只有 `0.0370`，strict-clean `FT only` 仍只有 `0.0932`，strict-clean `PE + FT` 达到 `0.3865`，strict-clean `PE + RAG + FT` 进一步达到 `0.5018`。这说明 LoRA 微调更多是在补“领域模式”，真正把模式转成稳定可评分输出的仍是 Prompt Engineering 与检索协同；同时，RAG 的价值要到 FT 之后才真正释放出来。
 
 3. **RAG 更适合解决 hard / dynamic 场景，而不是追求整体平均分**  
    GPT-5.4 端到端 `No-RAG 0.2783 -> With-RAG 0.2940`，总体只提升 `+0.0157`；但 `Hard` 难度从 `0.1980 -> 0.3372`，提升 `+0.1392`。所以 RAG 的角色是“定向修复长链路和动态解析”，不是默认全量启用的通用加分器。
@@ -232,13 +232,14 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 - strict 训练日志：`logs/strict_clean_20260329.train.log`
 - strict 运行配置：`configs/strict_clean_20260329.yaml`
 - strict `FT only`：完整 `54/54`，`0.0932`
+- strict `PE + FT`：完整 `54/54`，`0.3865`
 - strict `PE + RAG + FT`：完整 `54/54`，`0.5018`
-- strict `PE + FT`：当前 `48/54`，`0.3465`
 
 因此当前最稳的结论是：
 
 - `PE + RAG + FT = 0.5018` 是当前最强的**完整 strict-clean 开源路线**
-- 如果要讲完整 `54-case` 的 `PE + FT`，仍以历史正式 `0.4315` 为参考
+- `PE + FT = 0.3865` 是 strict-clean 下更低复杂度、仍有明显增益的备选路线
+- 历史正式 `PE + FT = 0.4315` 仍保留在仓库中，但已降级为归档参考
 
 更具体的完整度说明见：
 
@@ -257,7 +258,7 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 | GPT-5.4 PE only | 0.6651 | 0.6165 | 0.5522 | 0.6062 | 完成 |
 | GPT-5.4 RAG only | 0.2722 | 0.2656 | 0.3372 | 0.2940 | 完成 |
 | Qwen FT only | 0.1556 | 0.0895 | 0.0500 | 0.0932 | 完成（strict-clean 54-case） |
-| Qwen PE + FT | 0.5233 | 0.5370 | 0.2624 | 0.4315 | 历史正式完整 `54-case`；strict replay 当前 `48/54 = 0.3465` |
+| Qwen PE + FT | 0.5307 | 0.4277 | 0.2393 | 0.3865 | 完成（strict-clean 54-case） |
 | Qwen PE only | 0.3167 | 0.2491 | 0.1323 | 0.2246 | 完成 |
 | Qwen RAG only | 0.0667 | 0.0000 | 0.0000 | 0.0185 | 完成 |
 | Qwen PE + RAG | 0.1514 | 0.2614 | 0.0523 | 0.1534 | 完成 |
@@ -290,27 +291,27 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 
 - 商业模型：`GPT-5.4 + postprocess_targeted`
 - 开源模型 strict-clean 最强完整路线：`Qwen PE + RAG + FT`
-- 开源模型历史正式完整高性价比参考路线：`Qwen PE + FT`
+- 开源模型 strict-clean 低复杂度路线：`Qwen PE + FT`
 
 原因：
 
 - `GPT-5.4 + postprocess_targeted` 现在是 strict 口径下的商业模型最优路线，且机制最可解释
 - strict-clean `Qwen PE + RAG + FT` 给出当前最高完整结果 `0.5018`
-- 历史正式 `Qwen PE + FT = 0.4315` 仍然是完整 `54-case` 的低复杂度参考路线
-- `Qwen PE + FT strict replay` 当前只有 `48/54`，不能直接代替完整矩阵结果
+- strict-clean `Qwen PE + FT = 0.3865` 是低复杂度、较易部署的备选路线
+- 历史正式 `Qwen PE + FT = 0.4315` 仍可作为归档对照，但不再是主汇报口径
 
 ### 9.2 如果目标是“冲当前可见上限”
 
 - 当前 strict-clean 目标策略：`Qwen PE + RAG + FT`
 - 当前 `0.5018` 已经是完整 strict-clean 开源路线的最新结果
-- 如果未来继续优化，第一优先级不是再堆新 prompt，而是补齐 `Qwen PE + FT strict replay` 缺失的 `6` 条 case
+- 如果未来继续优化，第一优先级不是补缺失 case，而是把 `targeted few-shot + layer-preserving postprocess` 继续迁移到 Qwen strict-clean 线上
 
 ## 10. 工程落地建议
 
 1. **默认策略**：对普通 case 先用 `PE`，成本最低、收益最高。
 2. **Hard / Type A / Type E` 场景**：启用 `RAG`，尤其是带 entry 信息的检索。
-3. **开源模型部署**：如果追求当前最强完整结果，选 `Qwen PE + RAG + FT`；如果强调较低复杂度，则把 `Qwen PE + FT` 明确标成历史正式完整参考路线。
-4. **最终上线的“最强组合”**：当前最强完整组合是 strict-clean `Qwen PE + RAG + FT`；按严格答辩默认口径，还要补一句 `Qwen PE + FT strict replay` 当前只有 `48/54`。
+3. **开源模型部署**：如果追求当前最强完整结果，选 `Qwen PE + RAG + FT`；如果强调较低复杂度，则选 strict-clean `Qwen PE + FT = 0.3865`。
+4. **最终上线的“最强组合”**：当前最强完整组合是 strict-clean `Qwen PE + RAG + FT`；历史正式 `Qwen PE + FT = 0.4315` 只作为归档对照，不再作为主口径。
 
 ## 11. 仓库入口
 

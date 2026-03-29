@@ -18,19 +18,19 @@
 2. **strict 加固后的 GPT PE 最优路线已经更新为 `targeted few-shot + postprocess`**  
    在 `2026-03-29` 的 strict PE 搜索增补里，`postprocess_targeted` 达到 `union 0.6338 / macro 0.4757 / mislayer 0.1620`，同时优于此前 strict-best 的 `0.6136 / 0.4372 / 0.2336`。详见 [`reports/strict_pe_search_20260329.md`](reports/strict_pe_search_20260329.md)。
 
-3. **Qwen strict-clean 已落盘，但 FT family 的完整度需要分开说**  
-   strict-clean LoRA 训练已经完成，`FT only` 和 `PE + RAG + FT` 都已完整跑完 `54-case`；其中 `PE + RAG + FT` 达到 `0.5018`，成为当前最强的完整开源路线。`PE + FT` strict replay 当前只有 `48/54`，所以仍应把历史正式 `PE + FT = 0.4315` 保留为完整矩阵参考，并单独说明 strict partial 状态。
+3. **Qwen strict-clean FT family 已完整落盘**  
+   strict-clean LoRA 训练已经完成，`FT only / PE + FT / PE + RAG + FT` 三条线都已完整跑完 `54-case`。其中 `PE + RAG + FT = 0.5018` 是当前最强的完整开源路线，`PE + FT = 0.3865` 是 strict-clean 下更低复杂度的备选路线。历史正式 `PE + FT = 0.4315` 仍保留为归档参考，但不再作为 strict-clean 主结论。
 
 4. **RAG 的价值是“定向修复 hard 场景”，不是无脑全局提分**  
    GPT-5.4 端到端 `No-RAG 0.2783 -> With-RAG 0.2940`，总体只提升 `+0.0157`；但 `Hard` 难度从 `0.1980 -> 0.3372`，提升 `+0.1392`。RAG 更像是针对 Type A / Type E 的补偿模块。
 
 ## 当前结果总览
 
-下面这张主表使用**当前最稳妥的正式口径**：
+下面这张主表使用**当前最稳妥的最终交付口径**：
 
 - GPT / GLM / Qwen baseline、GPT PE、GPT RAG 为正式或 strict replay 已落盘结果
-- Qwen `FT only` 与 `PE + RAG + FT` 使用 strict-clean 完整结果
-- Qwen `PE + FT` 保留历史正式完整 `54-case` 结果，同时在备注里单独说明 strict replay 当前只有 `48/54`
+- Qwen FT family 统一使用 strict-clean 完整结果
+- 历史正式 `PE + FT = 0.4315` 仅作为归档参考，不再放进 strict-clean 主结论
 
 | 策略 / 模型 | Easy | Medium | Hard | Avg | 说明 |
 |------|------:|------:|------:|------:|------|
@@ -43,12 +43,13 @@
 | Qwen RAG only | 0.0667 | 0.0000 | 0.0000 | 0.0185 | 最新 Google embedding |
 | Qwen PE + RAG | 0.1514 | 0.2614 | 0.0523 | 0.1534 | 最新 Google embedding |
 | Qwen FT only | 0.1556 | 0.0895 | 0.0500 | 0.0932 | strict-clean 54-case |
-| Qwen PE + FT | 0.5233 | 0.5370 | 0.2624 | 0.4315 | 历史正式 54-case；strict replay 当前 `48/54 = 0.3465` |
+| Qwen PE + FT | 0.5307 | 0.4277 | 0.2393 | 0.3865 | strict-clean 54-case，低复杂度备选 |
 | Qwen PE + RAG + FT | 0.6168 | 0.5196 | 0.3986 | 0.5018 | strict-clean 54-case，开源最优 |
 
 补充说明：
 
-- `Qwen PE + FT strict replay` 当前只有 `48/54`，缺失 `6` 条 case，不放进完整 `54-case` 主排名。
+- strict-clean FT family 现在已经全部跑完 `54-case`。
+- 历史正式 `Qwen PE + FT = 0.4315` 与 `Qwen PE + RAG + FT = 0.4435` 仍保留在仓库中，用于演进对照，但当前主叙事优先使用 strict-clean 结果。
 - 对应审计见：[`reports/qwen_strict_result_audit_20260329.md`](reports/qwen_strict_result_audit_20260329.md)
 
 ## 正式评分口径
@@ -321,5 +322,5 @@ celery-dep-analysis/
 
 - 如果只看商业模型上界，`GPT-5.4` 仍明显领先。
 - 当前最强的**完整 strict-clean 开源路线**是 `Qwen PE + RAG + FT = 0.5018`。
-- 历史正式完整 `54-case` 里，默认高性价比路线仍可引用 `Qwen PE + FT = 0.4315`。
-- 如果按最严格口径汇报，需要补一句：`Qwen PE + FT strict replay` 当前只有 `48/54`，因此仍以历史正式完整结果作参考，并附上 strict 审计说明。
+- 当前 strict-clean 低复杂度路线是 `Qwen PE + FT = 0.3865`。
+- 历史正式 `Qwen PE + FT = 0.4315` 仍可保留为演进对照，但不再作为主汇报默认值。

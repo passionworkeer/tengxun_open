@@ -499,9 +499,9 @@ def main() -> int:
     qwen_pe = load_qwen_stats(ROOT / "results/qwen_pe_only_20260328_stats.json")
     qwen_rag = load_qwen_stats(ROOT / "results/qwen_rag_only_google_20260328_stats.json")
     qwen_pe_rag = load_qwen_stats(ROOT / "results/qwen_pe_rag_google_20260328_stats.json")
-    qwen_ft = load_qwen_stats(ROOT / "results/qwen_ft_20260327_160136_stats.json")
-    qwen_pe_ft = load_qwen_stats(ROOT / "results/qwen_pe_ft_20260327_162308_stats.json")
-    qwen_pe_rag_ft = load_qwen_stats(ROOT / "results/qwen_pe_rag_ft_google_20260328_stats.json")
+    qwen_ft = load_qwen_stats(ROOT / "results/qwen_strict_runs/strict_clean_20260329/qwen_ft_strict_stats.json")
+    qwen_pe_ft = load_qwen_stats(ROOT / "results/qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict_stats.json")
+    qwen_pe_rag_ft = load_qwen_stats(ROOT / "results/qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict_stats.json")
     training = parse_training_log(ROOT / "logs/train_20260327_143745.log")
 
     gpt_summary = summarize_baseline_results(gpt_results, case_map=case_map)

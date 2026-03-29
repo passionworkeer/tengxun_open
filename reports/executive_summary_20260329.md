@@ -76,8 +76,8 @@ Qwen strict baseline：
 
 - strict-clean `FT only = 0.0932`
 - strict-clean `PE + RAG + FT = 0.5018`
-- 历史正式 `PE + FT = 0.4315`
-- strict `PE + FT = 0.3465`（当前仅 `48/54`）
+- strict-clean `PE + FT = 0.3865`
+- 历史正式 `PE + FT = 0.4315`（归档参考）
 
 结论：
 
@@ -85,7 +85,7 @@ Qwen strict baseline：
 - FT 负责领域适配
 - RAG 只有在和 PE / FT 组合时才真正发挥价值
 - 当前最强的**完整 strict-clean 开源路线**已经更新为 `PE + RAG + FT = 0.5018`
-- `PE + FT` strict replay 当前只有 `48/54`，因此仍需和历史正式完整结果分开汇报
+- `PE + FT = 0.3865` 已形成完整 strict-clean 低复杂度路线
 
 ## 最终推荐策略
 
@@ -102,8 +102,8 @@ Qwen strict baseline：
 ### 开源模型
 
 - strict-clean 最强完整路线：`Qwen PE + RAG + FT`
-- 历史正式完整默认路线参考：`Qwen PE + FT`
-- 最严格口径下，应补充一句：`Qwen PE + FT strict replay` 当前只有 `48/54`
+- strict-clean 低复杂度路线：`Qwen PE + FT`
+- 历史正式 `Qwen PE + FT = 0.4315` 只作为归档对照
 
 ## 方法论上的核心结论
 

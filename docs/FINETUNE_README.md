@@ -26,7 +26,7 @@
 | strict 实际运行配置 | `configs/strict_clean_20260329.yaml` | 2026-03-29 CUDA 训练使用配置 |
 | strict 训练日志 | `logs/strict_clean_20260329.train.log` | strict-clean CUDA 训练日志 |
 | strict FT only 结果 | `results/qwen_strict_runs/strict_clean_20260329/qwen_ft_strict_metrics.json` | strict-clean 54-case |
-| strict PE + FT 结果 | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict_metrics.json` | strict replay 当前仅 48/54 |
+| strict PE + FT 结果 | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict_metrics.json` | strict-clean 54-case |
 | strict PE + RAG + FT 结果 | `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict_metrics.json` | strict-clean 54-case 最优 |
 | strict 审计报告 | `reports/strict_data_audit_20260329.md` | 记录 exact GT 与题面级 overlap 清理结果 |
 | strict 评分报告 | `reports/strict_scoring_audit_20260329.md` | 分层 strict 指标与 mislayer 诊断 |
@@ -181,7 +181,7 @@ strict 重训配置 `configs/train_config_strict_replay_20260329.yaml` 已修复
 - final eval loss：`0.4661`
 - strict `FT only`：完整 `54/54`
 - strict `PE + RAG + FT`：完整 `54/54`
-- strict `PE + FT`：当前 `48/54`
+- strict `PE + FT`：完整 `54/54`
 
 ## 6. 资产管理建议
 
@@ -203,7 +203,7 @@ strict 配置默认写入：
 
 这样可以把“历史正式结果”和“你本次复现结果”分开，避免覆盖。
 
-如果你已经在外部 CUDA 环境上准备补齐 strict-clean FT 线，优先直接使用：
+如果你已经在外部 CUDA 环境上准备复现实验，优先直接使用：
 
 ```bash
 make qwen-strict-rerun
