@@ -9,10 +9,10 @@
 ### 1.1 三条最重要的结论
 
 1. **Prompt Engineering 是当前最强单项优化**  
-   在正式 `54-case` 口径上，GPT-5.4 从 `0.2745` 提升到 `0.6062`，绝对增益 `+0.3317`，相对增益 `+120.8%`。在 `2026-03-29` 的 strict PE 搜索增补里，最优路线进一步更新为 `postprocess_targeted`，达到 `union 0.6338 / macro 0.4757 / mislayer 0.1620`。这说明对于高质量商业模型，真正有效的不是更“狠”的规则，而是更针对 failure mode 的 few-shot 选例与分层保留后处理。
+   在正式 `54-case` 的 entry-guided 口径上，GPT-5.4 从 `0.2745` 提升到 `0.6062`，绝对增益 `+0.3317`，相对增益 `+120.8%`。这里的任务输入不是 blind question-only，而是 `question_plus_entry`：题面显式提供 `entry_file`，部分样本还提供 `entry_symbol`，用于模拟真实代码分析中的入口锚点。strict PE 搜索增补里，最优路线进一步更新为 `postprocess_targeted`，达到 `union 0.6338 / macro 0.4757 / mislayer 0.1620`。这说明对于高质量商业模型，真正有效的不是更“狠”的规则，而是更针对 failure mode 的 few-shot 选例与分层保留后处理。
 
 2. **Qwen strict-clean 训练已完成，FT family 三条线都已完整落盘**  
-   Qwen strict baseline 只有 `0.0370`，strict-clean `FT only` 仍只有 `0.0932`，strict-clean `PE + FT` 达到 `0.3865`，strict-clean `PE + RAG + FT` 进一步达到 `0.5018`。这说明 LoRA 微调更多是在补“领域模式”，真正把模式转成稳定可评分输出的仍是 Prompt Engineering 与检索协同；同时，RAG 的价值要到 FT 之后才真正释放出来。
+   Qwen strict baseline 只有 `0.0370`，strict-clean `FT only` 仍只有 `0.0932`，strict-clean `PE + FT` 达到 `0.3865`，strict-clean `PE + RAG + FT` 进一步达到 `0.5018`。这说明 LoRA 微调更多是在补“领域模式”，真正把模式转成稳定可评分输出的仍是 Prompt Engineering 与检索协同；同时，RAG 的价值要到 FT 之后才真正释放出来。需要强调的是，`union F1` 只代表三层并集后的 FQN 命中，不等于 direct / indirect / implicit 三层都放对了，层级是否放对要看 strict 的 `macro F1` 和 `mislayer rate`。
 
 3. **RAG 更适合解决 hard / dynamic 场景，而不是追求整体平均分**  
    GPT-5.4 端到端 `No-RAG 0.2783 -> With-RAG 0.2940`，总体只提升 `+0.0157`；但 `Hard` 难度从 `0.1980 -> 0.3372`，提升 `+0.1392`。所以 RAG 的角色是“定向修复长链路和动态解析”，不是默认全量启用的通用加分器。
@@ -49,7 +49,7 @@
 
 ### 3.3 Ground Truth 口径
 
-- 主评分指标采用三层并集后的 FQN 精确匹配
+- 主评分指标采用三层并集后的 FQN 精确匹配；这是 entry-guided 任务的主分，不等于层级正确性本身
 - 正式 schema 保留 `direct_deps / indirect_deps / implicit_deps` 三层，用于标注、分析与展示
 - 正式 `54-case` 的 difficulty / failure_type / ground_truth 全部按源码阅读手工标注
 - 微调数据由 `finetune/data_guard.py` 对 Celery 内部 FQN 做源码存在性校验，对白名单外部依赖包做显式放行
@@ -58,9 +58,9 @@
 
 | 模型 | Easy | Medium | Hard | Avg | 备注 |
 |------|------:|------:|------:|------:|------|
-| GPT-5.4 | 0.4348 | 0.2188 | 0.2261 | 0.2815 | 商业模型上界 |
-| GLM-5 | 0.1048 | 0.0681 | 0.0367 | 0.0666 | 原始 thinking 已保留 |
-| Qwen3.5-9B | 0.0667 | 0.0526 | 0.0000 | 0.0370 | strict baseline recovered |
+| GPT-5.4 | 0.4348 | 0.2188 | 0.2261 | 0.2815 | 商业模型上界，entry-guided |
+| GLM-5 | 0.1048 | 0.0681 | 0.0367 | 0.0666 | 原始 thinking 已保留，entry-guided |
+| Qwen3.5-9B | 0.0667 | 0.0526 | 0.0000 | 0.0370 | strict baseline recovered，entry-guided |
 
 ![模型基线对比](../img/final_delivery/01_model_baselines_20260328.png)
 
@@ -72,7 +72,7 @@
 
 ### 4.2 评测口径说明
 
-GPT-5.4 与 GLM-5 使用完全相同的 baseline prompt：
+GPT-5.4 与 GLM-5 使用完全相同的 entry-guided baseline prompt：
 
 - 单条 `user` 消息
 - 相同的 `build_prompt_v2` 问题组织方式
@@ -86,6 +86,7 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 
 - “在最低限度格式约束下的开源模型起点”
 - 主要用于支撑 `PE / RAG / FT / All` 在同一模型内部的相对增益分析
+- 不是 blind question-only 场景下的绝对上限
 
 而不是与 GPT-5.4 / GLM-5 做完全同口径的绝对横向比较。
 
@@ -158,6 +159,8 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 -> 上下文构造(question_plus_entry；54/54 条样本含 source_file，5/54 条样本另有显式 entry_symbol)
 -> 生成模型输出 FQN JSON
 ```
+
+这里的 `entry_file` 不是“泄漏答案”，而是评测任务定义中显式提供的入口锚点，用来模拟真实代码分析里已知问题入口的场景。
 
 ### 6.2 当前正式配置
 
@@ -240,7 +243,7 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 
 - `PE + RAG + FT = 0.5018` 是当前最强的**完整 strict-clean 开源路线**
 - `PE + FT = 0.3865` 是 strict-clean 下更低复杂度、仍有明显增益的备选路线
-- 历史正式 `PE + FT = 0.4315` 仍保留在仓库中，但已降级为归档参考
+- 历史正式 `PE + FT = 0.4315` 和 `PE + RAG + FT = 0.4435` 仍保留在仓库中，但已降级为归档参考，不再作为 strict-clean 主结论
 
 更具体的完整度说明见：
 
@@ -269,7 +272,7 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 
 ### 8.2 复现入口
 
-如果你要复述历史正式矩阵，现有结果已经闭环。  
+如果你要复述历史正式矩阵，现有结果已经闭环，但它只代表历史正式线，不代表最新 strict-clean 主结论。  
 如果你要复述 strict-clean 的当前最终状态，直接看：
 
 - [`./qwen_strict_closeout_20260329.md`](./qwen_strict_closeout_20260329.md)
@@ -312,7 +315,7 @@ Qwen3.5-9B baseline 额外加入了一个最小化的 `JSON-only system wrapper`
 1. **默认策略**：对普通 case 先用 `PE`，成本最低、收益最高。
 2. **Hard / Type A / Type E` 场景**：启用 `RAG`，尤其是带 entry 信息的检索。
 3. **开源模型部署**：如果追求当前最强完整结果，选 `Qwen PE + RAG + FT`；如果强调较低复杂度，则选 strict-clean `Qwen PE + FT = 0.3865`。
-4. **最终上线的“最强组合”**：当前最强完整组合是 strict-clean `Qwen PE + RAG + FT`；历史正式 `Qwen PE + FT = 0.4315` 只作为归档对照，不再作为主口径。
+4. **最终上线的“最强组合”**：当前最强完整组合是 strict-clean `Qwen PE + RAG + FT`；历史正式 `Qwen PE + FT = 0.4315` 和 `Qwen PE + RAG + FT = 0.4435` 只作为归档对照，不再作为主口径。
 
 ## 11. 仓库入口
 
