@@ -1442,5 +1442,173 @@
       ]
     },
     "f1": 0.2857
+  },
+  {
+    "case_id": "celery_easy_020",
+    "difficulty": "easy",
+    "category": "extension_class_entry_point",
+    "failure_type": "Type E",
+    "question": "`celery.utils.imports.load_extension_classes(namespace)` 这条扩展加载链里，哪个 Celery 函数先枚举 entry point 的 `(name, value)`，哪个 Celery 函数再把 `value` 字符串解析成真实类？",
+    "entry_symbol": "",
+    "entry_file": "celery/utils/imports.py",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.load_extension_class_names",
+        "celery.utils.imports.load_extension_classes"
+      ],
+      "indirect_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": []
+    },
+    "model_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.imports.import_string\"\n    ],\n    \"indirect_deps\": [\n      \"celery.utils.imports.import_string\",\n      \"celery.utils.imports.import_module\",\n      \"celery.utils.imports.getattr\"\n    ],\n    \"implicit_deps\": []\n  }\n}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.utils.imports.import_string"
+      ],
+      "indirect_deps": [
+        "celery.utils.imports.import_string",
+        "celery.utils.imports.import_module",
+        "celery.utils.imports.getattr"
+      ],
+      "implicit_deps": []
+    },
+    "f1": 0.0
+  },
+  {
+    "case_id": "celery_medium_025",
+    "difficulty": "medium",
+    "category": "task_string_class_reference",
+    "failure_type": "Type D",
+    "question": "celery.app.task.Task.Request 是字符串 celery.worker.request:Request，celery.app.task.Task.Strategy 是字符串 celery.worker.strategy:default。这两个字符串在 worker 进程中被解析为哪些真实的类？",
+    "entry_symbol": "Task.Request",
+    "entry_file": "celery/app/task.py",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.request.Request",
+        "celery.worker.strategy.default"
+      ],
+      "indirect_deps": [
+        "celery.worker.request",
+        "celery.worker.strategy"
+      ],
+      "implicit_deps": []
+    },
+    "model_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.worker.request.Request\",\n      \"celery.worker.strategy.default\"\n    ],\n    \"indirect_deps\": [\n      \"celery.utils.imports.import_string\"\n    ],\n    \"implicit_deps\": []\n  }\n}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.worker.request.Request",
+        "celery.worker.strategy.default"
+      ],
+      "indirect_deps": [
+        "celery.utils.imports.import_string"
+      ],
+      "implicit_deps": []
+    },
+    "f1": 0.5714
+  },
+  {
+    "case_id": "celery_easy_021",
+    "difficulty": "easy",
+    "category": "signature_class_definition",
+    "failure_type": "Type D",
+    "question": "celery.canvas.Signature 是什么类型的对象？它继承自哪个标准库类？",
+    "entry_symbol": "Signature",
+    "entry_file": "celery/canvas.py",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.Signature"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.canvas.Signature\"\n    ],\n    \"indirect_deps\": [\n      \"celery.canvas.Signature\"\n    ],\n    \"implicit_deps\": []\n  }\n}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.canvas.Signature"
+      ],
+      "indirect_deps": [
+        "celery.canvas.Signature"
+      ],
+      "implicit_deps": []
+    },
+    "f1": 1.0
+  },
+  {
+    "case_id": "celery_easy_022",
+    "difficulty": "easy",
+    "category": "cross_package_re-export",
+    "failure_type": "Type C",
+    "question": "celery.utils.uuid 实际上是从哪个外部包的哪个模块的哪个函数重新导出的？",
+    "entry_symbol": "uuid",
+    "entry_file": "celery/utils/__init__.py",
+    "ground_truth": {
+      "direct_deps": [
+        "kombu.utils.uuid.uuid"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"kombu.utils.uuid.uuid\"\n    ],\n    \"indirect_deps\": [\n      \"celery.utils\"\n    ],\n    \"implicit_deps\": []\n  }\n}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "kombu.utils.uuid.uuid"
+      ],
+      "indirect_deps": [
+        "celery.utils"
+      ],
+      "implicit_deps": []
+    },
+    "f1": 0.6667
+  },
+  {
+    "case_id": "celery_easy_023",
+    "difficulty": "easy",
+    "category": "nodename_function_definition",
+    "failure_type": "Type C",
+    "question": "celery.utils.nodename 是在 celery.utils.nodenames 模块中定义的函数，它的完整 FQN 是什么？",
+    "entry_symbol": "nodename",
+    "entry_file": "celery/utils/__init__.py",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.nodenames.nodename"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.nodenames.nodename\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": []\n  }\n}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.utils.nodenames.nodename"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 1.0
+  },
+  {
+    "case_id": "celery_easy_024",
+    "difficulty": "easy",
+    "category": "worker_direct_re-export",
+    "failure_type": "Type C",
+    "question": "celery.utils.worker_direct 是在 celery.utils.nodenames 模块中定义的函数，它的完整 FQN 是什么？",
+    "entry_symbol": "worker_direct",
+    "entry_file": "celery/utils/__init__.py",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.nodenames.worker_direct"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "model_output": "{\n  \"ground_truth\": {\n    \"direct_deps\": [\n      \"celery.utils.nodenames.worker_direct\"\n    ],\n    \"indirect_deps\": [],\n    \"implicit_deps\": []\n  }\n}\n",
+    "extracted_prediction": {
+      "direct_deps": [
+        "celery.utils.nodenames.worker_direct"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "f1": 1.0
   }
 ]
