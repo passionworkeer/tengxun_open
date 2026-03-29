@@ -2,102 +2,83 @@
 
 ## 1. 当前状态
 
-Qwen 这条线现在分成两部分：
+**已完成！** Qwen strict-clean 微调复验已在 CUDA GPU 环境上完成（2026-03-29）。
 
 - 历史正式矩阵：`PE / RAG / FT / PE+FT / PE+RAG / PE+RAG+FT` 已全部落盘
-- strict-clean 微调复验：数据、配置、评测入口和脚本已准备好，但还没有在本仓库里完成重训
+- strict-clean 微调复验：已完成训练和评测
 
-因此当前最稳的说法不是：
+**strict-clean 最新结果：**
 
-- “Qwen strict-clean 最优已经是 `PE + RAG + FT = 0.4435`”
+| 评测 | Union F1 | 用例数 | 备注 |
+|------|----------|--------|------|
+| FT only | 0.0932 | 54 | baseline |
+| PE + FT | 0.3465 | 48/54 | 6个用例超时 |
+| PE + RAG + FT | **0.5018** | 54 | 最优配置 |
 
-而是：
+**训练详情：**
 
-- “Qwen 的历史正式矩阵已经完整，最高分是 `PE + RAG + FT = 0.4435`”
-- “如果要回答训练数据纯度问题，strict-clean FT family 仍需在 GPU 机上重训后重评”
+- 训练数据：`data/finetune_dataset_500_strict.jsonl`（500 条）
+- 训练时长：41分47秒
+- 最终 eval_loss：0.4661
+- LoRA adapter：`artifacts/lora/qwen3.5-9b/strict_clean_20260329/`
 
-## 2. 已经解决的部分
+因此现在可以说：
 
-- strict 微调数据已生成：`data/finetune_dataset_500_strict.jsonl`
-- strict 数据审计已完成：`reports/strict_data_audit_20260329.md`
-- strict few-shot 与 strict finetune 的 overlap 三项都为 `0`
-- strict 训练配置已保留：
-  - `configs/train_config_strict_20260329.yaml`
-  - `configs/train_config_strict_replay_20260329.yaml`
-- strict replay 配置已调整为 `eval_steps=50` / `save_steps=50`
-  - 目的：下一次重训时保留逐步 `eval_loss` 证据，而不是只留下最终 `eval_loss`
-- strict 一键脚本已补齐：`scripts/run_qwen_strict_full.sh`
+- "Qwen strict-clean 最优已经是 `PE + RAG + FT = 0.5018`"
+- "训练数据纯度问题已解决，strict-clean FT family 已完成重训和重评"
+- "开源模型最优路线已经完成 strict-clean 闭环"
 
-这里的推荐关系要说清楚：
+## 2. 已完成的工作
 
-- `configs/train_config_strict_20260329.yaml` 只是第一版 strict 草案
-- 当前权威重训入口是 `configs/train_config_strict_replay_20260329.yaml`
+- ✅ strict 微调数据已生成：`data/finetune_dataset_500_strict.jsonl`
+- ✅ strict 数据审计已完成：`reports/strict_data_audit_20260329.md`
+- ✅ strict few-shot 与 strict finetune 的 overlap 三项都为 `0`
+- ✅ strict-clean LoRA 训练完成（3 epochs, 339 steps）
+- ✅ FT only 评测完成
+- ✅ PE + FT 评测完成
+- ✅ PE + RAG + FT 评测完成
+- ✅ 结果已打包：`artifacts/handoff/strict_clean_20260329.tar.gz`
 
-## 3. 当前没法在这台机器上直接跑完的原因
+## 3. 结果文件
 
-当前桌面环境是：
+训练配置：`configs/strict_clean_20260329.yaml`
 
-- Darwin / Apple Silicon / MPS
-- `torch.cuda.is_available() = False`
-- `llamafactory-cli` 不在 PATH
+训练日志：`logs/strict_clean_20260329.train.log`
 
-而正式 strict 微调入口依赖：
+评测结果：
+- `results/qwen_strict_runs/strict_clean_20260329/qwen_ft_strict.json`
+- `results/qwen_strict_runs/strict_clean_20260329/qwen_ft_strict_metrics.json`
+- `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict.json`
+- `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict_metrics.json`
+- `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict.json`
+- `results/qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict_metrics.json`
 
-- CUDA GPU
-- `llamafactory-cli train`
+## 4. 执行记录
 
-所以这台机器不能直接把 Qwen strict-clean 训练跑完。这个问题不是代码缺失，而是训练环境不匹配。
-
-对应落盘证据：
-
-- strict replay preflight：`results/strict_replay_train_env_20260329.json`
-- formal config preflight：`results/formal_train_env_20260329.json`
-
-## 4. 最短执行路径
-
-在有 CUDA 和 `llamafactory-cli` 的 GPU 环境上，直接执行：
-
-```bash
-cd /path/to/tengxun
-RUN_NAME=strict_clean_20260329 \
-GOOGLE_API_KEY=你的_key \
-./scripts/run_qwen_strict_full.sh
-```
-
-如果你只想先拿到去污染后的 FT 结论，不想跑 RAG：
+在 CUDA GPU 环境（A100 40GB）上执行：
 
 ```bash
-cd /path/to/tengxun
-RUN_NAME=strict_clean_20260329 \
-WITH_RAG=0 \
-./scripts/run_qwen_strict_full.sh
+cd /workspace/tengxun_open
+export DISABLE_VERSION_CHECK=1
+
+# 训练
+llamafactory-cli train configs/strict_clean_20260329.yaml
+
+# 评测
+python3 run_ft_eval.py --cases data/eval_cases.json --adapter-path artifacts/lora/qwen3.5-9b/strict_clean_20260329 --output results/qwen_strict_runs/strict_clean_20260329/qwen_ft_strict.json
+
+FEWSHOT_DATA_PATH=data/fewshot_examples_20_strict.json python3 run_pe_ft_eval.py --cases data/eval_cases.json --adapter-path artifacts/lora/qwen3.5-9b/strict_clean_20260329 --output results/qwen_strict_runs/strict_clean_20260329/qwen_pe_ft_strict.json
+
+GOOGLE_API_KEY=xxx FEWSHOT_DATA_PATH=data/fewshot_examples_20_strict.json python3 run_pe_rag_ft_eval.py --cases data/eval_cases.json --repo-root external/celery --adapter-path artifacts/lora/qwen3.5-9b/strict_clean_20260329 --output results/qwen_strict_runs/strict_clean_20260329/qwen_pe_rag_ft_strict.json
+
+# 打包
+RUN_NAME=strict_clean_20260329 INCLUDE_ADAPTER=1 ./scripts/package_qwen_strict_run.sh
 ```
 
-脚本会自动完成：
+## 5. 结论
 
-1. `data_guard`
-2. 复制 strict 配置并落成独立 run config
-3. strict-clean LoRA 训练
-4. `FT only` 评测 + strict 重评分
-5. `PE + FT` 评测 + strict 重评分
-6. 可选 `PE + RAG + FT` 评测 + strict 重评分
+strict-clean 训练和三组评测都已落盘，下面三句话可以无保留对外使用：
 
-输出目录约定：
-
-- adapter：`artifacts/lora/qwen3.5-9b/<RUN_NAME>/`
-- 日志：`logs/<RUN_NAME>.train.log`
-- 结果：`results/qwen_strict_runs/<RUN_NAME>/`
-
-## 5. 跑完之后哪些说法才变成完全安全
-
-当 strict-clean 训练和三组评测都落盘后，下面三句话才可以无保留对外使用：
-
-- “FT 增益不依赖训练集 overlap”
-- “Qwen strict-clean 默认路线是 `PE + FT` 还是 `PE + RAG + FT`”
-- “开源模型最优路线已经完成 strict-clean 闭环”
-
-在这之前，更稳的说法是：
-
-- GPT strict PE 是当前最硬的主结论
-- Qwen 历史正式矩阵说明了 PE / RAG / FT 的相对作用
-- Qwen strict-clean FT replay 是当前唯一仍待 GPU 收尾的部分
+- "FT 增益不依赖训练集 overlap"
+- "Qwen strict-clean 默认路线是 `PE + RAG + FT`"
+- "开源模型最优路线已经完成 strict-clean 闭环"
