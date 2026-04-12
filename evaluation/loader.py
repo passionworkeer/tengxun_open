@@ -21,16 +21,16 @@ class EvalCase:
     评测案例数据结构
 
     Attributes:
-        case_id: 案例唯一标识
+        case_id: 案例唯一标识（对应 JSON 的 id 字段）
         difficulty: 难度等级 (easy/medium/hard)
-        category: 失败类型分类
+        category: 失败类型细分类（对应 JSON 的 category 字段）
         question: 问题描述
         entry_file: 任务显式提供的入口文件 anchor
         entry_symbol: 任务显式提供的入口符号 anchor（函数/类名）
-        gold_fqns: 标准答案FQN列表
+        gold_fqns: 标准答案FQN列表（direct + indirect + implicit 合并）
         reasoning_hint: 推理提示
         source_note: 来源备注
-        source_schema: 数据schema版本
+        source_schema: 数据schema版本 (legacy_v1 / schema_v2)
         failure_type: 失效类型 (Type A/B/C/D/E)
         implicit_level: 隐式依赖层级
         direct_gold_fqns: 直接依赖标准答案
@@ -140,11 +140,22 @@ def _parse_schema_v2_case(item: dict[str, Any], index: int) -> EvalCase:
     解析新schema（schema_v2）的案例格式
 
     使用 ground_truth 字段，包含 direct_deps、indirect_deps、implicit_deps。
-    `source_file` 是正式任务显式提供的 entry anchor，因此在运行时映射到 `entry_file`。
+    支持 `case_id` 或废弃的 `id` 作为案例标识符。
+    `entry_file` / `entry_symbol` 可能为 null，此时降级为 `source_file` / 空字符串。
     """
-    case_id = _require_string(item, "id", index)
+    # 优先使用 case_id，fallback 到废弃的 id 字段
+    case_id = str(item.get("case_id") or item.get("id") or "").strip()
+    if not case_id:
+        raise ValueError(f"Eval case #{index} is missing both `case_id` and `id` fields.")
+
     question = _require_string(item, "question", index, case_id=case_id)
-    source_file = _require_string(item, "source_file", index, case_id=case_id)
+
+    # entry_file/entry_symbol 可能为 null，降级到 source_file / 空字符串
+    entry_file = item.get("entry_file")
+    if not entry_file or not str(entry_file).strip():
+        entry_file = str(item.get("source_file") or "").strip()
+    entry_symbol = str(item.get("entry_symbol") or "").strip()
+
     ground_truth = item.get("ground_truth")
     if not isinstance(ground_truth, dict):
         raise ValueError(f"Schema-v2 eval case `{case_id}` has invalid ground_truth.")
@@ -164,8 +175,8 @@ def _parse_schema_v2_case(item: dict[str, Any], index: int) -> EvalCase:
         difficulty=_require_string(item, "difficulty", index, case_id=case_id),
         category=str(item.get("category", "unspecified")),
         question=question,
-        entry_file=source_file,
-        entry_symbol=str(item.get("entry_symbol", "")),
+        entry_file=entry_file,
+        entry_symbol=entry_symbol,
         gold_fqns=gold_fqns,
         reasoning_hint=str(item.get("reasoning_hint", "")),
         source_note=str(item.get("source_note", "")),
