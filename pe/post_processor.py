@@ -14,8 +14,18 @@
 from __future__ import annotations
 
 import json
+import logging
 import re
+import sys
 from typing import Iterable, Sequence
+
+# 统一规范化函数
+from rag.normalize_utils import normalize_fqn as _normalize_fqn
+
+_logger = logging.getLogger(__name__)
+
+# 模块级计数器：追踪JSON解析失败次数
+_JSON_PARSE_FAIL_COUNT = 0
 
 
 # FQN格式正则：形如 celery.app.trace.build_tracer
@@ -32,17 +42,9 @@ def normalize_fqn(value: str) -> str:
     """
     规范化FQN字符串
 
-    处理引号、转义符，统一格式。
+    使用统一的 rag.normalize_utils.normalize_fqn 函数。
     """
-    text = value.strip().strip('"').strip("'")
-    text = text.replace("::", ".")
-    text = text.replace(":", ".")
-    text = text.replace("/", ".")
-    text = text.replace(".py.", ".")
-    if text.endswith(".py"):
-        text = text[:-3]
-    text = re.sub(r"\.+", ".", text).strip(".")
-    return text
+    return _normalize_fqn(value)
 
 
 def is_valid_fqn(value: str) -> bool:
@@ -187,9 +189,20 @@ def _try_parse_json(text: str) -> list[str] | None:
     1. 直接是字符串数组
     2. 包含 ground_truth 等键的嵌套对象
     """
+    global _JSON_PARSE_FAIL_COUNT
     try:
         parsed = json.loads(text)
     except json.JSONDecodeError:
+        _JSON_PARSE_FAIL_COUNT += 1
+        _logger.debug(
+            f"JSON parse failed (total failures: {_JSON_PARSE_FAIL_COUNT}): "
+            f"first 100 chars: {text[:100]!r}"
+        )
+        print(
+            f"[DEBUG] JSON parse failed #{_JSON_PARSE_FAIL_COUNT}, "
+            f"falling back to regex extraction",
+            file=sys.stderr,
+        )
         return None
 
     flattened = _flatten_json(parsed)

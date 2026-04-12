@@ -1176,5 +1176,607 @@
     "reasoning_hint": "celery/utils/__init__.py 中 from celery.utils.nodenames import worker_direct。",
     "failure_type": "Type C",
     "implicit_level": 1
+  },
+  {
+    "id": "celery_type_e_002",
+    "difficulty": "hard",
+    "category": "symbol_by_name_dotted_resolution",
+    "failure_type": "Type E",
+    "implicit_level": 3,
+    "question": "在 `celery/utils/imports.py` 中，`symbol_by_name('celery.concurrency.prefork:TaskPool')` 这条调用链最终解析到哪个真实 Celery 类？",
+    "source_file": "celery/utils/imports.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.prefork.TaskPool"
+      ],
+      "indirect_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "kombu.utils.imports.symbol_by_name 接收到 'celery.concurrency.prefork:TaskPool' 格式字符串，将其拆分为模块路径和符号名，再用 importlib 加载模块并获取符号。",
+    "source_note": "Type E: symbol_by_name with dotted module.class format"
+  },
+  {
+    "id": "celery_type_e_004",
+    "difficulty": "hard",
+    "category": "backend_alias_redis_resolution",
+    "failure_type": "Type E",
+    "implicit_level": 4,
+    "question": "在 `celery/app/backends.py` 中，`backends.by_name('redis')` 通过 `BACKEND_ALIASES` 与 `symbol_by_name` 的组合调用链，最终解析到哪个具体的 Backend 类？",
+    "source_file": "celery/app/backends.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.backends.redis.RedisBackend"
+      ],
+      "indirect_deps": [
+        "celery.app.backends.by_name"
+      ],
+      "implicit_deps": [
+        "celery.app.backends.BACKEND_ALIASES",
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "reasoning_hint": "`BACKEND_ALIASES['redis']` 存储字符串 `'celery.backends.redis:RedisBackend'`；`by_name` 将该字符串传给 `symbol_by_name` 解析为真实类。BACKEND_ALIASES 查找和 symbol_by_name 解析都属于运行时隐式边。",
+    "source_note": "Type E: BACKEND_ALIASES + symbol_by_name multi-hop resolution"
+  },
+  {
+    "id": "celery_type_e_005",
+    "difficulty": "hard",
+    "category": "instantiate_symbol_by_name_chain",
+    "failure_type": "Type E",
+    "implicit_level": 3,
+    "question": "在 `celery/utils/imports.py` 中，`instantiate('celery.concurrency.prefork:TaskPool')` 这条链路经过哪个导入解析函数，最终实例化的是哪个真实 Celery 类？",
+    "source_file": "celery/utils/imports.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.concurrency.prefork.TaskPool"
+      ],
+      "indirect_deps": [
+        "celery.utils.imports.instantiate",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`instantiate` 内部直接调用 `symbol_by_name(name)(*args, **kwargs)`。`symbol_by_name` 负责将字符串解析为类，然后立即实例化。",
+    "source_note": "Type E: instantiate delegates to symbol_by_name and immediately instantiates"
+  },
+  {
+    "id": "celery_type_e_006",
+    "difficulty": "hard",
+    "category": "load_extension_classes_symbol_by_name",
+    "failure_type": "Type E",
+    "implicit_level": 4,
+    "question": "在 `celery/utils/imports.py` 中，`load_extension_classes('celery.contrib.tasks')` 的调用链中，entry_points 枚举出的 'package:class' 格式字符串由哪个 Celery 函数负责解析为真实类？",
+    "source_file": "celery/utils/imports.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [
+        "celery.utils.imports.load_extension_classes"
+      ],
+      "implicit_deps": [
+        "celery.utils.imports.load_extension_class_names"
+      ]
+    },
+    "reasoning_hint": "`load_extension_class_names` 从 entry_points 提取 `(name, 'package:class')` 对；`load_extension_classes` 再调用 `symbol_by_name(class_name)` 将字符串解析为真实类。",
+    "source_note": "Type E: entry_points → symbol_by_name resolution chain"
+  },
+  {
+    "id": "celery_type_e_007",
+    "difficulty": "hard",
+    "category": "config_from_object_symbol_by_name_fallback",
+    "failure_type": "Type E",
+    "implicit_level": 4,
+    "question": "在 `celery/loaders/base.py` 的 `BaseLoader.config_from_object` 方法中，当传入的 `obj` 参数是字符串（如 `'myconfig.CONF'`）且无法直接作为模块导入时，哪两个函数依次尝试解析该符号？",
+    "source_file": "celery/loaders/base.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [
+        "celery.loaders.base.BaseLoader.config_from_object",
+        "celery.loaders.base.BaseLoader._smart_import"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`config_from_object` 先尝试 `import_module(obj)`，失败后调用 `_smart_import`。`_smart_import` 若也失败，则回退到 `symbol_by_name(path, imp=imp)` 将 'mypackage:attr' 格式字符串解析为对象。",
+    "source_note": "Type E: config_from_object → _smart_import → symbol_by_name fallback"
+  },
+  {
+    "id": "celery_type_e_008",
+    "difficulty": "hard",
+    "category": "find_app_symbol_by_name_resolution",
+    "failure_type": "Type E",
+    "implicit_level": 4,
+    "question": "在 `celery/app/utils.py` 的 `find_app` 函数中，当 `app` 参数是字符串 `'myproject.celery:app'` 时，哪两个 Celery 函数依次尝试解析该符号以获取 Celery 实例？",
+    "source_file": "celery/app/utils.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.utils.find_app"
+      ],
+      "indirect_deps": [
+        "celery.utils.imports.symbol_by_name",
+        "celery.utils.imports.import_from_cwd"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`find_app` 首先调用 `symbol_by_name(app, imp=imp)` 尝试将 'myproject.celery:app' 解析为对象；若失败（属性不存在），则回退到 `import_from_cwd(app)` 仅作为模块导入，再在模块上查找 `.app` 属性。",
+    "source_note": "Type E: find_app → symbol_by_name → import_from_cwd fallback"
+  },
+  {
+    "id": "celery_type_e_009",
+    "difficulty": "hard",
+    "category": "loader_alias_resolution",
+    "failure_type": "Type E",
+    "implicit_level": 3,
+    "question": "在 `celery/loaders/__init__.py` 中，`LOADER_ALIASES['app']` 通过 `get_loader_cls('app')` 的调用链，最终解析到哪个具体的 Loader 类？",
+    "source_file": "celery/loaders/__init__.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.app.AppLoader"
+      ],
+      "indirect_deps": [
+        "celery.loaders.get_loader_cls"
+      ],
+      "implicit_deps": [
+        "celery.loaders.LOADER_ALIASES"
+      ]
+    },
+    "reasoning_hint": "`LOADER_ALIASES['app']` 存储字符串 `'celery.loaders.app:AppLoader'`；`get_loader_cls` 通过 `symbol_by_name` 将该字符串解析为 `AppLoader` 类（若未预先导入）。",
+    "source_note": "Type E: LOADER_ALIASES + get_loader_cls → symbol_by_name"
+  },
+  {
+    "id": "celery_type_b_001",
+    "difficulty": "hard",
+    "category": "autodiscover_tasks_force_true_chain",
+    "failure_type": "Type B",
+    "implicit_level": 4,
+    "question": "在 `celery/app/base.py` 中，当 `app.autodiscover_tasks(..., force=True)` 时，哪个方法被直接调用（绕过 lazy signal 机制）？该方法内部又调用了哪个 Loader 方法？",
+    "source_file": "celery/app/base.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._autodiscover_tasks"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.autodiscover_tasks",
+        "celery.loaders.base.BaseLoader.autodiscover_tasks"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "force=True 时，`autodiscover_tasks` 方法直接 `return self._autodiscover_tasks(packages, related_name)`，不经过 lazy signal 注册。`_autodiscover_tasks` 再根据 packages 参数调用 loader 的 autodiscover_tasks。",
+    "source_note": "Type B: autodiscover_tasks force=True bypasses lazy signal chain"
+  },
+  {
+    "id": "celery_type_b_002",
+    "difficulty": "hard",
+    "category": "app_task_decorator_task_from_fun",
+    "failure_type": "Type B",
+    "implicit_level": 4,
+    "question": "在 `celery/app/base.py` 中，`@app.task` 装饰器链的完整路径是什么？哪个方法最终完成任务的注册？",
+    "source_file": "celery/app/base.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.task"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`@app.task` 调用 `Celery.task(**options)` 返回装饰器函数；装饰器函数再调用 `app._task_from_fun(fun, **options)` 完成任务的实际注册。",
+    "source_note": "Type B: @app.task decorator → Celery.task → _task_from_fun"
+  },
+  {
+    "id": "celery_type_d_007",
+    "difficulty": "hard",
+    "category": "expand_router_string_symbol_by_name",
+    "failure_type": "Type D",
+    "implicit_level": 4,
+    "question": "在 `celery/app/routes.py` 中，`expand_router_string('my.router.module:RouterClass')` 的参数名 `router` 与 `Router` 类同名（参数遮蔽）。当方法体内访问 `router` 时，真正负责将字符串解析为真实符号的函数是哪个？",
+    "source_file": "celery/app/routes.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [
+        "celery.app.routes.expand_router_string"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`expand_router_string` 内部执行 `router = symbol_by_name(router)`，其中 `router` 是参数绑定的字符串（如 'my.router.module:RouterClass'）。参数名遮蔽类名不会改变真正负责字符串解析的函数。",
+    "source_note": "Type D: expand_router_string with parameter shadowing — symbol_by_name is still called"
+  },
+  {
+    "id": "celery_type_d_008",
+    "difficulty": "hard",
+    "category": "signature_register_type_polymorphic_dispatch",
+    "failure_type": "Type D",
+    "implicit_level": 4,
+    "question": "在 `celery/canvas.py` 中，`@Signature.register_type(name='chain')` 装饰器将 `_chain` 类注册到 `Signature.TYPES['chain']`。当 `Signature.from_dict({'subtask_type': 'chain', ...})` 时，最终返回哪个类的实例？",
+    "source_file": "celery/canvas.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas._chain"
+      ],
+      "indirect_deps": [
+        "celery.canvas.Signature.TYPES",
+        "celery.canvas.Signature.from_dict"
+      ],
+      "implicit_deps": [
+        "celery.canvas.Signature.register_type"
+      ]
+    },
+    "reasoning_hint": "`from_dict` 通过 `cls.TYPES[d['subtask_type']]` 查表得到 `_chain` 类（不是 `chain` 类），然后调用 `_chain.from_dict` 返回 `_chain` 实例。`@register_type(name='chain')` 将 `_chain` 以 'chain' 为键注册。",
+    "source_note": "Type D: @register_type(name='chain') registers _chain class, not chain class"
+  },
+  {
+    "id": "celery_type_d_010",
+    "difficulty": "hard",
+    "category": "chain_class_internal_vs_public_from_dict",
+    "failure_type": "Type D",
+    "implicit_level": 4,
+    "question": "在 `celery/canvas.py` 中，`_chain`（内部类，被 `@Signature.register_type(name='chain')` 注册）和 `chain`（公开类，继承 `_chain`）是两个不同的类。当通过 `signature({'subtask_type': 'chain', ...})` 反序列化时，返回的实例属于哪个类？",
+    "source_file": "celery/canvas.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas._chain"
+      ],
+      "indirect_deps": [
+        "celery.canvas.Signature.TYPES",
+        "celery.canvas.Signature.from_dict"
+      ],
+      "implicit_deps": [
+        "celery.canvas.chain"
+      ]
+    },
+    "reasoning_hint": "`Signature.TYPES['chain']` 注册的是 `_chain` 类（不是 `chain` 类）。`Signature.from_dict` 根据 `subtask_type` 查 `cls.TYPES`，得到 `_chain` 类，再调用 `_chain.from_dict` —— 返回的始终是 `_chain` 实例而非 `chain` 实例。",
+    "source_note": "Type D: _chain (internal registered class) vs chain (public subclass)"
+  },
+  {
+    "id": "celery_type_d_011",
+    "difficulty": "medium",
+    "category": "configuration_view_chainmap_merge",
+    "failure_type": "Type D",
+    "implicit_level": 3,
+    "question": "在 `celery/utils/collections.py` 中，`ConfigurationView` 继承自 `ChainMap`。当访问 `app.conf['broker_url']` 时，若该键同时存在于第一个映射（用户配置）和后续映射（默认配置）中，实际返回的是哪个映射中的值？`ChainMap` 的合并策略是什么？",
+    "source_file": "celery/utils/collections.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.collections.ConfigurationView"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`ChainMap` 按顺序搜索 `self.maps` 列表，返回第一个包含该键的映射中的值（first-found-wins）。`ConfigurationView` 构造时 `[conf, defaults]`，用户配置在前，默认配置在后，所以用户配置优先。",
+    "source_note": "Type D: ConfigurationView inherits ChainMap — first-found-wins lookup across conf and defaults"
+  },
+  {
+    "id": "celery_type_d_012",
+    "difficulty": "medium",
+    "category": "cwd_in_path_context_manager",
+    "failure_type": "Type D",
+    "implicit_level": 3,
+    "question": "在 `celery/utils/imports.py` 中，`cwd_in_path` 上下文管理器在 `__enter__` 时的具体行为是什么？它修改了哪个系统级的全局状态，使得当前工作目录下的模块优先被导入？",
+    "source_file": "celery/utils/imports.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.cwd_in_path"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`cwd_in_path` 在进入时执行 `sys.path.insert(0, cwd)`，将当前工作目录临时加入 `sys.path` 开头。退出时执行 `sys.path.remove(cwd)` 恢复。",
+    "source_note": "Type D: cwd_in_path modifies sys.path globally via context manager"
+  },
+  {
+    "id": "celery_type_a_004",
+    "difficulty": "hard",
+    "category": "autodiscover_tasks_force_true_loader_chain",
+    "failure_type": "Type A",
+    "implicit_level": 4,
+    "question": "在 `celery/app/base.py` 的 `autodiscover_tasks(..., force=True)` 路径中，`_autodiscover_tasks` 在 packages 非空时调用了 Loader 的哪个方法？该 Loader 方法内部又调用了哪个模块级函数来遍历任务模块？",
+    "source_file": "celery/app/base.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.base.autodiscover_tasks"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.app.base.Celery.autodiscover_tasks",
+        "celery.loaders.base.BaseLoader.autodiscover_tasks"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`force=True` 时 `autodiscover_tasks` 直接调用 `_autodiscover_tasks`，后者调用 `loader.autodiscover_tasks(packages, related_name)`；Loader 方法内部调用模块级 `autodiscover_tasks()` 函数遍历包并查找 tasks 模块。",
+    "source_note": "Type A: autodiscover_tasks force=True → loader.autodiscover_tasks → module-level autodiscover_tasks"
+  },
+  {
+    "id": "celery_type_a_010",
+    "difficulty": "hard",
+    "category": "acks_late_failure_matrix_on_failure",
+    "failure_type": "Type A",
+    "implicit_level": 5,
+    "question": "在 `celery/worker/request.py` 的 `Request.on_failure` 方法中，当 `acks_late=True` 时，以下情况分别走 `ack`、`reject(requeue=True)`、`reject(requeue=False)` 中的哪条路径：(1) `Reject` 异常；(2) `Ignore` 异常；(3) `Retry` 异常；(4) `MemoryError`；(5) 普通 `Exception` 且 `acks_on_failure=True`。",
+    "source_file": "celery/worker/request.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.request.Request.on_failure"
+      ],
+      "indirect_deps": [
+        "celery.worker.request.Request.reject",
+        "celery.worker.request.Request.acknowledge"
+      ],
+      "implicit_deps": [
+        "celery.worker.request.Request.on_retry"
+      ]
+    },
+    "reasoning_hint": "on_failure 入口: (1) Reject → self.reject(requeue=exc.requeue)。(2) Ignore → self.acknowledge()。(3) Retry → self.on_retry(exc_info)。(4) MemoryError → raise MemoryError。(5) 普通 Exception + acks_late + acks_on_failure=True → self.acknowledge()。",
+    "source_note": "Type A: acks_late failure matrix — branching on exception type"
+  },
+  {
+    "id": "celery_type_a_012",
+    "difficulty": "hard",
+    "category": "base_loader_smart_import_symbol_by_name_fallback",
+    "failure_type": "Type A",
+    "implicit_level": 4,
+    "question": "在 `celery/loaders/base.py` 的 `BaseLoader._smart_import` 方法中，当直接 `import_module(path)` 失败后，哪个函数被调用作为 fallback？该 fallback 通过什么机制将字符串（如 `'mypkg.config:SettingClass'`）解析为真实对象？",
+    "source_file": "celery/loaders/base.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "indirect_deps": [
+        "celery.loaders.base.BaseLoader._smart_import"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`_smart_import` 首先 `importlib.import_module(path)`；若失败则回退到 `symbol_by_name(path, imp=imp)` 将 'pkg:attr' 格式字符串解析为对象。",
+    "source_note": "Type A: _smart_import fallback to symbol_by_name on import_module failure"
+  },
+  {
+    "id": "celery_type_a_013",
+    "difficulty": "hard",
+    "category": "worker_autodiscover_imports_signal_chain",
+    "failure_type": "Type A",
+    "implicit_level": 5,
+    "question": "在 worker 启动链（`celery/bin/worker.py` → `app.Worker.start()`）中，`worker.autodiscover_tasks` 的 lazy 路径通过哪个信号触发？该信号的哪个接收者（receiver）最终执行 `_autodiscover_tasks`？从 signal.send 到 receiver 执行之间有几层间接调用？",
+    "source_file": "celery/bin/worker.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.signals.import_modules"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery._autodiscover_tasks",
+        "celery.loaders.base.BaseLoader.import_default_modules",
+        "celery.utils.dispatch.signal.Signal.send"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "Worker 启动: `ctx.obj.app.Worker.start()` → `init_worker()` → `import_default_modules()` → `signals.import_modules.send()` → starpromise receiver → `_autodiscover_tasks`。force=False 时 autodiscover_tasks 只注册 starpromise，不直接调用。",
+    "source_note": "Type A: worker startup → import_modules signal → autodiscover receiver chain"
+  },
+  {
+    "id": "celery_type_c_003",
+    "difficulty": "medium",
+    "category": "lpmerge_left_precedent_merge_behavior",
+    "failure_type": "Type C",
+    "implicit_level": 3,
+    "question": "在 `celery/utils/collections.py` 中，`lpmerge(L, R)` 的合并策略是什么？当 R 中某个键对应的值是 `None` 时，该键是否会被写入 L？当该值是空列表 `[]` 时呢？",
+    "source_file": "celery/utils/collections.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.collections.lpmerge"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "lpmerge 执行原地左优先合并：遍历 R，若 `v is not None` 则写入 L（L 中原有值被覆盖）；若 `v is None`（或 R 中无该键），L 中原有值保留。空列表 `[]` 的 `is not None` 为 True，所以会被写入 L。",
+    "source_note": "Type C: lpmerge — None is skipped, [] (non-None) is written"
+  },
+  {
+    "id": "celery_type_c_004",
+    "difficulty": "medium",
+    "category": "configuration_view_namespaces_resolution",
+    "failure_type": "Type E",
+    "implicit_level": 3,
+    "question": "在 `celery/utils/collections.py` 中，`ConfigurationView.__getitem__` 在查遍所有 ChainMap 层级的 `maps` 后，若仍未找到键，会进入哪个命名空间（NAMESPACES）查找？该命名空间是如何参与配置键解析的？",
+    "source_file": "celery/utils/collections.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.collections.ConfigurationView"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.utils.collections.ConfigurationView.NAMESPACES"
+      ]
+    },
+    "reasoning_hint": "`ConfigurationView.__getitem__` 在 maps 查完后，对含 ':' 的键（如 'broker:url'）在 NAMESPACES 中查找命名空间处理器，将复合键路由到正确的配置源。NAMESPACES 是一个字典，键为命名空间名，值为转换函数。",
+    "source_note": "Type E: ConfigurationView falls back to NAMESPACES for compound keys like 'broker:url'"
+  },
+  {
+    "id": "celery_type_e_010",
+    "difficulty": "hard",
+    "category": "task_string_strategy_request_resolution",
+    "failure_type": "Type E",
+    "implicit_level": 4,
+    "question": "在 `celery/app/task.py` 中，`Task.Strategy` 和 `Task.Request` 都是类名字符串。当 worker 执行任务时，这两个字符串分别被哪个函数解析为真实类？解析后的最终产物（策略实例和请求对象）分别属于哪些类？",
+    "source_file": "celery/app/task.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.worker.strategy.default",
+        "celery.worker.request.Request"
+      ],
+      "indirect_deps": [
+        "celery.utils.imports.instantiate",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`Task.Strategy = 'celery.worker.strategy:default'` 通过 `instantiate(self.Strategy, self, app, consumer, **kwargs)` 解析并实例化为 Strategy 实例；`Task.Request = 'celery.worker.request:Request'` 通过 `symbol_by_name` 解析为 Request 类。",
+    "source_note": "Type E: Task.Strategy and Task.Request are string references resolved at worker runtime"
+  },
+  {
+    "id": "celery_type_d_013",
+    "difficulty": "hard",
+    "category": "signature_from_dict_chain_dispatch",
+    "failure_type": "Type D",
+    "implicit_level": 4,
+    "question": "在 `celery/canvas.py` 中，当通过 `signature({'subtask_type': 'chord', 'body': {...}}` 反序列化时，`Signature.from_dict` 根据 'chord' 在 `cls.TYPES` 中查到了哪个类？该类的 `from_dict` 方法返回的实例属于哪个类（注意 `_chord` 与 `chord` 的区别）？",
+    "source_file": "celery/canvas.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas._chord"
+      ],
+      "indirect_deps": [
+        "celery.canvas.Signature.TYPES",
+        "celery.canvas.Signature.from_dict",
+        "celery.canvas._chord.from_dict"
+      ],
+      "implicit_deps": [
+        "celery.canvas.chord"
+      ]
+    },
+    "reasoning_hint": "`@Signature.register_type(name='chord')` 将 `_chord` 类注册为 'chord'。`Signature.from_dict` 查 `cls.TYPES['chord']` 得到 `_chord` 类，调用 `_chord.from_dict` 返回 `_chord` 实例（不是 `chord` 实例）。",
+    "source_note": "Type D: @register_type(name='chord') registers _chord class for 'chord' subtask_type"
+  },
+  {
+    "id": "celery_type_e_011",
+    "difficulty": "hard",
+    "category": "canvas_chain_polymorphic_from_dict",
+    "failure_type": "Type E",
+    "implicit_level": 4,
+    "question": "在 `celery/canvas.py` 中，当调用 `chain(signature_dicts)` 时，`chain` 构造函数内部如何将多个 Signature 字典合并并分发到正确的子类？合并后的链对象属于 `chain` 类还是 `_chain` 类？",
+    "source_file": "celery/canvas.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas._chain"
+      ],
+      "indirect_deps": [
+        "celery.canvas.Signature.register_type",
+        "celery.canvas.Signature.from_dict"
+      ],
+      "implicit_deps": [
+        "celery.canvas.chain"
+      ]
+    },
+    "reasoning_hint": "`chain(...)` 构造函数内部将所有参数转换为 Signature 后，调用 `_chain(tasks, **options)`。`_chain` 继承 `Signature`，被 `@register_type(name='chain')` 注册到 TYPES。所以 `chain(...)` 返回的是 `_chain` 实例，不是 `chain` 实例。",
+    "source_note": "Type E: chain() constructor returns _chain instance, not chain instance"
+  },
+  {
+    "id": "celery_type_e_012",
+    "difficulty": "hard",
+    "category": "symbol_by_name_four_hop_chain",
+    "failure_type": "Type E",
+    "implicit_level": 5,
+    "question": "在 `celery/utils/imports.py` 的 `symbol_by_name` 实现中（来自 kombu），当传入 'celery.backends.redis:RedisBackend' 时，它经过哪四个步骤最终获取到真实的类对象？",
+    "source_file": "celery/utils/imports.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.backends.redis.RedisBackend"
+      ],
+      "indirect_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`symbol_by_name` 四步: (1) 解析 'celery.backends.redis:RedisBackend' → module_path='celery.backends.redis', class_name='RedisBackend'；(2) `importlib.import_module(module_path)` 加载模块；(3) `getattr(module, class_name)` 获取类；(4) 返回类对象。",
+    "source_note": "Type E: symbol_by_name four-step resolution — parse → import_module → getattr → return"
+  },
+  {
+    "id": "celery_type_b_003",
+    "difficulty": "hard",
+    "category": "connect_on_app_finalize_registration_chain",
+    "failure_type": "Type B",
+    "implicit_level": 5,
+    "question": "在 `celery/_state.py` 中，`connect_on_app_finalize` 注册的回调在哪个方法中被调用？该方法内部通过哪个函数触发所有已登记的 finalizer？finalizer 的执行顺序是什么（FILO/LIFO）？",
+    "source_file": "celery/_state.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state._announce_app_finalized"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.finalize",
+        "celery._state.connect_on_app_finalize"
+      ],
+      "implicit_deps": []
+    },
+    "reasoning_hint": "`Celery.finalize()` 调用 `_announce_app_finalized(self)`；后者遍历 `_finalize_callbacks` 列表（FILO 栈），反向执行每个回调。",
+    "source_note": "Type B: connect_on_app_finalize → Celery.finalize → _announce_app_finalized (FILO stack)"
+  },
+  {
+    "id": "celery_type_d_014",
+    "difficulty": "hard",
+    "category": "app_task_proxy_lazy_resolution",
+    "failure_type": "Type D",
+    "implicit_level": 4,
+    "question": "在 `celery/app/task.py` 中，`celery.app.task.Task` 是一个动态创建的 `Proxy` 对象（由 `subclass_with_self` 生成）。当代码中访问 `Task.send` 时，这个 Proxy 解析链的起点是哪个 Proxy 属性访问？实际执行 `send` 方法的类是什么？",
+    "source_file": "celery/app/task.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [],
+      "indirect_deps": [
+        "celery.app.task.Task"
+      ],
+      "implicit_deps": [
+        "celery.app.base.Celery.create_task_cls",
+        "celery.app.base.Celery.subclass_with_self",
+        "celery.local.Proxy"
+      ]
+    },
+    "reasoning_hint": "`Task` 是 `Proxy(type(...))`，其类型由 `subclass_with_self` 动态创建。Proxy 访问 `Task.send` 时，触发 `__getattr__` → 获取当前 app 的 task_cls → 调用其 send 方法。",
+    "source_note": "Type D: Task Proxy — actual send method comes from the dynamically created task class, not the Proxy itself"
+  },
+  {
+    "id": "celery_type_a_014",
+    "difficulty": "hard",
+    "category": "worker_blueprint_apply_bootstep_lifecycle",
+    "failure_type": "Type A",
+    "implicit_level": 4,
+    "question": "在 `celery/bootsteps.py` 中，`Blueprint.apply` 方法的执行顺序是什么？当某个 `StartStopStep` 的 `include()` 返回 False 时（`include_if` 返回 False），该 Step 的 `create` 方法还会被调用吗？",
+    "source_file": "celery/bootsteps.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.bootsteps.Blueprint.apply"
+      ],
+      "indirect_deps": [
+        "celery.bootsteps.Step.__init__",
+        "celery.bootsteps.Step.create",
+        "celery.bootsteps.Step.include",
+        "celery.bootsteps.StartStopStep.include"
+      ],
+      "implicit_deps": [
+        "celery.bootsteps.Step.include_if"
+      ]
+    },
+    "reasoning_hint": "`Blueprint.apply` 循环中先 `step = S(parent, **kwargs)` 实例化（触发 `__init__`），`__init__` 内部调用 `create()`；然后才调用 `step.include(parent)`。`include()` 返回 False 时，`parent.steps.append` 不执行，但 `create()` 已执行过。",
+    "source_note": "Type A: bootstep lifecycle — instantiate (__init__+create) → include check → mount"
   }
 ]

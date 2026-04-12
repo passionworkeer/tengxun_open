@@ -9,12 +9,17 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import logging
 import re
+import sys
 from typing import Any, Iterable, Mapping, Sequence
 
+# 统一规范化函数
+from rag.normalize_utils import normalize_fqn
+
+_logger = logging.getLogger(__name__)
 
 LAYER_KEYS = ("direct_deps", "indirect_deps", "implicit_deps")
-_SEPARATOR_RE = re.compile(r"\.+")
 
 
 def _safe_divide(numerator: float, denominator: float) -> float:
@@ -107,18 +112,21 @@ def compute_set_metrics(
 def canonicalize_dependency_symbol(value: str) -> str:
     """
     将模型输出中常见的路径写法归一成 dotted symbol。
-    """
 
-    item = value.strip().strip('"').strip("'")
+    使用统一的 normalize_fqn 函数进行规范化。
+    返回空字符串时会记录调试日志。
+    """
+    item = normalize_fqn(value)
     if not item:
-        return ""
-    item = item.replace("::", ".")
-    item = item.replace(":", ".")
-    item = item.replace("/", ".")
-    item = item.replace(".py.", ".")
-    if item.endswith(".py"):
-        item = item[:-3]
-    return _SEPARATOR_RE.sub(".", item).strip(".")
+        _logger.debug(
+            f"canonicalize_dependency_symbol returned empty for input: {value!r}"
+        )
+        print(
+            f"[DEBUG] canonicalize_dependency_symbol returned empty "
+            f"for input: {value!r}",
+            file=sys.stderr,
+        )
+    return item
 
 
 def normalize_dependency_layers(

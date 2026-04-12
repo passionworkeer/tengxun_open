@@ -1,0 +1,4 @@
+output_dir: ./artifacts/lora/qwen3.5-9b
+dataset: finetune_qwen_dep_strict
+model_name_or_path: Qwen/Qwen3.5-9B
+ddp_timeout: 7200000  # 2 hours default

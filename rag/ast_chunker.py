@@ -23,6 +23,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 
+# 统一规范化函数
+from .normalize_utils import normalize_symbol_target
+
 
 # 字符串目标匹配模式：匹配形如 "celery.app.trace.build_tracer" 的符号路径
 _STRING_TARGET_PATTERN = re.compile(
@@ -70,19 +73,6 @@ class CodeChunk:
     string_targets: tuple[str, ...] = ()
     references: tuple[str, ...] = ()
     parent_symbol: str | None = None
-
-
-def normalize_symbol_target(value: str) -> str:
-    """
-    规范化符号目标字符串
-
-    处理引号、转义符等，统一符号路径格式。
-
-    Examples:
-        "'celery.app.trace'" -> "celery.app.trace"
-        '"celery:app:trace"' -> "celery.app.trace"
-    """
-    return value.strip().strip("'").strip('"').replace(":", ".")
 
 
 def module_name_from_path(path: Path, repo_root: Path) -> str:
