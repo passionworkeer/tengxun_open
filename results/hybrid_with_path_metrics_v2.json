@@ -1,0 +1,753 @@
+{
+  "pattern_fix": {
+    "total_cases": 102,
+    "old_total_correct": 35,
+    "new_total_correct": 86,
+    "old_overall_accuracy": 34.3,
+    "new_overall_accuracy": 84.3,
+    "overall_improvement": 50.0,
+    "per_type": [
+      {
+        "failure_type": "Type A",
+        "old_total": 16,
+        "new_total": 16,
+        "old_correct": 0,
+        "new_correct": 12,
+        "old_accuracy": 0.0,
+        "new_accuracy": 75.0,
+        "improvement": 75.0,
+        "old_missed": 16,
+        "new_missed": 4,
+        "old_detail": [
+          {
+            "case_id": "celery_type_a_hard_001",
+            "question": "在 `app.autodiscover_tasks(packages, force=False)` 的延迟执行链中，真正负责判定 `ModuleNotFound",
+            "gt": "Type A",
+            "old_pred": "(empty)",
+            "new_pred": "Type A"
+          },
+          {
+            "case_id": "celery_type_a_hard_002",
+            "question": "在 worker 启动链中，当某个 `StartStopStep.include_if()` 最终为 `False` 时，仍会先执行 step 实例化（触发 `",
+            "gt": "Type A",
+            "old_pred": "Type E",
+            "new_pred": "Type A"
+          },
+          {
+            "case_id": "celery_type_a_hard_003",
+            "question": "`PersistentScheduler` 启动阶段若持久化 store 缺失 `utc_enabled` 元数据字段，直接触发 reset（`self._st",
+            "gt": "Type A",
+            "old_pred": "(empty)",
+            "new_pred": "Type A"
+          },
+          {
+            "case_id": "celery_type_a_hard_004",
+            "question": "在 `worker_disable_prefetch=True` 且 broker 为 Redis 的前提下，运行时真正改写 `channel_qos.can_",
+            "gt": "Type A",
+            "old_pred": "(empty)",
+            "new_pred": "Type A"
+          },
+          {
+            "case_id": "celery_type_a_hard_005",
+            "question": "在 `celery/bootsteps.py` 中，`Step._should_include(parent)` 返回 `(False, None)` 时（即 ",
+            "gt": "Type A",
+            "old_pred": "(empty)",
+            "new_pred": "Type A"
+          },
+          {
+            "case_id": "celery_type_a_hard_006",
+            "question": "在 `celery/worker/request.py` 中，当 `acks_late=True` 时，以下情况分别走 `ack`、`reject(requeu",
+            "gt": "Type A",
+            "old_pred": "(empty)",
+            "new_pred": "Type A"
+          },
+          {
+            "case_id": "celery_type_a_hard_007",
+            "question": "在 `celery/app/base.py` 的 `autodiscover_tasks(..., force=False)` 懒路径下，哪个信号（signal",
+            "gt": "Type A",
+            "old_pred": "Type E",
+            "new_pred": "Type A"
+          },
+          {
+            "case_id": "celery_type_a_hard_008",
+            "question": "在 `celery/app/base.py` 的 `autodiscover_tasks(..., force=True)` 路径中，`_autodiscove",
+            "gt": "Type A",
+            "old_pred": "(empty)",
+            "new_pred": "Type A"
+          },
+          {
+            "case_id": "celery_type_a_hard_009",
+            "question": "在 `celery/worker/request.py` 的 `Request.on_failure` 方法中，当 `acks_late=True` 时，以下情",
+            "gt": "Type A",
+            "old_pred": "(empty)",
+            "new_pred": "Type A"
+          },
+          {
+            "case_id": "celery_type_a_hard_010",
+            "question": "在 `celery/loaders/base.py` 的 `BaseLoader._smart_import` 方法中，当直接 `import_module(p",
+            "gt": "Type A",
+            "old_pred": "(empty)",
+            "new_pred": "Type E"
+          },
+          {
+            "case_id": "celery_type_a_hard_011",
+            "question": "在 worker 启动链（`celery/bin/worker.py` → `app.Worker.start()`）中，`worker.autodiscove",
+            "gt": "Type A",
+            "old_pred": "Type E",
+            "new_pred": "Type A"
+          },
+          {
+            "case_id": "celery_type_a_hard_012",
+            "question": "在 `celery/bootsteps.py` 中，`Blueprint.apply` 方法的执行顺序是什么？当某个 `StartStopStep` 的 `in",
+            "gt": "Type A",
+            "old_pred": "(empty)",
+            "new_pred": "Type A"
+          },
+          {
+            "case_id": "celery_type_a_hard_013",
+            "question": "在 `celery/canvas.py` 的 `_chain.stamp` 方法中，当传入 `visitor` 参数时，链条中的每个 task 如何接收 vis",
+            "gt": "Type A",
+            "old_pred": "Type D",
+            "new_pred": "(empty)"
+          },
+          {
+            "case_id": "celery_type_a_hard_014",
+            "question": "在 `celery/canvas.py` 的 `_chain.prepare_steps` 中，当链条包含嵌套 chain 时（`chain(chain(t1,",
+            "gt": "Type A",
+            "old_pred": "Type D",
+            "new_pred": "(empty)"
+          },
+          {
+            "case_id": "celery_type_a_hard_015",
+            "question": "在 `celery/app/base.py` 的 `Celery.autodiscover_tasks` 中，当 `fixup='django'` 时，work",
+            "gt": "Type A",
+            "old_pred": "Type E",
+            "new_pred": "Type A"
+          },
+          {
+            "case_id": "celery_type_a_hard_016",
+            "question": "在 `celery/utils/timer2.py` 的 `Timer` 类中，`self.Schedule = Schedule` 和 `self.Entry",
+            "gt": "Type A",
+            "old_pred": "(empty)",
+            "new_pred": "Type D"
+          }
+        ],
+        "new_detail": [
+          {
+            "case_id": "celery_type_a_hard_010",
+            "question": "在 `celery/loaders/base.py` 的 `BaseLoader._smart_import` 方法中，当直接 `import_module(p",
+            "gt": "Type A",
+            "old_pred": "(empty)",
+            "new_pred": "Type E"
+          },
+          {
+            "case_id": "celery_type_a_hard_013",
+            "question": "在 `celery/canvas.py` 的 `_chain.stamp` 方法中，当传入 `visitor` 参数时，链条中的每个 task 如何接收 vis",
+            "gt": "Type A",
+            "old_pred": "Type D",
+            "new_pred": "(empty)"
+          },
+          {
+            "case_id": "celery_type_a_hard_014",
+            "question": "在 `celery/canvas.py` 的 `_chain.prepare_steps` 中，当链条包含嵌套 chain 时（`chain(chain(t1,",
+            "gt": "Type A",
+            "old_pred": "Type D",
+            "new_pred": "(empty)"
+          },
+          {
+            "case_id": "celery_type_a_hard_016",
+            "question": "在 `celery/utils/timer2.py` 的 `Timer` 类中，`self.Schedule = Schedule` 和 `self.Entry",
+            "gt": "Type A",
+            "old_pred": "(empty)",
+            "new_pred": "Type D"
+          }
+        ]
+      },
+      {
+        "failure_type": "Type B",
+        "old_total": 15,
+        "new_total": 15,
+        "old_correct": 0,
+        "new_correct": 11,
+        "old_accuracy": 0.0,
+        "new_accuracy": 73.3,
+        "improvement": 73.3,
+        "old_missed": 15,
+        "new_missed": 4,
+        "old_detail": [
+          {
+            "case_id": "celery_type_b_easy_001",
+            "question": "在顶层懒加载 API 中，`celery.current_app` 这个 Proxy 在取值时会直接调用哪个函数来获得 app 对象？",
+            "gt": "Type B",
+            "old_pred": "(empty)",
+            "new_pred": "Type B"
+          },
+          {
+            "case_id": "celery_type_b_easy_002",
+            "question": "在顶层懒加载 API 中，`celery.current_task` 在取值时直接调用哪个函数，并最终从哪个状态槽位读取当前任务？",
+            "gt": "Type B",
+            "old_pred": "Type E",
+            "new_pred": "Type B"
+          },
+          {
+            "case_id": "celery_type_b_hard_001",
+            "question": "When `@shared_task` decorates a function, which real app method ultimately creat",
+            "gt": "Type B",
+            "old_pred": "(empty)",
+            "new_pred": "Type B"
+          },
+          {
+            "case_id": "celery_type_b_hard_002",
+            "question": "Inside the `@app.task` decorator flow, which real method ultimately constructs a",
+            "gt": "Type B",
+            "old_pred": "(empty)",
+            "new_pred": "Type B"
+          },
+          {
+            "case_id": "celery_type_b_hard_003",
+            "question": "Which function is responsible for firing all shared-task and built-in finalize c",
+            "gt": "Type B",
+            "old_pred": "(empty)",
+            "new_pred": "Type B"
+          },
+          {
+            "case_id": "celery_type_b_hard_004",
+            "question": "At app finalize time, which method actually creates the celery.backend_cleanup T",
+            "gt": "Type B",
+            "old_pred": "(empty)",
+            "new_pred": "Type B"
+          },
+          {
+            "case_id": "celery_type_b_hard_005",
+            "question": "`celery.app.shared_task` 返回的 Proxy 首次解析任务对象时，触发 finalize 回调链的关键入口符号是什么？",
+            "gt": "Type B",
+            "old_pred": "(empty)",
+            "new_pred": "Type B"
+          },
+          {
+            "case_id": "celery_type_b_hard_006",
+            "question": "在 `app.autodiscover_tasks(..., force=False)` 的 lazy 路径下，真正被触发执行的目标函数是什么，以及它由哪条调用",
+            "gt": "Type B",
+            "old_pred": "(empty)",
+            "new_pred": "Type A"
+          },
+          {
+            "case_id": "celery_type_b_hard_007",
+            "question": "在 `celery/app/base.py` 中，当 `app.autodiscover_tasks(..., force=True)` 时，哪个方法被直接调用",
+            "gt": "Type B",
+            "old_pred": "(empty)",
+            "new_pred": "Type A"
+          },
+          {
+            "case_id": "celery_type_b_hard_008",
+            "question": "在 `celery/app/base.py` 中，`@app.task` 装饰器链的完整路径是什么？哪个方法最终完成任务的注册？",
+            "gt": "Type B",
+            "old_pred": "Type E",
+            "new_pred": "Type B"
+          },
+          {
+            "case_id": "celery_type_b_hard_009",
+            "question": "在 `celery/_state.py` 中，`connect_on_app_finalize` 注册的回调在哪个方法中被调用？该方法内部通过哪个函数触发所有已",
+            "gt": "Type B",
+            "old_pred": "(empty)",
+            "new_pred": "(empty)"
+          },
+          {
+            "case_id": "celery_type_b_medium_001",
+            "question": "在 `celery/backends/base.py` 中，`_create_fake_task_request` 函数创建的任务上下文（Context）中，`",
+            "gt": "Type B",
+            "old_pred": "(empty)",
+            "new_pred": "(empty)"
+          },
+          {
+            "case_id": "celery_type_b_hard_010",
+            "question": "在 `celery/app/base.py` 中，当使用 `@app.task(bind=True, name='custom.name', max_retri",
+            "gt": "Type B",
+            "old_pred": "(empty)",
+            "new_pred": "Type B"
+          },
+          {
+            "case_id": "celery_type_b_hard_011",
+            "question": "在 `celery/app/base.py` 中，`shared_task` 返回的 Proxy 对象在第一次访问属性（如 `.delay`）时，触发 __ge",
+            "gt": "Type B",
+            "old_pred": "Type E",
+            "new_pred": "Type B"
+          },
+          {
+            "case_id": "celery_type_b_hard_012",
+            "question": "在 `celery/app/builtins.py` 中，`@connect_on_app_finalize` 装饰的 `add_unlock_chord_ta",
+            "gt": "Type B",
+            "old_pred": "(empty)",
+            "new_pred": "Type B"
+          }
+        ],
+        "new_detail": [
+          {
+            "case_id": "celery_type_b_hard_006",
+            "question": "在 `app.autodiscover_tasks(..., force=False)` 的 lazy 路径下，真正被触发执行的目标函数是什么，以及它由哪条调用",
+            "gt": "Type B",
+            "old_pred": "(empty)",
+            "new_pred": "Type A"
+          },
+          {
+            "case_id": "celery_type_b_hard_007",
+            "question": "在 `celery/app/base.py` 中，当 `app.autodiscover_tasks(..., force=True)` 时，哪个方法被直接调用",
+            "gt": "Type B",
+            "old_pred": "(empty)",
+            "new_pred": "Type A"
+          },
+          {
+            "case_id": "celery_type_b_hard_009",
+            "question": "在 `celery/_state.py` 中，`connect_on_app_finalize` 注册的回调在哪个方法中被调用？该方法内部通过哪个函数触发所有已",
+            "gt": "Type B",
+            "old_pred": "(empty)",
+            "new_pred": "(empty)"
+          },
+          {
+            "case_id": "celery_type_b_medium_001",
+            "question": "在 `celery/backends/base.py` 中，`_create_fake_task_request` 函数创建的任务上下文（Context）中，`",
+            "gt": "Type B",
+            "old_pred": "(empty)",
+            "new_pred": "(empty)"
+          }
+        ]
+      },
+      {
+        "failure_type": "Type C",
+        "old_total": 15,
+        "new_total": 15,
+        "old_correct": 0,
+        "new_correct": 12,
+        "old_accuracy": 0.0,
+        "new_accuracy": 80.0,
+        "improvement": 80.0,
+        "old_missed": 15,
+        "new_missed": 3,
+        "old_detail": [
+          {
+            "case_id": "celery_type_c_easy_001",
+            "question": "Which real class does `celery.Celery` resolve to in the top-level lazy API?",
+            "gt": "Type C",
+            "old_pred": "Type E",
+            "new_pred": "Type C"
+          },
+          {
+            "case_id": "celery_type_c_easy_002",
+            "question": "Which real function does the top-level `celery.shared_task` symbol resolve to?",
+            "gt": "Type C",
+            "old_pred": "Type E",
+            "new_pred": "Type C"
+          },
+          {
+            "case_id": "celery_type_c_easy_003",
+            "question": "顶层符号 `celery.Task` 最终映射到哪个真实类？",
+            "gt": "Type C",
+            "old_pred": "Type E",
+            "new_pred": "Type C"
+          },
+          {
+            "case_id": "celery_type_c_easy_004",
+            "question": "从源码\"类定义\"角度看，顶层符号 `celery.group` 对应的真实类定义 FQN 是什么？",
+            "gt": "Type C",
+            "old_pred": "(empty)",
+            "new_pred": "Type C"
+          },
+          {
+            "case_id": "celery_type_c_easy_005",
+            "question": "`celery.app.base.Celery.gen_task_name` 方法将任务名生成委托给哪个工具函数？该工具函数在哪个文件中定义？",
+            "gt": "Type C",
+            "old_pred": "(empty)",
+            "new_pred": "Type C"
+          },
+          {
+            "case_id": "celery_type_c_easy_006",
+            "question": "`celery.utils.imports.import_from_cwd` 与普通的 `import_module` 相比，额外做了什么操作？该操作通过哪个上",
+            "gt": "Type C",
+            "old_pred": "(empty)",
+            "new_pred": "Type C"
+          },
+          {
+            "case_id": "celery_type_c_easy_007",
+            "question": "celery.utils.uuid 实际上是从哪个外部包的哪个模块的哪个函数重新导出的？",
+            "gt": "Type C",
+            "old_pred": "(empty)",
+            "new_pred": "Type C"
+          },
+          {
+            "case_id": "celery_type_c_easy_008",
+            "question": "celery.utils.nodename 是在 celery.utils.nodenames 模块中定义的函数，它的完整 FQN 是什么？",
+            "gt": "Type C",
+            "old_pred": "(empty)",
+            "new_pred": "Type C"
+          },
+          {
+            "case_id": "celery_type_c_easy_009",
+            "question": "celery.utils.worker_direct 是在 celery.utils.nodenames 模块中定义的函数，它的完整 FQN 是什么？",
+            "gt": "Type C",
+            "old_pred": "(empty)",
+            "new_pred": "Type C"
+          },
+          {
+            "case_id": "celery_type_c_medium_001",
+            "question": "Which helper function does `Celery.gen_task_name` delegate to?",
+            "gt": "Type C",
+            "old_pred": "(empty)",
+            "new_pred": "Type C"
+          },
+          {
+            "case_id": "celery_type_c_medium_002",
+            "question": "在 `celery/utils/collections.py` 中，`lpmerge(L, R)` 函数的合并策略是什么？当 R 字典中某个键的值是 `None",
+            "gt": "Type C",
+            "old_pred": "(empty)",
+            "new_pred": "(empty)"
+          },
+          {
+            "case_id": "celery_type_c_medium_003",
+            "question": "在 `celery/utils/collections.py` 中，`lpmerge(L, R)` 的合并策略是什么？当 R 中某个键对应的值是 `None` ",
+            "gt": "Type C",
+            "old_pred": "(empty)",
+            "new_pred": "(empty)"
+          },
+          {
+            "case_id": "celery_type_c_hard_001",
+            "question": "在 `celery/__init__.py` 中，顶层符号 `celery.group` 出现在 `celery.__all__` 中，但文件中没有 `from",
+            "gt": "Type C",
+            "old_pred": "(empty)",
+            "new_pred": "Type C"
+          },
+          {
+            "case_id": "celery_type_c_hard_002",
+            "question": "顶层 `celery.Task` 符号经过哪条 re-export 链最终指向 `celery.app.task.Task`？该链中 `celery/__ini",
+            "gt": "Type C",
+            "old_pred": "Type E",
+            "new_pred": "Type C"
+          },
+          {
+            "case_id": "celery_type_c_hard_003",
+            "question": "在 `celery/canvas.py` 中，`celery.canvas._chain`（内部类，被 `@Signature.register_type(na",
+            "gt": "Type C",
+            "old_pred": "Type D",
+            "new_pred": "Type D"
+          }
+        ],
+        "new_detail": [
+          {
+            "case_id": "celery_type_c_medium_002",
+            "question": "在 `celery/utils/collections.py` 中，`lpmerge(L, R)` 函数的合并策略是什么？当 R 字典中某个键的值是 `None",
+            "gt": "Type C",
+            "old_pred": "(empty)",
+            "new_pred": "(empty)"
+          },
+          {
+            "case_id": "celery_type_c_medium_003",
+            "question": "在 `celery/utils/collections.py` 中，`lpmerge(L, R)` 的合并策略是什么？当 R 中某个键对应的值是 `None` ",
+            "gt": "Type C",
+            "old_pred": "(empty)",
+            "new_pred": "(empty)"
+          },
+          {
+            "case_id": "celery_type_c_hard_003",
+            "question": "在 `celery/canvas.py` 中，`celery.canvas._chain`（内部类，被 `@Signature.register_type(na",
+            "gt": "Type C",
+            "old_pred": "Type D",
+            "new_pred": "Type D"
+          }
+        ]
+      },
+      {
+        "failure_type": "Type D",
+        "old_total": 20,
+        "new_total": 20,
+        "old_correct": 11,
+        "new_correct": 19,
+        "old_accuracy": 55.0,
+        "new_accuracy": 95.0,
+        "improvement": 40.0,
+        "old_missed": 9,
+        "new_missed": 1,
+        "old_detail": [
+          {
+            "case_id": "celery_type_d_easy_001",
+            "question": "What pool implementation does `celery.concurrency.get_implementation('processes'",
+            "gt": "Type D",
+            "old_pred": "Type E",
+            "new_pred": "Type D"
+          },
+          {
+            "case_id": "celery_type_d_hard_003",
+            "question": "在 `celery/app/routes.py` 的 `Router.query_router(self, router, ...)` 方法中，参数名 `rou",
+            "gt": "Type D",
+            "old_pred": "(empty)",
+            "new_pred": "Type D"
+          },
+          {
+            "case_id": "celery_type_d_hard_008",
+            "question": "在 `celery/app/task.py` 中，`celery.app.task.Task` 是一个动态创建的 `Proxy` 对象（由 `subclass_",
+            "gt": "Type D",
+            "old_pred": "(empty)",
+            "new_pred": "Type D"
+          },
+          {
+            "case_id": "celery_type_d_medium_001",
+            "question": "What pool implementation does `celery.concurrency.get_implementation('threads')`",
+            "gt": "Type D",
+            "old_pred": "Type E",
+            "new_pred": "Type D"
+          },
+          {
+            "case_id": "celery_type_d_medium_003",
+            "question": "在 `celery/utils/nodenames.py` 中，`current_process_index` 并非在文件顶部 import，而是通过 `fro",
+            "gt": "Type D",
+            "old_pred": "(empty)",
+            "new_pred": "Type D"
+          },
+          {
+            "case_id": "celery_type_d_medium_004",
+            "question": "在 `celery/concurrency/__init__.py` 中，若在首次导入前设置 `CELERY_CUSTOM_WORKER_POOL='celer",
+            "gt": "Type D",
+            "old_pred": "Type E",
+            "new_pred": "Type D"
+          },
+          {
+            "case_id": "celery_type_d_medium_006",
+            "question": "celery.app.task.Task.Request 是字符串 celery.worker.request:Request，celery.app.task.",
+            "gt": "Type D",
+            "old_pred": "Type E",
+            "new_pred": "Type E"
+          },
+          {
+            "case_id": "celery_type_d_medium_007",
+            "question": "在 `celery/utils/collections.py` 中，`ConfigurationView` 继承自 `ChainMap`。当访问 `app.co",
+            "gt": "Type D",
+            "old_pred": "(empty)",
+            "new_pred": "Type D"
+          },
+          {
+            "case_id": "celery_type_d_medium_008",
+            "question": "在 `celery/utils/imports.py` 中，`cwd_in_path` 上下文管理器在 `__enter__` 时的具体行为是什么？它修改了哪个",
+            "gt": "Type D",
+            "old_pred": "(empty)",
+            "new_pred": "Type D"
+          }
+        ],
+        "new_detail": [
+          {
+            "case_id": "celery_type_d_medium_006",
+            "question": "celery.app.task.Task.Request 是字符串 celery.worker.request:Request，celery.app.task.",
+            "gt": "Type D",
+            "old_pred": "Type E",
+            "new_pred": "Type E"
+          }
+        ]
+      },
+      {
+        "failure_type": "Type E",
+        "old_total": 36,
+        "new_total": 36,
+        "old_correct": 24,
+        "new_correct": 32,
+        "old_accuracy": 66.7,
+        "new_accuracy": 88.9,
+        "improvement": 22.2,
+        "old_missed": 12,
+        "new_missed": 4,
+        "old_detail": [
+          {
+            "case_id": "celery_type_e_easy_002",
+            "question": "`celery.utils.imports.load_extension_classes(namespace)` 这条扩展加载链里，哪个 Celery 函数先枚",
+            "gt": "Type E",
+            "old_pred": "(empty)",
+            "new_pred": "Type E"
+          },
+          {
+            "case_id": "celery_type_e_hard_008",
+            "question": "在 `celery/utils/imports.py` 中，`load_extension_classes('celery.contrib.tasks')` 的",
+            "gt": "Type E",
+            "old_pred": "(empty)",
+            "new_pred": "Type E"
+          },
+          {
+            "case_id": "celery_type_e_hard_010",
+            "question": "在 `celery/app/utils.py` 的 `find_app` 函数中，当 `app` 参数是字符串 `'myproject.celery:app'`",
+            "gt": "Type E",
+            "old_pred": "(empty)",
+            "new_pred": "Type E"
+          },
+          {
+            "case_id": "celery_type_e_hard_013",
+            "question": "在 `celery/canvas.py` 中，当调用 `chain(signature_dicts)` 时，`chain` 构造函数内部如何将多个 Signat",
+            "gt": "Type E",
+            "old_pred": "Type D",
+            "new_pred": "Type D"
+          },
+          {
+            "case_id": "celery_type_e_medium_005",
+            "question": "在 `Celery._get_backend` 调用路径里，当 `result_backend='rpc://...'` 时，哪个 backend 类会被解析并",
+            "gt": "Type E",
+            "old_pred": "(empty)",
+            "new_pred": "Type E"
+          },
+          {
+            "case_id": "celery_type_e_medium_010",
+            "question": "在 `celery/utils/functional.py` 中，`head_from_fun` 生成的函数签名源码存放在哪个命名空间变量中？该函数通过 `ex",
+            "gt": "Type E",
+            "old_pred": "(empty)",
+            "new_pred": "Type E"
+          },
+          {
+            "case_id": "celery_type_e_medium_011",
+            "question": "在 `celery/utils/collections.py` 中，`ConfigurationView.__getitem__` 在查遍所有 ChainMap",
+            "gt": "Type E",
+            "old_pred": "(empty)",
+            "new_pred": "Type D"
+          },
+          {
+            "case_id": "celery_type_e_hard_016",
+            "question": "在 `celery/result.py` 的 `AsyncResult.get()` 中，当 `self.backend` 为 `None` 时，`self.a",
+            "gt": "Type E",
+            "old_pred": "(empty)",
+            "new_pred": "Type E"
+          },
+          {
+            "case_id": "celery_type_e_hard_020",
+            "question": "在 `celery/result.py` 的 `result_from_tuple` 函数中，当反序列化一个嵌套的 GroupResult 元组时，递归调用 `",
+            "gt": "Type E",
+            "old_pred": "(empty)",
+            "new_pred": "Type E"
+          },
+          {
+            "case_id": "celery_type_e_hard_021",
+            "question": "在 `celery/result.py` 的 `AsyncResult.ready` 属性中，`self.state in self.backend.READY",
+            "gt": "Type E",
+            "old_pred": "(empty)",
+            "new_pred": "Type E"
+          },
+          {
+            "case_id": "celery_type_e_hard_022",
+            "question": "在 `celery/canvas.py` 的 `_chain.prepare_steps` 中，遇到 chord 类型的 task 时调用了 `app.back",
+            "gt": "Type E",
+            "old_pred": "Type D",
+            "new_pred": "Type E"
+          },
+          {
+            "case_id": "celery_type_e_hard_023",
+            "question": "在 `celery/utils/functional.py` 中，`maybe_evaluate` 用于延迟求值。当在 `celery/app/routes.p",
+            "gt": "Type E",
+            "old_pred": "(empty)",
+            "new_pred": "Type E"
+          }
+        ],
+        "new_detail": [
+          {
+            "case_id": "celery_type_e_hard_002",
+            "question": "When packages=None, which function finally executes the real importlib.import_mo",
+            "gt": "Type E",
+            "old_pred": "Type E",
+            "new_pred": "Type A"
+          },
+          {
+            "case_id": "celery_type_e_hard_013",
+            "question": "在 `celery/canvas.py` 中，当调用 `chain(signature_dicts)` 时，`chain` 构造函数内部如何将多个 Signat",
+            "gt": "Type E",
+            "old_pred": "Type D",
+            "new_pred": "Type D"
+          },
+          {
+            "case_id": "celery_type_e_medium_011",
+            "question": "在 `celery/utils/collections.py` 中，`ConfigurationView.__getitem__` 在查遍所有 ChainMap",
+            "gt": "Type E",
+            "old_pred": "(empty)",
+            "new_pred": "Type D"
+          },
+          {
+            "case_id": "celery_type_e_hard_018",
+            "question": "在 `celery/concurrency/__init__.py` 中，`get_implementation('prefork')` 如何通过 `symbo",
+            "gt": "Type E",
+            "old_pred": "Type E",
+            "new_pred": "Type D"
+          }
+        ]
+      }
+    ]
+  },
+  "retrieval_comparison": {
+    "per_type": [
+      {
+        "failure_type": "Type A",
+        "total": 16,
+        "original_avg_recall": 0.3857,
+        "with_path_avg_recall": 0.3857,
+        "delta": 0.0,
+        "delta_pct": 0.0,
+        "original_perfect": 2,
+        "with_path_perfect": 2,
+        "perfect_improvement": 0,
+        "original_zero": 2,
+        "with_path_zero": 2
+      },
+      {
+        "failure_type": "Type B",
+        "total": 15,
+        "original_avg_recall": 0.1635,
+        "with_path_avg_recall": 0.1635,
+        "delta": 0.0,
+        "delta_pct": 0.0,
+        "original_perfect": 0,
+        "with_path_perfect": 0,
+        "perfect_improvement": 0,
+        "original_zero": 7,
+        "with_path_zero": 7
+      },
+      {
+        "failure_type": "Type C",
+        "total": 15,
+        "original_avg_recall": 0.5111,
+        "with_path_avg_recall": 0.5111,
+        "delta": 0.0,
+        "delta_pct": 0.0,
+        "original_perfect": 6,
+        "with_path_perfect": 6,
+        "perfect_improvement": 0,
+        "original_zero": 6,
+        "with_path_zero": 6
+      },
+      {
+        "failure_type": "Type D",
+        "total": 20,
+        "original_avg_recall": 0.4235,
+        "with_path_avg_recall": 0.4235,
+        "delta": 0.0,
+        "delta_pct": 0.0,
+        "original_perfect": 4,
+        "with_path_perfect": 4,
+        "perfect_improvement": 0,
+        "original_zero": 5,
+        "with_path_zero": 5
+      },
+      {
+        "failure_type": "Type E",
+        "total": 36,
+        "original_avg_recall": 0.2485,
+        "with_path_avg_recall": 0.323,
+        "delta": 0.0745,
+        "delta_pct": 30.0,
+        "original_perfect": 0,
+        "with_path_perfect": 3,
+        "perfect_improvement": 3,
+        "original_zero": 11,
+        "with_path_zero": 10
+      }
+    ],
+    "top_k": 5
+  },
+  "config": {
+    "top_k": 5,
+    "weights": {
+      "bm25": 0.33,
+      "semantic": 0.33,
+      "graph": 0.34
+    },
+    "repo": "external\\celery",
+    "cases_file": "data\\eval_cases.json"
+  }
+}

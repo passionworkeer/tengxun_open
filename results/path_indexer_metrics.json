@@ -1,0 +1,931 @@
+{
+  "path_metrics": {
+    "n_type_e": 36,
+    "avg_recall": 0.1574,
+    "recalls": [
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.5,
+      0.25,
+      0.3333333333333333,
+      0.0,
+      0.0,
+      0.0,
+      0.3333333333333333,
+      0.0,
+      0.0,
+      0.5,
+      1.0,
+      1.0,
+      0.0,
+      0.25,
+      0.16666666666666666,
+      0.0,
+      0.0,
+      0.0,
+      0.3333333333333333,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "details": [
+      {
+        "case_id": "celery_type_e_easy_001",
+        "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('default')` resolv",
+        "gold_fqns": [
+          "celery.loaders.default.Loader"
+        ],
+        "path_fqns": [
+          "celery.loaders.default.Loader"
+        ],
+        "recall": 1.0,
+        "exact_match": true,
+        "n_paths_found": 1
+      },
+      {
+        "case_id": "celery_type_e_easy_002",
+        "question": "`celery.utils.imports.load_extension_classes(namespace)` 这条扩展加载链里，哪个 Celery 函数先枚",
+        "gold_fqns": [
+          "celery.utils.imports.load_extension_class_names",
+          "celery.utils.imports.load_extension_classes",
+          "celery.utils.imports.symbol_by_name"
+        ],
+        "path_fqns": [],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 0
+      },
+      {
+        "case_id": "celery_type_e_hard_001",
+        "question": "In `celery.worker.strategy.default`, what real class does `task.Request` resolve",
+        "gold_fqns": [
+          "celery.worker.request.Request"
+        ],
+        "path_fqns": [
+          "celery.loaders.default.Loader"
+        ],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 1
+      },
+      {
+        "case_id": "celery_type_e_hard_002",
+        "question": "When packages=None, which function finally executes the real importlib.import_mo",
+        "gold_fqns": [
+          "celery.loaders.base.find_related_module",
+          "celery.app.base.Celery._autodiscover_tasks_from_fixups",
+          "celery.fixups.django.DjangoFixup.autodiscover_tasks",
+          "celery.loaders.base.autodiscover_tasks"
+        ],
+        "path_fqns": [
+          "celery.loaders.app.AppLoader"
+        ],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 1
+      },
+      {
+        "case_id": "celery_type_e_hard_003",
+        "question": "在满足 Django fixup 前置条件（`DJANGO_SETTINGS_MODULE` 已设置、`django` 可导入、且 `app.loader_cl",
+        "gold_fqns": [
+          "celery.contrib.django.task.DjangoTask",
+          "celery.fixups.django.fixup",
+          "celery.fixups.django.DjangoFixup.install",
+          "celery.app.base.Celery.Task",
+          "celery.app.base.Celery.create_task_cls",
+          "celery.app.base.Celery.subclass_with_self",
+          "celery.utils.imports.symbol_by_name"
+        ],
+        "path_fqns": [
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader",
+          "celery.backends.gcs.GCSBackend"
+        ],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 5
+      },
+      {
+        "case_id": "celery_type_e_hard_004",
+        "question": "When BaseLoader.config_from_object receives a string like pkg.mod.CONF that cann",
+        "gold_fqns": [
+          "celery.utils.imports.symbol_by_name",
+          "celery.loaders.base.BaseLoader.config_from_object",
+          "celery.loaders.base.BaseLoader._smart_import",
+          "celery.utils.imports.import_from_cwd"
+        ],
+        "path_fqns": [],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 0
+      },
+      {
+        "case_id": "celery_type_e_hard_005",
+        "question": "在 `celery/utils/imports.py` 中，`symbol_by_name('celery.concurrency.prefork:TaskPo",
+        "gold_fqns": [
+          "celery.concurrency.prefork.TaskPool",
+          "celery.utils.imports.symbol_by_name"
+        ],
+        "path_fqns": [
+          "celery.concurrency.prefork.TaskPool",
+          "celery.concurrency.prefork.TaskPool"
+        ],
+        "recall": 0.5,
+        "exact_match": true,
+        "n_paths_found": 2
+      },
+      {
+        "case_id": "celery_type_e_hard_006",
+        "question": "在 `celery/app/backends.py` 中，`backends.by_name('redis')` 通过 `BACKEND_ALIASES` 与 ",
+        "gold_fqns": [
+          "celery.backends.redis.RedisBackend",
+          "celery.app.backends.by_name",
+          "celery.app.backends.BACKEND_ALIASES",
+          "celery.utils.imports.symbol_by_name"
+        ],
+        "path_fqns": [
+          "celery.backends.redis.RedisBackend",
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader"
+        ],
+        "recall": 0.25,
+        "exact_match": true,
+        "n_paths_found": 5
+      },
+      {
+        "case_id": "celery_type_e_hard_007",
+        "question": "在 `celery/utils/imports.py` 中，`instantiate('celery.concurrency.prefork:TaskPool'",
+        "gold_fqns": [
+          "celery.concurrency.prefork.TaskPool",
+          "celery.utils.imports.instantiate",
+          "celery.utils.imports.symbol_by_name"
+        ],
+        "path_fqns": [
+          "celery.concurrency.prefork.TaskPool",
+          "celery.concurrency.prefork.TaskPool"
+        ],
+        "recall": 0.3333333333333333,
+        "exact_match": true,
+        "n_paths_found": 2
+      },
+      {
+        "case_id": "celery_type_e_hard_008",
+        "question": "在 `celery/utils/imports.py` 中，`load_extension_classes('celery.contrib.tasks')` 的",
+        "gold_fqns": [
+          "celery.utils.imports.symbol_by_name",
+          "celery.utils.imports.load_extension_classes",
+          "celery.utils.imports.load_extension_class_names"
+        ],
+        "path_fqns": [],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 0
+      },
+      {
+        "case_id": "celery_type_e_hard_009",
+        "question": "在 `celery/loaders/base.py` 的 `BaseLoader.config_from_object` 方法中，当传入的 `obj` 参数是字",
+        "gold_fqns": [
+          "celery.utils.imports.symbol_by_name",
+          "celery.loaders.base.BaseLoader.config_from_object",
+          "celery.loaders.base.BaseLoader._smart_import"
+        ],
+        "path_fqns": [],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 0
+      },
+      {
+        "case_id": "celery_type_e_hard_010",
+        "question": "在 `celery/app/utils.py` 的 `find_app` 函数中，当 `app` 参数是字符串 `'myproject.celery:app'`",
+        "gold_fqns": [
+          "celery.app.utils.find_app",
+          "celery.utils.imports.symbol_by_name",
+          "celery.utils.imports.import_from_cwd"
+        ],
+        "path_fqns": [
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader"
+        ],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 3
+      },
+      {
+        "case_id": "celery_type_e_hard_011",
+        "question": "在 `celery/loaders/__init__.py` 中，`LOADER_ALIASES['app']` 通过 `get_loader_cls('app",
+        "gold_fqns": [
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.get_loader_cls",
+          "celery.loaders.LOADER_ALIASES"
+        ],
+        "path_fqns": [
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader"
+        ],
+        "recall": 0.3333333333333333,
+        "exact_match": true,
+        "n_paths_found": 3
+      },
+      {
+        "case_id": "celery_type_e_hard_012",
+        "question": "在 `celery/app/task.py` 中，`Task.Strategy` 和 `Task.Request` 都是类名字符串。当 worker 执行任务时",
+        "gold_fqns": [
+          "celery.worker.strategy.default",
+          "celery.worker.request.Request",
+          "celery.utils.imports.instantiate",
+          "celery.utils.imports.symbol_by_name"
+        ],
+        "path_fqns": [
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader"
+        ],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 3
+      },
+      {
+        "case_id": "celery_type_e_hard_013",
+        "question": "在 `celery/canvas.py` 中，当调用 `chain(signature_dicts)` 时，`chain` 构造函数内部如何将多个 Signat",
+        "gold_fqns": [
+          "celery.canvas._chain",
+          "celery.canvas.Signature.register_type",
+          "celery.canvas.Signature.from_dict",
+          "celery.canvas.chain"
+        ],
+        "path_fqns": [],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 0
+      },
+      {
+        "case_id": "celery_type_e_hard_014",
+        "question": "在 `celery/utils/imports.py` 的 `symbol_by_name` 实现中（来自 kombu），当传入 'celery.backend",
+        "gold_fqns": [
+          "celery.backends.redis.RedisBackend",
+          "celery.utils.imports.symbol_by_name"
+        ],
+        "path_fqns": [
+          "celery.backends.redis.RedisBackend",
+          "celery.backends.redis.RedisBackend",
+          "celery.backends.redis.SentinelBackend"
+        ],
+        "recall": 0.5,
+        "exact_match": true,
+        "n_paths_found": 3
+      },
+      {
+        "case_id": "celery_type_e_medium_001",
+        "question": "Which backend class does `celery.app.backends.by_name('redis')` resolve to?",
+        "gold_fqns": [
+          "celery.backends.redis.RedisBackend"
+        ],
+        "path_fqns": [
+          "celery.backends.redis.RedisBackend",
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader"
+        ],
+        "recall": 1.0,
+        "exact_match": true,
+        "n_paths_found": 5
+      },
+      {
+        "case_id": "celery_type_e_medium_002",
+        "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('app')` resolve to",
+        "gold_fqns": [
+          "celery.loaders.app.AppLoader"
+        ],
+        "path_fqns": [
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader"
+        ],
+        "recall": 1.0,
+        "exact_match": true,
+        "n_paths_found": 3
+      },
+      {
+        "case_id": "celery_type_e_medium_003",
+        "question": "在 `Celery.__init__` 中，默认 `builtin_fixups` 的字符串入口 `'celery.fixups.django:fixup'` ",
+        "gold_fqns": [
+          "celery.fixups.django.fixup",
+          "celery.app.base.Celery.__init__",
+          "celery.utils.imports.symbol_by_name",
+          "celery.app.base.BUILTIN_FIXUPS"
+        ],
+        "path_fqns": [
+          "celery.loaders.app.AppLoader"
+        ],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 1
+      },
+      {
+        "case_id": "celery_type_e_medium_004",
+        "question": "在未设置 `CELERY_LOADER` 且未显式传入 loader 参数时，`Celery.loader` 属性最终实例化哪个 Loader 类？",
+        "gold_fqns": [
+          "celery.loaders.app.AppLoader",
+          "celery.app.base.Celery._get_default_loader",
+          "celery.loaders.get_loader_cls",
+          "celery.utils.imports.symbol_by_name"
+        ],
+        "path_fqns": [
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader"
+        ],
+        "recall": 0.25,
+        "exact_match": true,
+        "n_paths_found": 4
+      },
+      {
+        "case_id": "celery_type_e_medium_005",
+        "question": "在 `Celery._get_backend` 调用路径里，当 `result_backend='rpc://...'` 时，哪个 backend 类会被解析并",
+        "gold_fqns": [
+          "celery.app.base.Celery._get_backend",
+          "celery.backends.rpc.RPCBackend",
+          "celery.app.backends.by_url",
+          "celery.app.backends.by_name",
+          "celery.app.backends.BACKEND_ALIASES",
+          "celery.utils.imports.symbol_by_name"
+        ],
+        "path_fqns": [
+          "celery.backends.rpc.RPCBackend",
+          "celery.loaders.app.AppLoader"
+        ],
+        "recall": 0.16666666666666666,
+        "exact_match": true,
+        "n_paths_found": 2
+      },
+      {
+        "case_id": "celery_type_e_medium_006",
+        "question": "当线程中没有 current app 且未设置 `CELERY_LOADER` 时，首次访问 `celery.current_app.loader` 最终会实例",
+        "gold_fqns": [
+          "celery.loaders.default.Loader",
+          "celery._state._get_current_app",
+          "celery.app.base.Celery.loader",
+          "celery.loaders.get_loader_cls",
+          "celery.local.Proxy",
+          "celery.loaders.LOADER_ALIASES",
+          "celery.utils.imports.symbol_by_name"
+        ],
+        "path_fqns": [
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader"
+        ],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 3
+      },
+      {
+        "case_id": "celery_type_e_medium_007",
+        "question": "`Task.start_strategy` 调用时，`Task.Strategy` 字符串最终会被解析为哪个可调用对象？",
+        "gold_fqns": [
+          "celery.worker.strategy.default",
+          "celery.app.task.Task.start_strategy",
+          "celery.utils.imports.instantiate",
+          "celery.utils.imports.symbol_by_name"
+        ],
+        "path_fqns": [],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 0
+      },
+      {
+        "case_id": "celery_type_e_medium_008",
+        "question": "`_state._get_current_app` 懒创建 fallback app 后，首次访问 `app.loader` 时，最终实例化到哪个具体 Load",
+        "gold_fqns": [
+          "celery.app.base.Celery.loader",
+          "celery.loaders.default.Loader",
+          "celery._state._get_current_app",
+          "celery.loaders.get_loader_cls",
+          "celery.utils.imports.symbol_by_name",
+          "celery.utils.imports.import_from_cwd"
+        ],
+        "path_fqns": [
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader"
+        ],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 3
+      },
+      {
+        "case_id": "celery_type_e_medium_009",
+        "question": "在 `celery/utils/imports.py` 中，`instantiate('celery.concurrency.prefork:TaskPool'",
+        "gold_fqns": [
+          "celery.concurrency.prefork.TaskPool",
+          "celery.utils.imports.instantiate",
+          "celery.utils.imports.symbol_by_name"
+        ],
+        "path_fqns": [
+          "celery.concurrency.prefork.TaskPool",
+          "celery.concurrency.prefork.TaskPool"
+        ],
+        "recall": 0.3333333333333333,
+        "exact_match": true,
+        "n_paths_found": 2
+      },
+      {
+        "case_id": "celery_type_e_medium_010",
+        "question": "在 `celery/utils/functional.py` 中，`head_from_fun` 生成的函数签名源码存放在哪个命名空间变量中？该函数通过 `ex",
+        "gold_fqns": [
+          "celery.utils.functional.head_from_fun",
+          "celery.utils.functional._argsfromspec",
+          "celery.utils.functional.FUNHEAD_TEMPLATE"
+        ],
+        "path_fqns": [],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 0
+      },
+      {
+        "case_id": "celery_type_e_medium_011",
+        "question": "在 `celery/utils/collections.py` 中，`ConfigurationView.__getitem__` 在查遍所有 ChainMap",
+        "gold_fqns": [
+          "celery.utils.collections.ConfigurationView",
+          "celery.utils.collections.ConfigurationView.NAMESPACES"
+        ],
+        "path_fqns": [],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 0
+      },
+      {
+        "case_id": "celery_type_e_hard_015",
+        "question": "在 `celery/app/backends.py` 的 `by_name('db')` 中，`LOADER_ALIASES` 为 `{'db': 'celer",
+        "gold_fqns": [
+          "celery.app.backends.by_name",
+          "celery.utils.imports.symbol_by_name",
+          "celery.utils.imports.load_extension_class_names",
+          "celery.app.backends.BACKEND_ALIASES",
+          "celery.utils.imports.import_from_cwd"
+        ],
+        "path_fqns": [
+          "celery.backends.database.DatabaseBackend",
+          "celery.backends.database.DatabaseBackend",
+          "celery.backends.database.DatabaseBackend"
+        ],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 5
+      },
+      {
+        "case_id": "celery_type_e_hard_016",
+        "question": "在 `celery/result.py` 的 `AsyncResult.get()` 中，当 `self.backend` 为 `None` 时，`self.a",
+        "gold_fqns": [
+          "celery.result.AsyncResult.app",
+          "celery.result.allow_join_result",
+          "celery.result.assert_will_not_block",
+          "celery.result.ResultBase",
+          "vine.promise",
+          "celery.app.backends.by_name",
+          "celery.app.backends.BACKEND_ALIASES",
+          "celery.utils.imports.symbol_by_name"
+        ],
+        "path_fqns": [
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader"
+        ],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 3
+      },
+      {
+        "case_id": "celery_type_e_hard_017",
+        "question": "在 `celery/worker/strategy.py` 的 `default` 函数体中，`symbol_by_name` 被用来将 Task 的 `Str",
+        "gold_fqns": [
+          "celery.utils.imports.symbol_by_name",
+          "celery.worker.strategy.default",
+          "celery.worker.request.create_request_cls"
+        ],
+        "path_fqns": [
+          "celery.loaders.default.Loader"
+        ],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 1
+      },
+      {
+        "case_id": "celery_type_e_hard_018",
+        "question": "在 `celery/concurrency/__init__.py` 中，`get_implementation('prefork')` 如何通过 `symbo",
+        "gold_fqns": [
+          "celery.concurrency.get_implementation",
+          "celery.utils.imports.symbol_by_name",
+          "celery.concurrency.ALIASES"
+        ],
+        "path_fqns": [
+          "celery.concurrency.prefork.TaskPool",
+          "celery.concurrency.prefork.TaskPool"
+        ],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 2
+      },
+      {
+        "case_id": "celery_type_e_hard_019",
+        "question": "在 `celery/backends/base.py` 的 `KeyValueStoreBackend` 中，`_get` 和 `_put` 方法最终调用了 `",
+        "gold_fqns": [
+          "celery.backends.base.KeyValueStoreBackend._get",
+          "celery.backends.base.KeyValueStoreBackend._put",
+          "celery.backends.base.KeyValueStoreBackend.__init__",
+          "celery.backends.base.BaseBackend.__init__",
+          "celery.app.backends.by_name",
+          "celery.app.backends.BACKEND_ALIASES",
+          "celery.utils.imports.symbol_by_name"
+        ],
+        "path_fqns": [
+          "celery.backends.redis.RedisBackend"
+        ],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 1
+      },
+      {
+        "case_id": "celery_type_e_hard_020",
+        "question": "在 `celery/result.py` 的 `result_from_tuple` 函数中，当反序列化一个嵌套的 GroupResult 元组时，递归调用 `",
+        "gold_fqns": [
+          "celery.result.result_from_tuple",
+          "celery.result.GroupResult",
+          "celery.result.AsyncResult",
+          "celery.result.ResultBase",
+          "celery.result.GroupResult.restore",
+          "celery.result.ResultSet.__init__",
+          "vine.barrier"
+        ],
+        "path_fqns": [
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader"
+        ],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 3
+      },
+      {
+        "case_id": "celery_type_e_hard_021",
+        "question": "在 `celery/result.py` 的 `AsyncResult.ready` 属性中，`self.state in self.backend.READY",
+        "gold_fqns": [
+          "celery.result.AsyncResult.ready",
+          "celery.result.AsyncResult.state",
+          "celery.result.AsyncResult._get_task_meta",
+          "celery.result.AsyncResult.backend",
+          "celery.app.backends.by_name",
+          "celery.backends.base.BaseBackend.READY_STATES",
+          "celery.utils.imports.symbol_by_name"
+        ],
+        "path_fqns": [
+          "celery.backends.redis.RedisBackend"
+        ],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 1
+      },
+      {
+        "case_id": "celery_type_e_hard_022",
+        "question": "在 `celery/canvas.py` 的 `_chain.prepare_steps` 中，遇到 chord 类型的 task 时调用了 `app.back",
+        "gold_fqns": [
+          "celery.canvas._chain.prepare_steps",
+          "celery.app.backends.by_name",
+          "celery.backends.redis.RedisBackend.ensure_chords_allowed",
+          "celery.backends.base.BaseBackend.ensure_chords_allowed",
+          "celery.utils.imports.symbol_by_name"
+        ],
+        "path_fqns": [
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader",
+          "celery.backends.redis.RedisBackend"
+        ],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 4
+      },
+      {
+        "case_id": "celery_type_e_hard_023",
+        "question": "在 `celery/utils/functional.py` 中，`maybe_evaluate` 用于延迟求值。当在 `celery/app/routes.p",
+        "gold_fqns": [
+          "celery.utils.functional.maybe_evaluate",
+          "kombu.utils.functional.maybe_evaluate",
+          "celery.utils.functional.lazy",
+          "celery.utils.functional.mlazy",
+          "celery.app.routes.Router.route",
+          "vine.promise"
+        ],
+        "path_fqns": [
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader",
+          "celery.loaders.app.AppLoader"
+        ],
+        "recall": 0.0,
+        "exact_match": false,
+        "n_paths_found": 3
+      }
+    ]
+  },
+  "rrf_metrics": {
+    "n_type_e": 36,
+    "avg_recall": 0.2416,
+    "recalls": [
+      0.0,
+      0.6666666666666666,
+      0.0,
+      0.25,
+      0.14285714285714285,
+      0.0,
+      0.5,
+      0.25,
+      0.6666666666666666,
+      0.6666666666666666,
+      0.3333333333333333,
+      0.0,
+      0.3333333333333333,
+      0.0,
+      0.0,
+      0.5,
+      0.0,
+      0.0,
+      0.25,
+      0.25,
+      0.16666666666666666,
+      0.14285714285714285,
+      0.25,
+      0.3333333333333333,
+      0.6666666666666666,
+      0.3333333333333333,
+      0.5,
+      0.2,
+      0.0,
+      0.3333333333333333,
+      0.3333333333333333,
+      0.0,
+      0.2857142857142857,
+      0.14285714285714285,
+      0.2,
+      0.0
+    ],
+    "details": [
+      {
+        "case_id": "celery_type_e_easy_001",
+        "recall": 0.0,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_easy_002",
+        "recall": 0.6666666666666666,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_001",
+        "recall": 0.0,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_002",
+        "recall": 0.25,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_003",
+        "recall": 0.14285714285714285,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_004",
+        "recall": 0.0,
+        "exact_match": false
+      },
+      {
+        "case_id": "celery_type_e_hard_005",
+        "recall": 0.5,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_006",
+        "recall": 0.25,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_007",
+        "recall": 0.6666666666666666,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_008",
+        "recall": 0.6666666666666666,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_009",
+        "recall": 0.3333333333333333,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_010",
+        "recall": 0.0,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_011",
+        "recall": 0.3333333333333333,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_012",
+        "recall": 0.0,
+        "exact_match": false
+      },
+      {
+        "case_id": "celery_type_e_hard_013",
+        "recall": 0.0,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_014",
+        "recall": 0.5,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_medium_001",
+        "recall": 0.0,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_medium_002",
+        "recall": 0.0,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_medium_003",
+        "recall": 0.25,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_medium_004",
+        "recall": 0.25,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_medium_005",
+        "recall": 0.16666666666666666,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_medium_006",
+        "recall": 0.14285714285714285,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_medium_007",
+        "recall": 0.25,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_medium_008",
+        "recall": 0.3333333333333333,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_medium_009",
+        "recall": 0.6666666666666666,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_medium_010",
+        "recall": 0.3333333333333333,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_medium_011",
+        "recall": 0.5,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_015",
+        "recall": 0.2,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_016",
+        "recall": 0.0,
+        "exact_match": false
+      },
+      {
+        "case_id": "celery_type_e_hard_017",
+        "recall": 0.3333333333333333,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_018",
+        "recall": 0.3333333333333333,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_019",
+        "recall": 0.0,
+        "exact_match": false
+      },
+      {
+        "case_id": "celery_type_e_hard_020",
+        "recall": 0.2857142857142857,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_021",
+        "recall": 0.14285714285714285,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_022",
+        "recall": 0.2,
+        "exact_match": true
+      },
+      {
+        "case_id": "celery_type_e_hard_023",
+        "recall": 0.0,
+        "exact_match": true
+      }
+    ]
+  },
+  "complementarity": {
+    "n_total": 36,
+    "path_only": [],
+    "rrf_only": [
+      "celery_type_e_easy_002",
+      "celery_type_e_hard_001",
+      "celery_type_e_hard_002",
+      "celery_type_e_hard_003",
+      "celery_type_e_hard_008",
+      "celery_type_e_hard_009",
+      "celery_type_e_hard_010",
+      "celery_type_e_hard_013",
+      "celery_type_e_medium_003",
+      "celery_type_e_medium_006",
+      "celery_type_e_medium_007",
+      "celery_type_e_medium_008",
+      "celery_type_e_medium_010",
+      "celery_type_e_medium_011",
+      "celery_type_e_hard_015",
+      "celery_type_e_hard_017",
+      "celery_type_e_hard_018",
+      "celery_type_e_hard_020",
+      "celery_type_e_hard_021",
+      "celery_type_e_hard_022",
+      "celery_type_e_hard_023"
+    ],
+    "both": [
+      "celery_type_e_easy_001",
+      "celery_type_e_hard_005",
+      "celery_type_e_hard_006",
+      "celery_type_e_hard_007",
+      "celery_type_e_hard_011",
+      "celery_type_e_hard_014",
+      "celery_type_e_medium_001",
+      "celery_type_e_medium_002",
+      "celery_type_e_medium_004",
+      "celery_type_e_medium_005",
+      "celery_type_e_medium_009"
+    ],
+    "neither": [
+      "celery_type_e_hard_004",
+      "celery_type_e_hard_012",
+      "celery_type_e_hard_016",
+      "celery_type_e_hard_019"
+    ],
+    "path_coverage": 11,
+    "rrf_coverage": 32,
+    "combined_coverage": 32
+  },
+  "indexer_stats": {
+    "total_paths": 40,
+    "unique_fqns": 30,
+    "unique_sources": 10,
+    "total_aliases": 29,
+    "alias_dicts_loaded": 3,
+    "by_path_type": {
+      "alias": 35,
+      "implicit": 5
+    }
+  },
+  "weights": {
+    "bm25": 0.33,
+    "semantic": 0.33,
+    "graph": 0.34
+  }
+}

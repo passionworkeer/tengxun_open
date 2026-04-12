@@ -1,29 +1,29 @@
 # DependencyPathIndexer 验证报告
 
-**Index stats**: 40 paths, 30 unique FQNs, 29 aliases loaded
+**Index stats**: 37 paths, 30 unique FQNs, 29 aliases loaded
 
 ## 1. Type E Recall@K 对比
 
 | 方法 | Type E Avg Recall@K | # Cases |
 |---|---|---|
-| **DependencyPathIndexer** | **0.2099** | 27 |
-| RRF (baseline) | 0.2668 | 27 |
+| **DependencyPathIndexer** | **0.1574** | 36 |
+| RRF (baseline) | 0.2416 | 36 |
 
-- PathIndexer vs RRF: -0.0569 (-21.3%)
+- PathIndexer vs RRF: -0.0842 (-34.9%)
 - RRF 优于 PathIndexer（两者互补才有效）
 
 ## 2. 互补性分析
 
-总 Type E cases: 27
+总 Type E cases: 36
 
 | 类别 | 数量 | 占比 | Cases |
 |---|---|---|---|
-| 两者都命中 | 11 | 40.7% | celery_type_e_easy_001, celery_type_e_hard_005, celery_type_e_hard_006, celery_type_e_hard_007, celery_type_e_hard_011... |
+| 两者都命中 | 11 | 30.6% | celery_type_e_easy_001, celery_type_e_hard_005, celery_type_e_hard_006, celery_type_e_hard_007, celery_type_e_hard_011... |
 | **仅 PathIndexer 命中** | 0 | 0.0% |  |
-| 仅 RRF 命中 | 15 | 55.6% | celery_type_e_easy_002, celery_type_e_hard_001, celery_type_e_hard_002, celery_type_e_hard_003, celery_type_e_hard_004... |
-| 两者都未命中 | 1 | 3.7% | celery_type_e_hard_012 |
+| 仅 RRF 命中 | 22 | 61.1% | celery_type_e_easy_002, celery_type_e_hard_001, celery_type_e_hard_002, celery_type_e_hard_003, celery_type_e_hard_004... |
+| 两者都未命中 | 3 | 8.3% | celery_type_e_hard_012, celery_type_e_hard_016, celery_type_e_hard_019 |
 
-**组合覆盖率**: 26/27 = 96.3%
+**组合覆盖率**: 33/36 = 91.7%
 
 ## 3. Type E Case 详细召回
 

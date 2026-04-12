@@ -95,6 +95,103 @@ Step-by-step layer assignment:
 7. Return only the required JSON object.
 """
 
+# ---------------------------------------------------------------------------
+# P2-18: CRITICAL Mislayer-Prevention Rules (Type A/B/D/E high-mislayer cases)
+# ---------------------------------------------------------------------------
+
+# Priority 1: symbol_by_name three-component split rule
+# Root cause: model puts ALL symbol_by_name components in one layer
+# Fix: explicit three-way split rule
+SYMBOL_BY_NAME_RULE = """\
+CRITICAL — SYMBOL_BY_NAME THREE-COMPONENT SPLIT:
+symbol_by_name('module.path:ClassName') resolves in THREE steps:
+  Step 1 — symbol_by_name() itself → implicit_deps (runtime lookup)
+  Step 2 — intermediate module path (module.path) → indirect_deps (if not already direct)
+  Step 3 — final ClassName (the actual class/function) → direct_deps (final resolution target)
+Example: symbol_by_name('celery.backends.redis:RedisBackend')
+  → celery.utils.symbols.symbol_by_name → implicit_deps (the lookup mechanism)
+  → celery.backends.redis.RedisBackend → direct_deps (the resolved class)
+  → celery.backends.redis → indirect_deps (only if needed as intermediate hop)
+NEVER put the resolved final class (RedisBackend) in indirect_deps or implicit_deps.
+"""
+
+# Priority 2: BACKEND_ALIASES / ALIASES lookup rule
+# Root cause: model confuses ALIASES dict lookup (implicit) with resolved class (direct)
+BACKEND_ALIASES_RULE = """\
+CRITICAL — BACKEND_ALIASES / ALIAS_LOOKUP:
+BACKEND_ALIASES['redis'], LOADER_ALIASES['lazy'], TYPES['task'] are runtime dictionary lookups:
+  → The ALIASES / dict object itself → implicit_deps
+  → The KEY lookup operation (BACKEND_ALIASES['key']) → implicit_deps
+  → The RESOLVED final class from the lookup → direct_deps
+Example: BACKEND_ALIASES['redis'] → celery.backends.redis.RedisBackend
+  → celery.app.backends.BACKEND_ALIASES → implicit_deps
+  → celery.backends.redis.RedisBackend → direct_deps
+NEVER put the resolved final class (RedisBackend) in indirect_deps.
+"""
+
+# Priority 3: @shared_task decorator registration flow
+# Root cause: model puts Task class in indirect_deps instead of direct_deps
+SHARED_TASK_RULE = """\
+CRITICAL — @shared_task DECORATOR REGISTRATION FLOW:
+@shared_task decorator creates a multi-stage registration:
+  Stage 1 — @shared_task DECORATOR CALL itself → implicit_deps (runtime hook registration)
+  Stage 2 — connect_on_app_finalize() callback → implicit_deps (registration mechanism)
+  Stage 3 — _task_from_fun() / app._task_from_fun() → direct_deps (actual Task registration)
+  Stage 4 — decorated function result (the real Task class) → direct_deps (final result)
+Example: @shared_task decorated function registered via app._task_from_fun
+  → celery._state.connect_on_app_finalize → implicit_deps
+  → celery._state._get_active_apps → implicit_deps
+  → celery.app.base.Celery._task_from_fun → direct_deps
+NEVER put _task_from_fun or the final Task class in indirect_deps — it is the direct result.
+"""
+
+# Priority 4: Proxy lazy resolution
+# Root cause: model confuses Proxy (implicit) with resolved type (direct)
+PROXY_RESOLUTION_RULE = """\
+CRITICAL — PROXY / LAZY RESOLUTION:
+celery.local.Proxy and celery._state.current_app use lazy evaluation:
+  → celery.local.Proxy → implicit_deps (the lazy mechanism)
+  → celery._state.current_app → implicit_deps (the Proxy itself)
+  → The RESOLVED real class/property behind the Proxy → direct_deps
+  → cached_property wrapper → indirect_deps (explicit intermediate)
+Example: Celery.Worker (cached_property) → Worker subclass with app bound
+  → celery.local.Proxy → implicit_deps
+  → celery.app.base.Celery.Worker (cached_property) → direct_deps
+  → celery.apps.worker.Worker (resolved subclass) → direct_deps
+  → celery.app.base.Celery.subclass_with_self → implicit_deps
+"""
+
+# Priority 5: cached_property and subclass_with_self
+CACHED_PROPERTY_RULE = """\
+IMPORTANT — CACHED_PROPERTY AND SUBCLASS_WITH_SELF:
+cached_property descriptors and subclass_with_self are indirect hops:
+  → cached_property descriptor itself → indirect_deps
+  → Resolved real attribute value (the actual object) → direct_deps
+  → subclass_with_self call → implicit_deps
+  → Generated subclass class → direct_deps
+Example: Celery.Worker (cached_property)
+  → celery.app.base.Celery.Worker (descriptor) → direct_deps
+  → celery.apps.worker.Worker (subclass) → direct_deps
+  → celery.app.base.Celery.subclass_with_self → implicit_deps
+"""
+
+# Combined mislayer-prevention addendum (append to LAYER_CHECKLIST_COT_TEMPLATE)
+MISLAYER_PREVENTION_ADDENDUM = (
+    SYMBOL_BY_NAME_RULE
+    + BACKEND_ALIASES_RULE
+    + SHARED_TASK_RULE
+    + PROXY_RESOLUTION_RULE
+    + CACHED_PROPERTY_RULE
+)
+
+
+def build_mislayer_prevention_cot(base_cot: str = LAYER_CHECKLIST_COT_TEMPLATE) -> str:
+    """
+    Build enhanced CoT with all mislayer-prevention rules.
+    Use this when mislayer rate is high or for Type A/B/D/E cases.
+    """
+    return f"{base_cot.strip()}\n\n{MISLAYER_PREVENTION_ADDENDUM.strip()}"
+
 
 # ---------------------------------------------------------------------------
 # P2-16: Hard-case optimization hints
@@ -491,6 +588,7 @@ def build_prompt_bundle(
     include_empty_context: bool = True,
     auto_hard_cot: bool = True,
     use_layer_checklist: bool = True,
+    use_mislayer_prevention: bool = False,
 ) -> PromptBundle:
     """
     组装完整Prompt包。
@@ -500,6 +598,9 @@ def build_prompt_bundle(
         use_layer_checklist: True（默认）时，使用增强版层级检查CoT（LAYER_CHECKLIST_COT_TEMPLATE）
                             替代默认cot_template，可降低mislayer_rate。
                             设置为False可禁用增强版layer checklist。
+        use_mislayer_prevention: True时，在layer_checklist基础上追加mislayer-prevention专项规则
+                            (symbol_by_name/ALIASES/@shared_task/Proxy规则)。
+                            建议用于Type A/B/D/E或已知mislayer高风险问题。
     """
     selected = select_few_shot_examples(
         question=question,
@@ -513,7 +614,10 @@ def build_prompt_bundle(
         effective_cot = LAYER_CHECKLIST_COT_TEMPLATE
     else:
         effective_cot = cot_template
-    if auto_hard_cot and is_hard_case(question=question, context=context, entry_symbol=entry_symbol):
+    # P2-18: mislayer_prevention addendum - applies on top of everything
+    if use_mislayer_prevention:
+        effective_cot = build_mislayer_prevention_cot(effective_cot)
+    elif auto_hard_cot and is_hard_case(question=question, context=context, entry_symbol=entry_symbol):
         effective_cot = build_cot_for_hard_case(effective_cot)
     return PromptBundle(
         system_prompt=system_prompt,
@@ -542,6 +646,7 @@ def build_messages(
     assistant_fewshot: bool = False,
     auto_hard_cot: bool = True,
     use_layer_checklist: bool = True,
+    use_mislayer_prevention: bool = False,
 ) -> list[dict[str, str]]:
     bundle = build_prompt_bundle(
         question=question,
@@ -555,6 +660,7 @@ def build_messages(
         include_empty_context=include_empty_context,
         auto_hard_cot=auto_hard_cot,
         use_layer_checklist=use_layer_checklist,
+        use_mislayer_prevention=use_mislayer_prevention,
     )
     messages = [{"role": "system", "content": bundle.system_prompt.strip()}]
     if bundle.cot_template.strip():
@@ -574,6 +680,218 @@ def build_messages(
             messages.append({"role": "user", "content": format_few_shot_example(example)})
     messages.append({"role": "user", "content": bundle.user_prompt.strip()})
     return messages
+
+
+# ---------------------------------------------------------------------------
+# P2-18: Mislayer-Focus Few-Shot Examples
+# ---------------------------------------------------------------------------
+# High-risk cases based on mislayer_analysis.md:
+# - Type B (@shared_task): 66.7% mislayer rate
+# - Type A (autodiscover/finalize): 54.5% mislayer rate
+# - Type E (symbol_by_name/ALIASES): 23.1% mislayer rate
+# - Top confusion pairs: indirect→direct, implicit→indirect, direct→implicit
+#
+# These examples specifically demonstrate correct 3-layer split for hard cases.
+
+MISLAYER_FOCUS_FEW_SHOTS: list[dict] = [
+    {
+        "id": "ML01",
+        "title": "symbol_by_name three-component split",
+        "failure_type": "Type E",
+        "difficulty": "hard",
+        "question": "What does `symbol_by_name('celery.backends.redis:RedisBackend')` ultimately resolve to? List all dependency layers.",
+        "environment_preconditions": [
+            "celery.backends.redis module is installed and accessible.",
+            "BACKEND_ALIASES dictionary maps 'redis' key to RedisBackend.",
+        ],
+        "reasoning_steps": [
+            "symbol_by_name() is a runtime string-to-class resolver → implicit_deps.",
+            "The intermediate module 'celery.backends.redis' may appear as indirect path.",
+            "The FINAL resolved class RedisBackend → direct_deps.",
+            "Rule: resolved final class NEVER goes to indirect_deps.",
+        ],
+        "ground_truth": {
+            "direct_deps": ["celery.backends.redis.RedisBackend"],
+            "indirect_deps": [],
+            "implicit_deps": ["celery.utils.symbols.symbol_by_name"],
+        },
+    },
+    {
+        "id": "ML02",
+        "title": "BACKEND_ALIASES lookup resolution",
+        "failure_type": "Type E",
+        "difficulty": "medium",
+        "question": "When `BACKEND_ALIASES['redis']` is used to get the backend class, what is the complete dependency chain?",
+        "environment_preconditions": [
+            "Celery app is configured with backend='redis'.",
+            "BACKEND_ALIASES is populated in celery.app.backends.",
+        ],
+        "reasoning_steps": [
+            "BACKEND_ALIASES dictionary is a runtime lookup structure → implicit_deps.",
+            "The ALIASES['key'] lookup operation itself → implicit_deps.",
+            "The RESOLVED RedisBackend class from the lookup → direct_deps.",
+            "NEVER: put RedisBackend in indirect_deps.",
+        ],
+        "ground_truth": {
+            "direct_deps": ["celery.backends.redis.RedisBackend"],
+            "indirect_deps": ["celery.app.backends.by_name"],
+            "implicit_deps": ["celery.app.backends.BACKEND_ALIASES"],
+        },
+    },
+    {
+        "id": "ML03",
+        "title": "@shared_task decorator registration",
+        "failure_type": "Type B",
+        "difficulty": "hard",
+        "question": "When `@shared_task` decorates a function, which symbols are in which dependency layers?",
+        "environment_preconditions": [
+            "A Celery app exists in the current process.",
+            "@shared_task decorator is applied to a user-defined function.",
+        ],
+        "reasoning_steps": [
+            "@shared_task decorator CALL → implicit_deps (runtime hook registration).",
+            "connect_on_app_finalize() callback → implicit_deps (registration mechanism).",
+            "_get_active_apps() → implicit_deps (app discovery).",
+            "app._task_from_fun() → direct_deps (actual task registration).",
+            "FINAL decorated function / Task class → direct_deps (the result).",
+            "NEVER put _task_from_fun in indirect_deps — it is the direct result.",
+        ],
+        "ground_truth": {
+            "direct_deps": ["celery.app.base.Celery._task_from_fun"],
+            "indirect_deps": [],
+            "implicit_deps": [
+                "celery._state.connect_on_app_finalize",
+                "celery._state._get_active_apps",
+                "celery._state._announce_app_finalized",
+            ],
+        },
+    },
+    {
+        "id": "ML04",
+        "title": "Proxy lazy resolution with cached_property",
+        "failure_type": "Type A",
+        "difficulty": "hard",
+        "question": "When `app.Worker` is accessed on a Celery app (where Worker is a cached_property), what are the dependency layers?",
+        "environment_preconditions": [
+            "Celery app is created with default configuration.",
+            "autofinalize=True (default).",
+        ],
+        "reasoning_steps": [
+            "celery.local.Proxy → implicit_deps (lazy proxy mechanism).",
+            "celery._state.current_app → implicit_deps (Proxy instance).",
+            "Celery.Worker (cached_property descriptor) → direct_deps (first stable attribute).",
+            "subclass_with_self('celery.apps.worker:Worker') → implicit_deps (runtime class generation).",
+            "celery.apps.worker.Worker (generated subclass with app bound) → direct_deps (final resolved class).",
+            "NEVER put Worker in indirect_deps — it is the direct resolved type.",
+        ],
+        "ground_truth": {
+            "direct_deps": [
+                "celery.app.base.Celery.Worker",
+                "celery.apps.worker.Worker",
+            ],
+            "indirect_deps": [],
+            "implicit_deps": [
+                "celery.local.Proxy",
+                "celery._state.current_app",
+                "celery.app.base.Celery.subclass_with_self",
+            ],
+        },
+    },
+    {
+        "id": "ML05",
+        "title": "indirect_deps vs direct_deps boundary (over-correction)",
+        "failure_type": "Type D",
+        "difficulty": "medium",
+        "question": "For a re-export chain A→B→C where the entry file imports from B and B imports from C, which symbols belong to direct_deps vs indirect_deps?",
+        "environment_preconditions": [
+            "Entry file: `from celery.app import base`",
+            "celery.app.base imports from celery.app.backends → C",
+        ],
+        "reasoning_steps": [
+            "B (intermediate module that entry file imports from) → direct_deps.",
+            "C (what B imports from) → indirect_deps (second hop).",
+            "Rule: first-hop stable symbol → direct_deps; second-hop → indirect_deps.",
+            "COMMON ERROR: model puts BOTH B and C in direct_deps.",
+            "COMMON ERROR: model puts BOTH B and C in indirect_deps.",
+        ],
+        "ground_truth": {
+            "direct_deps": ["celery.app.backends.by_name"],
+            "indirect_deps": ["celery.backends.base.BaseBackend"],
+            "implicit_deps": [],
+        },
+    },
+    {
+        "id": "ML06",
+        "title": "instantiate() runtime resolution",
+        "failure_type": "Type E",
+        "difficulty": "hard",
+        "question": "`instantiate('celery.backends.redis:RedisBackend', ...)` — what are the dependency layers for each symbol?",
+        "environment_preconditions": [
+            "instantiate() is called with a string class path.",
+        ],
+        "reasoning_steps": [
+            "instantiate() function itself → implicit_deps (runtime instantiation).",
+            "The intermediate module celery.backends.redis → indirect_deps (only if traversed).",
+            "The FINAL instantiated RedisBackend class → direct_deps.",
+            "Rule: instantiate() is a runtime mechanism → implicit_deps.",
+            "Rule: final instantiated class → direct_deps, NOT indirect_deps.",
+        ],
+        "ground_truth": {
+            "direct_deps": ["celery.backends.redis.RedisBackend"],
+            "indirect_deps": [],
+            "implicit_deps": ["celery.utils.symbols.instantiate"],
+        },
+    },
+]
+
+
+def select_mislayer_focus_examples(
+    question: str,
+    max_examples: int = 3,
+) -> list[dict]:
+    """
+    Select mislayer-focus few-shot examples based on question content.
+    Prioritizes Type B (@shared_task), Type E (symbol_by_name/ALIASES),
+    and Type A (autodiscover/finalize) patterns.
+    """
+    question_lower = question.lower()
+    scored: list[tuple[float, dict]] = []
+
+    # Keyword to example IDs mapping
+    keyword_to_ids = {
+        "shared_task": ["ML03"],
+        "symbol_by_name": ["ML01"],
+        "backend_aliases": ["ML02"],
+        "backend_alises": ["ML02"],  # typo variant
+        "instantiate": ["ML06"],
+        "proxy": ["ML04"],
+        "cached_property": ["ML04"],
+        "worker": ["ML04"],
+        "finalize": ["ML04"],
+        "autodiscover": ["ML04"],
+    }
+
+    # Score each example
+    for example in MISLAYER_FOCUS_FEW_SHOTS:
+        score = 0.0
+        ex_id = example["id"]
+        ex_text = f"{example['title']} {example['question']}".lower()
+
+        # Check keyword matches
+        for keyword, ids in keyword_to_ids.items():
+            if keyword in question_lower and ex_id in ids:
+                score += 5.0
+            if keyword in ex_text and any(k in question_lower for k in keyword.split("_")):
+                score += 3.0
+
+        # Hard/medium difficulty bonus
+        if example["difficulty"] in ("hard", "medium"):
+            score += 1.0
+
+        scored.append((score, example))
+
+    scored.sort(key=lambda x: x[0], reverse=True)
+    return [ex for _, ex in scored[:max_examples]]
 
 
 def few_shot_gap(library: Iterable[FewShotExample] | None = None) -> int:

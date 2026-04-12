@@ -186,10 +186,22 @@ class DependencyPathIndexer:
         这样的字面量查找，我们也应该为 BACKEND_ALIASES 中的每个条目建立路径。
         因为问题会直接问 "by_name('redis') resolves to what?"，
         我们需要直接回答 'redis' -> 'celery.backends.redis:RedisBackend'。
+
+        Deduplication: skip entries already added by _scan_file_for_alias_subscripts
+        by checking self._paths for existing (alias_key, resolved_fqn) pairs.
         """
+        seen_pairs: set[tuple[str | None, str]] = {
+            (p.alias_key, p.resolved_fqn) for p in self._paths
+        }
+
         for dict_name, mapping in self._alias_map.items():
             for key, target in mapping.items():
                 resolved_fqn = self._resolve_symbol_name(target)
+                pair = (key, resolved_fqn)
+                if pair in seen_pairs:
+                    continue
+                seen_pairs.add(pair)
+
                 # Determine the best source_call based on dict_name
                 # e.g. "backends.BACKEND_ALIASES" -> "celery/app/backends.py"
                 source_call = self._guess_source_file(dict_name)

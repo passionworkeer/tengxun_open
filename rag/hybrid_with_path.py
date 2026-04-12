@@ -130,13 +130,15 @@ class HybridRetrieverWithPath(HybridRetriever):
             entry_file=entry_file,
         )
 
-        # Step 2: Run standard RRF (from parent class)
+        # Step 2: Run standard RRF with larger candidate pool (50)
+        # so that path targets buried at rank 10-20 can still be boosted into top_k
+        _RRF_CANDIDATE_POOL = 50
         rrf_trace = HybridRetriever.retrieve_with_trace(
             self,
             question=question,
             entry_symbol=entry_symbol,
             entry_file=entry_file,
-            top_k=top_k,
+            top_k=_RRF_CANDIDATE_POOL,
             per_source=per_source,
             query_mode=query_mode,
             rrf_k=rrf_k,
@@ -202,26 +204,69 @@ class HybridRetrieverWithPath(HybridRetriever):
         top_k: int,
     ) -> tuple[list[RetrievalHit], tuple[str, ...], bool]:
         """
-        Boost chunks whose symbol matches PathInfo.resolved_fqn.
+        Boost chunks whose symbol matches PathInfo.resolved_fqn (suffix/prefix match)
+        AND inject path target chunks that are NOT already in the RRF fused list.
+
+        For Type E questions, the resolved FQN target (e.g., celery.backends.redis.RedisBackend)
+        might not appear in the RRF top-50 at all. In that case we materialize the target
+        chunk directly and inject it with a high score.
 
         Returns (new_fused, new_fused_ids, was_augmented).
-        If no path hits or no overlap, returns original fused list unchanged.
+        If no path hits, returns original fused list unchanged.
         """
         if not path_hits:
             return rrf_fused, tuple(h.chunk_id for h in rrf_fused), False
 
-        resolved_fqns = {p.resolved_fqn.lower() for p in path_hits}
+        # Deduplicate path hits by resolved_fqn
+        seen_fqns: set[str] = set()
+        unique_hits: list[PathInfo] = []
+        for ph in path_hits:
+            key = ph.resolved_fqn.lower()
+            if key not in seen_fqns:
+                seen_fqns.add(key)
+                unique_hits.append(ph)
+        path_hits = unique_hits
 
+        existing_ids: set[str] = {h.chunk_id for h in rrf_fused}
         boosted_ids: set[str] = set()
+        injected: list[RetrievalHit] = []
+
+        # 1. Boost RRF chunks whose symbol matches a path resolved_fqn
         for hit in rrf_fused:
             chunk = self.chunk_by_id.get(hit.chunk_id)
-            if chunk and chunk.symbol.lower() in resolved_fqns:
+            if not chunk:
+                continue
+            sym_lower = chunk.symbol.lower()
+            matched = self._symbol_matches_fqn(sym_lower, seen_fqns)
+            if matched:
                 boosted_ids.add(hit.chunk_id)
 
-        if not boosted_ids:
+        # 2. Inject path target chunks NOT already in RRF fused list
+        for ph in path_hits:
+            rfqn_lower = ph.resolved_fqn.lower()
+            # Find chunks whose symbol matches the resolved FQN
+            matched_ids = self._find_chunks_by_fqn(rfqn_lower)
+            for chunk_id in matched_ids:
+                if chunk_id not in existing_ids and chunk_id not in injected:
+                    chunk = self.chunk_by_id[chunk_id]
+                    injected.append(
+                        RetrievalHit(
+                            chunk_id=chunk_id,
+                            symbol=chunk.symbol,
+                            repo_path=chunk.repo_path,
+                            kind=chunk.kind,
+                            score=self._path_score_bonus + 0.5,
+                            source=("path_indexer",),
+                            start_line=chunk.start_line,
+                            end_line=chunk.end_line,
+                            snippet=self._render_chunk_for_hit(chunk, rank=1),
+                        )
+                    )
+
+        if not boosted_ids and not injected:
             return rrf_fused, tuple(h.chunk_id for h in rrf_fused), False
 
-        # Re-score: add bonus to matching chunks, re-sort
+        # Re-score boosted RRF hits
         new_fused: list[RetrievalHit] = []
         for hit in rrf_fused:
             if hit.chunk_id in boosted_ids:
@@ -241,8 +286,58 @@ class HybridRetrieverWithPath(HybridRetriever):
             else:
                 new_fused.append(hit)
 
+        # Append injected hits
+        new_fused.extend(injected)
+
         new_fused.sort(key=lambda h: h.score, reverse=True)
         return new_fused, tuple(h.chunk_id for h in new_fused), True
+
+    @staticmethod
+    def _symbol_matches_fqn(
+        sym_lower: str, resolved_fqns_lower: set[str]
+    ) -> bool:
+        """Check if a chunk symbol matches any resolved FQN (suffix/prefix/partial)."""
+        if sym_lower in resolved_fqns_lower:
+            return True
+        for rfqn in resolved_fqns_lower:
+            if sym_lower.endswith(rfqn) or rfqn.endswith(sym_lower):
+                return True
+            # Check last component match:
+            # 'celery.backends.redis.RedisBackend.__init__' vs
+            # 'celery.backends.redis.RedisBackend'
+            rfqn_last = rfqn.rsplit(".", 1)[-1] if "." in rfqn else rfqn
+            if sym_lower.endswith(rfqn_last):
+                return True
+        return False
+
+    def _find_chunks_by_fqn(self, fqn_lower: str) -> list[str]:
+        """Find chunk IDs whose symbol matches the given FQN (any form)."""
+        # Exact symbol match
+        if fqn_lower in self.symbol_to_ids:
+            return list(self.symbol_to_ids[fqn_lower])
+
+        # Module match (without class name)
+        # e.g. 'celery.backends.redis.RedisBackend' -> also match 'celery.backends.redis'
+        parts = fqn_lower.rsplit(".", 1)
+        if len(parts) == 2:
+            module_lower = parts[0]
+            if module_lower in self.symbol_to_ids:
+                return list(self.symbol_to_ids[module_lower])
+
+        # Try basename match
+        basename = fqn_lower.rsplit(".", 1)[-1]
+        return list(self.basename_to_ids.get(basename, []))
+
+    def _render_chunk_for_hit(self, chunk, rank: int) -> str:
+        """Render a chunk for the hit (used for injected path hits)."""
+        if rank == 1:
+            return chunk.content
+        lines = [chunk.signature]
+        if chunk.docstring:
+            lines.append(f'Docstring: "{chunk.docstring.splitlines()[0]}"')
+        if chunk.imports:
+            lines.append("Imports: " + ", ".join(chunk.imports[:6]))
+        return "\n".join(lines)
 
     # ── Convenience helpers ─────────────────────────────────────────────
 
