@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-12T20:18:24.712662",
+  "generated_at": "2026-04-12T22:34:27.361838",
   "strategies": {
     "gpt_baseline": {
       "strategy_key": "gpt_baseline",
@@ -914,6 +914,92 @@
         "description": "完整策略：Qwen + PE + RAG + Fine-tuned",
         "requires_api": false,
         "api_type": "vllm"
+      }
+    }
+  },
+  "dataset_info": {
+    "eval_cases": {
+      "version": "2026-04-12",
+      "total": 120,
+      "by_difficulty": {
+        "easy": {"count": 15, "pct": 12.5},
+        "medium": {"count": 23, "pct": 19.2},
+        "hard": {"count": 82, "pct": 68.3}
+      },
+      "by_failure_type": {
+        "Type A": {"count": 19, "pct": 15.8},
+        "Type B": {"count": 19, "pct": 15.8},
+        "Type C": {"count": 18, "pct": 15.0},
+        "Type D": {"count": 24, "pct": 20.0},
+        "Type E": {"count": 40, "pct": 33.3}
+      },
+      "new_cases_added": 18,
+      "blind_spots_covered": [
+        "celery/bin/celery.py CLI autodiscover",
+        "celery/canvas.py chain.__new__ reduce polymorphic",
+        "celery/canvas.py group.__or__ chord auto-upgrade",
+        "celery/schedules.py crontab_parser._expand_range wrap-around",
+        "celery/canvas.py _prepare_chain_from_options ChainMap guard",
+        "celery/result.py GroupResult nested deserialization",
+        "celery/canvas.py StampingVisitor recursive traversal",
+        "celery/canvas.py Signature.flatten_links recursion",
+        "celery/canvas.py _chord.__init__ dual polymorphic",
+        "celery/serialization.py UnpickleableExceptionWrapper roundtrip",
+        "celery/utils/serialization.py raise_with_context"
+      ]
+    },
+    "finetune_dataset": {
+      "version": "2026-04-12",
+      "file": "data/finetune_dataset_120_strict.jsonl",
+      "total": 531,
+      "original_clean": 493,
+      "variants_generated": 33,
+      "supplements_generated": 5,
+      "overlap_removed": 4,
+      "fqn_errors": 0,
+      "by_difficulty": {
+        "easy": {"count": 168, "pct": 31.6, "target": "<=35", "status": "OK"},
+        "medium": {"count": 173, "pct": 32.6, "target": "-", "status": "-"},
+        "hard": {"count": 190, "pct": 35.8, "target": ">=35", "status": "OK"}
+      },
+      "by_failure_type": {
+        "Type A": {"count": 107, "pct": 20.2},
+        "Type B": {"count": 122, "pct": 23.0},
+        "Type C": {"count": 94, "pct": 17.7},
+        "Type D": {"count": 95, "pct": 17.9},
+        "Type E": {"count": 113, "pct": 21.3, "target": ">=20", "status": "OK"}
+      }
+    }
+  },
+  "hybrid_with_path": {
+    "source": "results/hybrid_with_path_metrics_v2.json",
+    "eval_set": 102,
+    "config": {
+      "top_k": 5,
+      "weights": {"bm25": 0.33, "semantic": 0.33, "graph": 0.34}
+    },
+    "pattern_fix": {
+      "total": 102,
+      "old_correct": 35,
+      "new_correct": 86,
+      "old_accuracy": 34.3,
+      "new_accuracy": 84.3,
+      "improvement_pp": 50.0,
+      "by_failure_type": {
+        "Type A": {"n": 16, "old": 0.0, "new": 75.0, "improvement": 75.0},
+        "Type B": {"n": 15, "old": 0.0, "new": 73.3, "improvement": 73.3},
+        "Type C": {"n": 15, "old": 0.0, "new": 80.0, "improvement": 80.0},
+        "Type D": {"n": 20, "old": 55.0, "new": 95.0, "improvement": 40.0},
+        "Type E": {"n": 36, "old": 66.7, "new": 88.9, "improvement": 22.2}
+      }
+    },
+    "retrieval_recall_top5": {
+      "by_failure_type": {
+        "Type A": {"n": 16, "original": 0.3857, "with_path": 0.3857},
+        "Type B": {"n": 15, "original": 0.1635, "with_path": 0.1635},
+        "Type C": {"n": 15, "original": 0.5111, "with_path": 0.5111},
+        "Type D": {"n": 20, "original": 0.4235, "with_path": 0.4235},
+        "Type E": {"n": 36, "original": 0.2485, "with_path": 0.3230}
       }
     }
   }
