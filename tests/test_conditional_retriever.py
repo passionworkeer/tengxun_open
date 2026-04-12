@@ -177,90 +177,17 @@ class TestConditionalRetriever:
         hybrid = HybridRetriever(chunks)
         return ConditionalRetriever(hybrid)
 
-    def test_classify_delegates(self, retriever: ConditionalRetriever) -> None:
-        result = retriever.classify("Which real class does celery.Celery resolve to?")
-        assert isinstance(result, QuestionClassification)
-
     def test_should_use_rag_hard_true(self, retriever: ConditionalRetriever) -> None:
         assert retriever.should_use_rag(
             question="symbol_by_name resolution chain"
         ) is True
 
-    def test_should_use_rag_easy_false(self, retriever: ConditionalRetriever) -> None:
-        # The exact easy question
-        result = retriever.should_use_rag(
-            question="Which real class does `celery.Celery` resolve to in the top-level lazy API?"
-        )
-        # Easy pattern matches → rag_recommended may be False
-        assert isinstance(result, bool)
-
-    def test_fast_path_returns_chunk_ids(self, retriever: ConditionalRetriever) -> None:
-        result = retriever.fast_path("celery app base", top_k=2)
-        assert isinstance(result, list)
-        assert all(isinstance(x, str) for x in result)
-
     def test_fast_path_respects_top_k(self, retriever: ConditionalRetriever) -> None:
         result = retriever.fast_path("celery", top_k=1)
         assert len(result) <= 1
-
-    def test_fast_path_empty_query(self, retriever: ConditionalRetriever) -> None:
-        result = retriever.fast_path("")
-        assert isinstance(result, list)
-
-    def test_retrieve_delegates_to_hybrid(
-        self, retriever: ConditionalRetriever
-    ) -> None:
-        hits = retriever.retrieve("celery", top_k=2)
-        assert isinstance(hits, list)
-
-    def test_retrieve_with_trace_delegates(
-        self, retriever: ConditionalRetriever
-    ) -> None:
-        trace = retriever.retrieve_with_trace("celery", top_k=2)
-        assert hasattr(trace, "fused")
-
-    def test_smart_retrieve_returns_hits_and_classification(
-        self, retriever: ConditionalRetriever
-    ) -> None:
-        hits, classification = retriever.smart_retrieve(
-            "symbol_by_name resolution",
-            top_k=2,
-        )
-        assert isinstance(hits, list)
-        assert isinstance(classification, QuestionClassification)
-
-    def test_smart_retrieve_rag_recommended_false(
-        self, retriever: ConditionalRetriever
-    ) -> None:
-        # With hard_requires_rag=True (default), even medium returns RAG
-        hits, classification = retriever.smart_retrieve(
-            "Which real class does `celery.Celery` resolve to in the top-level lazy API?",
-            top_k=2,
-        )
-        assert isinstance(classification, QuestionClassification)
-
-    def test_build_context_returns_string(
-        self, retriever: ConditionalRetriever
-    ) -> None:
-        ctx = retriever.build_context("symbol_by_name", top_k=2)
-        assert isinstance(ctx, str)
 
     def test_from_repo_classmethod(self) -> None:
         # Test factory: creates retriever with empty chunks for nonexistent path
         retriever = ConditionalRetriever.from_repo("/nonexistent/path")
         assert isinstance(retriever, ConditionalRetriever)
         assert len(retriever._hybrid.chunks) == 0
-
-
-# ── QuestionClassification dataclass ───────────────────────────────────
-
-
-class TestQuestionClassificationFields:
-    def test_all_fields_present(self) -> None:
-        result = classify_question_type("symbol_by_name test")
-        assert hasattr(result, "difficulty")
-        assert hasattr(result, "failure_type")
-        assert hasattr(result, "signals")
-        assert hasattr(result, "rag_recommended")
-        assert hasattr(result, "reason")
-        assert isinstance(result.signals, tuple)

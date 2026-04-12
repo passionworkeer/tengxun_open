@@ -113,14 +113,14 @@ def _audit_exact_overlaps(
     eval_gt_to_cases: dict[tuple[tuple[str, ...], ...], list[str]] = {}
     for case in eval_cases:
         eval_gt_to_cases.setdefault(_normalize_ground_truth(case.get("ground_truth")), []).append(
-            case["id"]
+            case.get("case_id", case.get("id"))
         )
 
     fewshot_overlaps: list[dict[str, str]] = []
     for item in fewshot:
         eval_case_ids = eval_gt_to_cases.get(_normalize_ground_truth(item.get("ground_truth")), [])
         for eval_case_id in eval_case_ids:
-            fewshot_overlaps.append({"fewshot_id": item["id"], "eval_case_id": eval_case_id})
+            fewshot_overlaps.append({"fewshot_id": item.get("case_id", item.get("id")), "eval_case_id": eval_case_id})
 
     finetune_overlaps: list[dict[str, Any]] = []
     for index, row in enumerate(finetune_rows):
@@ -153,10 +153,10 @@ def _question_match(question: str, eval_cases: list[dict[str, Any]]) -> dict[str
     for eval_case in eval_cases:
         eval_normalized = _normalize_text(eval_case["question"])
         if normalized_question and normalized_question == eval_normalized:
-            normalized_exact_case_ids.append(eval_case["id"])
+            normalized_exact_case_ids.append(eval_case.get("case_id", eval_case.get("id")))
         score = SequenceMatcher(None, normalized_question, eval_normalized).ratio()
         if score > best_score:
-            best_case_id = eval_case["id"]
+            best_case_id = eval_case.get("case_id", eval_case.get("id"))
             best_score = score
     return {
         "normalized_question": normalized_question,
@@ -274,14 +274,14 @@ def _build_strict_fewshot(
     overlap_ids = {item["fewshot_id"] for item in overlap_audit["fewshot_overlaps"]}
     strict_rows: list[dict[str, Any]] = []
     question_filtered = 0
-    existing_ids = {item["id"] for item in fewshot if item["id"] not in overlap_ids}
+    existing_ids = {item.get("case_id", item.get("id")) for item in fewshot if item.get("case_id", item.get("id")) not in overlap_ids}
     for item in fewshot:
-        if item["id"] in overlap_ids:
+        if item.get("case_id", item.get("id")) in overlap_ids:
             continue
         match = _question_match(item.get("question", ""), eval_cases)
         if match["hard_overlap"]:
             question_filtered += 1
-            existing_ids.discard(item["id"])
+            existing_ids.discard(item.get("case_id", item.get("id")))
             continue
         strict_rows.append(item)
 
@@ -299,7 +299,7 @@ def _build_strict_fewshot(
         f"removed hard question-overlap few-shot rows: {question_filtered}",
         f"added strict supplement few-shot rows: {needed}",
     ]
-    strict_rows.sort(key=lambda item: (item["failure_type"], item["id"]))
+    strict_rows.sort(key=lambda item: (item["failure_type"], item.get("case_id", item.get("id"))))
     if len(strict_rows) != 20:
         raise ValueError(f"Expected 20 strict few-shot examples, got {len(strict_rows)}")
     return strict_rows, notes
@@ -397,7 +397,7 @@ def _build_report(
     )
     strict_fewshot_question_audit = _audit_question_overlaps(
         eval_cases,
-        [{"id": item["id"], "question": item["question"]} for item in strict_fewshot_rows],
+        [{"id": item.get("case_id", item.get("id")), "question": item["question"]} for item in strict_fewshot_rows],
         question_key="question",
     )
     strict_finetune_question_audit = _audit_question_overlaps(
@@ -519,7 +519,7 @@ def main() -> int:
     overlap_audit = _audit_exact_overlaps(eval_cases, fewshot, finetune_rows)
 
     fewshot_candidates = [
-        {"id": item["id"], "question": item["question"]} for item in fewshot
+        {"id": item.get("case_id", item.get("id")), "question": item["question"]} for item in fewshot
     ]
     finetune_candidates = [
         {

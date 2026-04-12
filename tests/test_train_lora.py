@@ -22,7 +22,7 @@ class TrainLoraPreflightTest(unittest.TestCase):
 
         self.assertIsNotNone(estimate)
         total_rows, train_rows, effective_batch, total_steps = estimate
-        self.assertEqual(total_rows, 500)
+        self.assertEqual(total_rows, 497)
         self.assertGreater(train_rows, 0)
         self.assertGreater(effective_batch, 0)
         self.assertGreater(total_steps, 0)

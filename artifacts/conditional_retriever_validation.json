@@ -1,0 +1,1908 @@
+{
+  "summary": {
+    "total_cases": 81,
+    "rag_enabled_count": 70,
+    "rag_disabled_count": 11,
+    "rag_enable_rate_pct": 86.42,
+    "ft_match_count": 43,
+    "ft_mismatch_count": 38,
+    "ft_accuracy_pct": 53.09,
+    "diff_match_count": 54,
+    "diff_mismatch_count": 27,
+    "diff_accuracy_pct": 66.67,
+    "rag_decision_agree_count": 69,
+    "rag_decision_disagree_count": 12,
+    "rag_decision_accuracy_pct": 85.19
+  },
+  "by_gt_failure_type": {
+    "Type A": {
+      "total": 12,
+      "ft_accuracy": 91.66666666666666,
+      "diff_accuracy": 91.66666666666666,
+      "rag_enable_rate": 100.0,
+      "mismatch_cases": [
+        {
+          "case_id": "celery_type_a_hard_010",
+          "gt_ft": "Type A",
+          "pred_ft": "",
+          "gt_diff": "hard",
+          "pred_diff": "medium",
+          "rag_pred": true
+        }
+      ]
+    },
+    "Type B": {
+      "total": 12,
+      "ft_accuracy": 58.333333333333336,
+      "diff_accuracy": 83.33333333333334,
+      "rag_enable_rate": 100.0,
+      "mismatch_cases": [
+        {
+          "case_id": "celery_type_b_easy_001",
+          "gt_ft": "Type B",
+          "pred_ft": "Type B",
+          "gt_diff": "easy",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_b_easy_002",
+          "gt_ft": "Type B",
+          "pred_ft": "Type E",
+          "gt_diff": "easy",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_b_hard_006",
+          "gt_ft": "Type B",
+          "pred_ft": "Type A",
+          "gt_diff": "hard",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_b_hard_007",
+          "gt_ft": "Type B",
+          "pred_ft": "Type A",
+          "gt_diff": "hard",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_b_hard_009",
+          "gt_ft": "Type B",
+          "pred_ft": "",
+          "gt_diff": "hard",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_b_medium_001",
+          "gt_ft": "Type B",
+          "pred_ft": "",
+          "gt_diff": "medium",
+          "pred_diff": "medium",
+          "rag_pred": true
+        }
+      ]
+    },
+    "Type C": {
+      "total": 12,
+      "ft_accuracy": 0.0,
+      "diff_accuracy": 66.66666666666666,
+      "rag_enable_rate": 41.66666666666667,
+      "mismatch_cases": [
+        {
+          "case_id": "celery_type_c_easy_001",
+          "gt_ft": "Type C",
+          "pred_ft": "Type E",
+          "gt_diff": "easy",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_c_easy_002",
+          "gt_ft": "Type C",
+          "pred_ft": "Type B",
+          "gt_diff": "easy",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_c_easy_003",
+          "gt_ft": "Type C",
+          "pred_ft": "Type E",
+          "gt_diff": "easy",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_c_easy_004",
+          "gt_ft": "Type C",
+          "pred_ft": "",
+          "gt_diff": "easy",
+          "pred_diff": "easy",
+          "rag_pred": false
+        },
+        {
+          "case_id": "celery_type_c_easy_005",
+          "gt_ft": "Type C",
+          "pred_ft": "",
+          "gt_diff": "easy",
+          "pred_diff": "easy",
+          "rag_pred": false
+        },
+        {
+          "case_id": "celery_type_c_easy_006",
+          "gt_ft": "Type C",
+          "pred_ft": "",
+          "gt_diff": "easy",
+          "pred_diff": "easy",
+          "rag_pred": false
+        },
+        {
+          "case_id": "celery_type_c_easy_007",
+          "gt_ft": "Type C",
+          "pred_ft": "",
+          "gt_diff": "easy",
+          "pred_diff": "easy",
+          "rag_pred": false
+        },
+        {
+          "case_id": "celery_type_c_easy_008",
+          "gt_ft": "Type C",
+          "pred_ft": "",
+          "gt_diff": "easy",
+          "pred_diff": "easy",
+          "rag_pred": false
+        },
+        {
+          "case_id": "celery_type_c_easy_009",
+          "gt_ft": "Type C",
+          "pred_ft": "",
+          "gt_diff": "easy",
+          "pred_diff": "easy",
+          "rag_pred": false
+        },
+        {
+          "case_id": "celery_type_c_medium_001",
+          "gt_ft": "Type C",
+          "pred_ft": "",
+          "gt_diff": "medium",
+          "pred_diff": "easy",
+          "rag_pred": false
+        },
+        {
+          "case_id": "celery_type_c_medium_002",
+          "gt_ft": "Type C",
+          "pred_ft": "",
+          "gt_diff": "medium",
+          "pred_diff": "medium",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_c_medium_003",
+          "gt_ft": "Type C",
+          "pred_ft": "",
+          "gt_diff": "medium",
+          "pred_diff": "medium",
+          "rag_pred": true
+        }
+      ]
+    },
+    "Type D": {
+      "total": 18,
+      "ft_accuracy": 33.33333333333333,
+      "diff_accuracy": 50.0,
+      "rag_enable_rate": 88.88888888888889,
+      "mismatch_cases": [
+        {
+          "case_id": "celery_type_d_easy_001",
+          "gt_ft": "Type D",
+          "pred_ft": "Type E",
+          "gt_diff": "easy",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_d_easy_002",
+          "gt_ft": "Type D",
+          "pred_ft": "Type D",
+          "gt_diff": "easy",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_d_hard_002",
+          "gt_ft": "Type D",
+          "pred_ft": "Type B",
+          "gt_diff": "hard",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_d_hard_003",
+          "gt_ft": "Type D",
+          "pred_ft": "",
+          "gt_diff": "hard",
+          "pred_diff": "easy",
+          "rag_pred": false
+        },
+        {
+          "case_id": "celery_type_d_hard_005",
+          "gt_ft": "Type D",
+          "pred_ft": "Type B",
+          "gt_diff": "hard",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_d_hard_006",
+          "gt_ft": "Type D",
+          "pred_ft": "Type B",
+          "gt_diff": "hard",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_d_hard_008",
+          "gt_ft": "Type D",
+          "pred_ft": "Type B",
+          "gt_diff": "hard",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_d_medium_001",
+          "gt_ft": "Type D",
+          "pred_ft": "Type E",
+          "gt_diff": "medium",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_d_medium_002",
+          "gt_ft": "Type D",
+          "pred_ft": "Type D",
+          "gt_diff": "medium",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_d_medium_003",
+          "gt_ft": "Type D",
+          "pred_ft": "",
+          "gt_diff": "medium",
+          "pred_diff": "easy",
+          "rag_pred": false
+        },
+        {
+          "case_id": "celery_type_d_medium_004",
+          "gt_ft": "Type D",
+          "pred_ft": "Type E",
+          "gt_diff": "medium",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_d_medium_005",
+          "gt_ft": "Type D",
+          "pred_ft": "Type D",
+          "gt_diff": "medium",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_d_medium_006",
+          "gt_ft": "Type D",
+          "pred_ft": "Type E",
+          "gt_diff": "medium",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_d_medium_007",
+          "gt_ft": "Type D",
+          "pred_ft": "",
+          "gt_diff": "medium",
+          "pred_diff": "medium",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_d_medium_008",
+          "gt_ft": "Type D",
+          "pred_ft": "",
+          "gt_diff": "medium",
+          "pred_diff": "medium",
+          "rag_pred": true
+        }
+      ]
+    },
+    "Type E": {
+      "total": 27,
+      "ft_accuracy": 70.37037037037037,
+      "diff_accuracy": 59.25925925925925,
+      "rag_enable_rate": 92.5925925925926,
+      "mismatch_cases": [
+        {
+          "case_id": "celery_type_e_easy_001",
+          "gt_ft": "Type E",
+          "pred_ft": "Type E",
+          "gt_diff": "easy",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_e_easy_002",
+          "gt_ft": "Type E",
+          "pred_ft": "",
+          "gt_diff": "easy",
+          "pred_diff": "easy",
+          "rag_pred": false
+        },
+        {
+          "case_id": "celery_type_e_hard_002",
+          "gt_ft": "Type E",
+          "pred_ft": "Type A",
+          "gt_diff": "hard",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_e_hard_008",
+          "gt_ft": "Type E",
+          "pred_ft": "",
+          "gt_diff": "hard",
+          "pred_diff": "easy",
+          "rag_pred": false
+        },
+        {
+          "case_id": "celery_type_e_hard_010",
+          "gt_ft": "Type E",
+          "pred_ft": "",
+          "gt_diff": "hard",
+          "pred_diff": "medium",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_e_hard_013",
+          "gt_ft": "Type E",
+          "pred_ft": "Type D",
+          "gt_diff": "hard",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_e_medium_001",
+          "gt_ft": "Type E",
+          "pred_ft": "Type E",
+          "gt_diff": "medium",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_e_medium_002",
+          "gt_ft": "Type E",
+          "pred_ft": "Type E",
+          "gt_diff": "medium",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_e_medium_003",
+          "gt_ft": "Type E",
+          "pred_ft": "Type E",
+          "gt_diff": "medium",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_e_medium_004",
+          "gt_ft": "Type E",
+          "pred_ft": "Type E",
+          "gt_diff": "medium",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_e_medium_005",
+          "gt_ft": "Type E",
+          "pred_ft": "",
+          "gt_diff": "medium",
+          "pred_diff": "medium",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_e_medium_006",
+          "gt_ft": "Type E",
+          "pred_ft": "Type E",
+          "gt_diff": "medium",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_e_medium_007",
+          "gt_ft": "Type E",
+          "pred_ft": "Type E",
+          "gt_diff": "medium",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_e_medium_008",
+          "gt_ft": "Type E",
+          "pred_ft": "Type E",
+          "gt_diff": "medium",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_e_medium_009",
+          "gt_ft": "Type E",
+          "pred_ft": "Type E",
+          "gt_diff": "medium",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_e_medium_010",
+          "gt_ft": "Type E",
+          "pred_ft": "",
+          "gt_diff": "medium",
+          "pred_diff": "medium",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_e_medium_011",
+          "gt_ft": "Type E",
+          "pred_ft": "",
+          "gt_diff": "medium",
+          "pred_diff": "medium",
+          "rag_pred": true
+        }
+      ]
+    }
+  },
+  "by_gt_difficulty": {
+    "easy": {
+      "total": 15,
+      "rag_enabled": 8,
+      "rag_disabled": 7,
+      "rag_enable_rate": 53.333333333333336
+    },
+    "hard": {
+      "total": 43,
+      "rag_enabled": 41,
+      "rag_disabled": 2,
+      "rag_enable_rate": 95.34883720930233
+    },
+    "medium": {
+      "total": 23,
+      "rag_enabled": 21,
+      "rag_disabled": 2,
+      "rag_enable_rate": 91.30434782608695
+    }
+  },
+  "findings": [
+    {
+      "severity": "INFO",
+      "issue": "RAG decision accuracy acceptable",
+      "detail": "85.2% accuracy (69/81 correct)"
+    },
+    {
+      "severity": "HIGH",
+      "issue": "Low failure_type classification accuracy",
+      "detail": "Only 53.1% of cases have correct failure_type (43/81)",
+      "recommendation": "Patterns for Type C/D may be too weak or overlapping with Type E"
+    },
+    {
+      "severity": "MEDIUM",
+      "issue": "Type E classification noisy",
+      "detail": "17 Type E cases were misclassified",
+      "examples": [
+        {
+          "case_id": "celery_type_e_easy_001",
+          "gt_ft": "Type E",
+          "pred_ft": "Type E",
+          "gt_diff": "easy",
+          "pred_diff": "hard",
+          "rag_pred": true
+        },
+        {
+          "case_id": "celery_type_e_easy_002",
+          "gt_ft": "Type E",
+          "pred_ft": "",
+          "gt_diff": "easy",
+          "pred_diff": "easy",
+          "rag_pred": false
+        },
+        {
+          "case_id": "celery_type_e_hard_002",
+          "gt_ft": "Type E",
+          "pred_ft": "Type A",
+          "gt_diff": "hard",
+          "pred_diff": "hard",
+          "rag_pred": true
+        }
+      ]
+    }
+  ],
+  "per_case_results": [
+    {
+      "case_id": "celery_type_a_hard_001",
+      "question": "在 `app.autodiscover_tasks(packages, force=False)` 的延迟执行链中，真正负责判定 `ModuleNotFound...",
+      "gt_failure_type": "Type A",
+      "pred_failure_type": "Type A",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeA:autodiscover|signal|import_mod"
+      ],
+      "reason": "Hard case detected (Type A), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_a_hard_002",
+      "question": "在 worker 启动链中，当某个 `StartStopStep.include_if()` 最终为 `False` 时，仍会先执行 step 实例化（触发 `...",
+      "gt_failure_type": "Type A",
+      "pred_failure_type": "Type A",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeE:最终|real class|real function|最终",
+        "TypeA:include_if|include|bootstep|st"
+      ],
+      "reason": "Hard case detected (Type A), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_a_hard_003",
+      "question": "`PersistentScheduler` 启动阶段若持久化 store 缺失 `utc_enabled` 元数据字段，直接触发 reset（`self._st...",
+      "gt_failure_type": "Type A",
+      "pred_failure_type": "Type A",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeA:PersistentScheduler|beat\\.py|s"
+      ],
+      "reason": "Hard case detected (Type A), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_a_hard_004",
+      "question": "在 `worker_disable_prefetch=True` 且 broker 为 Redis 的前提下，运行时真正改写 `channel_qos.can_...",
+      "gt_failure_type": "Type A",
+      "pred_failure_type": "Type A",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeA:disable_prefetch|can_consume|q"
+      ],
+      "reason": "Hard case detected (Type A), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_a_hard_005",
+      "question": "在 `celery/bootsteps.py` 中，`Step._should_include(parent)` 返回 `(False, None)` 时（即 ...",
+      "gt_failure_type": "Type A",
+      "pred_failure_type": "Type A",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeA:include_if|include|bootstep|st"
+      ],
+      "reason": "Hard case detected (Type A), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_a_hard_006",
+      "question": "在 `celery/worker/request.py` 中，当 `acks_late=True` 时，以下情况分别走 `ack`、`reject(requeu...",
+      "gt_failure_type": "Type A",
+      "pred_failure_type": "Type A",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeA:failure.*matrix|acks_late|on_f",
+        "TypeA:WorkerLostError|TimeLimitExcee"
+      ],
+      "reason": "Hard case detected (Type A), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_a_hard_007",
+      "question": "在 `celery/app/base.py` 的 `autodiscover_tasks(..., force=False)` 懒路径下，哪个信号（signal...",
+      "gt_failure_type": "Type A",
+      "pred_failure_type": "Type A",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeE:最终|real class|real function|最终",
+        "TypeA:autodiscover|signal|import_mod"
+      ],
+      "reason": "Hard case detected (Type A), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_a_hard_008",
+      "question": "在 `celery/app/base.py` 的 `autodiscover_tasks(..., force=True)` 路径中，`_autodiscove...",
+      "gt_failure_type": "Type A",
+      "pred_failure_type": "Type A",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeA:autodiscover|signal|import_mod"
+      ],
+      "reason": "Hard case detected (Type A), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_a_hard_009",
+      "question": "在 `celery/worker/request.py` 的 `Request.on_failure` 方法中，当 `acks_late=True` 时，以下情...",
+      "gt_failure_type": "Type A",
+      "pred_failure_type": "Type A",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeA:failure.*matrix|acks_late|on_f"
+      ],
+      "reason": "Hard case detected (Type A), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_a_hard_010",
+      "question": "在 `celery/loaders/base.py` 的 `BaseLoader._smart_import` 方法中，当直接 `import_module(p...",
+      "gt_failure_type": "Type A",
+      "pred_failure_type": "",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "medium",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": false,
+      "signals": [],
+      "reason": "Medium case (untyped), partial RAG helpful"
+    },
+    {
+      "case_id": "celery_type_a_hard_011",
+      "question": "在 worker 启动链（`celery/bin/worker.py` → `app.Worker.start()`）中，`worker.autodiscove...",
+      "gt_failure_type": "Type A",
+      "pred_failure_type": "Type A",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeE:最终|real class|real function|最终",
+        "TypeA:autodiscover|signal|import_mod"
+      ],
+      "reason": "Hard case detected (Type A), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_a_hard_012",
+      "question": "在 `celery/bootsteps.py` 中，`Blueprint.apply` 方法的执行顺序是什么？当某个 `StartStopStep` 的 `in...",
+      "gt_failure_type": "Type A",
+      "pred_failure_type": "Type A",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeA:include_if|include|bootstep|st"
+      ],
+      "reason": "Hard case detected (Type A), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_b_easy_001",
+      "question": "在顶层懒加载 API 中，`celery.current_app` 这个 Proxy 在取值时会直接调用哪个函数来获得 app 对象？",
+      "gt_failure_type": "Type B",
+      "pred_failure_type": "Type B",
+      "gt_difficulty": "easy",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": false,
+      "rag_correct": false,
+      "ft_correct": true,
+      "diff_correct": false,
+      "signals": [
+        "TypeB:Proxy|autofinalize|finalize.*c"
+      ],
+      "reason": "Hard case detected (Type B), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_b_easy_002",
+      "question": "在顶层懒加载 API 中，`celery.current_task` 在取值时直接调用哪个函数，并最终从哪个状态槽位读取当前任务？",
+      "gt_failure_type": "Type B",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "easy",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": false,
+      "rag_correct": false,
+      "ft_correct": false,
+      "diff_correct": false,
+      "signals": [
+        "TypeE:最终|real class|real function|最终"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_b_hard_001",
+      "question": "When `@shared_task` decorates a function, which real app method ultimately creat...",
+      "gt_failure_type": "Type B",
+      "pred_failure_type": "Type B",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeB:@shared_task|@app\\.task|shared"
+      ],
+      "reason": "Hard case detected (Type B), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_b_hard_002",
+      "question": "Inside the `@app.task` decorator flow, which real method ultimately constructs a...",
+      "gt_failure_type": "Type B",
+      "pred_failure_type": "Type B",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeB:@shared_task|@app\\.task|shared",
+        "TypeB:decorator|register|registratio"
+      ],
+      "reason": "Hard case detected (Type B), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_b_hard_003",
+      "question": "Which function is responsible for firing all shared-task and built-in finalize c...",
+      "gt_failure_type": "Type B",
+      "pred_failure_type": "Type B",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeB:@shared_task|@app\\.task|shared",
+        "TypeB:Proxy|autofinalize|finalize.*c"
+      ],
+      "reason": "Hard case detected (Type B), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_b_hard_004",
+      "question": "At app finalize time, which method actually creates the celery.backend_cleanup T...",
+      "gt_failure_type": "Type B",
+      "pred_failure_type": "Type B",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeB:builtin_finalize|finalize.*bui"
+      ],
+      "reason": "Hard case detected (Type B), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_b_hard_005",
+      "question": "`celery.app.shared_task` 返回的 Proxy 首次解析任务对象时，触发 finalize 回调链的关键入口符号是什么？",
+      "gt_failure_type": "Type B",
+      "pred_failure_type": "Type B",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeB:@shared_task|@app\\.task|shared",
+        "TypeB:Proxy|autofinalize|finalize.*c",
+        "TypeB:celery\\.app\\.shared_task|celer"
+      ],
+      "reason": "Hard case detected (Type B), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_b_hard_006",
+      "question": "在 `app.autodiscover_tasks(..., force=False)` 的 lazy 路径下，真正被触发执行的目标函数是什么，以及它由哪条调用...",
+      "gt_failure_type": "Type B",
+      "pred_failure_type": "Type A",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [
+        "TypeA:autodiscover|signal|import_mod"
+      ],
+      "reason": "Hard case detected (Type A), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_b_hard_007",
+      "question": "在 `celery/app/base.py` 中，当 `app.autodiscover_tasks(..., force=True)` 时，哪个方法被直接调用...",
+      "gt_failure_type": "Type B",
+      "pred_failure_type": "Type A",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [
+        "TypeA:autodiscover|signal|import_mod"
+      ],
+      "reason": "Hard case detected (Type A), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_b_hard_008",
+      "question": "在 `celery/app/base.py` 中，`@app.task` 装饰器链的完整路径是什么？哪个方法最终完成任务的注册？",
+      "gt_failure_type": "Type B",
+      "pred_failure_type": "Type B",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeE:最终|real class|real function|最终",
+        "TypeB:@shared_task|@app\\.task|shared"
+      ],
+      "reason": "Hard case detected (Type B), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_b_hard_009",
+      "question": "在 `celery/_state.py` 中，`connect_on_app_finalize` 注册的回调在哪个方法中被调用？该方法内部通过哪个函数触发所有已...",
+      "gt_failure_type": "Type B",
+      "pred_failure_type": "",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [],
+      "reason": "Hard case detected (untyped), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_b_medium_001",
+      "question": "在 `celery/backends/base.py` 中，`_create_fake_task_request` 函数创建的任务上下文（Context）中，`...",
+      "gt_failure_type": "Type B",
+      "pred_failure_type": "",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "medium",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [],
+      "reason": "Medium case (untyped), partial RAG helpful"
+    },
+    {
+      "case_id": "celery_type_c_easy_001",
+      "question": "Which real class does `celery.Celery` resolve to in the top-level lazy API?",
+      "gt_failure_type": "Type C",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "easy",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": false,
+      "rag_correct": false,
+      "ft_correct": false,
+      "diff_correct": false,
+      "signals": [
+        "TypeE:symbol.*resolution|resolve.*to",
+        "TypeE:最终|real class|real function|最终"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_c_easy_002",
+      "question": "Which real function does the top-level `celery.shared_task` symbol resolve to?",
+      "gt_failure_type": "Type C",
+      "pred_failure_type": "Type B",
+      "gt_difficulty": "easy",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": false,
+      "rag_correct": false,
+      "ft_correct": false,
+      "diff_correct": false,
+      "signals": [
+        "TypeE:symbol.*resolution|resolve.*to",
+        "TypeE:最终|real class|real function|最终",
+        "TypeB:@shared_task|@app\\.task|shared"
+      ],
+      "reason": "Hard case detected (Type B), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_c_easy_003",
+      "question": "顶层符号 `celery.Task` 最终映射到哪个真实类？",
+      "gt_failure_type": "Type C",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "easy",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": false,
+      "rag_correct": false,
+      "ft_correct": false,
+      "diff_correct": false,
+      "signals": [
+        "TypeE:最终|real class|real function|最终"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_c_easy_004",
+      "question": "从源码\"类定义\"角度看，顶层符号 `celery.group` 对应的真实类定义 FQN 是什么？",
+      "gt_failure_type": "Type C",
+      "pred_failure_type": "",
+      "gt_difficulty": "easy",
+      "pred_difficulty": "easy",
+      "rag_enabled": false,
+      "rag_expected": false,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [],
+      "reason": "Easy case, simple re-export pattern, RAG optional"
+    },
+    {
+      "case_id": "celery_type_c_easy_005",
+      "question": "`celery.app.base.Celery.gen_task_name` 方法将任务名生成委托给哪个工具函数？该工具函数在哪个文件中定义？",
+      "gt_failure_type": "Type C",
+      "pred_failure_type": "",
+      "gt_difficulty": "easy",
+      "pred_difficulty": "easy",
+      "rag_enabled": false,
+      "rag_expected": false,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [],
+      "reason": "Easy case, simple re-export pattern, RAG optional"
+    },
+    {
+      "case_id": "celery_type_c_easy_006",
+      "question": "`celery.utils.imports.import_from_cwd` 与普通的 `import_module` 相比，额外做了什么操作？该操作通过哪个上...",
+      "gt_failure_type": "Type C",
+      "pred_failure_type": "",
+      "gt_difficulty": "easy",
+      "pred_difficulty": "easy",
+      "rag_enabled": false,
+      "rag_expected": false,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [],
+      "reason": "Easy case, simple re-export pattern, RAG optional"
+    },
+    {
+      "case_id": "celery_type_c_easy_007",
+      "question": "celery.utils.uuid 实际上是从哪个外部包的哪个模块的哪个函数重新导出的？",
+      "gt_failure_type": "Type C",
+      "pred_failure_type": "",
+      "gt_difficulty": "easy",
+      "pred_difficulty": "easy",
+      "rag_enabled": false,
+      "rag_expected": false,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [],
+      "reason": "Easy case, simple re-export pattern, RAG optional"
+    },
+    {
+      "case_id": "celery_type_c_easy_008",
+      "question": "celery.utils.nodename 是在 celery.utils.nodenames 模块中定义的函数，它的完整 FQN 是什么？",
+      "gt_failure_type": "Type C",
+      "pred_failure_type": "",
+      "gt_difficulty": "easy",
+      "pred_difficulty": "easy",
+      "rag_enabled": false,
+      "rag_expected": false,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [],
+      "reason": "Easy case, simple re-export pattern, RAG optional"
+    },
+    {
+      "case_id": "celery_type_c_easy_009",
+      "question": "celery.utils.worker_direct 是在 celery.utils.nodenames 模块中定义的函数，它的完整 FQN 是什么？",
+      "gt_failure_type": "Type C",
+      "pred_failure_type": "",
+      "gt_difficulty": "easy",
+      "pred_difficulty": "easy",
+      "rag_enabled": false,
+      "rag_expected": false,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [],
+      "reason": "Easy case, simple re-export pattern, RAG optional"
+    },
+    {
+      "case_id": "celery_type_c_medium_001",
+      "question": "Which helper function does `Celery.gen_task_name` delegate to?",
+      "gt_failure_type": "Type C",
+      "pred_failure_type": "",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "easy",
+      "rag_enabled": false,
+      "rag_expected": true,
+      "rag_correct": false,
+      "ft_correct": false,
+      "diff_correct": false,
+      "signals": [],
+      "reason": "Easy case, simple re-export pattern, RAG optional"
+    },
+    {
+      "case_id": "celery_type_c_medium_002",
+      "question": "在 `celery/utils/collections.py` 中，`lpmerge(L, R)` 函数的合并策略是什么？当 R 字典中某个键的值是 `None...",
+      "gt_failure_type": "Type C",
+      "pred_failure_type": "",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "medium",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [],
+      "reason": "Medium case (untyped), partial RAG helpful"
+    },
+    {
+      "case_id": "celery_type_c_medium_003",
+      "question": "在 `celery/utils/collections.py` 中，`lpmerge(L, R)` 的合并策略是什么？当 R 中某个键对应的值是 `None` ...",
+      "gt_failure_type": "Type C",
+      "pred_failure_type": "",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "medium",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [],
+      "reason": "Medium case (untyped), partial RAG helpful"
+    },
+    {
+      "case_id": "celery_type_d_easy_001",
+      "question": "What pool implementation does `celery.concurrency.get_implementation('processes'...",
+      "gt_failure_type": "Type D",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "easy",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": false,
+      "rag_correct": false,
+      "ft_correct": false,
+      "diff_correct": false,
+      "signals": [
+        "TypeE:symbol.*resolution|resolve.*to"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_d_easy_002",
+      "question": "celery.canvas.Signature 是什么类型的对象？它继承自哪个标准库类？",
+      "gt_failure_type": "Type D",
+      "pred_failure_type": "Type D",
+      "gt_difficulty": "easy",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": false,
+      "rag_correct": false,
+      "ft_correct": true,
+      "diff_correct": false,
+      "signals": [
+        "TypeD:subtask|maybe_subtask|signatur"
+      ],
+      "reason": "Hard case detected (Type D), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_d_hard_001",
+      "question": "在 `celery/app/routes.py` 中，调用 `expand_router_string('my.router.module:RouterClas...",
+      "gt_failure_type": "Type D",
+      "pred_failure_type": "Type D",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeD:parameter.*shadow|shadow.*para",
+        "TypeD:expand_router|RouterClass|regi"
+      ],
+      "reason": "Hard case detected (Type D), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_d_hard_002",
+      "question": "在 `celery/canvas.py` 中，`celery.canvas._chain`（内部类，被 `@Signature.register_type(na...",
+      "gt_failure_type": "Type D",
+      "pred_failure_type": "Type B",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [
+        "TypeB:decorator|register|registratio",
+        "TypeD:expand_router|RouterClass|regi",
+        "TypeD:_chain|chain.*vs|registered.*c",
+        "TypeD:subtask|maybe_subtask|signatur"
+      ],
+      "reason": "Hard case detected (Type B), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_d_hard_003",
+      "question": "在 `celery/app/routes.py` 的 `Router.query_router(self, router, ...)` 方法中，参数名 `rou...",
+      "gt_failure_type": "Type D",
+      "pred_failure_type": "",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "easy",
+      "rag_enabled": false,
+      "rag_expected": true,
+      "rag_correct": false,
+      "ft_correct": false,
+      "diff_correct": false,
+      "signals": [],
+      "reason": "Easy case, simple re-export pattern, RAG optional"
+    },
+    {
+      "case_id": "celery_type_d_hard_004",
+      "question": "在 `celery/app/routes.py` 中，`expand_router_string('my.router.module:RouterClass')...",
+      "gt_failure_type": "Type D",
+      "pred_failure_type": "Type D",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeD:parameter.*shadow|shadow.*para",
+        "TypeD:expand_router|RouterClass|regi"
+      ],
+      "reason": "Hard case detected (Type D), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_d_hard_005",
+      "question": "在 `celery/canvas.py` 中，`@Signature.register_type(name='chain')` 装饰器将 `_chain` 类注...",
+      "gt_failure_type": "Type D",
+      "pred_failure_type": "Type B",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [
+        "TypeE:最终|real class|real function|最终",
+        "TypeB:decorator|register|registratio",
+        "TypeD:expand_router|RouterClass|regi",
+        "TypeD:_chain|chain.*vs|registered.*c",
+        "TypeD:subtask|maybe_subtask|signatur"
+      ],
+      "reason": "Hard case detected (Type B), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_d_hard_006",
+      "question": "在 `celery/canvas.py` 中，`_chain`（内部类，被 `@Signature.register_type(name='chain')` 注...",
+      "gt_failure_type": "Type D",
+      "pred_failure_type": "Type B",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [
+        "TypeB:decorator|register|registratio",
+        "TypeD:expand_router|RouterClass|regi",
+        "TypeD:_chain|chain.*vs|registered.*c",
+        "TypeD:subtask|maybe_subtask|signatur"
+      ],
+      "reason": "Hard case detected (Type B), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_d_hard_007",
+      "question": "在 `celery/canvas.py` 中，当通过 `signature({'subtask_type': 'chord', 'body': {...}}` ...",
+      "gt_failure_type": "Type D",
+      "pred_failure_type": "Type D",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeD:subtask|maybe_subtask|signatur"
+      ],
+      "reason": "Hard case detected (Type D), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_d_hard_008",
+      "question": "在 `celery/app/task.py` 中，`celery.app.task.Task` 是一个动态创建的 `Proxy` 对象（由 `subclass_...",
+      "gt_failure_type": "Type D",
+      "pred_failure_type": "Type B",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [
+        "TypeB:Proxy|autofinalize|finalize.*c"
+      ],
+      "reason": "Hard case detected (Type B), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_d_medium_001",
+      "question": "What pool implementation does `celery.concurrency.get_implementation('threads')`...",
+      "gt_failure_type": "Type D",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": false,
+      "signals": [
+        "TypeE:symbol.*resolution|resolve.*to"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_d_medium_002",
+      "question": "在 `celery/canvas.py` 模块级别，`subtask = signature` 和 `maybe_subtask = maybe_signatu...",
+      "gt_failure_type": "Type D",
+      "pred_failure_type": "Type D",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": false,
+      "signals": [
+        "TypeD:subtask|maybe_subtask|signatur",
+        "TypeD:celery\\.canvas\\.(subtask|maybe"
+      ],
+      "reason": "Hard case detected (Type D), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_d_medium_003",
+      "question": "在 `celery/utils/nodenames.py` 中，`current_process_index` 并非在文件顶部 import，而是通过 `fro...",
+      "gt_failure_type": "Type D",
+      "pred_failure_type": "",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "easy",
+      "rag_enabled": false,
+      "rag_expected": true,
+      "rag_correct": false,
+      "ft_correct": false,
+      "diff_correct": false,
+      "signals": [],
+      "reason": "Easy case, simple re-export pattern, RAG optional"
+    },
+    {
+      "case_id": "celery_type_d_medium_004",
+      "question": "在 `celery/concurrency/__init__.py` 中，若在首次导入前设置 `CELERY_CUSTOM_WORKER_POOL='celer...",
+      "gt_failure_type": "Type D",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": false,
+      "signals": [
+        "TypeE:最终|real class|real function|最终"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_d_medium_005",
+      "question": "在 `celery/canvas.py` 中，`Signature.from_dict(d, app=app)` 如何根据字典的 `subtask_type` ...",
+      "gt_failure_type": "Type D",
+      "pred_failure_type": "Type D",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": false,
+      "signals": [
+        "TypeD:subtask|maybe_subtask|signatur"
+      ],
+      "reason": "Hard case detected (Type D), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_d_medium_006",
+      "question": "celery.app.task.Task.Request 是字符串 celery.worker.request:Request，celery.app.task....",
+      "gt_failure_type": "Type D",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": false,
+      "signals": [
+        "TypeE:strategy.*default|default.*str",
+        "TypeE:task\\.Request|task\\.Strategy"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_d_medium_007",
+      "question": "在 `celery/utils/collections.py` 中，`ConfigurationView` 继承自 `ChainMap`。当访问 `app.co...",
+      "gt_failure_type": "Type D",
+      "pred_failure_type": "",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "medium",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [],
+      "reason": "Medium case (untyped), partial RAG helpful"
+    },
+    {
+      "case_id": "celery_type_d_medium_008",
+      "question": "在 `celery/utils/imports.py` 中，`cwd_in_path` 上下文管理器在 `__enter__` 时的具体行为是什么？它修改了哪个...",
+      "gt_failure_type": "Type D",
+      "pred_failure_type": "",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "medium",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [],
+      "reason": "Medium case (untyped), partial RAG helpful"
+    },
+    {
+      "case_id": "celery_type_e_easy_001",
+      "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('default')` resolv...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "easy",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": false,
+      "rag_correct": false,
+      "ft_correct": true,
+      "diff_correct": false,
+      "signals": [
+        "TypeE:loader.*default|default.*loade",
+        "TypeE:symbol.*resolution|resolve.*to"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_easy_002",
+      "question": "`celery.utils.imports.load_extension_classes(namespace)` 这条扩展加载链里，哪个 Celery 函数先枚...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "",
+      "gt_difficulty": "easy",
+      "pred_difficulty": "easy",
+      "rag_enabled": false,
+      "rag_expected": false,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [],
+      "reason": "Easy case, simple re-export pattern, RAG optional"
+    },
+    {
+      "case_id": "celery_type_e_hard_001",
+      "question": "In `celery.worker.strategy.default`, what real class does `task.Request` resolve...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeE:strategy.*default|default.*str",
+        "TypeE:task\\.Request|task\\.Strategy",
+        "TypeE:symbol.*resolution|resolve.*to",
+        "TypeE:最终|real class|real function|最终"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_hard_002",
+      "question": "When packages=None, which function finally executes the real importlib.import_mo...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type A",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [
+        "TypeE:django.*fixup|fixup|django.*ta",
+        "TypeA:autodiscover|signal|import_mod"
+      ],
+      "reason": "Hard case detected (Type A), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_hard_003",
+      "question": "在满足 Django fixup 前置条件（`DJANGO_SETTINGS_MODULE` 已设置、`django` 可导入、且 `app.loader_cl...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeE:最终|real class|real function|最终",
+        "TypeE:django.*fixup|fixup|django.*ta"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_hard_004",
+      "question": "When BaseLoader.config_from_object receives a string like pkg.mod.CONF that cann...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeE:symbol_by_name|by_name\\(|impor"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_hard_005",
+      "question": "在 `celery/utils/imports.py` 中，`symbol_by_name('celery.concurrency.prefork:TaskPo...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeE:symbol_by_name|by_name\\(|impor",
+        "TypeE:最终|real class|real function|最终"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_hard_006",
+      "question": "在 `celery/app/backends.py` 中，`backends.by_name('redis')` 通过 `BACKEND_ALIASES` 与 ...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeE:symbol_by_name|by_name\\(|impor",
+        "TypeE:LOADER_ALIASES|BACKEND_ALIASES",
+        "TypeE:最终|real class|real function|最终"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_hard_007",
+      "question": "在 `celery/utils/imports.py` 中，`instantiate('celery.concurrency.prefork:TaskPool'...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeE:最终|real class|real function|最终"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_hard_008",
+      "question": "在 `celery/utils/imports.py` 中，`load_extension_classes('celery.contrib.tasks')` 的...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "easy",
+      "rag_enabled": false,
+      "rag_expected": true,
+      "rag_correct": false,
+      "ft_correct": false,
+      "diff_correct": false,
+      "signals": [],
+      "reason": "Easy case, simple re-export pattern, RAG optional"
+    },
+    {
+      "case_id": "celery_type_e_hard_009",
+      "question": "在 `celery/loaders/base.py` 的 `BaseLoader.config_from_object` 方法中，当传入的 `obj` 参数是字...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeE:symbol_by_name|by_name\\(|impor"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_hard_010",
+      "question": "在 `celery/app/utils.py` 的 `find_app` 函数中，当 `app` 参数是字符串 `'myproject.celery:app'`...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "medium",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": false,
+      "signals": [],
+      "reason": "Medium case (untyped), partial RAG helpful"
+    },
+    {
+      "case_id": "celery_type_e_hard_011",
+      "question": "在 `celery/loaders/__init__.py` 中，`LOADER_ALIASES['app']` 通过 `get_loader_cls('app...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeE:LOADER_ALIASES|BACKEND_ALIASES",
+        "TypeE:最终|real class|real function|最终"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_hard_012",
+      "question": "在 `celery/app/task.py` 中，`Task.Strategy` 和 `Task.Request` 都是类名字符串。当 worker 执行任务时...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeE:task\\.Request|task\\.Strategy",
+        "TypeE:最终|real class|real function|最终"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_hard_013",
+      "question": "在 `celery/canvas.py` 中，当调用 `chain(signature_dicts)` 时，`chain` 构造函数内部如何将多个 Signat...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type D",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [
+        "TypeD:_chain|chain.*vs|registered.*c",
+        "TypeD:subtask|maybe_subtask|signatur"
+      ],
+      "reason": "Hard case detected (Type D), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_hard_014",
+      "question": "在 `celery/utils/imports.py` 的 `symbol_by_name` 实现中（来自 kombu），当传入 'celery.backend...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "hard",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": true,
+      "signals": [
+        "TypeE:symbol_by_name|by_name\\(|impor",
+        "TypeE:最终|real class|real function|最终"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_medium_001",
+      "question": "Which backend class does `celery.app.backends.by_name('redis')` resolve to?",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": false,
+      "signals": [
+        "TypeE:symbol_by_name|by_name\\(|impor",
+        "TypeE:symbol.*resolution|resolve.*to"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_medium_002",
+      "question": "In `celery.loaders.get_loader_cls`, what does `get_loader_cls('app')` resolve to...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": false,
+      "signals": [
+        "TypeE:symbol.*resolution|resolve.*to"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_medium_003",
+      "question": "在 `Celery.__init__` 中，默认 `builtin_fixups` 的字符串入口 `'celery.fixups.django:fixup'` ...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": false,
+      "signals": [
+        "TypeE:最终|real class|real function|最终",
+        "TypeE:django.*fixup|fixup|django.*ta"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_medium_004",
+      "question": "在未设置 `CELERY_LOADER` 且未显式传入 loader 参数时，`Celery.loader` 属性最终实例化哪个 Loader 类？",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": false,
+      "signals": [
+        "TypeE:最终|real class|real function|最终"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_medium_005",
+      "question": "在 `Celery._get_backend` 调用路径里，当 `result_backend='rpc://...'` 时，哪个 backend 类会被解析并...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "medium",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [],
+      "reason": "Medium case (untyped), partial RAG helpful"
+    },
+    {
+      "case_id": "celery_type_e_medium_006",
+      "question": "当线程中没有 current app 且未设置 `CELERY_LOADER` 时，首次访问 `celery.current_app.loader` 最终会实例...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": false,
+      "signals": [
+        "TypeE:最终|real class|real function|最终"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_medium_007",
+      "question": "`Task.start_strategy` 调用时，`Task.Strategy` 字符串最终会被解析为哪个可调用对象？",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": false,
+      "signals": [
+        "TypeE:task\\.Request|task\\.Strategy",
+        "TypeE:最终|real class|real function|最终"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_medium_008",
+      "question": "`_state._get_current_app` 懒创建 fallback app 后，首次访问 `app.loader` 时，最终实例化到哪个具体 Load...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": false,
+      "signals": [
+        "TypeE:最终|real class|real function|最终"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_medium_009",
+      "question": "在 `celery/utils/imports.py` 中，`instantiate('celery.concurrency.prefork:TaskPool'...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "Type E",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "hard",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": true,
+      "diff_correct": false,
+      "signals": [
+        "TypeE:最终|real class|real function|最终"
+      ],
+      "reason": "Hard case detected (Type E), multi-hop resolution needed"
+    },
+    {
+      "case_id": "celery_type_e_medium_010",
+      "question": "在 `celery/utils/functional.py` 中，`head_from_fun` 生成的函数签名源码存放在哪个命名空间变量中？该函数通过 `ex...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "medium",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [],
+      "reason": "Medium case (untyped), partial RAG helpful"
+    },
+    {
+      "case_id": "celery_type_e_medium_011",
+      "question": "在 `celery/utils/collections.py` 中，`ConfigurationView.__getitem__` 在查遍所有 ChainMap...",
+      "gt_failure_type": "Type E",
+      "pred_failure_type": "",
+      "gt_difficulty": "medium",
+      "pred_difficulty": "medium",
+      "rag_enabled": true,
+      "rag_expected": true,
+      "rag_correct": true,
+      "ft_correct": false,
+      "diff_correct": true,
+      "signals": [],
+      "reason": "Medium case (untyped), partial RAG helpful"
+    }
+  ]
+}
