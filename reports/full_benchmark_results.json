@@ -1,0 +1,920 @@
+{
+  "generated_at": "2026-04-12T20:18:24.712662",
+  "strategies": {
+    "gpt_baseline": {
+      "strategy_key": "gpt_baseline",
+      "status": "loaded_existing",
+      "metrics": {
+        "format": "strict_summary",
+        "overall": {
+          "count": 54,
+          "avg_union_f1": 0.2815,
+          "avg_macro_f1": 0.1652,
+          "avg_direct_f1": 0.3011,
+          "avg_indirect_f1": 0.0278,
+          "avg_implicit_f1": 0.0,
+          "layer_penalty": 0.1163,
+          "avg_mislayer_rate": 0.1954,
+          "exact_layer_match_rate": 0.0741
+        },
+        "by_difficulty": {
+          "easy": {
+            "count": 15,
+            "avg_union_f1": 0.4348,
+            "avg_macro_f1": 0.2859,
+            "avg_direct_f1": 0.5578,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.1489,
+            "avg_mislayer_rate": 0.1667
+          },
+          "hard": {
+            "count": 20,
+            "avg_union_f1": 0.2261,
+            "avg_macro_f1": 0.1065,
+            "avg_direct_f1": 0.1779,
+            "avg_indirect_f1": 0.0417,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.1196,
+            "avg_mislayer_rate": 0.2108
+          },
+          "medium": {
+            "count": 19,
+            "avg_union_f1": 0.2188,
+            "avg_macro_f1": 0.1316,
+            "avg_direct_f1": 0.2281,
+            "avg_indirect_f1": 0.0351,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0872,
+            "avg_mislayer_rate": 0.2018
+          }
+        },
+        "by_failure_type": {},
+        "source": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json"
+      },
+      "source": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json",
+      "info": {
+        "label": "GPT-5.4 Baseline",
+        "short": "GPT-B",
+        "result_path": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json",
+        "result_key": "gpt_baseline",
+        "description": "GPT-5.4 无 PE 无 RAG",
+        "requires_api": true,
+        "api_type": "openai"
+      }
+    },
+    "gpt_pe": {
+      "strategy_key": "gpt_pe",
+      "status": "loaded_existing",
+      "metrics": {
+        "format": "strict_summary",
+        "overall": {
+          "count": 54,
+          "avg_union_f1": 0.6062,
+          "avg_macro_f1": 0.3556,
+          "avg_direct_f1": 0.4812,
+          "avg_indirect_f1": 0.0,
+          "avg_implicit_f1": 0.0,
+          "layer_penalty": 0.2506,
+          "avg_mislayer_rate": 0.3037,
+          "exact_layer_match_rate": 0.0926
+        },
+        "by_difficulty": {
+          "easy": {
+            "count": 15,
+            "avg_union_f1": 0.6651,
+            "avg_macro_f1": 0.567,
+            "avg_direct_f1": 0.6689,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0981,
+            "avg_mislayer_rate": 0.1
+          },
+          "hard": {
+            "count": 20,
+            "avg_union_f1": 0.5522,
+            "avg_macro_f1": 0.2482,
+            "avg_direct_f1": 0.3627,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.304,
+            "avg_mislayer_rate": 0.43
+          },
+          "medium": {
+            "count": 19,
+            "avg_union_f1": 0.6165,
+            "avg_macro_f1": 0.3018,
+            "avg_direct_f1": 0.4579,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.3147,
+            "avg_mislayer_rate": 0.3316
+          }
+        },
+        "by_failure_type": {
+          "Type A": {
+            "count": 7,
+            "avg_union_f1": 0.5133,
+            "avg_macro_f1": 0.1845,
+            "avg_direct_f1": 0.3308,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.3288,
+            "avg_mislayer_rate": 0.4952
+          },
+          "Type B": {
+            "count": 9,
+            "avg_union_f1": 0.5502,
+            "avg_macro_f1": 0.2896,
+            "avg_direct_f1": 0.4984,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.2606,
+            "avg_mislayer_rate": 0.2556
+          },
+          "Type C": {
+            "count": 11,
+            "avg_union_f1": 0.7394,
+            "avg_macro_f1": 0.7243,
+            "avg_direct_f1": 0.7697,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0151,
+            "avg_mislayer_rate": 0.0
+          },
+          "Type D": {
+            "count": 11,
+            "avg_union_f1": 0.6159,
+            "avg_macro_f1": 0.3914,
+            "avg_direct_f1": 0.5152,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.2245,
+            "avg_mislayer_rate": 0.2424
+          },
+          "Type E": {
+            "count": 16,
+            "avg_union_f1": 0.5801,
+            "avg_macro_f1": 0.1895,
+            "avg_direct_f1": 0.3158,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.3906,
+            "avg_mislayer_rate": 0.4979
+          }
+        },
+        "source": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json"
+      },
+      "source": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json",
+      "info": {
+        "label": "GPT-5.4 PE",
+        "short": "GPT-PE",
+        "result_path": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json",
+        "result_key": "pe_postprocess",
+        "description": "GPT-5.4 + Fewshot + Postprocess",
+        "requires_api": true,
+        "api_type": "openai"
+      }
+    },
+    "glm_baseline": {
+      "strategy_key": "glm_baseline",
+      "status": "loaded_existing",
+      "metrics": {
+        "format": "strict_summary",
+        "overall": {
+          "count": 54,
+          "avg_union_f1": 0.0666,
+          "avg_macro_f1": 0.0395,
+          "avg_direct_f1": 0.0463,
+          "avg_indirect_f1": 0.0259,
+          "avg_implicit_f1": 0.0,
+          "layer_penalty": 0.0271,
+          "avg_mislayer_rate": 0.0556,
+          "exact_layer_match_rate": 0.0185
+        },
+        "by_difficulty": {
+          "easy": {
+            "count": 15,
+            "avg_union_f1": 0.1048,
+            "avg_macro_f1": 0.1,
+            "avg_direct_f1": 0.1,
+            "avg_indirect_f1": 0.0667,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0048,
+            "avg_mislayer_rate": 0.0
+          },
+          "hard": {
+            "count": 20,
+            "avg_union_f1": 0.0367,
+            "avg_macro_f1": 0.0,
+            "avg_direct_f1": 0.0,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0367,
+            "avg_mislayer_rate": 0.1
+          },
+          "medium": {
+            "count": 19,
+            "avg_union_f1": 0.0681,
+            "avg_macro_f1": 0.0333,
+            "avg_direct_f1": 0.0526,
+            "avg_indirect_f1": 0.0211,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0348,
+            "avg_mislayer_rate": 0.0526
+          }
+        },
+        "by_failure_type": {},
+        "source": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json"
+      },
+      "source": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json",
+      "info": {
+        "label": "GLM-5 Baseline",
+        "short": "GLM-B",
+        "result_path": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json",
+        "result_key": "glm_baseline",
+        "description": "GLM-5 无 PE 无 RAG",
+        "requires_api": true,
+        "api_type": "openai"
+      }
+    },
+    "qwen_baseline": {
+      "strategy_key": "qwen_baseline",
+      "status": "loaded_existing",
+      "metrics": {
+        "format": "strict_summary",
+        "overall": {
+          "count": 54,
+          "avg_union_f1": 0.037,
+          "avg_macro_f1": 0.037,
+          "avg_direct_f1": 0.037,
+          "avg_indirect_f1": 0.0,
+          "avg_implicit_f1": 0.0,
+          "layer_penalty": 0.0,
+          "avg_mislayer_rate": 0.0,
+          "exact_layer_match_rate": 0.037
+        },
+        "by_difficulty": {
+          "easy": {
+            "count": 15,
+            "avg_union_f1": 0.0667,
+            "avg_macro_f1": 0.0667,
+            "avg_direct_f1": 0.0667,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0,
+            "avg_mislayer_rate": 0.0
+          },
+          "hard": {
+            "count": 20,
+            "avg_union_f1": 0.0,
+            "avg_macro_f1": 0.0,
+            "avg_direct_f1": 0.0,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0,
+            "avg_mislayer_rate": 0.0
+          },
+          "medium": {
+            "count": 19,
+            "avg_union_f1": 0.0526,
+            "avg_macro_f1": 0.0526,
+            "avg_direct_f1": 0.0526,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0,
+            "avg_mislayer_rate": 0.0
+          }
+        },
+        "by_failure_type": {
+          "Type A": {
+            "count": 7,
+            "avg_union_f1": 0.0,
+            "avg_macro_f1": 0.0,
+            "avg_direct_f1": 0.0,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0,
+            "avg_mislayer_rate": 0.0
+          },
+          "Type B": {
+            "count": 9,
+            "avg_union_f1": 0.0,
+            "avg_macro_f1": 0.0,
+            "avg_direct_f1": 0.0,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0,
+            "avg_mislayer_rate": 0.0
+          },
+          "Type C": {
+            "count": 11,
+            "avg_union_f1": 0.0909,
+            "avg_macro_f1": 0.0909,
+            "avg_direct_f1": 0.0909,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0,
+            "avg_mislayer_rate": 0.0
+          },
+          "Type D": {
+            "count": 11,
+            "avg_union_f1": 0.0,
+            "avg_macro_f1": 0.0,
+            "avg_direct_f1": 0.0,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0,
+            "avg_mislayer_rate": 0.0
+          },
+          "Type E": {
+            "count": 16,
+            "avg_union_f1": 0.0625,
+            "avg_macro_f1": 0.0625,
+            "avg_direct_f1": 0.0625,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0,
+            "avg_mislayer_rate": 0.0
+          }
+        },
+        "source": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json"
+      },
+      "source": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json",
+      "info": {
+        "label": "Qwen Baseline",
+        "short": "Qwen-B",
+        "result_path": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json",
+        "result_key": "qwen_baseline_recovered",
+        "description": "Qwen3-9B 无 PE 无 RAG",
+        "requires_api": false,
+        "api_type": "vllm"
+      }
+    },
+    "qwen_pe": {
+      "strategy_key": "qwen_pe",
+      "status": "loaded_existing",
+      "metrics": {
+        "format": "strict_summary",
+        "overall": {
+          "count": 54,
+          "avg_union_f1": 0.2246,
+          "avg_macro_f1": 0.1702,
+          "avg_direct_f1": 0.2963,
+          "avg_indirect_f1": 0.0475,
+          "avg_implicit_f1": 0.0185,
+          "layer_penalty": 0.0544,
+          "avg_mislayer_rate": 0.0772,
+          "exact_layer_match_rate": 0.0741
+        },
+        "by_difficulty": {
+          "easy": {
+            "count": 15,
+            "avg_union_f1": 0.3167,
+            "avg_macro_f1": 0.2185,
+            "avg_direct_f1": 0.3778,
+            "avg_indirect_f1": 0.0444,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0982,
+            "avg_mislayer_rate": 0.1
+          },
+          "hard": {
+            "count": 20,
+            "avg_union_f1": 0.1323,
+            "avg_macro_f1": 0.0944,
+            "avg_direct_f1": 0.1833,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0379,
+            "avg_mislayer_rate": 0.0833
+          },
+          "medium": {
+            "count": 19,
+            "avg_union_f1": 0.2491,
+            "avg_macro_f1": 0.2117,
+            "avg_direct_f1": 0.3509,
+            "avg_indirect_f1": 0.1,
+            "avg_implicit_f1": 0.0526,
+            "layer_penalty": 0.0374,
+            "avg_mislayer_rate": 0.0526
+          }
+        },
+        "by_failure_type": {
+          "Type A": {
+            "count": 7,
+            "avg_union_f1": 0.0,
+            "avg_macro_f1": 0.0,
+            "avg_direct_f1": 0.0,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0,
+            "avg_mislayer_rate": 0.0
+          },
+          "Type B": {
+            "count": 9,
+            "avg_union_f1": 0.1868,
+            "avg_macro_f1": 0.0988,
+            "avg_direct_f1": 0.2963,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.088,
+            "avg_mislayer_rate": 0.2963
+          },
+          "Type C": {
+            "count": 11,
+            "avg_union_f1": 0.4394,
+            "avg_macro_f1": 0.3687,
+            "avg_direct_f1": 0.6061,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0707,
+            "avg_mislayer_rate": 0.0
+          },
+          "Type D": {
+            "count": 11,
+            "avg_union_f1": 0.303,
+            "avg_macro_f1": 0.2475,
+            "avg_direct_f1": 0.3333,
+            "avg_indirect_f1": 0.0909,
+            "avg_implicit_f1": 0.0909,
+            "layer_penalty": 0.0555,
+            "avg_mislayer_rate": 0.0455
+          },
+          "Type E": {
+            "count": 16,
+            "avg_union_f1": 0.1425,
+            "avg_macro_f1": 0.0951,
+            "avg_direct_f1": 0.1875,
+            "avg_indirect_f1": 0.0979,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0474,
+            "avg_mislayer_rate": 0.0625
+          }
+        },
+        "source": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json"
+      },
+      "source": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json",
+      "info": {
+        "label": "Qwen PE",
+        "short": "Qwen-PE",
+        "result_path": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json",
+        "result_key": "qwen_pe_only",
+        "description": "Qwen + PE (Fewshot + Postprocess)",
+        "requires_api": false,
+        "api_type": "vllm"
+      }
+    },
+    "qwen_rag": {
+      "strategy_key": "qwen_rag",
+      "status": "loaded_existing",
+      "metrics": {
+        "format": "strict_summary",
+        "overall": {
+          "count": 54,
+          "avg_union_f1": 0.0185,
+          "avg_macro_f1": 0.0185,
+          "avg_direct_f1": 0.0185,
+          "avg_indirect_f1": 0.0,
+          "avg_implicit_f1": 0.0,
+          "layer_penalty": 0.0,
+          "avg_mislayer_rate": 0.0,
+          "exact_layer_match_rate": 0.0185
+        },
+        "by_difficulty": {
+          "easy": {
+            "count": 15,
+            "avg_union_f1": 0.0667,
+            "avg_macro_f1": 0.0667,
+            "avg_direct_f1": 0.0667,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0,
+            "avg_mislayer_rate": 0.0
+          },
+          "hard": {
+            "count": 20,
+            "avg_union_f1": 0.0,
+            "avg_macro_f1": 0.0,
+            "avg_direct_f1": 0.0,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0,
+            "avg_mislayer_rate": 0.0
+          },
+          "medium": {
+            "count": 19,
+            "avg_union_f1": 0.0,
+            "avg_macro_f1": 0.0,
+            "avg_direct_f1": 0.0,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0,
+            "avg_mislayer_rate": 0.0
+          }
+        },
+        "by_failure_type": {
+          "Type A": {
+            "count": 7,
+            "avg_union_f1": 0.0,
+            "avg_macro_f1": 0.0,
+            "avg_direct_f1": 0.0,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0,
+            "avg_mislayer_rate": 0.0
+          },
+          "Type B": {
+            "count": 9,
+            "avg_union_f1": 0.0,
+            "avg_macro_f1": 0.0,
+            "avg_direct_f1": 0.0,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0,
+            "avg_mislayer_rate": 0.0
+          },
+          "Type C": {
+            "count": 11,
+            "avg_union_f1": 0.0909,
+            "avg_macro_f1": 0.0909,
+            "avg_direct_f1": 0.0909,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0,
+            "avg_mislayer_rate": 0.0
+          },
+          "Type D": {
+            "count": 11,
+            "avg_union_f1": 0.0,
+            "avg_macro_f1": 0.0,
+            "avg_direct_f1": 0.0,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0,
+            "avg_mislayer_rate": 0.0
+          },
+          "Type E": {
+            "count": 16,
+            "avg_union_f1": 0.0,
+            "avg_macro_f1": 0.0,
+            "avg_direct_f1": 0.0,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0,
+            "avg_mislayer_rate": 0.0
+          }
+        },
+        "source": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json"
+      },
+      "source": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json",
+      "info": {
+        "label": "Qwen RAG",
+        "short": "Qwen-R",
+        "result_path": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json",
+        "result_key": "qwen_rag_only",
+        "description": "Qwen + RAG (无 PE)",
+        "requires_api": false,
+        "api_type": "vllm"
+      }
+    },
+    "qwen_pe_rag": {
+      "strategy_key": "qwen_pe_rag",
+      "status": "loaded_existing",
+      "metrics": {
+        "format": "strict_summary",
+        "overall": {
+          "count": 54,
+          "avg_union_f1": 0.1534,
+          "avg_macro_f1": 0.1273,
+          "avg_direct_f1": 0.2284,
+          "avg_indirect_f1": 0.0917,
+          "avg_implicit_f1": 0.0432,
+          "layer_penalty": 0.0261,
+          "avg_mislayer_rate": 0.037,
+          "exact_layer_match_rate": 0.037
+        },
+        "by_difficulty": {
+          "easy": {
+            "count": 15,
+            "avg_union_f1": 0.1514,
+            "avg_macro_f1": 0.1185,
+            "avg_direct_f1": 0.3111,
+            "avg_indirect_f1": 0.0444,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0329,
+            "avg_mislayer_rate": 0.0667
+          },
+          "hard": {
+            "count": 20,
+            "avg_union_f1": 0.0523,
+            "avg_macro_f1": 0.0381,
+            "avg_direct_f1": 0.05,
+            "avg_indirect_f1": 0.0309,
+            "avg_implicit_f1": 0.0333,
+            "layer_penalty": 0.0142,
+            "avg_mislayer_rate": 0.0333
+          },
+          "medium": {
+            "count": 19,
+            "avg_union_f1": 0.2614,
+            "avg_macro_f1": 0.2281,
+            "avg_direct_f1": 0.3509,
+            "avg_indirect_f1": 0.193,
+            "avg_implicit_f1": 0.0877,
+            "layer_penalty": 0.0333,
+            "avg_mislayer_rate": 0.0175
+          }
+        },
+        "by_failure_type": {
+          "Type A": {
+            "count": 7,
+            "avg_union_f1": 0.0714,
+            "avg_macro_f1": 0.0454,
+            "avg_direct_f1": 0.0,
+            "avg_indirect_f1": 0.0408,
+            "avg_implicit_f1": 0.0952,
+            "layer_penalty": 0.026,
+            "avg_mislayer_rate": 0.0476
+          },
+          "Type B": {
+            "count": 9,
+            "avg_union_f1": 0.0,
+            "avg_macro_f1": 0.0,
+            "avg_direct_f1": 0.0,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0,
+            "avg_mislayer_rate": 0.0
+          },
+          "Type C": {
+            "count": 11,
+            "avg_union_f1": 0.1792,
+            "avg_macro_f1": 0.1313,
+            "avg_direct_f1": 0.3333,
+            "avg_indirect_f1": 0.0606,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0479,
+            "avg_mislayer_rate": 0.0909
+          },
+          "Type D": {
+            "count": 11,
+            "avg_union_f1": 0.1273,
+            "avg_macro_f1": 0.1212,
+            "avg_direct_f1": 0.1818,
+            "avg_indirect_f1": 0.0909,
+            "avg_implicit_f1": 0.0909,
+            "layer_penalty": 0.0061,
+            "avg_mislayer_rate": 0.0
+          },
+          "Type E": {
+            "count": 16,
+            "avg_union_f1": 0.2758,
+            "avg_macro_f1": 0.2361,
+            "avg_direct_f1": 0.4167,
+            "avg_indirect_f1": 0.1875,
+            "avg_implicit_f1": 0.0417,
+            "layer_penalty": 0.0397,
+            "avg_mislayer_rate": 0.0417
+          }
+        },
+        "source": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json"
+      },
+      "source": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json",
+      "info": {
+        "label": "Qwen PE + RAG",
+        "short": "Qwen-PE+R",
+        "result_path": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json",
+        "result_key": "qwen_pe_rag",
+        "description": "Qwen + PE + RAG",
+        "requires_api": false,
+        "api_type": "vllm"
+      }
+    },
+    "qwen_pe_ft": {
+      "strategy_key": "qwen_pe_ft",
+      "status": "loaded_existing",
+      "metrics": {
+        "format": "strict_summary",
+        "overall": {
+          "count": 54,
+          "avg_union_f1": 0.4315,
+          "avg_macro_f1": 0.3404,
+          "avg_direct_f1": 0.5093,
+          "avg_indirect_f1": 0.1399,
+          "avg_implicit_f1": 0.1136,
+          "layer_penalty": 0.0911,
+          "avg_mislayer_rate": 0.1309,
+          "exact_layer_match_rate": 0.1111
+        },
+        "by_difficulty": {
+          "easy": {
+            "count": 15,
+            "avg_union_f1": 0.5233,
+            "avg_macro_f1": 0.4141,
+            "avg_direct_f1": 0.6444,
+            "avg_indirect_f1": 0.0667,
+            "avg_implicit_f1": 0.0978,
+            "layer_penalty": 0.1092,
+            "avg_mislayer_rate": 0.1
+          },
+          "hard": {
+            "count": 20,
+            "avg_union_f1": 0.2624,
+            "avg_macro_f1": 0.2059,
+            "avg_direct_f1": 0.3333,
+            "avg_indirect_f1": 0.1162,
+            "avg_implicit_f1": 0.0333,
+            "layer_penalty": 0.0565,
+            "avg_mislayer_rate": 0.1167
+          },
+          "medium": {
+            "count": 19,
+            "avg_union_f1": 0.537,
+            "avg_macro_f1": 0.4237,
+            "avg_direct_f1": 0.5877,
+            "avg_indirect_f1": 0.2228,
+            "avg_implicit_f1": 0.2105,
+            "layer_penalty": 0.1133,
+            "avg_mislayer_rate": 0.1702
+          }
+        },
+        "by_failure_type": {
+          "Type A": {
+            "count": 7,
+            "avg_union_f1": 0.0406,
+            "avg_macro_f1": 0.0136,
+            "avg_direct_f1": 0.0,
+            "avg_indirect_f1": 0.0408,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.027,
+            "avg_mislayer_rate": 0.1429
+          },
+          "Type B": {
+            "count": 9,
+            "avg_union_f1": 0.4361,
+            "avg_macro_f1": 0.3716,
+            "avg_direct_f1": 0.7407,
+            "avg_indirect_f1": 0.1556,
+            "avg_implicit_f1": 0.163,
+            "layer_penalty": 0.0645,
+            "avg_mislayer_rate": 0.1481
+          },
+          "Type C": {
+            "count": 11,
+            "avg_union_f1": 0.6717,
+            "avg_macro_f1": 0.596,
+            "avg_direct_f1": 0.8788,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.0757,
+            "avg_mislayer_rate": 0.0
+          },
+          "Type D": {
+            "count": 11,
+            "avg_union_f1": 0.5579,
+            "avg_macro_f1": 0.3561,
+            "avg_direct_f1": 0.5909,
+            "avg_indirect_f1": 0.0909,
+            "avg_implicit_f1": 0.0909,
+            "layer_penalty": 0.2018,
+            "avg_mislayer_rate": 0.3636
+          },
+          "Type E": {
+            "count": 16,
+            "avg_union_f1": 0.3479,
+            "avg_macro_f1": 0.2793,
+            "avg_direct_f1": 0.2917,
+            "avg_indirect_f1": 0.3045,
+            "avg_implicit_f1": 0.2292,
+            "layer_penalty": 0.0686,
+            "avg_mislayer_rate": 0.0458
+          }
+        },
+        "source": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json"
+      },
+      "source": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json",
+      "info": {
+        "label": "Qwen PE + FT",
+        "short": "Qwen-PE+FT",
+        "result_path": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json",
+        "result_key": "qwen_pe_ft",
+        "description": "Qwen + PE + Fine-tuned",
+        "requires_api": false,
+        "api_type": "vllm"
+      }
+    },
+    "qwen_pe_rag_ft": {
+      "strategy_key": "qwen_pe_rag_ft",
+      "status": "loaded_existing",
+      "metrics": {
+        "format": "strict_summary",
+        "overall": {
+          "count": 54,
+          "avg_union_f1": 0.4435,
+          "avg_macro_f1": 0.3182,
+          "avg_direct_f1": 0.6123,
+          "avg_indirect_f1": 0.0973,
+          "avg_implicit_f1": 0.0461,
+          "layer_penalty": 0.1253,
+          "avg_mislayer_rate": 0.2204,
+          "exact_layer_match_rate": 0.0741
+        },
+        "by_difficulty": {
+          "easy": {
+            "count": 15,
+            "avg_union_f1": 0.4985,
+            "avg_macro_f1": 0.3648,
+            "avg_direct_f1": 0.7444,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.1337,
+            "avg_mislayer_rate": 0.1
+          },
+          "hard": {
+            "count": 20,
+            "avg_union_f1": 0.3672,
+            "avg_macro_f1": 0.2473,
+            "avg_direct_f1": 0.4783,
+            "avg_indirect_f1": 0.0559,
+            "avg_implicit_f1": 0.0577,
+            "layer_penalty": 0.1199,
+            "avg_mislayer_rate": 0.325
+          },
+          "medium": {
+            "count": 19,
+            "avg_union_f1": 0.4805,
+            "avg_macro_f1": 0.3561,
+            "avg_direct_f1": 0.6491,
+            "avg_indirect_f1": 0.2175,
+            "avg_implicit_f1": 0.0702,
+            "layer_penalty": 0.1244,
+            "avg_mislayer_rate": 0.2053
+          }
+        },
+        "by_failure_type": {
+          "Type A": {
+            "count": 7,
+            "avg_union_f1": 0.3391,
+            "avg_macro_f1": 0.2486,
+            "avg_direct_f1": 0.5095,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.1648,
+            "layer_penalty": 0.0905,
+            "avg_mislayer_rate": 0.2857
+          },
+          "Type B": {
+            "count": 9,
+            "avg_union_f1": 0.2571,
+            "avg_macro_f1": 0.0741,
+            "avg_direct_f1": 0.2222,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.183,
+            "avg_mislayer_rate": 0.4444
+          },
+          "Type C": {
+            "count": 11,
+            "avg_union_f1": 0.5424,
+            "avg_macro_f1": 0.4444,
+            "avg_direct_f1": 0.8788,
+            "avg_indirect_f1": 0.0,
+            "avg_implicit_f1": 0.0,
+            "layer_penalty": 0.098,
+            "avg_mislayer_rate": 0.0
+          },
+          "Type D": {
+            "count": 11,
+            "avg_union_f1": 0.5258,
+            "avg_macro_f1": 0.4545,
+            "avg_direct_f1": 0.7879,
+            "avg_indirect_f1": 0.1061,
+            "avg_implicit_f1": 0.0606,
+            "layer_penalty": 0.0713,
+            "avg_mislayer_rate": 0.1364
+          },
+          "Type E": {
+            "count": 16,
+            "avg_union_f1": 0.4695,
+            "avg_macro_f1": 0.3056,
+            "avg_direct_f1": 0.5729,
+            "avg_indirect_f1": 0.2554,
+            "avg_implicit_f1": 0.0417,
+            "layer_penalty": 0.1639,
+            "avg_mislayer_rate": 0.275
+          }
+        },
+        "source": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json"
+      },
+      "source": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json",
+      "info": {
+        "label": "Qwen PE + RAG + FT",
+        "short": "Qwen-PE+R+FT",
+        "result_path": "E:\\desktop\\tengxun\\tengxun_open\\results\\strict_metrics_20260329\\summary.json",
+        "result_key": "qwen_pe_rag_ft",
+        "description": "完整策略：Qwen + PE + RAG + Fine-tuned",
+        "requires_api": false,
+        "api_type": "vllm"
+      }
+    }
+  }
+}

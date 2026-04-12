@@ -30,27 +30,75 @@ from .rrf_retriever import HybridRetriever
 # Question classification patterns
 # ---------------------------------------------------------------------------
 
-# Hard/Type E: dynamic symbol resolution, alias chains, string-based targets
+# Hard/Type E: dynamic symbol resolution via ALIASES, symbol_by_name, instantiate.
 _TYPE_E_PATTERNS = [
-    re.compile(r"symbol_by_name|by_name\(|import_object|config_from_object", re.I),
+    # "real class does celery.X resolve to" pattern - runtime resolution chain
+    re.compile(r"(resolve|real|actual) (class|function) does celery\.[A-Za-z]", re.I),
+    re.compile(r"symbol_by_name", re.I),
+    re.compile(r"import_object\s*\(|instantiate\s*\(", re.I),
+    re.compile(r"config_from_object\s*\(", re.I),
+    re.compile(r"load_extension_classes\s*\(", re.I),
+    re.compile(r"find_app\s*\(", re.I),
     re.compile(r"LOADER_ALIASES|BACKEND_ALIASES|ALIASES\[", re.I),
-    re.compile(r"loader.*default|default.*loader", re.I),
-    re.compile(r"strategy.*default|default.*strategy", re.I),
+    re.compile(r"get_loader_cls\s*\(", re.I),
+    re.compile(r"by_name\s*\(|loader_cls", re.I),
     re.compile(r"task\.Request|task\.Strategy", re.I),
-    re.compile(r"symbol.*resolution|resolve.*to", re.I),
-    re.compile(r"最终|real class|real function|最终解析", re.I),
-    re.compile(r"django.*fixup|fixup|django.*task", re.I),
+    re.compile(r"django.*fixup|django.*task", re.I),
+    re.compile(r"current_app\.loader", re.I),
+    re.compile(r"result_backend\s*=|CELERY_CUSTOM_WORKER_POOL", re.I),
+    re.compile(r"builtin_fixups|_get_backend|_get_current_app", re.I),
+    re.compile(r"解析成真实类|解析为真实类", re.I),
+    re.compile(r"最终解析到.*真实|真实.*最终解析到", re.I),
+    re.compile(r"真实 Celery|真实函数符号", re.I),
+    re.compile(r"symbol_by_name.*最终解析|instantiate.*最终解析|解析成真实", re.I),
+    re.compile(r"celery\.utils\.(imports|functional|collections)\..*解析", re.I),
+    re.compile(r"symbol_by_name.*celery\.utils|celery\.utils.*symbol_by_name", re.I),
+    re.compile(r"instantiate.*celery\.utils|celery\.utils.*instantiate", re.I),
+    re.compile(r"config_from_object.*无法|无法.*config_from_object|obj.*无法.*模块导入", re.I),
+    re.compile(r"find_app.*获取|无法.*find_app|symbol.*find_app", re.I),
+    re.compile(r"head_from_fun.*生成|生成.*head_from_fun", re.I),
+    re.compile(r"cwd_in_path.*__enter__|__enter__.*cwd_in_path|当前工作目录.*import|import.*当前工作目录", re.I),
+    re.compile(r"celery\.utils\..*调用链|调用链.*celery\.utils", re.I),
+    re.compile(r"解析.*真实|真实.*解析|哪个真实.*类|真实.*Celery.*类", re.I),
+    re.compile(r"最终.*哪个.*函数|最终.*哪个.*类|哪个.*最终.*解析", re.I),
+    re.compile(r"importlib.*import_module|importlib_import", re.I),
+    re.compile(r"load_extension_classes|entry_points.*package:class", re.I),
+    re.compile(r"result_from_tuple|READY_STATES", re.I),
+    re.compile(r"kombu.*symbol_by_name|symbol_by_name.*kombu", re.I),
+    re.compile(r"builtin_fixups.*fixup|fixup.*真实函数|resolve.*builtin_fixups", re.I),
+    re.compile(r"AsyncResult.*backend|self\.app\.backend", re.I),
+    re.compile(r"maybe_evaluate.*lazy|lazy.*maybe_evaluate|maybe_evaluate.*proxy", re.I),
+    re.compile(r"ensure_chords_allowed|chords_allowed", re.I),
+    re.compile(r"current_app.*loader|loader.*current_app", re.I),
+    re.compile(r"最终.*哪个函数|最终.*哪个类|which function ultimately", re.I),
+]
+
+
+# Hard/Type C: lazy re-export / __getattr__ delegation in celery top-level API.
+# Key: Type C is about knowing the structure, NOT about runtime resolution (resolve/to -> Type E)
+_TYPE_C_PATTERNS = [
+    re.compile(r"Which real (class|function) does.*shared_task", re.I),
+    re.compile(r"Which real (class|function) does [`'](celery\.[a-z_])", re.I),
+    re.compile(r"\bre-export\b|\breexport\b|\b__getattr__\b|\b__all__\b", re.I),
+    re.compile(r"delegate[s]?|delegat(es|ion)", re.I),
+    re.compile(r"from celery\.canvas import|from celery\.app import", re.I),
+    re.compile(r"顶层符号.*celery\.[A-Z]|celery\.[A-Z].*顶层符号", re.I),
+    re.compile(r"哪个真实类.*celery\.[A-Z]|celery\.[A-Z].*哪个真实类", re.I),
+    re.compile(r"真实类定义 FQN|真实类.*FQN|对应.*真实类.*FQN", re.I),
+    re.compile(r"重新导出|委托给哪个|完整 FQN|完整.*FQN|哪个外部包", re.I),
+    re.compile(r"import_from_cwd", re.I),
 ]
 
 # Hard/Type B: decorator flows, shared_task, proxy, finalize callbacks
 _TYPE_B_PATTERNS = [
-    re.compile(r"@shared_task|@app\.task|shared_task|shared-task", re.I),
-    re.compile(r"decorator|register|registration|register.*task", re.I),
-    re.compile(r"Proxy|autofinalize|finalize.*callback|finalize.*callback", re.I),
+    re.compile(r"@shared_task|@app\.task", re.I),
+    re.compile(r"\bdecorator\b|autofinalize|finalize.*callback", re.I),
     re.compile(r"builtin_finalize|finalize.*builtin", re.I),
     re.compile(r"task.*from.*fun|_task_from_fun", re.I),
     re.compile(r"celery\.app\.shared_task|celery\.app\.Celery.*task", re.I),
+    re.compile(r"celery\.current_app(?!\.loader)|celery\.current_task(?!\.loader)", re.I),
 ]
+
 
 # Hard/Type A: lifecycle, bootstep, conditional include, signals
 _TYPE_A_PATTERNS = [
@@ -60,27 +108,49 @@ _TYPE_A_PATTERNS = [
     re.compile(r"disable_prefetch|can_consume|qos|channel_qos", re.I),
     re.compile(r"failure.*matrix|acks_late|on_failure|on_timeout", re.I),
     re.compile(r"WorkerLostError|TimeLimitExceeded", re.I),
+    re.compile(r"importlib", re.I),
 ]
 
-# Hard/Type D: parameter shadowing, string targets, name confusion
+
+# Hard/Type D: parameter shadowing, naming confusion, type mismatches.
 _TYPE_D_PATTERNS = [
-    re.compile(r"parameter.*shadow|shadow.*parameter|router.*string", re.I),
-    re.compile(r"expand_router|RouterClass|register_type", re.I),
-    re.compile(r"_chain|chain.*vs|registered.*class|subclass.*instance", re.I),
-    re.compile(r"inline.*import|lazy.*import|import.*inside", re.I),
-    re.compile(r"subtask|maybe_subtask|signature", re.I),
-    re.compile(r"celery\.canvas\.(subtask|maybe_subtask)", re.I),
+    re.compile(r"register_type|RegisteredType|Signature\.TYPES", re.I),
+    re.compile(r"chain\.__new__", re.I),
+    re.compile(r"(chain|chord).*(vs|\bv\.).*(_chain|_chord)", re.I),
+    re.compile(r"(internal|private).*(class|function).*(_chain|_chord)", re.I),
+    re.compile(r"parameter.*shadow|shadow.*parameter", re.I),
+    re.compile(r"type.*mismatch|mismatch.*type", re.I),
+    re.compile(r"same.*name.*different.*type|different.*type.*same.*name", re.I),
+    re.compile(r"inherits.*wrong|wrong.*base|base.*class.*different", re.I),
+    re.compile(r"celery\.[a-z_]+\.(subtask|maybe_subtask)", re.I),
+    re.compile(r"subtask.*=.*signature|maybe_subtask.*=.*maybe_signature", re.I),
+    re.compile(r"subclass_with_self|Proxy.*type|type.*Proxy", re.I),
+    re.compile(r"ConfigurationView.*ChainMap|ChainMap.*ConfigurationView", re.I),
+    re.compile(r"哪个映射|层次映射|取哪个映射", re.I),
+    re.compile(r"参数.*遮蔽|遮蔽.*参数|同名.*参数|参数.*同名", re.I),
+    re.compile(r"内联.*import|inline.*import|函数体内.*import|from.*import.*函数体内", re.I),
+    re.compile(r"Signature\.from_dict|Signature\.TYPES|注册到.*TYPES", re.I),
+    re.compile(r"继承自.*标准库|inherits.*standard library|是什么类型的对象", re.I),
+    re.compile(r"celery\.canvas\.Signature", re.I),
+    re.compile(r"expand_router_string", re.I),
+    re.compile(r"CELERY_CUSTOM_WORKER_POOL", re.I),
+    re.compile(r"cwd_in_path", re.I),
+    re.compile(r"get_implementation", re.I),
+    re.compile(r"chain.*构造函数|构造函数.*chain|Signature.*合并|合并.*Signature", re.I),
+    re.compile(r"from_dict.*分发|分发.*from_dict|from_dict.*子类|from_dict.*哪个类", re.I),
+    re.compile(r"ConfigurationView.*__getitem__|NAMESPACES.*查找|查找.*NAMESPACES", re.I),
+    re.compile(r"Timer.*Schedule.*Entry|Schedule.*Timer|Entry.*Timer", re.I),
 ]
 
-# Easy indicators: simple re-export, top-level, delegation
+
+# Easy indicators: simple re-export, top-level, delegation (MUST NOT match resolve/real class)
 _EASY_PATTERNS = [
     re.compile(r"^Which real class does.*resolve.*\?$"),
     re.compile(r"^Which real function does.*\?$"),
     re.compile(r"^The.*real class.*FQN.*\?$"),
-    re.compile(r"^.*top-level.*lazy.*API.*\?$"),
     re.compile(r"^From.*class.*definition.*view.*\?$"),
     re.compile(r"^顶层符号.*\?$"),
-    re.compile(r"top.level|re-export|re_export|celery\.[A-Z][a-z]+", re.I),
+    re.compile(r"top.level|re-export|re_export", re.I),
     re.compile(r"re-exports|thin wrapper|delegat", re.I),
 ]
 
@@ -129,18 +199,21 @@ def classify_question_type(
 
     signals: list[str] = []
 
-    for pattern in _TYPE_E_PATTERNS:
-        if pattern.search(combined):
-            signals.append(f"TypeE:{pattern.pattern[:30]}")
-    for pattern in _TYPE_B_PATTERNS:
-        if pattern.search(combined):
-            signals.append(f"TypeB:{pattern.pattern[:30]}")
     for pattern in _TYPE_A_PATTERNS:
         if pattern.search(combined):
             signals.append(f"TypeA:{pattern.pattern[:30]}")
+    for pattern in _TYPE_B_PATTERNS:
+        if pattern.search(combined):
+            signals.append(f"TypeB:{pattern.pattern[:30]}")
+    for pattern in _TYPE_C_PATTERNS:
+        if pattern.search(combined):
+            signals.append(f"TypeC:{pattern.pattern[:30]}")
     for pattern in _TYPE_D_PATTERNS:
         if pattern.search(combined):
             signals.append(f"TypeD:{pattern.pattern[:30]}")
+    for pattern in _TYPE_E_PATTERNS:
+        if pattern.search(combined):
+            signals.append(f"TypeE:{pattern.pattern[:30]}")
 
     # Count implicit-level keywords
     level_4_count = sum(1 for kw in _IMPLICIT_LEVEL_KEYWORDS[4] if kw.lower() in combined.lower())
@@ -154,6 +227,8 @@ def classify_question_type(
         failure_type = "Type A"
     elif any(s.startswith("TypeB") for s in signals):
         failure_type = "Type B"
+    elif any(s.startswith("TypeC") for s in signals):
+        failure_type = "Type C"
     elif any(s.startswith("TypeD") for s in signals):
         failure_type = "Type D"
     elif any(s.startswith("TypeE") for s in signals):
