@@ -24,7 +24,7 @@ FT_STRATEGY ?= ft
 FT_OUTPUT ?=
 RAG_FORMAL_REPORT ?= results/rag_google_eval_54cases_20260328.json
 
-.PHONY: help eval-baseline eval-pe eval-rag eval-rag-draft eval-ft eval-all train train-historical train-strict train-strict-dry-run qwen-strict-rerun report report-final lint-data lint-data-historical audit-strict rescore-strict check-train-env check-train-env-historical check-train-env-strict audit-train-log audit-train-log-historical materialize-strict-adapter prepare-rag-cache
+.PHONY: help eval-baseline eval-pe eval-rag eval-rag-draft eval-ft eval-all train train-historical train-strict train-strict-dry-run qwen-strict-rerun report report-final lint-data lint-data-historical audit-strict rescore-strict check-train-env check-train-env-historical check-train-env-strict audit-train-log audit-train-log-historical materialize-strict-adapter prepare-rag-cache dashboard tune-weights
 
 help:
 	@echo "可用目标："
@@ -51,6 +51,8 @@ help:
 	@echo "  make rescore-strict - 对现有结果做 strict 分层重评分"
 	@echo "  make materialize-strict-adapter - 从 handoff 包提取 strict-clean adapter 到默认目录"
 	@echo "  make prepare-rag-cache - 自动重建正式 Google embedding cache（如缺失）"
+	@echo "  make dashboard      - 生成项目健康度 dashboard JSON（输出 artifacts/dashboard.json）"
+	@echo "  make tune-weights   - 运行 RRF 权重网格搜索，输出 reports/rag_weights_tuning.md"
 
 eval-baseline:
 	$(PYTHON) -m evaluation.baseline --mode baseline --eval-cases $(EVAL_CASES)
@@ -157,3 +159,9 @@ report-status:
 	@echo "  - reports/pe_optimization.md"
 	@echo "  - reports/rag_pipeline.md"
 	@echo "  - reports/ablation_study.md"
+
+dashboard:
+	$(PYTHON) scripts/generate_dashboard.py
+
+tune-weights:
+	$(PYTHON) scripts/tune_rag_weights.py

@@ -52,12 +52,13 @@ Reason internally using this checklist before answering:
 
 LAYER_GUARD_RULES = """\
 Layer assignment rules:
-1. direct_deps: only symbols directly imported, called, instantiated, accessed, or returned by the entry file / entry symbol itself.
-2. indirect_deps: symbols reached through one or more explicit intermediate code symbols such as re-export, alias, wrapper, factory, cached_property, or subclass_with_self.
-3. implicit_deps: symbols reached through runtime-triggered edges such as decorators, finalize hooks, signals, registries, lazy Proxy resolution, dynamic string imports, symbol_by_name, or loader autodiscovery.
+1. direct_deps: symbols directly imported, called, instantiated, accessed, or returned by the entry file / entry symbol itself. If the entry symbol's file contains an `import X` or `from X import Y` where X/Y is the target, that symbol is direct_deps. Single-hop re-exports (entry file imports from another file) are also direct_deps.
+2. indirect_deps: symbols reached through one or more explicit intermediate code symbols such as re-export chains (A→B→C), alias assignment, wrapper function, factory, cached_property, or subclass_with_self. Each hop in the chain adds one level of indirection.
+3. implicit_deps: symbols reached through runtime-triggered edges. This includes: decorator registration callbacks, finalize hooks, signals/receivers, registries, lazy Proxy resolution, dynamic string imports, symbol_by_name(), symbol_by_name() fallback paths, loader autodiscovery, importlib.import_module, BACKEND_ALIASES/LOADER_ALIASES lookup, entry_points() resolution, and config_from_object with string arguments.
 4. Each FQN must appear in exactly one layer. Never duplicate the same symbol across layers.
 5. A symbol reached via string resolution, hook registration, or runtime callback cannot be direct_deps.
-6. If uncertain, prefer indirect_deps over direct_deps; prefer implicit_deps for runtime-triggered edges.
+6. CRITICAL: symbol_by_name(), instantiate(), ALIASES['key'], entry_points(), importlib.import_module, config_from_object with string args — these ALL create implicit_deps edges, NOT indirect_deps.
+7. If uncertain, prefer indirect_deps over direct_deps; prefer implicit_deps for runtime-triggered edges.
 """
 
 
@@ -67,9 +68,74 @@ Reason internally using this checklist before answering:
 2. Mark only that first-hop stable code symbol as direct_deps.
 3. Move any symbol reached via re-export, wrapper, alias, factory, cached_property, or helper into indirect_deps.
 4. Move any symbol reached via decorator registration, finalize callbacks, signals, Proxy/lazy resolution, or string/module-name lookup into implicit_deps.
-5. Run an exclusivity check so each FQN appears in at most one layer.
-6. Return only the required JSON object.
+5. CRITICAL boundary check: symbol_by_name(), instantiate(), ALIASES[], entry_points(), importlib.import_module — these are RUNTIME lookups → implicit_deps.
+6. Run an exclusivity check so each FQN appears in at most one layer.
+7. Return only the required JSON object.
 """
+
+
+# ---------------------------------------------------------------------------
+# P2-17: Enhanced layer-checking CoT (reduces mislayer_rate)
+# ---------------------------------------------------------------------------
+LAYER_CHECKLIST_COT_TEMPLATE = """\
+Step-by-step layer assignment:
+1. ENTRY: Identify what the entry file/symbol is (re-export, Proxy, decorator factory, signal receiver, string resolver, etc.).
+2. FIRST HOP: Trace the single immediate code path from the entry. Whatever is directly imported/called/accessed at this point is direct_deps.
+3. EXPLICIT CHAIN: Follow any explicit re-export, alias, or wrapper chain. Each explicit intermediate code symbol (not a runtime call) goes to indirect_deps.
+4. RUNTIME TRIGGER: Any symbol reached via:
+   - symbol_by_name() / instantiate() / import_from_cwd()
+   - BACKEND_ALIASES / LOADER_ALIASES / TYPES registry lookup
+   - connect_on_app_finalize() / finalize() callbacks
+   - signals.import_modules.send() / starpromise()
+   - importlib.import_module() with string/module-name
+   - entry_points() resolution
+   → goes to implicit_deps (NOT indirect_deps).
+5. EXCLUSIVITY: Verify each FQN appears in exactly one layer. Move any symbol_by_name results from indirect_deps to implicit_deps if found there.
+6. SANITY: If a FQN is in indirect_deps but reached by a runtime call (not an explicit import chain), move it to implicit_deps.
+7. Return only the required JSON object.
+"""
+
+
+# ---------------------------------------------------------------------------
+# P2-16: Hard-case optimization hints
+# ---------------------------------------------------------------------------
+
+# 触发Hard难度的关键词模式，按failure_type分组
+HARD_TYPE_A_PATTERNS = [
+    "autodiscover", "include_if", "conditional", "bootstep", "step",
+    "finalize", "failure_matrix", "PersistentScheduler", "store.clear",
+]
+HARD_TYPE_B_PATTERNS = [
+    "shared_task", "@app.task", "register", "Proxy", "autofinalize",
+    "finalize_callback", "builtin_finalize",
+]
+HARD_TYPE_D_PATTERNS = [
+    "expand_router", "router_string", "RouterClass", "register_type",
+    "parameter_shadow", "shadows",
+]
+HARD_TYPE_E_PATTERNS = [
+    "symbol_by_name", "by_name", "string_resolution", "import_object",
+    "loader_smart", "config_from_object", "BACKEND_ALIASES", "LOADER_ALIASES",
+]
+
+# Hard case专用CoT补充：当检测到Hard关键词时追加到标准CoT后面
+HARD_CASE_COT_ADDENDUM = """
+[Hard Case Alert] Detected multi-hop or runtime-triggered chain:
+- Trace the FULL chain: entry -> first hop -> intermediate -> final symbol.
+- Decorator registration creates implicit edges; follow finalize callbacks.
+- autodiscover_tasks uses lazy signals, not direct imports.
+- Parameter shadowing: distinguish local parameter names from module-level FQNs.
+- symbol_by_name/string resolution: the final class is several hops from the entry.
+- A single entry may span 2-3 layers (direct + indirect + implicit).
+"""
+
+# 按failure_type分布补充的fewshot提示（不直接嵌入prompt，仅供选择参考）
+HARD_FAILURE_TYPE_HINTS = {
+    "Type A": "Watch for conditional execution paths and state-dependent includes.",
+    "Type B": "Follow the full decorator factory chain to the actual registration call.",
+    "Type D": "Distinguish parameter names from module FQNs; shadowing hides the real symbol.",
+    "Type E": "String-based lookups (ALIASES, symbol_by_name) require multiple resolution hops.",
+}
 
 
 OUTPUT_INSTRUCTIONS = """Return only a JSON object with:
@@ -265,6 +331,7 @@ def select_few_shot_examples(
     2. 失效类型匹配（权重2.0）：失败类型关键词匹配
     3. 入口符号匹配（权重2.5）：入口符号在示例中出现
     4. 长链路加分（0.5）：case_id以A开头表示长链案例优先
+    5. Hard-case模式加分（1.0）：匹配Type A/B/D/E的Hard关键词
 
     Args:
         question: 当前问题
@@ -281,8 +348,17 @@ def select_few_shot_examples(
         return []
 
     query_text = " ".join(part for part in (question, context, entry_symbol) if part)
+    query_lower = query_text.lower()
     query_tokens = _tokenize(query_text)
     entry_tail = entry_symbol.rsplit(".", 1)[-1].lower() if entry_symbol else ""
+
+    # P2-16: 收集所有Hard模式
+    all_hard_patterns: list[str] = (
+        HARD_TYPE_A_PATTERNS
+        + HARD_TYPE_B_PATTERNS
+        + HARD_TYPE_D_PATTERNS
+        + HARD_TYPE_E_PATTERNS
+    )
 
     scored: list[tuple[float, FewShotExample]] = []
     for example in examples:
@@ -308,7 +384,20 @@ def select_few_shot_examples(
         )
         entry_hit = 1 if entry_tail and entry_tail in example_text.lower() else 0
         long_chain_bonus = 0.5 if example.case_id.startswith("A") else 0.0
-        score = overlap * 3.0 + failure_hit * 2.0 + entry_hit * 2.5 + long_chain_bonus
+
+        # P2-16: Hard-case模式命中加分
+        hard_pattern_hit = sum(
+            1.0 for pattern in all_hard_patterns if pattern.lower() in query_lower
+        )
+        hard_pattern_bonus = min(hard_pattern_hit, 3.0)  # 最多加3分
+
+        score = (
+            overlap * 3.0
+            + failure_hit * 2.0
+            + entry_hit * 2.5
+            + long_chain_bonus
+            + hard_pattern_bonus
+        )
         scored.append((score, example))
 
     scored.sort(
@@ -331,6 +420,39 @@ def select_few_shot_examples(
         if len(selected) >= max_examples:
             break
     return selected
+
+
+def is_hard_case(question: str, context: str = "", entry_symbol: str = "") -> bool:
+    """
+    判断当前问题是否可能属于Hard难度案例。
+
+    通过关键词匹配检测Hard-case模式：
+    - Type A: autodiscover, include_if, conditional, bootstep, finalize
+    - Type B: shared_task, @app.task, Proxy, autofinalize
+    - Type D: router_string, expand_router, shadowing
+    - Type E: symbol_by_name, ALIASES, string_resolution
+    """
+    combined = " ".join(part for part in (question, context, entry_symbol) if part)
+    combined_lower = combined.lower()
+    hard_keywords = (
+        HARD_TYPE_A_PATTERNS
+        + HARD_TYPE_B_PATTERNS
+        + HARD_TYPE_D_PATTERNS
+        + HARD_TYPE_E_PATTERNS
+    )
+    return any(kw.lower() in combined_lower for kw in hard_keywords)
+
+
+def build_cot_for_hard_case(
+    base_cot: str = COT_TEMPLATE,
+) -> str:
+    """
+    为Hard案例构建增强版CoT。
+
+    当 is_hard_case() 返回True时，在标准CoT后追加Hard-case补充提示，
+    提醒模型注意多跳链路、装饰器流、动态解析等典型Hard-case陷阱。
+    """
+    return f"{base_cot.strip()}\n\n{HARD_CASE_COT_ADDENDUM.strip()}"
 
 
 def build_user_prompt(
@@ -367,7 +489,17 @@ def build_prompt_bundle(
     system_prompt: str = SYSTEM_PROMPT,
     cot_template: str = COT_TEMPLATE,
     include_empty_context: bool = True,
+    auto_hard_cot: bool = True,
+    use_layer_checklist: bool = False,
 ) -> PromptBundle:
+    """
+    组装完整Prompt包。
+
+    Args:
+        auto_hard_cot: True时，自动检测Hard-case并追加增强CoT（不影响Easy/Medium）。
+        use_layer_checklist: True时，使用增强版层级检查CoT（LAYER_CHECKLIST_COT_TEMPLATE）
+                            替代默认cot_template，可降低mislayer_rate。
+    """
     selected = select_few_shot_examples(
         question=question,
         context=context,
@@ -375,9 +507,16 @@ def build_prompt_bundle(
         max_examples=max_examples,
         library=library,
     )
+    # P2-17: use_layer_checklist 优先；其次 auto_hard_cot 追加Hard-case专用CoT
+    if use_layer_checklist:
+        effective_cot = LAYER_CHECKLIST_COT_TEMPLATE
+    else:
+        effective_cot = cot_template
+    if auto_hard_cot and is_hard_case(question=question, context=context, entry_symbol=entry_symbol):
+        effective_cot = build_cot_for_hard_case(effective_cot)
     return PromptBundle(
         system_prompt=system_prompt,
-        cot_template=cot_template,
+        cot_template=effective_cot,
         few_shot_examples=tuple(selected),
         user_prompt=build_user_prompt(
             question=question,
@@ -400,6 +539,8 @@ def build_messages(
     cot_template: str = COT_TEMPLATE,
     include_empty_context: bool = True,
     assistant_fewshot: bool = False,
+    auto_hard_cot: bool = True,
+    use_layer_checklist: bool = False,
 ) -> list[dict[str, str]]:
     bundle = build_prompt_bundle(
         question=question,
@@ -411,6 +552,8 @@ def build_messages(
         system_prompt=system_prompt,
         cot_template=cot_template,
         include_empty_context=include_empty_context,
+        auto_hard_cot=auto_hard_cot,
+        use_layer_checklist=use_layer_checklist,
     )
     messages = [{"role": "system", "content": bundle.system_prompt.strip()}]
     if bundle.cot_template.strip():

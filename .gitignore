@@ -19,7 +19,8 @@ dist/
 # Data & outputs
 # artifacts/
 artifacts/lora/
-artifacts/rag/
+# RAG embeddings cache — rebuild with: bash scripts/rebuild_rag_cache.sh
+artifacts/rag/embeddings_cache_*.json
 outputs/
 cache/
 logs/

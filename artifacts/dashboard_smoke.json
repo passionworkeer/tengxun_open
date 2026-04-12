@@ -1,0 +1,141 @@
+{
+  "timestamp": "2026-04-12T10:40:57Z",
+  "test_coverage": {
+    "total": 107,
+    "passed": 107,
+    "modules": {
+      "ast_chunker": {
+        "tests": 23,
+        "coverage": "unknown"
+      },
+      "rrf_retriever": {
+        "tests": 23,
+        "coverage": "unknown"
+      },
+      "metrics": {
+        "tests": 21,
+        "coverage": "unknown"
+      },
+      "post_processor": {
+        "tests": 22,
+        "coverage": "unknown"
+      },
+      "baseline_loader": {
+        "tests": 3,
+        "coverage": "unknown"
+      },
+      "data_guard": {
+        "tests": 4,
+        "coverage": "unknown"
+      },
+      "prompt_templates_v2": {
+        "tests": 2,
+        "coverage": "unknown"
+      },
+      "train_lora": {
+        "tests": 9,
+        "coverage": "unknown"
+      }
+    }
+  },
+  "strategy_performance": {
+    "pe_targeted": 0.6123,
+    "hard_bottleneck": 0.0946
+  },
+  "rag_quality": {
+    "chunk_recall_at_5": 0.4305,
+    "expanded_recall_at_5": 0.4502,
+    "mrr": 0.5292,
+    "worst_failure_type": "Type E",
+    "worst_recall": 0.1882,
+    "by_failure_type": {
+      "Type A": {
+        "recall": 0.4837,
+        "mrr": 0.65,
+        "count": 7
+      },
+      "Type B": {
+        "recall": 0.2333,
+        "mrr": 0.4611,
+        "count": 9
+      },
+      "Type C": {
+        "recall": 0.8636,
+        "mrr": 0.5606,
+        "count": 11
+      },
+      "Type D": {
+        "recall": 0.4773,
+        "mrr": 0.3379,
+        "count": 11
+      },
+      "Type E": {
+        "recall": 0.1882,
+        "mrr": 0.6245,
+        "count": 16
+      }
+    },
+    "by_difficulty": {
+      "easy": {
+        "recall": 0.6244,
+        "mrr": 0.459,
+        "count": 15
+      },
+      "hard": {
+        "recall": 0.2839,
+        "mrr": 0.464,
+        "count": 20
+      },
+      "medium": {
+        "recall": 0.4317,
+        "mrr": 0.6531,
+        "count": 19
+      }
+    }
+  },
+  "critical_issues": {
+    "open_p0": 1,
+    "open_p1": 1,
+    "open_p2": 1
+  },
+  "eval_dataset": {
+    "total_cases": 54,
+    "by_difficulty": {
+      "easy": 15,
+      "medium": 19,
+      "hard": 20
+    },
+    "failure_type_distribution": {
+      "Type C": 11,
+      "Type E": 16,
+      "Type D": 11,
+      "Type B": 9,
+      "Type A": 7
+    },
+    "has_schema_v2": true
+  },
+  "rag_index": {
+    "num_chunks": 8086,
+    "repo_root": "external/celery",
+    "query_mode": "question_plus_entry",
+    "rrf_k": 30,
+    "weights": null,
+    "per_source_depth": 12
+  },
+  "training_health": {
+    "best_eval_loss": 0.4661,
+    "final_eval_loss": 0.4661,
+    "checkpoint_steps": [
+      50,
+      100,
+      150,
+      200,
+      250,
+      300,
+      339
+    ],
+    "train_loss_points": 33,
+    "eval_loss_points": 7,
+    "log_path": "logs/strict_clean_20260329.train.log"
+  }
+}
