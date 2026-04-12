@@ -49,6 +49,28 @@ class RetrievalTrace:
     fused: tuple[RetrievalHit, ...]
 
 
+@dataclass(frozen=True)
+class RetrievalTraceWithPath:
+    """
+    Extended trace from HybridRetrieverWithPath.
+
+    Adds:
+        path_indexer_hits: PathInfo tuples from DependencyPathIndexer
+        path_augmented:    whether PathIndexer actually changed the ranking
+        question_classification: QuestionClassification result
+    """
+
+    bm25: tuple[str, ...]
+    semantic: tuple[str, ...]
+    graph: tuple[str, ...]
+    fused_ids: tuple[str, ...]
+    fused: tuple[RetrievalHit, ...]
+    path_indexer_hits: tuple
+    path_augmented: bool
+    question_classification: object
+
+
+
 def rrf_fuse(rankings: dict[str, Iterable[str]], k: int = 60) -> list[RankedResult]:
     """
     倒数排名融合（Reciprocal Rank Fusion）

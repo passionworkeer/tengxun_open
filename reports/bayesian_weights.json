@@ -1,0 +1,43 @@
+{
+  "best_weights": {
+    "bm25": 0.5467,
+    "semantic": 0.4433,
+    "graph": 0.01
+  },
+  "best_primary_recall": 0.3898,
+  "best_overall_recall": 0.4328,
+  "best_type_e_recall": 0.3898,
+  "baseline": {
+    "overall_avg_recall": 0.4586,
+    "overall_mrr": 0.5779,
+    "n": 102,
+    "by_ft": {
+      "Type A": {
+        "avg_recall": 0.4772,
+        "n": 16
+      },
+      "Type B": {
+        "avg_recall": 0.2224,
+        "n": 15
+      },
+      "Type C": {
+        "avg_recall": 0.6722,
+        "n": 15
+      },
+      "Type D": {
+        "avg_recall": 0.5593,
+        "n": 20
+      },
+      "Type E": {
+        "avg_recall": 0.4037,
+        "n": 36
+      }
+    }
+  },
+  "sensitivity": {},
+  "n_trials": 10,
+  "n_cases": 102,
+  "focus_types": [
+    "Type E"
+  ]
+}

@@ -2022,5 +2022,507 @@
     "case_id": "celery_type_c_hard_003",
     "entry_symbol": "celery.chain",
     "entry_file": "celery/__init__.py"
+  },
+  {
+    "case_id": "celery_type_e_hard_015",
+    "difficulty": "hard",
+    "category": "backend_alias_multi_hop_resolution",
+    "failure_type": "Type E",
+    "implicit_level": 5,
+    "question": "在 `celery/app/backends.py` 的 `by_name('db')` 中，`LOADER_ALIASES` 为 `{'db': 'celery.backends.database:DatabaseBackend'}` 时，`symbol_by_name` 通过哪些中间函数最终解析到具体的 DatabaseBackend 类？",
+    "source_file": "celery/app/backends.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [],
+      "indirect_deps": [
+        "celery.app.backends.by_name",
+        "celery.utils.imports.symbol_by_name",
+        "celery.utils.imports.load_extension_class_names"
+      ],
+      "implicit_deps": [
+        "celery.app.backends.BACKEND_ALIASES",
+        "celery.utils.imports.import_from_cwd"
+      ]
+    },
+    "reasoning_hint": "by_name 调用 symbol_by_name 并传入合并后的 aliases。symbol_by_name 是 kombu 层的函数（直接导入），执行时通过 importlib 在运行时解析 dotted name。BACKEND_ALIASES['db'] 是字符串字面量，属于配置查找，在 import 时已确定。",
+    "source_note": "Blind spot: celery/backends/base.py not covered; add Type E chain via BACKEND_ALIASES",
+    "entry_symbol": null,
+    "entry_file": null
+  },
+  {
+    "case_id": "celery_type_e_hard_016",
+    "difficulty": "hard",
+    "category": "result_async_result_backend_delegation",
+    "failure_type": "Type E",
+    "implicit_level": 4,
+    "question": "在 `celery/result.py` 的 `AsyncResult.get()` 中，当 `self.backend` 为 `None` 时，`self.app.backend` 的实际类型取决于什么配置？这条依赖链如何从 AsyncResult 追溯到具体的 Backend 类？",
+    "source_file": "celery/result.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.result.AsyncResult.app",
+        "celery.result.allow_join_result",
+        "celery.result.assert_will_not_block"
+      ],
+      "indirect_deps": [
+        "celery.result.ResultBase",
+        "vine.promise"
+      ],
+      "implicit_deps": [
+        "celery.app.backends.by_name",
+        "celery.app.backends.BACKEND_ALIASES",
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "reasoning_hint": "AsyncResult.__init__ 中 self.backend = backend or self.app.backend。app.backend 通过 @cached_property 懒加载，在 app.conf.result_backend 的基础上通过 by_name() 解析。backend 的具体类是运行时由配置决定的，属于 implicit 依赖。",
+    "source_note": "Blind spot: celery/result.py has 0 hard cases; AsyncResult->Backend chain is entirely uncovered",
+    "entry_symbol": "celery.result.AsyncResult.get",
+    "entry_file": "celery/result.py"
+  },
+  {
+    "case_id": "celery_type_e_hard_017",
+    "difficulty": "hard",
+    "category": "worker_strategy_symbol_by_name_import",
+    "failure_type": "Type E",
+    "implicit_level": 5,
+    "question": "在 `celery/worker/strategy.py` 的 `default` 函数体中，`symbol_by_name` 被用来将 Task 的 `Strategy` 字符串配置解析为实际的策略类。这个解析过程经过哪些中间符号，最终得到的类属于哪个模块？",
+    "source_file": "celery/worker/strategy.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [],
+      "indirect_deps": [
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": [
+        "celery.worker.strategy.default",
+        "celery.worker.request.create_request_cls"
+      ]
+    },
+    "reasoning_hint": "strategy.py 直接导入 symbol_by_name from celery.utils.imports。Task.Strategy 配置为字符串 'celery.worker.strategy:default'，symbol_by_name 在运行时解析这个 dotted name 并实例化策略类。这是运行时字符串解析，属于 implicit 依赖。",
+    "source_note": "Blind spot: celery/worker/strategy.py has only 1 hard case; symbol_by_name import chain uncovered",
+    "entry_symbol": "celery.worker.strategy.default",
+    "entry_file": "celery/worker/strategy.py"
+  },
+  {
+    "case_id": "celery_type_e_hard_018",
+    "difficulty": "hard",
+    "category": "concurrency_symbol_by_name_multi_alias",
+    "failure_type": "Type E",
+    "implicit_level": 4,
+    "question": "在 `celery/concurrency/__init__.py` 中，`get_implementation('prefork')` 如何通过 `symbol_by_name` 和 `ALIASES` 字典将字符串 'prefork' 最终解析为 `celery.concurrency.prefork.TaskPool`？经过哪些中间符号？",
+    "source_file": "celery/concurrency/__init__.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [],
+      "indirect_deps": [
+        "celery.concurrency.get_implementation",
+        "celery.utils.imports.symbol_by_name"
+      ],
+      "implicit_deps": [
+        "celery.concurrency.ALIASES"
+      ]
+    },
+    "reasoning_hint": "get_implementation 直接调用 symbol_by_name(cls, ALIASES)。ALIASES 是模块级字典，在 import 时已确定。symbol_by_name 收到 'celery.concurrency.prefork:TaskPool' 字符串，在运行时通过 importlib 解析。",
+    "source_note": "Blind spot: celery/concurrency/__init__.py completely uncovered; ALIASES pattern with symbol_by_name",
+    "entry_symbol": "celery.concurrency.get_implementation",
+    "entry_file": "celery/concurrency/__init__.py"
+  },
+  {
+    "case_id": "celery_type_e_hard_019",
+    "difficulty": "hard",
+    "category": "backend_base_key_value_store_resolution",
+    "failure_type": "Type E",
+    "implicit_level": 5,
+    "question": "在 `celery/backends/base.py` 的 `KeyValueStoreBackend` 中，`_get` 和 `_put` 方法最终调用了 `_safe_get` 来处理异常。当配置了 Redis 后端时，`_safe_get` 中通过 `symbol_by_name` 解析的后端类是什么？经过哪些中间符号？",
+    "source_file": "celery/backends/base.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.backends.base.KeyValueStoreBackend._get",
+        "celery.backends.base.KeyValueStoreBackend._put"
+      ],
+      "indirect_deps": [
+        "celery.backends.base.KeyValueStoreBackend.__init__",
+        "celery.backends.base.BaseBackend.__init__"
+      ],
+      "implicit_deps": [
+        "celery.app.backends.by_name",
+        "celery.app.backends.BACKEND_ALIASES",
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "reasoning_hint": "KeyValueStoreBackend 是具体后端类的基类。子类（如 RedisBackend）继承它并覆写 _get/_put。backend 的选择通过 app.conf.result_backend 配置，经 by_name() + symbol_by_name() 在运行时解析，属于 implicit 依赖。",
+    "source_note": "Blind spot: celery/backends/base.py completely uncovered; KeyValueStoreBackend inheritance chain",
+    "entry_symbol": "celery.backends.base.KeyValueStoreBackend._get",
+    "entry_file": "celery/backends/base.py"
+  },
+  {
+    "case_id": "celery_type_b_hard_010",
+    "difficulty": "hard",
+    "category": "task_from_fun_with_bind_and_options",
+    "failure_type": "Type B",
+    "implicit_level": 5,
+    "question": "在 `celery/app/base.py` 中，当使用 `@app.task(bind=True, name='custom.name', max_retries=3)` 装饰器时，`_task_from_fun` 的执行路径中，哪些中间符号参与了 Task 类的构造？bind=True 和自定义 name 分别触发了哪些代码路径？",
+    "source_file": "celery/app/base.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.app.base.Celery._task_from_fun"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.task",
+        "celery.app.base.Celery.subclass_with_self",
+        "celery.app.base.Celery.finalize",
+        "celery._state._announce_app_finalized"
+      ],
+      "implicit_deps": [
+        "celery._state.connect_on_app_finalize",
+        "celery.app.base.Celery.tasks"
+      ]
+    },
+    "reasoning_hint": "bind=True 使 Task 获得 self 参数，需要 subclass_with_self 创建绑定子类。自定义 name 通过 options 传递并在 __init__ 中设置。_task_from_fun 在 app.finalize() 前只是注册回调（@connect_on_app_finalize），在 finalize 时才真正创建 Task 类。",
+    "source_note": "Blind spot: Type B decorator chains with bind=True and custom options not covered",
+    "entry_symbol": "celery.app.base.Celery._task_from_fun",
+    "entry_file": "celery/app/base.py"
+  },
+  {
+    "case_id": "celery_type_b_hard_011",
+    "difficulty": "hard",
+    "category": "shared_task_proxy_lazy_creation",
+    "failure_type": "Type B",
+    "implicit_level": 5,
+    "question": "在 `celery/app/base.py` 中，`shared_task` 返回的 Proxy 对象在第一次访问属性（如 `.delay`）时，触发 __getattr__ 代理链，最终通过什么符号找到真正的 app 并创建 Task 类？Proxy 懒创建的完整链路是什么？",
+    "source_file": "celery/app/base.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.local.PromiseProxy.__getattr__",
+        "celery.local.maybe_evaluate"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery._task_from_fun",
+        "celery.app.base.Celery.tasks",
+        "celery._state._announce_app_finalized"
+      ],
+      "implicit_deps": [
+        "celery._state.connect_on_app_finalize",
+        "celery._state.get_current_app",
+        "celery.app.shared_task"
+      ]
+    },
+    "reasoning_hint": "shared_task 返回的 Proxy 在 __getattr__ 时调用 maybe_evaluate -> proxy 属性访问 -> current_app() -> _task_from_fun() 创建真正的 Task 实例。这是懒加载模式，Proxy 的 __getattr__ 是 indirect 入口，current_app() 是 implicit 依赖。",
+    "source_note": "Blind spot: PromiseProxy.__getattr__ lazy creation chain for shared_task",
+    "entry_symbol": "celery.app.shared_task",
+    "entry_file": "celery/app/base.py"
+  },
+  {
+    "case_id": "celery_type_d_hard_009",
+    "difficulty": "hard",
+    "category": "canvas_chain_new_operator_reduce",
+    "failure_type": "Type D",
+    "implicit_level": 5,
+    "question": "在 `celery/canvas.py` 的 `chain.__new__` 中，当调用 `chain(task1, task2, task3)` 时，`reduce(operator.or_, tasks, _chain())` 最终调用了 `_chain.__new__`。在这个过程中，`operator.or_` 对 chain 的特殊处理经过了哪些中间符号？",
+    "source_file": "celery/canvas.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.chain.__new__"
+      ],
+      "indirect_deps": [
+        "celery.canvas._chain.__new__",
+        "celery.canvas._chain.__init__"
+      ],
+      "implicit_deps": [
+        "celery.canvas.operator",
+        "celery.canvas.reduce",
+        "celery.canvas.Signature.__or__"
+      ]
+    },
+    "reasoning_hint": "chain.__new__ 检测到多个参数时，使用 reduce(operator.or_, tasks, _chain()) 构造。reduce 对每个任务调用 __or__，最终合并到 _chain 实例。operator.or_ 实际上是 Signature.__or__，属于 implicit 边。",
+    "source_note": "Blind spot: chain.__new__ reduce(operator.or_) deep chain with operator module",
+    "entry_symbol": "celery.canvas.chain.__new__",
+    "entry_file": "celery/canvas.py"
+  },
+  {
+    "case_id": "celery_type_d_hard_010",
+    "difficulty": "hard",
+    "category": "canvas_group_or_task_upgrade_to_chord",
+    "failure_type": "Type D",
+    "implicit_level": 4,
+    "question": "在 `celery/canvas.py` 中，`group(t1, t2) | task3` 的执行路径中，`group.__or__` 返回的 chord 对象实际类型是什么？这个 chord 的 body 和 header 分别是什么？Signature.from_dict 的分发路径如何将 dict 路由到 _chord？",
+    "source_file": "celery/canvas.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas.group.__or__",
+        "celery.canvas._chord"
+      ],
+      "indirect_deps": [
+        "celery.canvas.chord.__init__",
+        "celery.canvas.Signature.TYPES",
+        "celery.canvas.Signature.from_dict"
+      ],
+      "implicit_deps": [
+        "celery.canvas.group",
+        "celery.canvas.chord"
+      ]
+    },
+    "reasoning_hint": "group | task 通过 group.__or__ 返回 _chord 实例（被 @register_type(name='chord') 装饰）。chord.__init__ 接收 (header=group, body=task)。_chord.from_dict 通过 Signature.TYPES['chord'] 路由。",
+    "source_note": "Blind spot: group | task upgrade to chord not covered; _chord vs chord polymorphic dispatch",
+    "entry_symbol": "celery.canvas.group.__or__",
+    "entry_file": "celery/canvas.py"
+  },
+  {
+    "case_id": "celery_type_a_hard_013",
+    "difficulty": "hard",
+    "category": "canvas_chain_stamp_visitor_dependency",
+    "failure_type": "Type A",
+    "implicit_level": 4,
+    "question": "在 `celery/canvas.py` 的 `_chain.stamp` 方法中，当传入 `visitor` 参数时，链条中的每个 task 如何接收 visitor 的 headers？`StampingVisitor.on_chain_start` 和 `on_chain_end` 回调在链条的哪些位置被触发？",
+    "source_file": "celery/canvas.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas._chain.stamp",
+        "celery.canvas.StampingVisitor.on_chain_start",
+        "celery.canvas.StampingVisitor.on_chain_end"
+      ],
+      "indirect_deps": [
+        "celery.canvas.Signature._stamp_headers",
+        "celery.canvas.Signature.stamp_links"
+      ],
+      "implicit_deps": [
+        "celery.canvas.StampingVisitor.on_signature",
+        "celery.canvas._chain.prepare_steps"
+      ]
+    },
+    "reasoning_hint": "_chain.stamp 首先调用 visitor.on_chain_start 获取初始 headers，然后对每个 task 调用 task.stamp(visitor)，最后调用 visitor.on_chain_end。StampingVisitor 是 abstract 基类，on_signature 是必需的抽象方法。",
+    "source_note": "Blind spot: canvas stamping visitor API dependency chain; StampingVisitor abstract methods",
+    "entry_symbol": "celery.canvas._chain.stamp",
+    "entry_file": "celery/canvas.py"
+  },
+  {
+    "case_id": "celery_type_a_hard_014",
+    "difficulty": "hard",
+    "category": "canvas_chain_prepare_steps_unroll_nested",
+    "failure_type": "Type A",
+    "implicit_level": 5,
+    "question": "在 `celery/canvas.py` 的 `_chain.prepare_steps` 中，当链条包含嵌套 chain 时（`chain(chain(t1, t2), t3)`），`isinstance(task, _chain)` 分支如何将嵌套链条展开？这个展开过程中哪些符号参与了处理？",
+    "source_file": "celery/canvas.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas._chain.prepare_steps",
+        "celery.canvas._chain.unchain_tasks"
+      ],
+      "indirect_deps": [
+        "celery.canvas.Signature.freeze",
+        "celery.canvas.maybe_unroll_group"
+      ],
+      "implicit_deps": [
+        "celery.canvas.chain",
+        "celery.canvas.operator.or_",
+        "celery.canvas.reduce"
+      ]
+    },
+    "reasoning_hint": "prepare_steps 中的 while 循环逐个处理 task。如果 task 是 _chain 实例，通过 steps_extend(task.tasks) 将其展开（反向顺序压入 deque）。unchain_tasks() 返回克隆的任务列表。每个被展开任务的 freeze() 生成 AsyncResult。",
+    "source_note": "Blind spot: _chain.prepare_steps nested chain unrolling; deepcopy chain manipulation",
+    "entry_symbol": "celery.canvas._chain.prepare_steps",
+    "entry_file": "celery/canvas.py"
+  },
+  {
+    "case_id": "celery_type_e_hard_020",
+    "difficulty": "hard",
+    "category": "result_from_tuple_recursive_deserialization",
+    "failure_type": "Type E",
+    "implicit_level": 4,
+    "question": "在 `celery/result.py` 的 `result_from_tuple` 函数中，当反序列化一个嵌套的 GroupResult 元组时，递归调用 `result_from_tuple(child, app)` 的停止条件是什么？GroupResult.restore 和 result_from_tuple 的调用链中经过了哪些符号？",
+    "source_file": "celery/result.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.result.result_from_tuple",
+        "celery.result.GroupResult"
+      ],
+      "indirect_deps": [
+        "celery.result.AsyncResult",
+        "celery.result.ResultBase"
+      ],
+      "implicit_deps": [
+        "celery.result.GroupResult.restore",
+        "celery.result.ResultSet.__init__",
+        "vine.barrier"
+      ]
+    },
+    "reasoning_hint": "result_from_tuple 检测 r 是否为 ResultBase 实例：如果已经是 ResultBase 直接返回；否则解包元组 (res, nodes)，递归处理 parent 和 child nodes。GroupResult.restore 从后端恢复 id 和 results 列表，再调用 result_from_tuple 处理每个子节点。",
+    "source_note": "Blind spot: celery/result.py 0 hard cases; result_from_tuple recursive deserialization chain",
+    "entry_symbol": "celery.result.result_from_tuple",
+    "entry_file": "celery/result.py"
+  },
+  {
+    "case_id": "celery_type_e_hard_021",
+    "difficulty": "hard",
+    "category": "async_result_ready_backend_native_join",
+    "failure_type": "Type E",
+    "implicit_level": 4,
+    "question": "在 `celery/result.py` 的 `AsyncResult.ready` 属性中，`self.state in self.backend.READY_STATES` 的 backend.READY_STATES 来自哪个类的定义？当 backend 为 Redis 时，这个集合的内容是什么？这个依赖是如何在初始化时确定的？",
+    "source_file": "celery/result.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.result.AsyncResult.ready",
+        "celery.result.AsyncResult.state"
+      ],
+      "indirect_deps": [
+        "celery.result.AsyncResult._get_task_meta",
+        "celery.result.AsyncResult.backend"
+      ],
+      "implicit_deps": [
+        "celery.app.backends.by_name",
+        "celery.backends.base.BaseBackend.READY_STATES",
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "reasoning_hint": "AsyncResult.ready 检查 state 是否在 backend.READY_STATES 集合中。READY_STATES 在 BaseBackend 中定义为 {PENDING, RECEIVED, STARTED, SUCCESS, FAILURE, REVOKED, RETRY}。backend 实例通过 app.backend 懒加载，backend 类由配置经 by_name() 确定，属于 implicit 依赖。",
+    "source_note": "Blind spot: AsyncResult.ready -> backend.READY_STATES backend determination chain",
+    "entry_symbol": "celery.result.AsyncResult.ready",
+    "entry_file": "celery/result.py"
+  },
+  {
+    "case_id": "celery_type_a_hard_015",
+    "difficulty": "hard",
+    "category": "autodiscover_from_fixups_django_chain",
+    "failure_type": "Type A",
+    "implicit_level": 5,
+    "question": "在 `celery/app/base.py` 的 `Celery.autodiscover_tasks` 中，当 `fixup='django'` 时，worker 启动路径 `_autodiscover_tasks_from_fixups` 经过哪些符号？DjangoFixup.autodiscover_tasks 最终触发的 find_related_module 调用链是什么？",
+    "source_file": "celery/app/base.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.loaders.base.find_related_module"
+      ],
+      "indirect_deps": [
+        "celery.app.base.Celery.autodiscover_tasks",
+        "celery.app.base.Celery._autodiscover_tasks_from_fixups",
+        "celery.fixups.django.DjangoFixup.autodiscover_tasks",
+        "celery.loaders.base.autodiscover_tasks"
+      ],
+      "implicit_deps": [
+        "celery.fixups.django.fixup"
+      ]
+    },
+    "reasoning_hint": "worker 启动时调用 app.autodiscover_tasks(..., fixup='django')，这会注册到 _autodiscover_tasks_from_fixups 列表。启动过程中 fixup.install() 被调用，触发 DjangoFixup.autodiscover_tasks，最终走到 find_related_module 判定候选模块是否可导入。",
+    "source_note": "Blind spot: autodiscover_tasks from fixups chain; DjangoFixup autodiscover pattern",
+    "entry_symbol": "celery.app.base.Celery.autodiscover_tasks",
+    "entry_file": "celery/app/base.py"
+  },
+  {
+    "case_id": "celery_type_b_hard_012",
+    "difficulty": "hard",
+    "category": "chord_unlock_task_builtin_registration",
+    "failure_type": "Type B",
+    "implicit_level": 5,
+    "question": "在 `celery/app/builtins.py` 中，`@connect_on_app_finalize` 装饰的 `add_unlock_chord_task` 函数，在 app finalize 时创建了 `celery.chord_unlock` 任务。这个任务的创建路径经过了哪些符号？内置任务和用户任务的注册机制有何不同？",
+    "source_file": "celery/app/builtins.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery._state._announce_app_finalized"
+      ],
+      "indirect_deps": [
+        "celery.app.builtins.add_unlock_chord_task",
+        "celery.app.base.Celery._task_from_fun",
+        "celery._state.connect_on_app_finalize"
+      ],
+      "implicit_deps": [
+        "celery.app.builtins"
+      ]
+    },
+    "reasoning_hint": "builtins 模块通过 from . import builtins (base.py line 45) 在 Celery 类导入时就被加载。builtins 中的 @connect_on_app_finalize 回调注册到 _on_app_finalizers。app.finalize() 调用 _announce_app_finalized，触发所有回调，包括 add_unlock_chord_task。",
+    "source_note": "Blind spot: celery/app/builtins.py chord_unlock task creation chain; builtin vs shared task difference",
+    "entry_symbol": "celery.app.builtins.add_unlock_chord_task",
+    "entry_file": "celery/app/builtins.py"
+  },
+  {
+    "case_id": "celery_type_e_hard_022",
+    "difficulty": "hard",
+    "category": "backend_ensure_chords_allowed_native_join",
+    "failure_type": "Type E",
+    "implicit_level": 4,
+    "question": "在 `celery/canvas.py` 的 `_chain.prepare_steps` 中，遇到 chord 类型的 task 时调用了 `app.backend.ensure_chords_allowed()`。这个方法在哪些 backend 类中被覆写？Redis backend 的具体实现是什么？这个依赖属于哪一层？",
+    "source_file": "celery/canvas.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.canvas._chain.prepare_steps"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.app.backends.by_name",
+        "celery.backends.redis.RedisBackend.ensure_chords_allowed",
+        "celery.backends.base.BaseBackend.ensure_chords_allowed",
+        "celery.utils.imports.symbol_by_name"
+      ]
+    },
+    "reasoning_hint": "app.backend 是懒加载属性，通过配置解析 backend 类。ensure_chords_allowed 在 BaseBackend 中为空实现（pass），RedisBackend 覆写它检查 redis version >= 2.2.0。backend 的选择是运行时配置，属于 implicit 依赖。",
+    "source_note": "Blind spot: backend.ensure_chords_allowed lazy backend resolution during canvas execution",
+    "entry_symbol": "celery.canvas._chain.prepare_steps",
+    "entry_file": "celery/canvas.py"
+  },
+  {
+    "case_id": "celery_type_e_hard_023",
+    "difficulty": "hard",
+    "category": "utils_functional_maybe_evaluate_lazy_chain",
+    "failure_type": "Type E",
+    "implicit_level": 4,
+    "question": "在 `celery/utils/functional.py` 中，`maybe_evaluate` 用于延迟求值。当在 `celery/app/routes.py` 的 Router 中通过 `maybe_evaluate` 处理路由目标时，lazy proxy 的解析经过了哪些符号？",
+    "source_file": "celery/utils/functional.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.functional.maybe_evaluate",
+        "kombu.utils.functional.maybe_evaluate"
+      ],
+      "indirect_deps": [],
+      "implicit_deps": [
+        "celery.utils.functional.lazy",
+        "celery.utils.functional.mlazy",
+        "celery.app.routes.Router.route",
+        "vine.promise"
+      ]
+    },
+    "reasoning_hint": "celery/utils/functional.py 中 maybe_evaluate 从 kombu.utils.functional 导入。当 Router.route 遇到 mlazy 封装的路由目标时，调用 maybe_evaluate 触发 lazy 对象求值。lazy 对象通常通过 vine.promise 实现延迟调用。",
+    "source_note": "Blind spot: celery/utils/functional.py completely uncovered; maybe_evaluate lazy resolution",
+    "entry_symbol": "celery.utils.functional.maybe_evaluate",
+    "entry_file": "celery/utils/functional.py"
+  },
+  {
+    "case_id": "celery_type_a_hard_016",
+    "difficulty": "hard",
+    "category": "timer2_thread_scheduler_dependency",
+    "failure_type": "Type A",
+    "implicit_level": 4,
+    "question": "在 `celery/utils/timer2.py` 的 `Timer` 类中，`self.Schedule = Schedule` 和 `self.Entry = Entry` 分别引用了 kombu.asynchronous.timer 中的哪些类？Timer.run() 循环中调用 `self.scheduler` 和 `self.schedule.apply_entry` 时，这些依赖链的源头是什么？",
+    "source_file": "celery/utils/timer2.py",
+    "source_commit": "b8f85213f45c937670a6a6806ce55326a0eb537f",
+    "ground_truth": {
+      "direct_deps": [
+        "celery.utils.timer2.Timer.run",
+        "celery.utils.timer2.Timer._next_entry",
+        "kombu.asynchronous.timer.Schedule",
+        "kombu.asynchronous.timer.Entry"
+      ],
+      "indirect_deps": [
+        "celery.utils.timer2.Timer.__init__"
+      ],
+      "implicit_deps": [
+        "kombu.asynchronous.timer.Timer.apply_entry",
+        "kombu.asynchronous.timer.to_timestamp"
+      ]
+    },
+    "reasoning_hint": "Timer 直接从 kombu 导入 Schedule 和 Entry。Timer.run() 在后台线程中运行 while self.running 循环，调用 _next_entry() -> self.scheduler 获取下一个定时任务，然后 apply_entry(entry) 执行。kombu 的 Timer 是跨进程/线程调度的基础。",
+    "source_note": "Blind spot: celery/utils/timer2.py completely uncovered; Timer thread scheduler with kombu dependency",
+    "entry_symbol": "celery.utils.timer2.Timer.run",
+    "entry_file": "celery/utils/timer2.py"
   }
 ]

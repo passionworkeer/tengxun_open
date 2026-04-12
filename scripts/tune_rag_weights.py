@@ -445,7 +445,7 @@ def build_markdown_report(
     lines.append("## 3. Bayesian 优化 Top-5 试验")
     lines.append("")
     sorted_trials = sorted(
-        study.trivals,
+        study.trials,
         key=lambda t: (t.value or 0, t.user_attrs.get("overall_recall", 0)),
         reverse=True,
     )

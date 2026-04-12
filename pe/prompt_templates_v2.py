@@ -490,15 +490,16 @@ def build_prompt_bundle(
     cot_template: str = COT_TEMPLATE,
     include_empty_context: bool = True,
     auto_hard_cot: bool = True,
-    use_layer_checklist: bool = False,
+    use_layer_checklist: bool = True,
 ) -> PromptBundle:
     """
     组装完整Prompt包。
 
     Args:
         auto_hard_cot: True时，自动检测Hard-case并追加增强CoT（不影响Easy/Medium）。
-        use_layer_checklist: True时，使用增强版层级检查CoT（LAYER_CHECKLIST_COT_TEMPLATE）
+        use_layer_checklist: True（默认）时，使用增强版层级检查CoT（LAYER_CHECKLIST_COT_TEMPLATE）
                             替代默认cot_template，可降低mislayer_rate。
+                            设置为False可禁用增强版layer checklist。
     """
     selected = select_few_shot_examples(
         question=question,
@@ -540,7 +541,7 @@ def build_messages(
     include_empty_context: bool = True,
     assistant_fewshot: bool = False,
     auto_hard_cot: bool = True,
-    use_layer_checklist: bool = False,
+    use_layer_checklist: bool = True,
 ) -> list[dict[str, str]]:
     bundle = build_prompt_bundle(
         question=question,
