@@ -1,0 +1,32 @@
+{
+  "case_id": "D30-01",
+  "dimension": "D30",
+  "language": "Python",
+  "severity": "High",
+  "issue": {
+    "title": "未begin就commit导致事务状态机违反",
+    "description": "调用 conn.commit() 时没有先 begin() 活动事务，违反 DB-API 2.0 事务状态机约定。在 isolation_level=None 时，SQLite 会静默忽略无上下文的 commit()，导致部分写入在异常时无法回滚，破坏转账原子性。",
+    "repo": "手工构造 / Python stdlib sqlite3",
+    "base_commit": "N/A (hand-crafted)"
+  },
+  "ground_truth": {
+    "source": "手工构造",
+    "gold_patch": "gold_patch.py",
+    "files_must_modify": ["buggy_code.py"],
+    "test_patch": "test_patch.py"
+  },
+  "evaluation": {
+    "method": "端到端 Fail-to-Pass",
+    "test_commands": [
+      "cd testcases/D30-01-Python-Txn-State-Machine && pytest test_patch.py -v --tb=short"
+    ],
+    "pass_criteria": "gold_patch.py 运行所有测试 PASS；buggy_code.py 至少 test_no_isolation_level_none FAIL",
+    "fail_criteria": "buggy_code.py 中检测到 isolation_level=None 且无显式事务管理"
+  },
+  "metadata": {
+    "paper_reference": "SWE-bench (ICLR 2024) / DDI 调试衰减模型 (Nature CompSci 2025)",
+    "difficulty": "L3",
+    "estimated_context_files": 2,
+    "tags": ["database", "transaction", "state-machine", "DB-API2.0", "atomicity"]
+  }
+}

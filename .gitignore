@@ -46,3 +46,18 @@ apikey*
 id_rsa*
 id_ed25519*
 .ssh/
+
+# Compiled binaries & class files
+*.exe
+*.class
+*.o
+*.obj
+
+# Downloaded JAR dependencies
+_jars/
+*.jar
+
+# Go module cache & build artifacts
+vendor/
+*.test
+

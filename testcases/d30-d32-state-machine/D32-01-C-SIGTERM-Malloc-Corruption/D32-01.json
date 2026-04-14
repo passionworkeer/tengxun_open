@@ -1,0 +1,30 @@
+{
+  "case_id": "D32-01",
+  "dimension": "D32",
+  "language": "C",
+  "severity": "High",
+  "issue": {
+    "title": "SIGTERM handler中malloc导致堆损坏",
+    "description": "信号处理函数中调用非async-signal-safe函数malloc/free，可能导致堆损坏和段错误。",
+    "repo": "手工构造",
+    "base_commit": "N/A (hand-crafted)"
+  },
+  "ground_truth": {
+    "source": "手工构造",
+    "gold_patch": "gold_patch.c",
+    "files_must_modify": ["buggy_code.c"],
+    "test_patch": "test_patch.py"
+  },
+  "evaluation": {
+    "method": "端到端 Fail-to-Pass",
+    "test_commands": ["cd D32-01-C-SIGTERM-Malloc-Corruption && D:/python/python.exe -m pytest test_patch.py -v --tb=short"],
+    "pass_criteria": "gold_patch.c 中信号处理器仅调用async-signal-safe函数；buggy_code.c 中检测到malloc/free等非安全函数",
+    "fail_criteria": "buggy_code.c 的信号处理函数中调用了非async-signal-safe函数"
+  },
+  "metadata": {
+    "paper_reference": "SWE-bench (ICLR 2024)",
+    "difficulty": "L3",
+    "estimated_context_files": 2,
+    "tags": ["c", "signal-handler", "async-signal-safe", "heap-corruption", "posix"]
+  }
+}

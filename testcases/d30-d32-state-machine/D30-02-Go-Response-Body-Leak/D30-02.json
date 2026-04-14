@@ -1,0 +1,32 @@
+{
+  "case_id": "D30-02",
+  "dimension": "D30",
+  "language": "Go",
+  "severity": "High",
+  "issue": {
+    "title": "Response.Body未Close导致连接池泄漏",
+    "description": "HTTP响应体未调用resp.Body.Close()，导致连接无法归还到HTTP客户端的连接池。",
+    "repo": "手工构造",
+    "base_commit": "N/A (hand-crafted)"
+  },
+  "ground_truth": {
+    "source": "手工构造",
+    "gold_patch": "gold_patch.go",
+    "files_must_modify": ["buggy_code.go"],
+    "test_patch": "test_patch.py"
+  },
+  "evaluation": {
+    "method": "端到端 Fail-to-Pass",
+    "test_commands": [
+      "cd E:/desktop/tengxun_open/testcases/D30-02-Go-Response-Body-Leak && D:/python/python.exe -m pytest test_patch.py -v --tb=short"
+    ],
+    "pass_criteria": "gold_patch.go 运行所有测试 PASS；buggy_code.go 至少有一个测试 FAIL",
+    "fail_criteria": "buggy_code.go 中检测到 resp.Body 未 Close"
+  },
+  "metadata": {
+    "paper_reference": "SWE-bench (ICLR 2024)",
+    "difficulty": "L3",
+    "estimated_context_files": 2,
+    "tags": ["go", "http", "connection-pool", "resource-leak", "body-close"]
+  }
+}

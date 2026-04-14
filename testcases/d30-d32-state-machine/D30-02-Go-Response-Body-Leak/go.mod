@@ -1,0 +1,3 @@
+module D30-02-GO-RESPONSE-BODY-LEAK
+
+go 1.22

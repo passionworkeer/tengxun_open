@@ -1,0 +1,30 @@
+{
+  "case_id": "D30-03",
+  "dimension": "D30",
+  "language": "Java",
+  "severity": "High",
+  "issue": {
+    "title": "连接池未归还，后续获取阻塞",
+    "description": "从连接池获取Connection后未调用close()归还连接，导致后续请求阻塞或超时。",
+    "repo": "手工构造",
+    "base_commit": "N/A (hand-crafted)"
+  },
+  "ground_truth": {
+    "source": "手工构造",
+    "gold_patch": "gold_patch.java",
+    "files_must_modify": ["buggy_code.java"],
+    "test_patch": "test_patch.py"
+  },
+  "evaluation": {
+    "method": "端到端 Fail-to-Pass",
+    "test_commands": ["cd E:/desktop/tengxun_open/testcases/D30-03-Java-Connection-Pool-Not-Returned && D:/python/python.exe -m pytest test_patch.py -v --tb=short"],
+    "pass_criteria": "gold_patch.java 运行所有测试 PASS；buggy_code.java 至少有一个测试 FAIL",
+    "fail_criteria": "buggy_code.java 中检测到 Connection 未 close()"
+  },
+  "metadata": {
+    "paper_reference": "SWE-bench (ICLR 2024)",
+    "difficulty": "L3",
+    "estimated_context_files": 5,
+    "tags": ["java", "connection-pool", "resource-leak", "sql", "hikari"]
+  }
+}
