@@ -1,3 +1,27 @@
+"""Prompt engineering core module for Python cross-file dependency analysis.
+
+This module provides the prompt construction logic used by the PE (Prompt Engineering)
+pipeline to resolve fully qualified names (FQNs) in Celery source code.
+
+Main components:
+    - SYSTEM_PROMPT / COT_TEMPLATE: Fixed instruction scaffolds guiding the model
+      to perform static analysis and return only a JSON array of FQNs.
+    - FewShotExample / PromptBundle: Data structures for few-shot example management
+      and prompt composition.
+    - FEW_SHOT_LIBRARY: Curated examples spanning re-export, alias resolution,
+      loader/backend alias, cached-property delegation, and finalize-callback
+      registration patterns at easy / medium / hard difficulty levels.
+    - select_few_shot_examples(): Scores and selects the top-k relevant examples
+      from the library using an overlap + category + entry + hard-bonus scheme.
+    - build_user_prompt() / build_prompt_bundle() / build_messages(): Assemble
+      individual prompt components into user-facing strings or chat-style message
+      lists suitable for model inference.
+
+The module is intentionally stateless; all state (selected examples, bundle)
+is returned as plain dataclass instances or lists so callers control caching
+and injection.
+"""
+
 from __future__ import annotations
 
 import json
@@ -491,6 +515,42 @@ def select_few_shot_examples(
     max_examples: int = 6,
     library: Sequence[FewShotExample] | None = None,
 ) -> list[FewShotExample]:
+    """Select the top-k few-shot examples most relevant to the given query.
+
+    Each candidate is scored using a weighted four-signal scheme:
+
+    1. **Token overlap (weight 3.0):** Jaccard-like signal; the query and the
+       example are both tokenised (lowercased, CamelCase split) and the
+       cardinality of their intersection drives the base score.
+
+    2. **Category hit (weight 2.0):** A binary bonus of 1 when at least one
+       query token appears inside the example's ``category`` field, encouraging
+       selection of examples from the same resolution pattern
+       (e.g. ``re_export``, ``alias_resolution``).
+
+    3. **Entry symbol tail hit (weight 2.5):** A binary bonus when the last
+       component of the supplied ``entry_symbol`` (e.g. ``Celery`` from
+       ``celery.app.base.Celery``) occurs verbatim anywhere in the example
+       text, capturing structural similarity.
+
+    4. **Hard-example bonus (+0.25):** A small additive bonus for ``hard``
+       examples so that they appear earlier in ties, improving coverage of
+       complex patterns without dominating the selection.
+
+    The final sort key is ``(score DESC, hard_examples_first, medium_examples_first, case_id ASC)``,
+    guaranteeing a stable order and deterministic output.
+
+    Args:
+        question: The user's dependency-resolution question.
+        context: Concatenated source-file snippets providing the analysis context.
+        entry_symbol: The symbol whose final target is being asked for.
+        max_examples: Maximum number of examples to return (0 returns ``[]``).
+        library: Override the example pool; defaults to ``FEW_SHOT_LIBRARY``.
+
+    Returns:
+        A list of up to ``max_examples`` selected ``FewShotExample`` instances,
+        ordered by relevance score descending.
+    """
     examples = list(library or FEW_SHOT_LIBRARY)
     if max_examples <= 0 or not examples:
         return []

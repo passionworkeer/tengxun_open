@@ -1,3 +1,18 @@
+"""
+GLM（智谱）模型评测脚本。
+
+通过 OpenAI-compatible API 或官方 bigmodel.cn HTTP 接口对 Celery
+代码仓库进行跨文件依赖分析任务评测，支持流式推理输出收集、
+断点续跑、配额错误检测和分层依赖指标计算。
+
+用法示例：
+    python evaluation/run_glm_eval.py \\
+        --api-key <KEY> \\
+        --model ZhipuAI/GLM-5 \\
+        --cases data/eval_cases.json \\
+        --output results/glm_eval_results.json
+"""
+
 from __future__ import annotations
 
 import json
@@ -19,6 +34,18 @@ from evaluation.metrics import compute_layered_dependency_metrics
 
 
 def build_prompt_v2(case: EvalCase, context: str = "") -> str:
+    """构建发送给 GLM 模型的评测 prompt。
+
+    将评测案例的问题描述、入口文件锚点和入口符号组装为结构化 prompt。
+    若提供额外上下文（如 RAG 检索结果），会附加在 prompt 末尾。
+
+    Args:
+        case: 评测案例对象，包含 question、entry_file、entry_symbol 等字段。
+        context: 可选附加上下文，默认空字符串。
+
+    Returns:
+        组装后的完整 prompt 字符串。
+    """
     parts = [f"Question: {case.question.strip()}"]
     if case.entry_symbol:
         parts.append(f"Provided Entry Symbol: {case.entry_symbol.strip()}")
@@ -34,7 +61,23 @@ def build_prompt_v2(case: EvalCase, context: str = "") -> str:
 
 
 def parse_response(text: str | None) -> dict[str, list[str]] | None:
-    if not text:
+    """从模型原始输出中解析 ground_truth 分层依赖结果。
+
+    尝试两种提取策略：
+    1. 先用正则表达式匹配最外层包含 ``"ground_truth"`` 的 JSON 对象；
+    2. 若正则失败则直接 ``json.loads()`` 全文本。
+
+    解析后对三个层级（direct_deps / indirect_deps / implicit_deps）分别
+    归一化为去除首尾空格后的字符串列表，空列表或非 list 类型返回空列表。
+
+    Args:
+        text: 模型输出的原始文本，可为 None。
+
+    Returns:
+        解析成功时返回形如
+        ``{"direct_deps": [...], "indirect_deps": [...], "implicit_deps": [...]}``
+        的字典；解析失败时返回 None。
+    """
         return None
     try:
         text = text.strip()
@@ -69,11 +112,29 @@ def parse_response(text: str | None) -> dict[str, list[str]] | None:
 
 
 def compute_f1(pred: dict[str, list[str]], gt: dict[str, list[str]]) -> float:
-    return compute_layered_dependency_metrics(gt, pred).union.f1
+    """计算预测结果相对于标准答案的并集 F1 分数。
+
+    内部委托 ``compute_layered_dependency_metrics`` 对三层依赖统一评分，
+    仅返回 union 级别的 F1 值。
+
+    Args:
+        pred: 模型预测结果，键为 "direct_deps" / "indirect_deps" / "implicit_deps"。
+        gt: 标准答案，结构同 ``pred``。
+
+    Returns:
+        0.0 ~ 1.0 之间的 F1 分数。
+    """
 
 
 def _load_existing_results(output_path: Path | None) -> list[dict[str, Any]]:
-    if output_path is None or not output_path.exists():
+    """加载已有的评测结果文件以支持断点续跑。
+
+    Args:
+        output_path: 结果 JSON 文件路径，为 None 或文件不存在时返回空列表。
+
+    Returns:
+        已保存的结果列表（非 list 格式或解析失败时返回空列表）。
+    """
         return []
     try:
         data = json.loads(output_path.read_text(encoding="utf-8"))
@@ -83,7 +144,19 @@ def _load_existing_results(output_path: Path | None) -> list[dict[str, Any]]:
 
 
 def _collect_stream_response(stream: Any) -> tuple[str, str, str | None, str | None]:
-    reasoning_parts: list[str] = []
+    """收集 OpenAI-compatible 流式响应的所有 chunks。
+
+    将流式 SSE 数据块拆分为 ``reasoning_content``（思考过程）和
+    ``content``（最终回答）两部分，并记录模型标识和 finish_reason。
+
+    Args:
+        stream: 由 ``client.chat.completions.create(stream=True)`` 返回的
+           迭代器对象。
+
+    Returns:
+        四元组 ``(answer_text, reasoning_text, model_name, finish_reason)``。
+        若流为空则各字段均为空字符串或 None。
+    """
     answer_parts: list[str] = []
     response_model = None
     finish_reason = None
@@ -119,10 +192,25 @@ def _collect_stream_response(stream: Any) -> tuple[str, str, str | None, str | N
 
 
 def _use_official_http_api(base_url: str) -> bool:
-    return "open.bigmodel.cn" in base_url
+    """判断是否应使用官方 bigmodel.cn HTTP API 而非 OpenAI-compatible SDK。
+
+    Args:
+        base_url: API 基础地址。
+
+    Returns:
+        若 base_url 包含 "open.bigmodel.cn" 则返回 True。
+    """
 
 
 def _official_chat_url(base_url: str) -> str:
+    """将 base_url 补全为官方 bigmodel.cn 的 chat/completions 端点。
+
+    Args:
+        base_url: API 基础地址。
+
+    Returns:
+        以 ``/chat/completions`` 结尾的完整 URL。
+    """
     url = base_url.rstrip("/")
     if url.endswith("/chat/completions"):
         return url
@@ -139,6 +227,23 @@ def _collect_http_response(
     timeout: int,
     thinking_mode: str | None = None,
 ) -> tuple[str, str, str | None, str | None, dict[str, Any]]:
+    """通过官方 bigmodel.cn HTTP 接口发送非流式请求并收集响应。
+
+    Args:
+        base_url: API 基础地址。
+        api_key: 认证密钥。
+        model: 模型名称。
+        prompt: 用户输入的 prompt。
+        max_tokens: 最大生成 token 数。
+        timeout: HTTP 请求超时时间（秒）。
+        thinking_mode: 可选思考模式（"enabled" / "disabled"），会注入到请求体。
+
+    Returns:
+        五元组 ``(content, reasoning_content, model_name, finish_reason, raw_body)``。
+
+    Raises:
+        RuntimeError: HTTP 响应状态码非 2xx 时抛出。
+    """
     payload = {
         "model": model,
         "messages": [{"role": "user", "content": prompt}],
@@ -188,6 +293,21 @@ def _collect_http_stream_response(
     timeout: int,
     thinking_mode: str | None = None,
 ) -> tuple[str, str, str | None, str | None, dict[str, Any]]:
+    """通过官方 bigmodel.cn HTTP 接口发送流式请求并收集全部 SSE 数据块。
+
+    Args:
+        base_url: API 基础地址。
+        api_key: 认证密钥。
+        model: 模型名称。
+        prompt: 用户输入的 prompt。
+        max_tokens: 最大生成 token 数。
+        timeout: HTTP 请求超时时间（秒）。
+        thinking_mode: 可选思考模式，会注入到请求体。
+
+    Returns:
+        五元组 ``(content, reasoning_content, model_name, finish_reason, meta)``。
+        ``meta`` 包含 ``stream_chunk_count`` 记录收流的 chunk 总数。
+    """
     import requests
 
     payload = {
@@ -254,7 +374,17 @@ def _collect_http_stream_response(
 
 
 def _is_fatal_quota_error(exc: Exception) -> bool:
-    text = str(exc).lower()
+    """判断异常是否由服务商配额耗尽导致，属于不可重试的致命错误。
+
+    检查错误信息中是否包含以下关键词：
+    ``today's quota``、``insufficient_quota``、``exceeded your current quota``。
+
+    Args:
+        exc: 捕获的异常对象。
+
+    Returns:
+        若是配额类致命错误返回 True，否则返回 False。
+    """
     return (
         "today's quota" in text
         or "insufficient_quota" in text
@@ -275,6 +405,29 @@ def run_eval(
     max_cases: int | None = None,
     official_stream: bool = False,
 ) -> list[dict[str, Any]]:
+    """执行 GLM 模型评测的核心函数。
+
+    遍历所有评测案例，对每个案例调用 GLM API 并计算分层依赖指标。
+    支持断点续跑（自动跳过已完成案例）、配额错误快速终止、
+    流式/非流式双路径收集推理内容。
+
+    Args:
+        cases: 评测案例列表。
+        api_key: API 认证密钥。
+        model: 模型名称，默认 "ZhipuAI/GLM-5"。
+        base_url: API 基础地址。
+        max_tokens: 单次生成的最大 token 数。
+        timeout: HTTP 请求超时（秒）。
+        thinking_mode: 思考模式（"enabled" / "disabled"），None 表示平台默认。
+        save_raw_response: 是否在结果中保存服务商原始响应体。
+        output_path: 结果 JSON 文件路径，传入后自动持久化（实时写入）。
+        max_cases: 最大评测案例数（用于快速测试）。
+        official_stream: 是否对官方 bigmodel.cn 接口使用流式收集。
+
+    Returns:
+        所有评测案例的结果列表，每条记录包含 case_id、难度、预测值、
+        ground_truth、F1、macro_f1、mislayer_rate 及详细评分等字段。
+    """
     use_official_http_api = _use_official_http_api(base_url)
     client = None
     if not use_official_http_api:
@@ -426,9 +579,13 @@ def run_eval(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Run model evaluation on Celery dependency analysis."
-    )
+    """GLM 评测脚本的 CLI 入口。
+
+    解析命令行参数，加载评测数据集，调用 ``run_eval`` 执行评测并持久化结果。
+
+    Returns:
+        成功时返回 0，失败时抛出异常。
+    """
     parser.add_argument(
         "--api-key",
         type=str,

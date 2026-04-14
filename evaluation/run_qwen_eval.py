@@ -1,14 +1,21 @@
 """
-Qwen3.5 模型评测脚本
-用法: python evaluation/run_qwen_eval.py --cases data/eval_cases.json --output results/qwen_eval.json
+Qwen3.5 模型评测脚本。
 
-参数:
-    --cases: 评测数据集路径（默认: data/eval_cases.json）
-    --api-key: API密钥（默认: EMPTY 用于本地部署）
-    --base-url: API地址（默认: http://localhost:8000/v1）
-    --model: 模型名称（默认: Qwen/Qwen3.5-9B）
-    --output: 输出结果路径（默认: results/qwen3_eval_results.json）
-    --max-cases: 限制评测案例数量（用于测试）
+通过 OpenAI-compatible API 对 Celery 代码仓库进行跨文件依赖分析任务评测，
+计算集合级 F1 指标并支持断点续跑。
+
+用法：
+    python evaluation/run_qwen_eval.py \\
+        --cases data/eval_cases.json \\
+        --output results/qwen3_eval_results.json
+
+参数：
+    --cases:      评测数据集路径（默认: data/eval_cases.json）
+    --api-key:    API 密钥（默认: EMPTY 用于本地部署）
+    --base-url:   API 地址（默认: http://localhost:8000/v1）
+    --model:      模型名称（默认: Qwen/Qwen3.5-9B）
+    --output:     输出结果路径（默认: results/qwen3_eval_results.json）
+    --max-cases:  限制评测案例数量（用于测试）
 """
 
 from __future__ import annotations
@@ -25,9 +32,17 @@ from evaluation.metrics import compute_set_metrics
 
 
 def build_prompt_v2(case: EvalCase, context: str = "") -> str:
-    """
-    构建发送给模型的提示词
-    包含问题、入口符号、文件和可选的上下文信息
+    """构建发送给 Qwen 模型的评测 prompt。
+
+    将评测案例的问题描述、入口文件锚点和入口符号组装为结构化 prompt，
+    末尾添加 JSON 格式约束。若提供额外上下文则附加在 prompt 中。
+
+    Args:
+        case: 评测案例对象。
+        context: 可选附加上下文，默认空字符串。
+
+    Returns:
+        组装后的完整 prompt 字符串。
     """
     parts = [f"Question: {case.question.strip()}"]
     if case.entry_symbol:
@@ -45,10 +60,18 @@ def build_prompt_v2(case: EvalCase, context: str = "") -> str:
 
 
 def parse_response(text: str) -> dict[str, list[str]] | None:
-    """
-    解析模型输出的JSON响应
-    尝试从模型输出中提取ground_truth字段
-    包含错误处理和正则匹配
+    """从模型原始输出中解析 ground_truth 分层依赖结果。
+
+    优先用正则表达式匹配包含 ``"ground_truth"`` 的 JSON 子串，
+    失败后尝试直接解析全文本。三个层级的每一项都会去除首尾空格
+    并过滤空值。
+
+    Args:
+        text: 模型输出的原始文本。
+
+    Returns:
+        解析成功时返回 ``{"direct_deps": [...], "indirect_deps": [...],
+        "implicit_deps": [...]}``；解析失败时返回 None。
     """
     try:
         text = text.strip()
@@ -83,7 +106,18 @@ def parse_response(text: str) -> dict[str, list[str]] | None:
 
 
 def compute_f1(pred: dict[str, list[str]], gt: dict[str, list[str]]) -> float:
-    all_pred = set(
+    """计算预测结果相对于标准答案的并集 F1 分数。
+
+    将三层依赖（direct / indirect / implicit）合并为集合后
+    通过 ``compute_set_metrics`` 计算精确率、召回率和 F1。
+
+    Args:
+        pred: 模型预测结果，键为 "direct_deps" / "indirect_deps" / "implicit_deps"。
+        gt: 标准答案，结构同 ``pred``。
+
+    Returns:
+        0.0 ~ 1.0 之间的 F1 分数。
+    """
         pred.get("direct_deps", [])
         + pred.get("indirect_deps", [])
         + pred.get("implicit_deps", [])
@@ -105,6 +139,24 @@ def run_qwen_eval(
     output_path: Path | None = None,
     max_cases: int | None = None,
 ) -> list[dict[str, Any]]:
+    """执行 Qwen 模型评测的核心函数。
+
+    遍历所有评测案例，对每个案例调用 OpenAI-compatible API 并计算 F1。
+    每个案例最多重试 3 次，失败时记录错误信息并继续。
+    结果实时写入 output_path（若提供）以支持断点续跑。
+
+    Args:
+        cases: 评测案例列表。
+        api_key: API 认证密钥，默认为 "EMPTY"（本地部署场景）。
+        base_url: API 基础地址，默认 "http://localhost:8000/v1"。
+        model: 模型名称，默认 "qwen3.5"。
+        output_path: 结果 JSON 文件路径，传入后自动持久化。
+        max_cases: 最大评测案例数（用于快速测试）。
+
+    Returns:
+        所有评测案例的结果列表，每条记录包含 case_id、难度、类别、
+        预测值、ground_truth、原始输出及 F1 分数。
+    """
     client = OpenAI(
         base_url=base_url,
         api_key=api_key,
@@ -186,9 +238,14 @@ def run_qwen_eval(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Run Qwen3.5 evaluation on Celery dependency analysis."
-    )
+    """Qwen 评测脚本的 CLI 入口。
+
+    解析命令行参数，加载评测数据集，调用 ``run_qwen_eval`` 执行评测
+    并持久化结果到 JSON 文件。
+
+    Returns:
+        成功时返回 0。
+    """
     parser.add_argument(
         "--cases",
         type=Path,

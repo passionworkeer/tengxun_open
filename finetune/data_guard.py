@@ -260,7 +260,24 @@ def validate_fqns_in_ground_truth(
 
 
 def _validate_dep_lists(ground_truth: dict[str, Any]) -> list[str]:
-    """验证依赖列表字段的格式"""
+    """
+    验证依赖列表字段的格式与数据质量。
+
+    Args:
+        ground_truth: 包含 direct_deps / indirect_deps / implicit_deps 的字典。
+
+    Returns:
+        错误描述列表，无错误时返回空列表。
+
+    Raises:
+        无显式异常，所有问题均以字符串形式附加到返回值中。
+
+    数据质量检查项：
+
+        - 每项必须是符合 FQN 格式的字符串（非空、无非法字符）
+        - 至少存在一个非空依赖列表（direct_deps / indirect_deps / implicit_deps 之一）
+        - 各列表之间允许有交集，不强制去重
+    """
     errors: list[str] = []
     total_items = 0
 
@@ -483,7 +500,33 @@ def validate_jsonl(
 
 
 def main() -> int:
-    """命令行入口"""
+    """
+    data_guard 的 CLI 入口。
+
+    读取指定的 JSONL 微调数据集，执行完整验证流水线：
+
+        1. JSON 解析与必需字段检查
+        2. 字段类型与枚举值校验（difficulty / failure_type / verified）
+        3. ground_truth 提取与依赖列表数据质量检查
+        4. FQN 路径存在性验证（防止幻觉）
+        5. 数据集级 Gate 检查（记录数下限、难度分布）
+        6. 与正式评测集的重叠审计（可选）
+
+    Returns:
+        0 表示通过所有 Gate（summary.ready == True），
+        1 表示存在无效记录或 Gate 检查失败。
+
+    CLI 用法::
+
+        python -m finetune.data_guard data/finetune_dataset_500.jsonl \\
+            --min-records 500 \\
+            --min-hard-ratio 0.3 \\
+            --eval-cases data/eval_cases.json \\
+            --allow-overlap
+
+    所有验证结果以 JSON 格式输出到 stdout，包含 difficulty_distribution、
+    hard_ratio、overlap_audit 以及 gate_errors 字段。
+    """
     parser = argparse.ArgumentParser(description="Validate finetune dataset JSONL.")
     parser.add_argument("dataset", type=Path, help="Path to finetune_dataset_500.jsonl")
     parser.add_argument(

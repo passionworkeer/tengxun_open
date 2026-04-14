@@ -22,6 +22,16 @@ _TOKEN_PATTERN = re.compile(r"[A-Za-z_][A-Za-z0-9_]+")
 
 @dataclass(frozen=True)
 class RankedResult:
+    """A single item from an RRF fusion ranking.
+
+    Attributes:
+        item_id: Unique identifier of the ranked item (typically a chunk ID).
+        score: RRF fusion score — the sum of reciprocal-rank contributions
+            from all sources that included this item.
+        source: Comma-separated names of the ranking sources that contributed
+            to this item's score (e.g. ``"bm25,semantic"``).
+    """
+
     item_id: str
     score: float
     source: str
@@ -29,6 +39,24 @@ class RankedResult:
 
 @dataclass(frozen=True)
 class RetrievalHit:
+    """A fully-materialised retrieval result with score and rendered snippet.
+
+    Attributes:
+        chunk_id: Unique identifier of the :class:`CodeChunk` this hit came from.
+        symbol: Fully-qualified symbol name (e.g. ``"celery.app.task.Task"``).
+        repo_path: Relative file path within the repository.
+        kind: Code element kind — one of ``"class"``, ``"function"``,
+            ``"async_function"``, ``"method"``, etc.
+        score: Final RRF fusion score (after all weighting and bonuses).
+        source: Tuple of source names that contributed to this hit
+            (e.g. ``("bm25", "graph")``).
+        start_line: 1-based line number where the symbol is defined.
+        end_line: 1-based line number of the last line of the definition.
+        snippet: Rendered text to include in the LLM context. For top-ranked
+            hits this is the full source code; for lower ranks it is a
+            compressed summary (signature + docstring + imports).
+    """
+
     chunk_id: str
     symbol: str
     repo_path: str
@@ -42,6 +70,17 @@ class RetrievalHit:
 
 @dataclass(frozen=True)
 class RetrievalTrace:
+    """Complete trace of a retrieval run, including per-source rankings.
+
+    Attributes:
+        bm25: Ordered chunk IDs returned by the BM25 index.
+        semantic: Ordered chunk IDs returned by the semantic index.
+        graph: Ordered chunk IDs returned by the graph search.
+        fused_ids: Chunk IDs after RRF fusion, highest-scored first.
+        fused: Fully-materialised :class:`RetrievalHit` objects for the
+            fused ranking.
+    """
+
     bm25: tuple[str, ...]
     semantic: tuple[str, ...]
     graph: tuple[str, ...]

@@ -58,7 +58,19 @@ def build_prompt_no_rag(case: EvalCase) -> str:
 
 
 def parse_response(text: str) -> dict[str, list[str]] | None:
-    try:
+    """从模型原始输出中解析 ground_truth 分层依赖结果。
+
+    优先用正则表达式匹配包含 ``"ground_truth"`` 的 JSON 子串，
+    失败后尝试直接解析全文本。返回 direct_deps / indirect_deps /
+    implicit_deps 三个层级的字符串列表（已去除首尾空格并过滤空值）。
+
+    Args:
+        text: 模型输出的原始文本。
+
+    Returns:
+        解析成功时返回 ``{"direct_deps": [...], "indirect_deps": [...],
+        "implicit_deps": [...]}``；解析失败时返回 None。
+    """
         text = text.strip()
         import re
 
@@ -91,7 +103,18 @@ def parse_response(text: str) -> dict[str, list[str]] | None:
 
 
 def compute_f1(pred: dict[str, list[str]], gt: dict[str, list[str]]) -> float:
-    all_pred = set(
+    """计算预测结果相对于标准答案的并集 F1 分数。
+
+    将三层依赖（direct / indirect / implicit）合并为集合后
+    通过 ``compute_set_metrics`` 计算精确率、召回率和 F1。
+
+    Args:
+        pred: 模型预测结果，键为 "direct_deps" / "indirect_deps" / "implicit_deps"。
+        gt: 标准答案，结构同 ``pred``。
+
+    Returns:
+        0.0 ~ 1.0 之间的 F1 分数。
+    """
         pred.get("direct_deps", [])
         + pred.get("indirect_deps", [])
         + pred.get("implicit_deps", [])
@@ -119,6 +142,32 @@ def run_gpt_eval_with_rag(
     max_cases: int | None = None,
     run_baseline: bool = True,
 ) -> list[dict[str, Any]]:
+    """对比 RAG 加持与无 RAG 基线条件下的模型生成质量。
+
+    每个案例会执行两次推理：一次不带 RAG 上下文（基线），
+    一次通过 retriever 检索上下文后推理。结果中记录两次的
+    F1 分数及其差值（delta），用于量化 RAG 对最终质量的影响。
+
+    支持断点续跑：若 output_path 已存在且为列表，则自动跳过
+    已完成的案例。
+
+    Args:
+        cases: 评测案例列表。
+        retriever: RAG 检索器实例，提供 ``build_context`` 方法。
+        weights: RRF 融合权重，键为 "bm25" / "semantic" / "graph"。
+        rrf_k: RRF 融合的 k 参数。
+        api_key: API 认证密钥。
+        base_url: API 基础地址，默认 "https://ai.td.ee/v1"。
+        model: 模型名称，默认 "gpt-5.4"。
+        output_path: 结果 JSON 文件路径，传入后自动持久化。
+        max_cases: 最大评测案例数（用于快速测试）。
+        run_baseline: 是否运行无 RAG 基线推理，默认 True。
+
+    Returns:
+        所有评测案例的对比结果列表，每条记录包含 no_rag 与
+        with_rag 两个子记录，各自含 raw_output、prediction、f1
+        及上下文预览，run_baseline=True 时额外含 delta。
+    """
     client = OpenAI(base_url=base_url, api_key=api_key)
 
     if max_cases is not None:

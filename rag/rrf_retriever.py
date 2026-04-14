@@ -125,6 +125,19 @@ class HybridRetriever:
 
     @classmethod
     def from_repo(cls, repo_root: Path | str) -> "HybridRetriever":
+        """Create a retriever by chunking the entire repository at *repo_root*.
+
+        This is a convenience factory that runs :func:`chunk_repository
+        <celestial.ast_chunker.chunk_repository>` on the given root and
+        passes the resulting chunk list to :meth:`__init__`.
+
+        Args:
+            repo_root: Root directory of the source repository to index.
+
+        Returns:
+            A fully-initialised :class:`HybridRetriever` instance with
+            BM25, semantic, and graph indexes built.
+        """
         return cls(chunk_repository(Path(repo_root)))
 
     def retrieve(
@@ -138,6 +151,32 @@ class HybridRetriever:
         rrf_k: int = 30,
         weights: dict[str, float] | None = None,
     ) -> list[RetrievalHit]:
+        """Return the top-*top_k* fused retrieval hits for the given question.
+
+        This is a convenience wrapper around :meth:`retrieve_with_trace` that
+        discards per-source rankings and returns only the fused hits.
+
+        Args:
+            question: Natural-language question string.
+            entry_symbol: Optional fully-qualified symbol name that is the
+                entry point of the query (provides context for graph search).
+            entry_file: Optional source file path to anchor the query.
+            top_k: Maximum number of fused hits to return.
+            per_source: Maximum candidates pulled from each individual index
+                (BM25, semantic, graph) before fusion.
+            query_mode: Controls how *entry_symbol* and *entry_file* are mixed
+                into the query text passed to BM25 and semantic index.
+                ``"question_only"`` ignores them; ``"question_plus_entry"``
+                (default) includes them.
+            rrf_k: Reciprocal Rank Fusion constant. Higher values reduce the
+                influence of rank position (default 30).
+            weights: Optional per-source weight dict for
+                :func:`rrf_fuse_weighted`. If ``None``, unweighted RRF is used.
+
+        Returns:
+            List of :class:`RetrievalHit` objects ordered by fused score,
+            highest first, up to *top_k* items.
+        """
         return list(
             self.retrieve_with_trace(
                 question=question,
@@ -162,6 +201,25 @@ class HybridRetriever:
         rrf_k: int = 30,
         weights: dict[str, float] | None = None,
     ) -> RetrievalTrace:
+        """Execute retrieval and return a full :class:`RetrievalTrace`.
+
+        Runs all three indexes (BM25, semantic, graph) independently,
+        applies RRF fusion, and materialises the top *top_k* hits.
+
+        Args:
+            question: Natural-language question string.
+            entry_symbol: Optional entry-point symbol name (passed to graph search).
+            entry_file: Optional entry file path (passed to graph search).
+            top_k: Maximum fused hits in the returned trace.
+            per_source: Candidates per index before fusion.
+            query_mode: Query construction mode; see :meth:`retrieve`.
+            rrf_k: RRF constant; see :meth:`retrieve`.
+            weights: Optional per-source weights; see :meth:`retrieve`.
+
+        Returns:
+            A :class:`RetrievalTrace` containing per-source ranked IDs,
+            fused IDs, and fully-materialised :class:`RetrievalHit` objects.
+        """
         query_text = self._build_query_text(
             question=question,
             entry_symbol=entry_symbol,
@@ -223,6 +281,32 @@ class HybridRetriever:
         weights: dict[str, float] | None = None,
         max_context_tokens: int = 4096,
     ) -> str:
+        """Build an LLM-ready context string by fusing and truncating retrieval results.
+
+        Executes :meth:`retrieve_with_trace`, then formats each hit into a
+        annotated section and concatenates them. Sections are added in rank
+        order until the token budget (*max_context_tokens*) is exhausted,
+        at which point the last section is truncated or a sentinel message
+        is appended.
+
+        Args:
+            question: Natural-language question string.
+            entry_symbol: Optional entry-point symbol name.
+            entry_file: Optional entry file path.
+            top_k: Maximum hits to consider.
+            per_source: Candidates per index before fusion.
+            query_mode: Query construction mode; see :meth:`retrieve`.
+            rrf_k: RRF constant; see :meth:`retrieve`.
+            weights: Optional per-source weights; see :meth:`retrieve`.
+            max_context_tokens: Hard budget for the output string, in
+                approximate tokens (chars / 4). Truncation happens at section
+                boundaries.
+
+        Returns:
+            A formatted multi-section string, each section prefixed with
+            ``[Retrieved N] {symbol} ({location}) | source={...}`` and separated
+            by blank lines.
+        """
         trace = self.retrieve_with_trace(
             question=question,
             entry_symbol=entry_symbol,
@@ -271,6 +355,23 @@ class HybridRetriever:
         query_text: str = "",
         entry_symbol: str = "",
     ) -> list[str]:
+        """Expand a list of retrieval hits into candidate FQN strings.
+
+        This is used by downstream callers that need to resolve which
+        fully-qualified names are relevant to a query. Candidates are
+        harvested from each hit's symbol, string targets, imports, and
+        code references, then scored by overlap with the query tokens and
+        position in the hit list.
+
+        Args:
+            hits: Retrieval hits to expand. Typically from :meth:`retrieve`.
+            query_text: Original query text; used to compute token overlap.
+            entry_symbol: Entry symbol; hits whose FQN ends with this tail
+                receive a positional bonus.
+
+        Returns:
+            Deduplicated, score-ordered list of FQN strings, highest score first.
+        """
         query_tokens = set(_tokenize(query_text))
         entry_tail = entry_symbol.rsplit(".", 1)[-1] if entry_symbol else ""
         scored: dict[str, float] = {}
@@ -304,6 +405,20 @@ class HybridRetriever:
         ]
 
     def ranked_symbols(self, chunk_ids: Sequence[str]) -> list[str]:
+        """Extract deduplicated symbols from *chunk_ids* in the same order.
+
+        Looks up each chunk ID in the registry and appends its
+        :attr:`CodeChunk.symbol` to the result list. Empty symbols,
+        duplicates (by exact match), and missing chunk IDs are all skipped.
+
+        Args:
+            chunk_ids: Sequence of chunk identifiers, typically from
+                :attr:`RetrievalTrace.fused_ids` or :attr:`RetrievalTrace.bm25`.
+
+        Returns:
+            List of unique, non-empty symbol strings in the order they
+            first appear in *chunk_ids*.
+        """
         symbols: list[str] = []
         seen: set[str] = set()
         for chunk_id in chunk_ids:
@@ -320,6 +435,23 @@ class HybridRetriever:
         source: str,
         top_k: int | None = None,
     ) -> list[RetrievalHit]:
+        """Convert a sequence of chunk IDs into fully-materialised :class:`RetrievalHit` objects.
+
+        Each chunk is looked up, wrapped in a :class:`RetrievalHit` with a
+        score of ``1 / rank``, the given *source* tag, and a tiered snippet.
+
+        Args:
+            chunk_ids: Chunk IDs to materialise. May contain IDs that are not
+                in the registry; those are silently skipped.
+            source: String label identifying the source that produced these
+                IDs (e.g. ``"graph"``, ``"path_indexer"``).
+            top_k: Optional cap on the number of hits returned. If ``None``,
+                all *chunk_ids* are processed.
+
+        Returns:
+            List of :class:`RetrievalHit` objects in the same order as the
+            (possibly truncated) input.
+        """
         selected_ids = chunk_ids[:top_k] if top_k is not None else chunk_ids
         hits: list[RetrievalHit] = []
         for rank, chunk_id in enumerate(selected_ids, start=1):
@@ -346,6 +478,22 @@ class HybridRetriever:
         query_text: str = "",
         entry_symbol: str = "",
     ) -> list[str]:
+        """Convenience composition of :meth:`materialize_hits` and :meth:`expand_candidate_fqns`.
+
+        Materialises *chunk_ids* into hits, then expands them to candidate
+        FQN strings. This is the typical entry point when a caller only has
+        chunk IDs (e.g. from a raw index result) rather than a
+        :class:`RetrievalHit` sequence.
+
+        Args:
+            chunk_ids: Chunk IDs to materialise.
+            source: Source label passed to :meth:`materialize_hits`.
+            query_text: Passed to :meth:`expand_candidate_fqns`.
+            entry_symbol: Passed to :meth:`expand_candidate_fqns`.
+
+        Returns:
+            Score-ordered list of FQN strings.
+        """
         hits = self.materialize_hits(chunk_ids=chunk_ids, source=source)
         return self.expand_candidate_fqns(
             hits,

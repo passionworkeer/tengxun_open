@@ -31,7 +31,14 @@ from .summarizer import summarize_cases
 
 
 def build_parser() -> argparse.ArgumentParser:
-    """构建命令行参数解析器"""
+    """构建基线评测模块的 CLI 参数解析器。
+
+    支持四种运行模式：数据集摘要（baseline）、prompt 预览（pe）、
+    RAG 检索指标（rag）和完整评测（all）。
+
+    Returns:
+        配置好的 ``argparse.ArgumentParser`` 实例。
+    """
     parser = argparse.ArgumentParser(
         description="Summarize eval data, preview prompts, and evaluate retrieval quality."
     )
@@ -117,8 +124,18 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def load_prompt_module(version: str) -> ModuleType:
-    """加载提示词模板模块"""
-    module_name = "pe.prompt_templates_v2" if version == "v2" else "pe.prompt_templates"
+    """根据版本号动态加载对应的 prompt 模板模块。
+
+    Args:
+        version: 模板版本标识，"v2" 加载 ``pe.prompt_templates_v2``，
+            其他值加载 ``pe.prompt_templates``。
+
+    Returns:
+        加载后的 Python 模块对象，预期包含 few-shot 相关的属性和方法。
+
+    Raises:
+        ModuleNotFoundError: 指定版本的模板模块不存在。
+    """
     return importlib.import_module(module_name)
 
 

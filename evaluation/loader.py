@@ -98,10 +98,21 @@ def load_eval_cases(path: Path) -> list[EvalCase]:
 
 
 def load_fewshot_cases(path: Path) -> list[EvalCase]:
-    """
-    加载 few-shot 示例案例。
+    """加载 few-shot 示例案例。
 
-    与 load_eval_cases 相同入口，但语义上用于 few-shot 场景。
+    内部调用 ``load_eval_cases``，语义上用于构建 few-shot prompt 时
+    所需的示例案例。调用方需确保传入的 JSON 文件格式与 ``load_eval_cases``
+    兼容（即支持 legacy_v1 或 schema_v2 两种格式）。
+
+    Args:
+        path: 包含 few-shot 示例的 JSON 文件路径。
+
+    Returns:
+        EvalCase 对象列表。
+
+    Raises:
+        FileNotFoundError: 文件不存在。
+        ValueError: 数据格式错误或两种 schema 均不匹配。
     """
     return load_eval_cases(path)
 

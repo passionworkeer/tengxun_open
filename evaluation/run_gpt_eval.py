@@ -1,3 +1,17 @@
+"""
+GPT 系列模型评测脚本（OpenAI-compatible API）。
+
+通过 OpenAI-compatible 接口对 Celery 代码仓库进行跨文件依赖分析任务评测，
+计算分层依赖指标（F1、macro_f1、mislayer_rate）并支持断点续跑。
+
+用法示例：
+    python evaluation/run_gpt_eval.py \\
+        --api-key <KEY> \\
+        --model gpt-5.4 \\
+        --cases data/eval_cases.json \\
+        --output results/gpt_eval_results.json
+"""
+
 from __future__ import annotations
 
 import json
@@ -12,7 +26,18 @@ from evaluation.metrics import compute_layered_dependency_metrics
 
 
 def build_prompt_v2(case: EvalCase, context: str = "") -> str:
-    parts = [f"Question: {case.question.strip()}"]
+    """构建发送给 GPT 模型的评测 prompt。
+
+    将评测案例的问题描述、入口文件锚点和入口符号组装为结构化 prompt，
+    若提供额外上下文（如 RAG 检索结果）则附加在 prompt 末尾。
+
+    Args:
+        case: 评测案例对象。
+        context: 可选附加上下文，默认空字符串。
+
+    Returns:
+        组装后的完整 prompt 字符串。
+    """
     if case.entry_symbol:
         parts.append(f"Provided Entry Symbol: {case.entry_symbol.strip()}")
     if case.entry_file:
@@ -27,7 +52,19 @@ def build_prompt_v2(case: EvalCase, context: str = "") -> str:
 
 
 def parse_response(text: str) -> dict[str, list[str]] | None:
-    try:
+    """从模型原始输出中解析 ground_truth 分层依赖结果。
+
+    优先用正则表达式匹配包含 ``"ground_truth"`` 的 JSON 子串，
+    失败后尝试直接解析全文本。返回 direct_deps / indirect_deps /
+    implicit_deps 三个层级的字符串列表。
+
+    Args:
+        text: 模型输出的原始文本。
+
+    Returns:
+        解析成功时返回 ``{"direct_deps": [...], "indirect_deps": [...],
+        "implicit_deps": [...]}``；解析失败时返回 None。
+    """
         text = text.strip()
         import re
 
@@ -48,7 +85,18 @@ def parse_response(text: str) -> dict[str, list[str]] | None:
 
 
 def compute_f1(pred: dict[str, list[str]], gt: dict[str, list[str]]) -> float:
-    return compute_layered_dependency_metrics(gt, pred).union.f1
+    """计算预测结果相对于标准答案的并集 F1 分数。
+
+    内部委托 ``compute_layered_dependency_metrics`` 对三层依赖统一评分，
+    仅返回 union 级别的 F1 值。
+
+    Args:
+        pred: 模型预测结果，键为 "direct_deps" / "indirect_deps" / "implicit_deps"。
+        gt: 标准答案，结构同 ``pred``。
+
+    Returns:
+        0.0 ~ 1.0 之间的 F1 分数。
+    """
 
 
 def run_gpt_eval(
@@ -59,6 +107,24 @@ def run_gpt_eval(
     output_path: Path | None = None,
     max_cases: int | None = None,
 ) -> list[dict[str, Any]]:
+    """执行 GPT 模型评测的核心函数。
+
+    遍历所有评测案例，对每个案例调用 OpenAI-compatible API 并计算分层
+    依赖指标。每个案例最多重试 3 次，失败时记录错误信息并继续。
+    结果实时写入 output_path（若提供）以支持断点续跑。
+
+    Args:
+        cases: 评测案例列表。
+        api_key: API 认证密钥。
+        base_url: API 基础地址，默认 "https://ai.td.ee/v1"。
+        model: 模型名称，默认 "gpt-5.4"。
+        output_path: 结果 JSON 文件路径，传入后自动持久化。
+        max_cases: 最大评测案例数（用于快速测试）。
+
+    Returns:
+        所有评测案例的结果列表，每条记录包含 case_id、难度、预测值、
+        ground_truth、F1、macro_f1、mislayer_rate 及 strict_scoring 等字段。
+    """
     client = OpenAI(
         base_url=base_url,
         api_key=api_key,
@@ -136,9 +202,14 @@ def run_gpt_eval(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Run GPT5.4 evaluation on Celery dependency analysis."
-    )
+    """GPT 评测脚本的 CLI 入口。
+
+    解析命令行参数，加载评测数据集，调用 ``run_gpt_eval`` 执行评测
+    并持久化结果到 JSON 文件。
+
+    Returns:
+        成功时返回 0。
+    """
     parser.add_argument(
         "--cases",
         type=Path,
