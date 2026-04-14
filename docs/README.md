@@ -91,6 +91,19 @@
 
 ---
 
+## AI Coder 优化调研（2026-04 新增）
+
+| 文档 | 说明 |
+|------|------|
+| `ai-coder-research-reference.md` | **调研总览** — 四路调研整合 + 优化决策矩阵 |
+| `github-ai-coder-repos.md` | **GitHub AI Coder Repos** — Top 业界项目全景分析 |
+| `production-ai-coder-architectures.md` | **生产架构解析** — Devin/Copilot/Cursor/OpenHands/SWE-agent 深度架构 |
+| `ai-coder-self-optimization-techniques.md` | **自我优化技术** — PE / RAG / Self-Refinement / ReAct / Self-RAG / Reflexion |
+| `mcp-tool-design-best-practices.md` | **MCP/NCP 工具设计** — Schema 规范、反模式、最佳实践 |
+| `repomind-optimization-plan.md` | **RepoMind 优化路线图** — 当前优化计划（Tracing → PE → RAG → NCP） |
+
+---
+
 ## 快速入口
 
 - **开始新实验** → `experiment_log_template.md`
@@ -98,3 +111,4 @@
 - **添加新评测 case** → `celery_case_mining.md` + `eval_case_annotation_template.md`
 - **Qwen 微调** → `FINETUNE_README.md`
 - **Prompt 优化** → `ai_prompt_templates.md`
+- **RepoMind AI Coder 优化调研** → `ai-coder-research-reference.md`
