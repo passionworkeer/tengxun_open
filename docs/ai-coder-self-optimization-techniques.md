@@ -826,7 +826,103 @@ class RepoMindTracer:
 
 ---
 
-## 七、关键参考论文
+## 七、2026 最新优化技术（来自深度调研）
+
+### 7.1 Tree of Thoughts（多路径探索）
+
+**核心思想：** 显式探索多条推理路径，而非单链推理
+
+```python
+from tot.methods.bfs import solve
+from tot.tasks.game24 import Game24Task
+
+# 三步：Propose（生成候选）→ Value（评估）→ Select（选择）
+task = Game24Task()
+ys, infos = solve(args, task, 900)
+```
+
+**RepoMind 适用场景：** Changelog 生成时，对同一个 commit 可能有多种分类方式，Tree of Thoughts 可以探索多条路径并选择最优
+
+### 7.2 Graph-CoT（知识图谱遍历推理）
+
+**核心思想：** LLM 生成图遍历命令，系统执行后返回结果，形成推理循环
+
+```python
+def four_hop(node_type_1, edge_type_12, node_type_2, edge_type_23,
+             node_type_3, edge_type_34, node_type_4):
+    # 遍历图：node1 → node2 → node3 → node4
+    # 多跳推理回答复杂影响范围问题
+    pass
+```
+
+**RepoMind 适用场景：** 影响范围分析的多跳推理（"修改 A 如何通过 B 间接影响 C"）
+
+### 7.3 Agentic RAG（NVIDIA 架构）
+
+**完整 Pipeline：**
+
+```
+Question → Router → Retrieval Grader → Re-ranking → Hallucination Grader → Answer
+              ↓              ↓
+         (vector or    (过滤不相关 doc)
+          web search)
+```
+
+```python
+# 检索评分器
+retrieval_grader = prompt | llm | JsonOutputParser()
+score = retrieval_grader.invoke({"question": q, "document": doc})
+
+# Hallucination 检查
+hallucination_grader = prompt | llm | JsonOutputParser()
+grade = hallucination_grader.invoke({"answer": ans, "context": docs})
+```
+
+**RepoMind 适用场景：** 对检索到的代码 chunk 做二次评分，过滤幻觉内容
+
+### 7.4 Context+（RAG + AST + 谱聚类）
+
+**核心特性：**
+- AST 解析：结构化理解代码
+- 向量嵌入：语义搜索
+- 谱聚类：相关代码分组
+- Obsidian 风格 wikilink 导航
+
+**RepoMind 适用场景：** RepoMind 的 AST Chunker 已经实现了部分，Context+ 的谱聚类可以进一步增强代码结构感知
+
+### 7.5 EvalPlus（严格评测）
+
+**核心洞察：** 原始测试 × 80 倍的扩展测试 = 鲁棒性检测
+
+```python
+from evalplus.data import get_human_eval_plus
+
+problems = get_human_eval_plus()
+# HumanEval+：比原始多 80 倍测试用例
+# MBPP+：比原始多 35 倍测试用例
+```
+
+**RepoMind 适用场景：** D30-D32 测试集的 test_patch 可以参考 EvalPlus 思路，增加更多边界测试用例
+
+### 7.6 Bugbot 自我改进规则
+
+```python
+# 从成功修复中提取规则
+class LearnedRule:
+    pattern: str        # 错误模式
+    context: str        # 上下文条件
+    fix_template: str  # 修复模板
+
+# 下次遇到相似模式时主动应用
+if rule.matches(current_code):
+    current_code = rule.apply(current_code)
+```
+
+**RepoMind 适用场景：** 失败案例的经验存储化，避免重复同类错误
+
+---
+
+## 八、关键参考论文
 
 | 论文 | 年份 | 核心贡献 |
 |------|------|---------|
@@ -837,5 +933,8 @@ class RepoMindTracer:
 | PAL | 2023 | Program-aided LLM |
 | DSP | 2023 | Demonstration + prompting |
 | Cramming | 2023 | LM 压缩上下文 |
-| ColBERT | 2020 | Late interaction retrieval |
+| ColBERT | SIGIR 2020 | Late interaction retrieval |
 | BEIR | 2021 | 检索评测基准 |
+| Tree of Thoughts | NeurIPS 2023 | 多路径推理探索 |
+| SWE-grep | 2025 | 并行工具调用 + RL 训练 |
+| CursorBench | 2026 | 真实工程会话评测 |

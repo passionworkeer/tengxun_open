@@ -467,7 +467,116 @@ Recent Changes:
 
 ---
 
-## 十、关键参考论文
+## 十、2026 最新架构创新（来自深度调研）
+
+### 10.1 并行工具调用（SWE-grep, 2025-10）
+
+**核心突破：** 每轮最多 8 个并行工具调用，最多 4 轮串行（3 轮探索 + 1 轮答案）
+
+```python
+# 传统：串行调用（10-20 轮）
+for call in sequential_calls:
+    result = execute(call)
+    context += result
+
+# SWE-grep：每轮最多 8 并行
+parallel_calls = await gather(*[execute(call) for call in batch])
+# 延迟从分钟级 → 秒级（Cerebras 推理 2800 tok/s）
+```
+
+**RepoMind 启发：** 将 RAG 检索 + BM25 查询 + AST 解析并行化
+
+### 10.2 CursorBench — 真实工程会话评测（2026-03）
+
+**为什么重要：** 公开 Benchmark（SWW-bench/HumanEval）任务过于明确，真实开发场景更模糊：
+
+- **SWE-bench**：任务预先指定，解决方案窄
+- **CursorBench**：真实 Cursor 工程团队的 coding sessions，prompt 简短模糊，解决方案需要数百行跨多文件
+
+**CursorBench 数据：**
+- Composer 2 得分 61.3（2026-03）
+- 相比 Composer 1.5 提升 37%
+- 准确率 vs 成本达到帕累托最优
+
+**RepoMind 启发：** 构建类似 CursorBench 的真实评测集，D30-D32 状态机测试集正是这个方向
+
+### 10.3 Model UX — SWE-1.6（2026-04）
+
+**核心概念：** 传统 Benchmark 不测量以下维度：
+
+- Overthinking（简单问题想太多）
+- Looping（重复尝试同一路径）
+- 工具偏好错误（应该用 native tool 却用 terminal）
+- 串行 vs 并行工具调用
+
+**SWE-1.6 解决方案：** RL 训练中加入 length penalty，降低不必要的长轨迹
+
+**RepoMind 启发：** RepoMind 的 PE + Postprocess 正是减少 overthinking 的手段
+
+### 10.4 GitHub Agentic Workflows 安全架构（2026-03）
+
+**四大安全原则：**
+1. **Defense in depth**（多层防御）
+2. **Don't trust agents with secrets**（零密钥架构）
+3. **Stage and vet all writes**（分期写入审批）
+4. **Log everything**（全量日志）
+
+**零密钥 Agent 架构：**
+```
+Agent Container
+  ↕ firewalled internet + MCP gateway
+  ↕ Auth tokens in isolated API proxy
+  ↕ chroot jail at /host with read-only filesystem
+```
+
+**RepoMind 启发：** RepoMind 分析代码仓库时，不应将写入能力暴露给 LLM
+
+### 10.5 Bugbot 自我改进规则（2026-04）
+
+**创新：** 从成功修复中提取模式，存储为规则，下次主动应用
+
+```python
+# 规则存储格式
+class LearnedRule:
+    pattern: str          # "空指针检查缺失"
+    context: str          # "在 if 语句后立即检查"
+    fix_template: str     # "添加 if (ptr == nullptr) 检查"
+
+# Bugbot 在提交前主动检查
+for rule in learned_rules:
+    if rule.matches(code_change):
+        code_change = rule.apply(code_change)
+```
+
+**RepoMind 启发：** 失败案例的经验存储化（Reflexion 思路）
+
+### 10.6 三工程模式（GitHub, 2026-02）
+
+**多 Agent 可靠性设计模式：**
+
+1. **Typed schemas at every boundary**：机器可检查的数据契约
+2. **Action schemas define explicit allowed actions**：`request-more-info` / `assign` / `close-as-duplicate` / `no-action`
+3. **MCP enforces both**：执行前验证，防止坏状态传播
+
+**RepoMind 启发：** NCP 的 task_type 路由 + Schema 验证正是此模式
+
+### 10.7 Vercel Agentic Infrastructure（2026-04）
+
+**核心数据：**
+- 30% 周部署由 AI Agent 发起（6 个月增长 1000%）
+- Agent 部署的项目 20x 更可能调用 AI 推理提供商
+- Claude Code 占 Vercel 平台 75% Agent 驱动部署
+
+**三层演进：**
+```
+Layer 1: Agent 部署基础设施（不可变部署 + Preview URL）
+Layer 2: Agent 构建和运行基础设施（AI SDK + AI Gateway + Sandbox）
+Layer 3: Agentic 平台自身（自动调查异常 + 根因分析 + 修复建议）
+```
+
+---
+
+## 十一、关键参考论文
 
 | 论文 | 年份 | 机构 | 核心贡献 |
 |------|------|------|---------|
@@ -480,3 +589,6 @@ Recent Changes:
 | ReAct | 2023 | Princeton | Synergizing reasoning + acting |
 | Reflexion | 2023 | NEU | 语言强化学习 agent |
 | Self-RAG | 2024 | Carnegie Mellon | 自适应检索增强 |
+| SWE-grep | 2025 | Cognition | 并行工具调用 + RL 训练 |
+| CursorBench | 2026 | Cursor AI | 真实工程会话评测 |
+| SWE-1.6 | 2026 | Cognition | Model UX 训练目标 |

@@ -324,7 +324,120 @@ Client (LLM)
 
 ---
 
-## 九、参考资源索引
+## 九、Top 15 完整项目详解（来自深度调研）
+
+### Repo 1: OpenHands
+**Stars:** ~45k+ | **License:** MIT
+- 端到端自主软件工程师，Docker 沙箱执行
+- FSAL（File System Abstraction Layer）统一文件操作 API
+- 状态机：Plan → Search → Edit → Verify → Submit
+- SWE-bench Lite ~30-35%，Full ~20-25%
+- 200+ 贡献者，被阿里巴巴、蚂蚁金服采用
+
+### Repo 2: SWE-agent (Princeton NLP)
+**Stars:** ~22k+
+- SWElf 环境（Alpine + 预装工具链）
+- 专业动作空间：`search`, `goto`, `edit`, `create`, `submit`
+- Critique-Refine Loop：生成前先批评
+- SWE-bench Lite ~28-33%，学术引用 500+
+
+### Repo 3: Devin (Cognition AI)
+**非开源**（云服务 + API）
+- 200K+ 上下文窗口，持久会话状态
+- 沙箱计算环境 + 自我评测
+- SWE-bench ~30%+（最新版本）
+- 2026 年支持 Devin Review（PR 自动审查）
+
+### Repo 4: Claude Code (Anthropic)
+**Stars:** ~30k+
+- 工具集：`Bash`, `Read`, `Write`, `Edit`, `Grep`, `Glob`, `WebSearch`
+- 自动工具选择，5-7 步并行评估
+- Anthropic 报告 85%+ 任务完成率
+- Vercel 平台 75% 的 Agent 驱动部署使用 Claude Code
+
+### Repo 5: Cursor Agent
+**Stars:** ~35k+
+- Composer Engine：多文件编辑 + 依赖图管理
+- Rules System：YAML 定义 agent 行为和代码风格
+- CursorBench 评分 61.3（Composer 2）
+- Composer 2 使用 RL 训练，实现 37% 提升
+
+### Repo 6: Cline
+**Stars:** ~28k+
+- VS Code 扩展，支持 Claude/GPT/Gemini/Ollama
+- 记忆系统：跨会话存储项目决策和架构笔记
+- 每周发布，15000+ 周活用户
+
+### Repo 7: Continue
+**Stars:** ~20k+
+- 图形检索：Call-graph + Import-graph 构建
+- Context Provider：可插拔上下文（文件/终端/文档/Jira）
+- 100K+ 周活用户，4.5/5 VS Code 评分
+
+### Repo 8: Aider
+**Stars:** ~18k+
+- Git 原生：所有编辑作为 git diff 跟踪
+- Atomic Commits：每个逻辑变更集作为一个 git commit
+- 支持 Claude 3.5/3.7, GPT-4o, Gemini, Deepseek
+
+### Repo 9: Devika
+**Stars:** ~12k+
+- 类 Devin 开源实现，分层任务规划
+- Reasoning Trace 可视化（Web UI 实时显示思维链）
+- PostgreSQL 持久化记忆，项目级知识库
+
+### Repo 10: MCP (Model Context Protocol)
+**SDK Stars:** ~15k+（合并）
+- 协议标准，JSON Schema 定义工具
+- 1000+ MCP Server 在 npm/PyPI 可用
+- Cursor/Cline/Claude Code/Continue/OpenHands 都支持
+
+### Repo 11: RooCode
+**Stars:** ~8k+
+- AST 感知编辑，Tree-Sitter 语言无关解析
+- 依赖图引擎：实时构建和维护全代码库依赖图
+- 企业级：80%+ 多文件重构准确率
+
+### Repo 12: Sourcegraph Cody
+**Stars:** ~10k+
+- 使用 Sourcegraph 精确代码搜索（非 embedding）
+- 支持 100K+ 文件超大代码库
+- 2000+ 企业客户，SOC2 合规
+
+### Repo 13: GitHub Copilot Agent Mode
+**用户:** 50M+（最大用户基数）
+- 多模型动态路由：GPT-4o + 专有模型
+- PR Description 生成，代码审查 Agent
+- Microsoft 报告 46% 的代码由 Copilot 撰写
+
+### Repo 14: Tabnine
+**Stars:** ~8k+
+- 企业专注，1B-7B 专用小模型
+- 全本地部署选项，数据不出网络
+- 10000+ 企业客户（SOC2/HIPAA/GDPR）
+
+### Repo 15: Factory
+**Stars:** ~6k+
+- 多 Agent Pipeline：搜索/编辑/测试/验证分离
+- 测试先行：Test-Driven Agent Loop
+- SWE-bench Lite ~18-22%，$0.50-1.50/issue
+
+---
+
+## 十、2026 最新趋势
+
+| 趋势 | 说明 | RepoMind 机会 |
+|------|------|--------------|
+| **MCP 成为基础设施** | 所有 Agent 都支持 MCP | RepoMind NCP 与 MCP 对齐 |
+| **多 Agent 编排** | 单 Agent → Supervisor + Specialist 团队 | RepoMind 按 task_type 分 Handler |
+| **生产可靠性优先** | 从刷榜 → 真实任务完成率 + 成本效率 | 评测聚焦 Hard case |
+| **企业级功能** | 本地部署/SSO/审计日志 | RepoMind 的 NCP 架构支持 |
+| **Benchmark 饱和** | SWE-bench 趋近平台期 | RepoMind 自建评测集（D30-D32）|
+| **本地模型支持** | Ollama/本地 LLM 支持成为标配 | RepoMind 支持 Qwen 等开源模型 |
+
+---
+
+## 十一、参考资源索引
 
 | 资源 | URL | 价值 |
 |------|-----|------|
@@ -337,3 +450,6 @@ Client (LLM)
 | BFCL | github.com/bytedance/bfcl | 工具调用评测 |
 | Aider | github.com/paul-gauthier/aider | 轻量 CLI 参考 |
 | Continue | github.com/continuedev/continue | 多 IDE 集成参考 |
+| CursorBench | cursor.com/blog (March 2026) | 真实工程会话评测 |
+| SWE-grep | cognition.ai (October 2025) | 并行工具调用 + RL 训练 |
+| Composer 2 | cursor.com/blog (March 2026) | RL 训练多文件编辑 |
