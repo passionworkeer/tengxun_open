@@ -39,38 +39,19 @@ SYMBOL_PATTERN = re.compile(
 
 
 def normalize_fqn(value: str) -> str:
-    """Normalise a string to its canonical FQN form.
+    """
+    规范化FQN字符串
 
-    Delegates to :func:`rag.normalize_utils.normalize_fqn`, which typically
-    strips whitespace, lowercases the string, and replaces separator characters
-    (``/``, ``:``) with dots so that ``celery.app.base:celery`` and
-    ``celery.app.base.celery`` are treated as equivalent.
-
-    Args:
-        value: A raw symbol string, possibly with surrounding whitespace,
-            mixed casing, or non-standard separators.
-
-    Returns:
-        The canonical FQN string with normalised casing and separators.
+    使用统一的 rag.normalize_utils.normalize_fqn 函数。
     """
     return _normalize_fqn(value)
 
 
 def is_valid_fqn(value: str) -> bool:
-    r"""Check whether a string is a syntactically valid FQN.
+    r"""
+    检查字符串是否为有效的FQN格式
 
-    The string is first normalised via :func:`normalize_fqn`, then matched
-    against the regular-expression pattern
-    ``^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)+$``.
-    This accepts dotted identifiers such as ``celery.app.trace.build_tracer``
-    but rejects bare words, names starting with a digit, and strings
-    containing characters outside the identifier charset.
-
-    Args:
-        value: The candidate string to validate.
-
-    Returns:
-        True when the normalised string is a valid FQN; False otherwise.
+    FQN必须符合：^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)+$
     """
     return bool(FQN_PATTERN.fullmatch(normalize_fqn(value)))
 
@@ -112,26 +93,11 @@ def parse_model_output_layers(
     raw_output: str,
     allowed_fqns: Sequence[str] | None = None,
 ) -> dict[str, list[str]] | None:
-    """Parse model output that is expected to carry three dependency layers.
+    """
+    优先保留 direct / indirect / implicit 三层结构。
 
-    This function preserves the ``direct_deps / indirect_deps / implicit_deps``
-    tiered structure when the model returns well-formed JSON.  Each layer is
-    independently normalised, validated, optionally filtered against the
-    ``allowed_fqns`` whitelist, and deduplicated while preserving order.
-
-    If the output cannot be decoded as JSON or the top-level structure does not
-    contain the expected keys, the function returns ``None`` and leaves it to
-    the caller to fall back to the flat :func:`parse_model_output` path.
-
-    Args:
-        raw_output: The unprocessed model response string.
-        allowed_fqns: Optional whitelist of permissible FQNs; any candidate not
-            in this set is dropped from every layer.
-
-    Returns:
-        A dictionary mapping layer names (``direct_deps``, ``indirect_deps``,
-        ``implicit_deps``) to lists of normalised FQNs, or ``None`` when the
-        output is not valid JSON or lacks the required keys.
+    若输出可解析成 JSON，则逐层清洗；
+    若无法解析，返回 None，由上层决定是否退回扁平模式。
     """
 
     text = raw_output.strip()
@@ -178,20 +144,10 @@ def parse_model_output_layers(
 
 
 def dedupe_preserve_order(items: Iterable[str]) -> list[str]:
-    """Remove duplicates from a sequence while preserving the first-seen order.
+    """
+    去重并保持原始顺序
 
-    Each item is normalised via :func:`normalize_fqn` before comparison so that
-    ``Celery``, ``celery``, and ``CELERY`` are all treated as the same key.
-    The first occurrence (in iteration order) is retained; subsequent duplicates
-    are discarded.
-
-    Args:
-        items: Any iterable of symbol strings, possibly containing duplicates
-            or inconsistently-cased entries.
-
-    Returns:
-        A new list containing only the first-seen normalised entry for each
-        unique symbol, in the original iteration order.
+    用于确保输出的FQN列表顺序有意义。
     """
     seen: set[str] = set()
     ordered: list[str] = []
@@ -205,28 +161,10 @@ def dedupe_preserve_order(items: Iterable[str]) -> list[str]:
 
 
 def _extract_candidates(text: str) -> list[str]:
-    """Extract FQN candidates from raw model output text.
+    """
+    从文本中提取FQN候选
 
-    The extraction strategy tries three approaches in order of preference:
-
-    1. **JSON in code fences** — if the text contains a fenced code block
-       (`` ```json … ``` ``), only the block body is examined.
-    2. **Top-level JSON array** — if the text is a valid JSON array, every
-       element is taken as a candidate.
-    3. **Symbol regex fallback** — a broad dotted-identifier pattern
-       (``SYMBOL_PATTERN``) is run over the remaining text and each match is
-       checked for FQN validity.
-
-    Candidates are returned in the order they were discovered but are
-    intentionally **not** deduplicated here; callers should apply
-    :func:`dedupe_preserve_order` if needed.
-
-    Args:
-        text: Raw model output that may contain JSON, fenced blocks, and/or
-            free-text descriptions.
-
-    Returns:
-        A list of not-yet-deduplicated FQN strings extracted from the text.
+    优先从代码块解析，否则用正则匹配。
     """
     fenced = CODE_FENCE_PATTERN.search(text)
     if fenced:
@@ -244,26 +182,12 @@ def _extract_candidates(text: str) -> list[str]:
 
 
 def _try_parse_json(text: str) -> list[str] | None:
-    """Attempt to parse ``text`` as a JSON array of FQN strings.
+    """
+    尝试解析JSON
 
-    The function accepts two structural forms:
-
-    1. A flat array of strings, e.g. ``["celery.app.base.Celery", ...]``.
-    2. A nested object containing an ``answers``, ``fqns``, ``predictions``,
-       ``output``, ``result``, or ``fqn`` key whose value is an array
-       (recursively flattened by :func:`_flatten_json`).
-
-    Non-string leaf values (``int``, ``float``) are accepted and coerced to
-    ``str``.  Any JSON decode error or structural mismatch causes the function
-    to return ``None``, incrementing the module-level failure counter and
-    logging a debug message.
-
-    Args:
-        text: The candidate JSON string.
-
-    Returns:
-        A flat list of string FQN candidates on success; ``None`` on parse
-        failure or unexpected structure.
+    支持两种格式：
+    1. 直接是字符串数组
+    2. 包含 ground_truth 等键的嵌套对象
     """
     global _JSON_PARSE_FAIL_COUNT
     try:
@@ -286,25 +210,11 @@ def _try_parse_json(text: str) -> list[str] | None:
 
 
 def _flatten_json(value: object) -> list[object]:
-    """Recursively flatten a parsed JSON value into a list of leaf values.
+    """
+    扁平化JSON对象
 
-    When ``value`` is a list, the function recurses into each element and
-    concatenates the results.  When it is a dict, it first checks for any of
-    the six prioritised keys (``answers``, ``fqns``, ``predictions``,
-    ``output``, ``result``, ``fqn``) in that order; the first match is
-    expanded recursively.  If none of those keys exist, all dictionary values
-    are recursively flattened and concatenated.  Scalar values (including
-    numbers and booleans) are returned as single-element lists.
-
-    This strategy allows the function to transparently handle both flat
-    response arrays and the nested response envelopes produced by various
-    model providers without requiring callers to know the exact shape in advance.
-
-    Args:
-        value: Any object produced by :func:`json.loads`.
-
-    Returns:
-        A flat list of all leaf values encountered during traversal.
+    优先提取特定键（answers/fqns/predictions/output/result/fqn），
+    否则递归展开所有值。
     """
     if isinstance(value, list):
         flattened: list[object] = []

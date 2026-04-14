@@ -110,18 +110,11 @@ def compute_set_metrics(
 
 
 def canonicalize_dependency_symbol(value: str) -> str:
-    """将模型输出中常见的路径写法归一化为 dotted FQN 符号。
+    """
+    将模型输出中常见的路径写法归一成 dotted symbol。
 
-    委托 ``rag.normalize_utils.normalize_fqn`` 执行规范化，
-    处理如 ``path/to/module:ClassName`` 或 ``module.ClassName`` 等
-    多种写法，最终返回标准 dotted 格式。
-
-    Args:
-        value: 模型输出的原始依赖符号字符串。
-
-    Returns:
-        归一化后的 dotted FQN。若规范化结果为空字符串，
-        会同时记录 debug 日志和 stderr 输出。
+    使用统一的 normalize_fqn 函数进行规范化。
+    返回空字符串时会记录调试日志。
     """
     item = normalize_fqn(value)
     if not item:
@@ -139,19 +132,10 @@ def canonicalize_dependency_symbol(value: str) -> str:
 def normalize_dependency_layers(
     payload: Mapping[str, Iterable[str]] | None,
 ) -> dict[str, list[str]]:
-    """归一化 direct / indirect / implicit 三层依赖。
+    """
+    归一化 direct / indirect / implicit 三层依赖。
 
-    对每层的每一项执行 FQN 规范化（``canonicalize_dependency_symbol``），
-    过滤空值和重复项，保留首次出现的顺序。payload 为 None 或某层
-    缺失时，该层返回空列表。
-
-    Args:
-        payload: 可为 None，键必须为 "direct_deps" / "indirect_deps" /
-            "implicit_deps"，值为对应的依赖字符串可迭代对象。
-
-    Returns:
-        形如 ``{"direct_deps": [...], "indirect_deps": [...],
-        "implicit_deps": [...]}`` 的字典，三层均已去重且顺序保留。
+    会过滤空值并去重，保留首次出现顺序。
     """
 
     normalized: dict[str, list[str]] = {key: [] for key in LAYER_KEYS}

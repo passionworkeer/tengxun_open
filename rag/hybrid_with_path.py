@@ -329,19 +329,7 @@ class HybridRetrieverWithPath(HybridRetriever):
         return list(self.basename_to_ids.get(basename, []))
 
     def _render_chunk_for_hit(self, chunk, rank: int) -> str:
-        """Render a :class:`CodeChunk` into a human-readable snippet string.
-
-        This is used for path-indexer-injected hits where the chunk may not
-        have been through the tiered rendering of :meth:`_render_chunk`.
-
-        Args:
-            chunk: The :class:`CodeChunk` to render.
-            rank: 1-based position of this hit in the final ranking.
-                Currently only ``rank == 1`` triggers full-content rendering.
-
-        Returns:
-            A text snippet suitable for inclusion in LLM context.
-        """
+        """Render a chunk for the hit (used for injected path hits)."""
         if rank == 1:
             return chunk.content
         lines = [chunk.signature]
