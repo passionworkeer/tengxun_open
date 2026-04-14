@@ -2,6 +2,16 @@
 
 > **📋 交付检查清单**（推荐优先阅读）：[`DELIVERY_CHECKLIST.md`](DELIVERY_CHECKLIST.md)
 
+---
+
+## 📚 文档索引
+
+| 索引 | 说明 |
+|------|------|
+| **[`docs/README.md`](docs/README.md)** | 操作文档索引 — 评测、微调、PE、项目管理 |
+| **[`reports/README.md`](reports/README.md)** | 报告文档索引 — 交付、答辩、实验、分析、审计 |
+| **[`REPO_MIND_PLAN.md`](REPO_MIND_PLAN.md)** | 新项目计划 — RepoMind 优化路线图（12周） |
+
 面向腾讯实习考核题的正式仓库版本。任务聚焦于：
 
 - 真实开源项目上的跨文件依赖分析
